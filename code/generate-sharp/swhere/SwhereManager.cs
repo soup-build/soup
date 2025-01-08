@@ -57,18 +57,21 @@ public static class SwhereManager
 	{
 		Log.HighPriority("Discover Windows Platform");
 
-		var (msvcVersion, msvcInstallPath) = await VSWhereUtilities.FindMSVCInstallAsync(includePrerelease);
-		var msvcSDK = userConfig.EnsureSDK("MSVC");
-		msvcSDK.SourceDirectories =
-		[
-			msvcInstallPath,
-		];
-		msvcSDK.SetProperties(
-			new Dictionary<string, string>()
-			{
-				{ "Version", msvcVersion },
-				{ "VCToolsRoot", msvcInstallPath.ToString() },
-			});
+		var msvc = await VSWhereUtilities.TryFindMSVCInstallAsync(includePrerelease);
+		if (msvc is not null)
+		{
+			var msvcSDK = userConfig.EnsureSDK("MSVC");
+			msvcSDK.SourceDirectories =
+			[
+				msvc.Value.Path,
+			];
+			msvcSDK.SetProperties(
+				new Dictionary<string, string>()
+				{
+					{ "Version", msvc.Value.Version },
+					{ "VCToolsRoot", msvc.Value.Path.ToString() },
+				});
+		}
 
 		var windowsSDK = WindowsSDKUtilities.TryFindWindows10Kit();
 

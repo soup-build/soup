@@ -16,40 +16,49 @@ public static class VSWhereUtilities
 	/// <summary>
 	/// Attempt to find MSVC compiler installation 
 	/// </summary>
-	public static async Task<(string Version, Path Path)> FindMSVCInstallAsync(bool includePrerelease)
+	public static async Task<(string Version, Path Path)?> TryFindMSVCInstallAsync(bool includePrerelease)
 	{
 		// Find the location of the Windows SDK
-		var visualStudioInstallRoot = await FindVSInstallRootAsync(
+		var visualStudioInstallRoot = await TryFindVSInstallRootAsync(
 			"Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 			includePrerelease);
-		Log.HighPriority("Using VS Installation: " + visualStudioInstallRoot.ToString());
 
-		// Use the default version
-		var visualCompilerVersion = await FindDefaultVCToolsVersionAsync(visualStudioInstallRoot);
-		Log.HighPriority("Using VC Version: " + visualCompilerVersion);
+		if (visualStudioInstallRoot is null)
+		{
+			Log.HighPriority("Visual Studio not installed");
+			return null;
+		}
+		else
+		{
+			Log.HighPriority("Using VS Installation: " + visualStudioInstallRoot.ToString());
 
-		// Calculate the final VC tools folder
-		var visualCompilerVersionFolder =
-			visualStudioInstallRoot + new Path($"./VC/Tools/MSVC/{visualCompilerVersion}/");
+			// Use the default version
+			var visualCompilerVersion = await FindDefaultVCToolsVersionAsync(visualStudioInstallRoot);
+			Log.HighPriority("Using VC Version: " + visualCompilerVersion);
 
-		return (visualCompilerVersion, visualCompilerVersionFolder);
+			// Calculate the final VC tools folder
+			var visualCompilerVersionFolder =
+				visualStudioInstallRoot + new Path($"./VC/Tools/MSVC/{visualCompilerVersion}/");
+
+			return (visualCompilerVersion, visualCompilerVersionFolder);
+		}
 	}
 
-	private static async Task<Path> FindVSInstallRootAsync(string requires, bool includePrerelease)
+	private static async Task<Path?> TryFindVSInstallRootAsync(string requires, bool includePrerelease)
 	{
 		// Find a copy of visual studio that has the required VisualCompiler
 		var executablePath = new Path("C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe");
 		var workingDirectory = new Path("./");
 		var argumentList = new List<string>()
-			{
-				"-latest",
-				"-products",
-				"*",
-				"-requires",
-				requires,
-				"-property",
-				"installationPath",
-			};
+		{
+			"-latest",
+			"-products",
+			"*",
+			"-requires",
+			requires,
+			"-property",
+			"installationPath",
+		};
 
 		// Check if we should include pre-release versions
 		if (includePrerelease)
@@ -62,8 +71,8 @@ public static class VSWhereUtilities
 		Log.Info(executablePath.ToString() + " " + arguments);
 		if (!LifetimeManager.Get<IFileSystem>().Exists(executablePath))
 		{
-			Log.Error("VSWhere is not installed on the host machine");
-			throw new HandledException();
+			Log.HighPriority("VSWhere is not installed on the host machine");
+			return null;
 		}
 
 		var process = LifetimeManager.Get<IProcessManager>().CreateProcess(
