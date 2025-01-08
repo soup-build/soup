@@ -122,17 +122,24 @@ public static class SwhereManager
 		Log.HighPriority("Discover GCC");
 
 		// Find the GCC SDKs
-		var cCompilerPath = await WhereIsUtilities.FindExecutableAsync(platform, "gcc");
-		var cppCompilerPath = await WhereIsUtilities.FindExecutableAsync(platform, "g++");
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "gcc");
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "g++");
 
-		var gccSDK = userConfig.EnsureSDK("GCC");
-		gccSDK.SourceDirectories = [];
-		gccSDK.SetProperties(
-			new Dictionary<string, string>()
-			{
-				{ "CCompiler", cCompilerPath.ToString() },
-				{ "CppCompiler", cppCompilerPath.ToString() },
-			});
+		if (cCompilerPath is null || cppCompilerPath is null)
+		{
+			Log.HighPriority("GCC not installed");
+		}
+		else
+		{
+			var gccSDK = userConfig.EnsureSDK("GCC");
+			gccSDK.SourceDirectories = [];
+			gccSDK.SetProperties(
+				new Dictionary<string, string>()
+				{
+					{ "CCompiler", cCompilerPath.ToString() },
+					{ "CppCompiler", cppCompilerPath.ToString() },
+				});
+		}
 	}
 
 	private static async Task DiscoverClangAsync(OSPlatform platform, LocalUserConfig userConfig)
@@ -140,19 +147,26 @@ public static class SwhereManager
 		Log.HighPriority("Discover Clang");
 
 		// Find the Clang SDKs
-		var cCompilerPath = await WhereIsUtilities.FindExecutableAsync(platform, "clang");
-		var cppCompilerPath = await WhereIsUtilities.FindExecutableAsync(platform, "clang++");
-		var archiverPath = await WhereIsUtilities.FindExecutableAsync(platform, "ar");
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "clang");
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "clang++");
+		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "ar");
 
-		var clangSDK = userConfig.EnsureSDK("Clang");
-		clangSDK.SourceDirectories = [];
-		clangSDK.SetProperties(
-			new Dictionary<string, string>()
-			{
-				{ "CCompiler", cCompilerPath.ToString() },
-				{ "CppCompiler", cppCompilerPath.ToString() },
-				{ "Archiver", archiverPath.ToString() },
-			});
+		if (cCompilerPath is null || cppCompilerPath is null || archiverPath is null)
+		{
+			Log.HighPriority("Clang not installed");
+		}
+		else
+		{
+			var clangSDK = userConfig.EnsureSDK("Clang");
+			clangSDK.SourceDirectories = [];
+			clangSDK.SetProperties(
+				new Dictionary<string, string>()
+				{
+					{ "CCompiler", cCompilerPath.ToString() },
+					{ "CppCompiler", cppCompilerPath.ToString() },
+					{ "Archiver", archiverPath.ToString() },
+				});
+		}
 	}
 
 
@@ -160,57 +174,59 @@ public static class SwhereManager
 	{
 		Log.HighPriority("Discover DotNet");
 
-		var (dotNetExecutable, dotnetSDKs, dotnetRuntimes, dotnetTargetingPacks, sourceDirectories) =
-			await DotNetSDKUtilities.FindDotNetAsync(platform);
-		var dotnetSDK = userConfig.EnsureSDK("DotNet");
-		dotnetSDK.SourceDirectories = sourceDirectories;
-		dotnetSDK.SetProperties(
-			new Dictionary<string, string>()
-			{
-				{ "DotNetExecutable", dotNetExecutable.ToString() },
-			});
-
-		var sdksTable = dotnetSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
-		foreach (var sdk in dotnetSDKs)
+		var dotnet = await DotNetSDKUtilities.TryFindDotNetAsync(platform);
+		if (dotnet is not null)
 		{
-			sdksTable.AddItemWithSyntax(sdk.Version, sdk.InstallDirectory.ToString(), 4);
-		}
-
-		var runtimesTable = dotnetSDK.Properties.EnsureTableWithSyntax("Runtimes", 3);
-		foreach (var runtime in dotnetRuntimes)
-		{
-			var runtimeTable = runtimesTable.EnsureTableWithSyntax(runtime.Key, 4);
-			foreach (var runtimeVersion in runtime.Value)
-			{
-				runtimeTable.AddItemWithSyntax(runtimeVersion.Version, runtimeVersion.InstallDirectory.ToString(), 5);
-			}
-		}
-
-		var packsTable = dotnetSDK.Properties.EnsureTableWithSyntax("TargetingPacks", 3);
-		foreach (var pack in dotnetTargetingPacks)
-		{
-			var packTable = packsTable.EnsureTableWithSyntax(pack.Key, 4);
-			foreach (var packVersion in pack.Value)
-			{
-				var packVersionTable = packTable.AddTableWithSyntax(packVersion.Version, 5);
-				packVersionTable.AddItemWithSyntax("Path", packVersion.InstallDirectory.ToString(), 6);
-				var analyzerArray = packVersionTable.AddArrayWithSyntax("Analyzer", 6);
-				var managedArray = packVersionTable.AddArrayWithSyntax("Managed", 6);
-				if (packVersion.FrameworkList is not null)
+			var dotnetSDK = userConfig.EnsureSDK("DotNet");
+			dotnetSDK.SourceDirectories = dotnet.Value.SourceDirectories;
+			dotnetSDK.SetProperties(
+				new Dictionary<string, string>()
 				{
-					foreach (var file in packVersion.FrameworkList.Files)
+					{ "DotNetExecutable", dotnet.Value.DotNetExecutable.ToString() },
+				});
+
+			var sdksTable = dotnetSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
+			foreach (var sdk in dotnet.Value.SDKVersions)
+			{
+				sdksTable.AddItemWithSyntax(sdk.Version, sdk.InstallDirectory.ToString(), 4);
+			}
+
+			var runtimesTable = dotnetSDK.Properties.EnsureTableWithSyntax("Runtimes", 3);
+			foreach (var runtime in dotnet.Value.Runtimes)
+			{
+				var runtimeTable = runtimesTable.EnsureTableWithSyntax(runtime.Key, 4);
+				foreach (var runtimeVersion in runtime.Value)
+				{
+					runtimeTable.AddItemWithSyntax(runtimeVersion.Version, runtimeVersion.InstallDirectory.ToString(), 5);
+				}
+			}
+
+			var packsTable = dotnetSDK.Properties.EnsureTableWithSyntax("TargetingPacks", 3);
+			foreach (var pack in dotnet.Value.TargetingPacks)
+			{
+				var packTable = packsTable.EnsureTableWithSyntax(pack.Key, 4);
+				foreach (var packVersion in pack.Value)
+				{
+					var packVersionTable = packTable.AddTableWithSyntax(packVersion.Version, 5);
+					packVersionTable.AddItemWithSyntax("Path", packVersion.InstallDirectory.ToString(), 6);
+					var analyzerArray = packVersionTable.AddArrayWithSyntax("Analyzer", 6);
+					var managedArray = packVersionTable.AddArrayWithSyntax("Managed", 6);
+					if (packVersion.FrameworkList is not null)
 					{
-						switch (file.Type)
+						foreach (var file in packVersion.FrameworkList.Files)
 						{
-							case "Analyzer":
-								analyzerArray.AddItemWithSyntax(file.Path.ToString(), 7);
-								break;
-							case "Managed":
-								managedArray.AddItemWithSyntax(file.Path.ToString(), 7);
-								break;
-							default:
-								Log.Warning($"Unknown File Type: {file.Type}");
-								break;
+							switch (file.Type)
+							{
+								case "Analyzer":
+									analyzerArray.AddItemWithSyntax(file.Path.ToString(), 7);
+									break;
+								case "Managed":
+									managedArray.AddItemWithSyntax(file.Path.ToString(), 7);
+									break;
+								default:
+									Log.Warning($"Unknown File Type: {file.Type}");
+									break;
+							}
 						}
 					}
 				}

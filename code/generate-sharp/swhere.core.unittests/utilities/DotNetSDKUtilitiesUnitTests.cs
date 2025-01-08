@@ -43,9 +43,9 @@ public class DotNetSDKUtilitiesUnitTests
 		mockFileSystem.RegisterChildren(new Path("C:/Program Files/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.7/"), []);
 
 		var platform = OSPlatform.Windows;
-		var result = await DotNetSDKUtilities.FindDotNetAsync(platform);
+		var result = await DotNetSDKUtilities.TryFindDotNetAsync(platform);
 
-		Assert.Equal(new Path("C:/Program Files/dotnet/dotnet.exe"), result.DotNetExecutable);
+		Assert.Equal(new Path("C:/Program Files/dotnet/dotnet.exe"), result.Value.DotNetExecutable);
 		Assert.Equal(
 			[
 				("5.0.0", new Path("C:/Program Files/dotnet/sdk/5.0.0/")),
@@ -55,7 +55,7 @@ public class DotNetSDKUtilitiesUnitTests
 				("7.0.304", new Path("C:/Program Files/dotnet/sdk/7.0.304/")),
 				("7.0.400-preview.23274.1", new Path("C:/Program Files/dotnet/sdk/7.0.400-preview.23274.1/")),
 			],
-			result.SDKVersions);
+			result.Value.SDKVersions);
 		Assert.Equal(
 			new Dictionary<string, IList<(string Version, Path InstallDirectory)>>()
 			{
@@ -105,7 +105,7 @@ public class DotNetSDKUtilitiesUnitTests
 					}
 				},
 			},
-			result.Runtimes,
+			result.Value.Runtimes,
 			new DictionaryOfListsComparer<(string Version, Path InstallDirectory)>());
 
 		Assert.Equal(
@@ -123,7 +123,7 @@ public class DotNetSDKUtilitiesUnitTests
 					}
 				},
 			},
-			result.TargetingPacks,
+			result.Value.TargetingPacks,
 			new DictionaryOfListsComparer<(string Version, Path InstallDirectory, FrameworkFileList? FrameworkList)>());
 
 		// Verify expected logs

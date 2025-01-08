@@ -125,7 +125,7 @@ public class OperationGraphViewModel : ContentPaneViewModel
 				Title = operation.Title,
 				ToolTip = toolTop,
 				Id = operation.Id.Value,
-				ChildNodes = operation.Children.Select(value => value.Value).ToList(),
+				ChildNodes = [.. operation.Children.Select(value => value.Value)],
 				Position = position,
 			};
 

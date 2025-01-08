@@ -13,7 +13,7 @@ namespace Soup.Build.Discover;
 
 public static class ExecutableUtilities
 {
-	public static async Task<string> RunExecutableAsync(string executable, IList<string> arguments)
+	public static async Task<string?> RunExecutableAsync(string executable, IList<string> arguments)
 	{
 		var workingDirectory = new Path("./");
 
@@ -34,18 +34,17 @@ public static class ExecutableUtilities
 
 		if (!string.IsNullOrEmpty(stdErr))
 		{
-			Log.Error("Executable wrote error message.");
-			Log.Error(stdErr);
-			throw new HandledException();
+			Log.HighPriority(stdErr);
 		}
 
 		if (exitCode != 0)
 		{
-			Log.Error($"Where failed: {exitCode}");
-			throw new HandledException();
+			return null;
 		}
-
-		return stdOut;
+		else
+		{
+			return stdOut;
+		}
 	}
 
 	private static string CombineArguments(IList<string> args)
