@@ -7,6 +7,8 @@ SCRIPTS_DIR=$(dirname "$0")
 ROOT_DIR=$SCRIPTS_DIR/../..
 OUT_DIR=$ROOT_DIR/out
 RUN_DIR=$OUT_DIR/run
+RELEASE_DIR=$OUT_DIR/release
 
-# Cleanup previous runs
-tar -a -cf $OUT_DIR/soup-build-0.41.3-linux-x64.tar.gz -C $RUN_DIR .
+# Pack the release tarbal
+mkdir -p $RELEASE_DIR
+tar -a -cf $RELEASE_DIR/soup-build-0.41.3-linux-x64.tar.gz -C $RUN_DIR .

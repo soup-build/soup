@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Linux Build Client: $1"
+echo "Build Client: $1"
 
 # Stop on first error
 set -e

@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Linux Build SoupView!"
+echo "Build SoupView!"
 
 # Stop on first error
 set -e
