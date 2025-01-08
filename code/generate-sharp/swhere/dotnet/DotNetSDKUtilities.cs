@@ -22,7 +22,7 @@ public static class DotNetSDKUtilities
 		IDictionary<string, IList<(string Version, Path InstallDirectory, FrameworkFileList? FrameworkList)>> TargetingPacks,
 		IList<Path> SourceDirectories)?> TryFindDotNetAsync(OSPlatform platform)
 	{
-		var dotnetExecutablePath = await WhereIsUtilities.TryFindExecutableAsync(platform, "dotnet2");
+		var dotnetExecutablePath = await WhereIsUtilities.TryFindExecutableAsync(platform, "dotnet");
 
 		if (dotnetExecutablePath is null)
 		{
