@@ -25,7 +25,7 @@ public static class VSWhereUtilities
 
 		if (visualStudioInstallRoot is null)
 		{
-			Log.HighPriority("Visual Studio not installed");
+			Log.HighPriority("Could not find component");
 			return null;
 		}
 		else
@@ -46,6 +46,8 @@ public static class VSWhereUtilities
 
 	private static async Task<Path?> TryFindVSInstallRootAsync(string requires, bool includePrerelease)
 	{
+		Log.HighPriority($"Discover VS Component: {requires}");
+
 		// Find a copy of visual studio that has the required VisualCompiler
 		var executablePath = new Path("C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe");
 		var workingDirectory = new Path("./");
@@ -105,8 +107,8 @@ public static class VSWhereUtilities
 		var path = await reader.ReadLineAsync();
 		if (path is null)
 		{
-			Log.Error("Failed to parse vswhere output.");
-			throw new HandledException();
+			Log.HighPriority("No results.");
+			return null;
 		}
 
 		return Path.Parse($"{path}\\");
