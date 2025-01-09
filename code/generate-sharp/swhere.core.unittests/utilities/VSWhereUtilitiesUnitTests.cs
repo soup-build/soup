@@ -48,6 +48,7 @@ public class VSWhereUtilitiesUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
+				"HIGH: Discover VS Component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
 				"HIGH: Using VS Installation: C:/Program Files/Microsoft Visual Studio/2022/Community/",
 				"HIGH: Using VC Version: 14.33.31629",
@@ -110,6 +111,7 @@ public class VSWhereUtilitiesUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
+				"HIGH: Discover VS Component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
 				"HIGH: Using VS Installation: C:/Program Files/Microsoft Visual Studio/2022/Preview/",
 				"HIGH: Using VC Version: 14.34.31823",
