@@ -14,6 +14,9 @@ SAMPLES_DIR=$ROOT_DIR/samples
 ## C Samples
 ########################################
 
+echo soup restore $SAMPLES_DIR/c/build-extension/executable/
+eval soup restore $SAMPLES_DIR/c/build-extension/executable/
+
 echo soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
 eval soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
 
@@ -32,6 +35,9 @@ echo SKIP: soup build $SAMPLES_DIR/c/windows-application/ -flavor $FLAVOR
 ## C# Samples
 ########################################
 
+echo soup restore $SAMPLES_DIR/c#/build-extension/executable/
+eval soup restore $SAMPLES_DIR/c#/build-extension/executable/
+
 echo soup build $SAMPLES_DIR/c#/build-extension/executable/ -flavor $FLAVOR
 eval soup build $SAMPLES_DIR/c#/build-extension/executable/ -flavor $FLAVOR
 
@@ -44,6 +50,9 @@ eval soup build $SAMPLES_DIR/c#/library/application/ -flavor $FLAVOR
 ########################################
 ## C++ Samples
 ########################################
+
+echo soup restore $SAMPLES_DIR/c++/build-extension/executable/
+eval soup restore $SAMPLES_DIR/c++/build-extension/executable/
 
 echo soup build $SAMPLES_DIR/c++/build-extension/executable/ -flavor $FLAVOR
 eval soup build $SAMPLES_DIR/c++/build-extension/executable/ -flavor $FLAVOR
@@ -64,6 +73,9 @@ eval soup build $SAMPLES_DIR/c++/module-dynamic-library/application/ -flavor $FL
 
 echo soup build $SAMPLES_DIR/c++/module-interface/ -flavor $FLAVOR
 eval soup build $SAMPLES_DIR/c++/module-interface/ -flavor $FLAVOR
+
+echo soup restore $SAMPLES_DIR/c++/parse-json/
+eval soup restore $SAMPLES_DIR/c++/parse-json/
 
 echo soup build $SAMPLES_DIR/c++/parse-json/ -flavor $FLAVOR
 eval soup build $SAMPLES_DIR/c++/parse-json/ -flavor $FLAVOR

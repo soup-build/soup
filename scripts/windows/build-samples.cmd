@@ -9,6 +9,10 @@ REM - ########################################
 REM - ## C Samples
 REM - ########################################
 
+echo soup restore %SamplesDir%/c/build-extension/executable/
+call soup restore %SamplesDir%/c/build-extension/executable/
+if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
+
 echo soup build %SamplesDir%/c/build-extension/executable/ -flavor %Flavor%
 call soup build %SamplesDir%/c/build-extension/executable/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
@@ -33,6 +37,10 @@ REM - ########################################
 REM - ## C# Samples
 REM - ########################################
 
+echo soup restore %SamplesDir%/c#/build-extension/executable/
+call soup restore %SamplesDir%/c#/build-extension/executable/
+if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
+
 echo soup build %SamplesDir%/c#/build-extension/executable/ -flavor %Flavor%
 call soup build %SamplesDir%/c#/build-extension/executable/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
@@ -48,6 +56,10 @@ if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
 REM - ########################################
 REM - ## C++ Samples
 REM - ########################################
+
+echo soup restore %SamplesDir%/c++/build-extension/executable/
+call soup restore %SamplesDir%/c++/build-extension/executable/
+if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/c++/build-extension/executable/ -flavor %Flavor%
 call soup build %SamplesDir%/c++/build-extension/executable/ -flavor %Flavor%
@@ -75,6 +87,10 @@ if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/c++/module-interface/ -flavor %Flavor%
 call soup build %SamplesDir%/c++/module-interface/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
+
+echo soup restore %SamplesDir%/c++/parse-json/
+call soup restore %SamplesDir%/c++/parse-json/
 if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/c++/parse-json/ -flavor %Flavor%
