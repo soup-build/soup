@@ -109,8 +109,8 @@ public static class NugetSDKUtilities
 						{
 							Name = tfm,
 							Libraries = DiscoverLibraries(directory, tfm),
-							Dependencies = dependencyGroup.Dependencies.Select(value =>
-								new NugetPackageDependency() { Id = value.Id, Version = value.Version }).ToList(),
+							Dependencies = [.. dependencyGroup.Dependencies.Select(value =>
+								new NugetPackageDependency() { Id = value.Id, Version = value.Version })],
 						};
 
 						nugetPackageVersion.TargetFrameworks.Add(targetFramework);

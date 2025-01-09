@@ -13,7 +13,7 @@ namespace Soup.Build.Discover;
 
 public static class WhereIsUtilities
 {
-	public static async Task<Path> FindExecutableAsync(OSPlatform platform, string name)
+	public static async Task<Path?> TryFindExecutableAsync(OSPlatform platform, string name)
 	{
 		string executable;
 		string separator;
@@ -45,18 +45,24 @@ public static class WhereIsUtilities
 		};
 
 		var stdOut = await ExecutableUtilities.RunExecutableAsync(executable, arguments);
-
-		// The first line is the path
-		var values = stdOut[..^newLineLength]
-			.Split(separator)
-			.Skip(skipCount)
-			.ToList();
-		if (values.Count == 0)
+		if (stdOut is null)
 		{
-			Log.Error("Failed to parse where output.");
-			throw new HandledException();
+			return null;
 		}
+		else
+		{
+			// The first line is the path
+			var values = stdOut[..^newLineLength]
+				.Split(separator)
+				.Skip(skipCount)
+				.ToList();
+			if (values.Count == 0)
+			{
+				Log.Error("Failed to parse where output.");
+				throw new HandledException();
+			}
 
-		return Path.Parse(values.First());
+			return Path.Parse(values.First());
+		}
 	}
 }

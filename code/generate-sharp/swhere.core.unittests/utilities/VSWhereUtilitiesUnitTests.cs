@@ -40,14 +40,15 @@ public class VSWhereUtilitiesUnitTests
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("14.33.31629\r\n"))));
 
 		bool includePrerelease = false;
-		var result = await VSWhereUtilities.FindMSVCInstallAsync(includePrerelease);
+		var result = await VSWhereUtilities.TryFindMSVCInstallAsync(includePrerelease);
 
-		Assert.Equal("14.33.31629", result.Version);
-		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/"), result.Path);
+		Assert.Equal("14.33.31629", result.Value.Version);
+		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/"), result.Value.Path);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
+				"HIGH: Discover VS Component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
 				"HIGH: Using VS Installation: C:/Program Files/Microsoft Visual Studio/2022/Community/",
 				"HIGH: Using VC Version: 14.33.31629",
@@ -102,14 +103,15 @@ public class VSWhereUtilitiesUnitTests
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("14.34.31823\r\n"))));
 
 		bool includePrerelease = true;
-		var result = await VSWhereUtilities.FindMSVCInstallAsync(includePrerelease);
+		var result = await VSWhereUtilities.TryFindMSVCInstallAsync(includePrerelease);
 
-		Assert.Equal("14.34.31823", result.Version);
-		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.34.31823/"), result.Path);
+		Assert.Equal("14.34.31823", result.Value.Version);
+		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.34.31823/"), result.Value.Path);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
+				"HIGH: Discover VS Component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
 				"HIGH: Using VS Installation: C:/Program Files/Microsoft Visual Studio/2022/Preview/",
 				"HIGH: Using VC Version: 14.34.31823",

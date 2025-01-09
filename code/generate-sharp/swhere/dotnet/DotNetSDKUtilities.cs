@@ -20,29 +20,38 @@ public static class DotNetSDKUtilities
 		IList<(string Version, Path InstallDirectory)> SDKVersions,
 		IDictionary<string, IList<(string Version, Path InstallDirectory)>> Runtimes,
 		IDictionary<string, IList<(string Version, Path InstallDirectory, FrameworkFileList? FrameworkList)>> TargetingPacks,
-		IList<Path> SourceDirectories)> FindDotNetAsync(OSPlatform platform)
+		IList<Path> SourceDirectories)?> TryFindDotNetAsync(OSPlatform platform)
 	{
-		var dotnetExecutablePath = await WhereIsUtilities.FindExecutableAsync(platform, "dotnet");
-		Log.HighPriority($"Using DotNet: {dotnetExecutablePath}");
-		Path dotnetInstallPath = dotnetExecutablePath.GetParent();
-		string newline = platform switch
-		{
-			OSPlatform.Windows => "\r\n",
-			OSPlatform.Linux => "\n",
-			_ => throw new InvalidOperationException("Unsupported operating system"),
-		};
+		var dotnetExecutablePath = await WhereIsUtilities.TryFindExecutableAsync(platform, "dotnet");
 
-		// Grant access to the install folder
-		var sourceDirectories = new HashSet<Path>()
+		if (dotnetExecutablePath is null)
+		{
+			Log.HighPriority("Could not find dotnet");
+			return null;
+		}
+		else
+		{
+			Log.HighPriority($"Using DotNet: {dotnetExecutablePath}");
+			Path dotnetInstallPath = dotnetExecutablePath.GetParent();
+			string newline = platform switch
+			{
+				OSPlatform.Windows => "\r\n",
+				OSPlatform.Linux => "\n",
+				_ => throw new InvalidOperationException("Unsupported operating system"),
+			};
+
+			// Grant access to the install folder
+			var sourceDirectories = new HashSet<Path>()
 		{
 			dotnetInstallPath,
 		};
 
-		var dotnetSDKs = await FindDotNetSDKVersionsAsync(sourceDirectories, dotnetExecutablePath, newline);
-		var dotnetRuntimes = await FindDotNetRuntimeVersionsAsync(sourceDirectories, dotnetExecutablePath, newline);
-		var dotnetTargetingPacks = FindDotNetTargetingPacksVersions(sourceDirectories, dotnetRuntimes);
+			var dotnetSDKs = await FindDotNetSDKVersionsAsync(sourceDirectories, dotnetExecutablePath, newline);
+			var dotnetRuntimes = await FindDotNetRuntimeVersionsAsync(sourceDirectories, dotnetExecutablePath, newline);
+			var dotnetTargetingPacks = FindDotNetTargetingPacksVersions(sourceDirectories, dotnetRuntimes);
 
-		return (dotnetExecutablePath, dotnetSDKs, dotnetRuntimes, dotnetTargetingPacks, sourceDirectories.ToList());
+			return (dotnetExecutablePath, dotnetSDKs, dotnetRuntimes, dotnetTargetingPacks, sourceDirectories.ToList());
+		}
 	}
 
 	private static async Task<IList<(string Version, Path InstallDirectory)>> FindDotNetSDKVersionsAsync(
@@ -54,7 +63,8 @@ public static class DotNetSDKUtilities
 		Log.HighPriority("Find DotNet SDK Versions");
 		var sdksOutput = await ExecutableUtilities.RunExecutableAsync(
 			dotnetExecutablePath.ToString(),
-			["--list-sdks"]);
+			["--list-sdks"]) ?? throw new HandledException("Failed to get DotNet SDK Versions");
+
 		var sdks = new List<(string, Path)>();
 		foreach (var sdkValue in sdksOutput.Split(newline).SkipLast(1))
 		{
@@ -89,7 +99,7 @@ public static class DotNetSDKUtilities
 		Log.HighPriority("Find DotNet Runtime Versions");
 		var runtimesOutput = await ExecutableUtilities.RunExecutableAsync(
 			dotnetExecutablePath.ToString(),
-			["--list-runtimes"]);
+			["--list-runtimes"]) ?? throw new HandledException("Failed to get DotNet Runtime Versions");
 		var runtimes = new Dictionary<string, IList<(string, Path)>>();
 		foreach (var runtimeValue in runtimesOutput.Split(newline).SkipLast(1))
 		{

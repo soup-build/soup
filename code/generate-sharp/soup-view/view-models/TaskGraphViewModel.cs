@@ -191,7 +191,7 @@ public class TaskGraphViewModel : ContentPaneViewModel
 				Title = task.Name,
 				ToolTip = toolTop,
 				Id = task.Id,
-				ChildNodes = task.Children.Select(value => value.Id).ToList(),
+				ChildNodes = [.. task.Children.Select(value => value.Id)],
 				Position = position,
 			};
 

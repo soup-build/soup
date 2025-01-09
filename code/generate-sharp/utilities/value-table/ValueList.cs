@@ -21,7 +21,7 @@ public class ValueList : IEnumerable, IEnumerable<Value>
 
 	public ValueList(IEnumerable<Value> collection)
 	{
-		this.impl = new List<Value>(collection);
+		this.impl = [.. collection];
 	}
 
 	public Value this[int index] => this.impl[index];
@@ -40,7 +40,7 @@ public class ValueList : IEnumerable, IEnumerable<Value>
 
 	public ValueList Clone()
 	{
-		return new ValueList(this.impl);
+		return [.. this.impl];
 	}
 
 	public IEnumerator<Value> GetEnumerator()

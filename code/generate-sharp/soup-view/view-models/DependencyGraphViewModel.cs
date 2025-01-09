@@ -127,7 +127,7 @@ public class DependencyGraphViewModel : ContentPaneViewModel
 				Title = title,
 				ToolTip = toolTip,
 				Id = (uint)package.Id,
-				ChildNodes = GetChildren(package.Dependencies, packageProvider).Select(value => (uint)value.Id).ToList(),
+				ChildNodes = [.. GetChildren(package.Dependencies, packageProvider).Select(value => (uint)value.Id)],
 				Position = nodePositions[package],
 			};
 

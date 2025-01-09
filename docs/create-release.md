@@ -6,11 +6,30 @@ Ensure that the client build number is updated in Recipe.sml, VersionCommand.h a
 Create a PR with this change.
 
 ## Build Windows Release
+
+Install WIX
+```
+dotnet tool install --global wix
+```
+
+Build Release
 ```
 ./scripts/windows/build.cmd Release
+```
+
+Sign Runtime
+```
 ./scripts/windows/soup-release.cmd version
 ./scripts/windows/sign-runtime.cmd
+```
+
+Create the release
+```
 ./scripts/windows/release.cmd
+```
+
+Sign installer
+```
 ./scripts/windows/sign-installer.cmd
 ```
 
