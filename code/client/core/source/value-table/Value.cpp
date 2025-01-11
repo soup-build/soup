@@ -2,9 +2,7 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#ifdef SOUP_BUILD
 module;
-#endif
 
 #include <chrono>
 #include <iostream>
@@ -15,11 +13,7 @@ module;
 #include <variant>
 #include <vector>
 
-#ifdef SOUP_BUILD
 module Soup.Core;
-#else
-#include "Value.h"
-#endif
 
 namespace Soup::Core
 {

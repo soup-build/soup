@@ -11,10 +11,7 @@ namespace Soup::Core
 	/// A package reference object which will consist of a name version pair that
 	/// refers to a published package or a path to a local recipe
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class PackageReference
+	export class PackageReference
 	{
 	private:
 		std::optional<PackageIdentifier> _identifier;

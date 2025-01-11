@@ -7,10 +7,7 @@
 #include "recipe/PackageReference.h"
 #include "recipe/PackageName.h"
 
-#ifdef SOUP_BUILD
-export
-#endif
-namespace Soup::Core
+export namespace Soup::Core
 {
 	class PackageClosureValue
 	{

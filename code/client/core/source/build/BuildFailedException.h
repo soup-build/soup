@@ -7,12 +7,9 @@
 namespace Soup::Core
 {
 	/// <summary>
-	/// The exception thrown to indcate that a build operation has failed
+	/// The exception thrown to indicate that a build operation has failed
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class BuildFailedException : public std::exception
+	export class BuildFailedException : public std::exception
 	{
 	public:
 		/// <summary>

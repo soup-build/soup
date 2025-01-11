@@ -9,10 +9,7 @@ namespace Soup::Core
 	/// <summary>
 	/// A package owner/name that uniquely identifies a package in a single language
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class PackageName
+	export class PackageName
 	{
 	private:
 		std::optional<std::string> _owner;

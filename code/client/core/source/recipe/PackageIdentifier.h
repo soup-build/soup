@@ -10,10 +10,7 @@ namespace Soup::Core
 	/// <summary>
 	/// A package language/owner/name that uniquely identifies a package in a single build graph
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class PackageIdentifier
+	export class PackageIdentifier
 	{
 	private:
 		std::optional<std::string> _language;

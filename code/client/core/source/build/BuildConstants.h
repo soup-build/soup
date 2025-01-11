@@ -9,10 +9,7 @@ namespace Soup::Core
 	/// <summary>
 	/// The constants used throughout the build
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class BuildConstants
+	export class BuildConstants
 	{
 	public:
 		static const Path& EvaluateGraphFileName()

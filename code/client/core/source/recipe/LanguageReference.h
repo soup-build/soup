@@ -10,10 +10,7 @@ namespace Soup::Core
 	/// A language reference object which will consist of a name version pair that
 	/// refers to a published package
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class LanguageReference
+	export class LanguageReference
 	{
 	public:
 		/// <summary>
