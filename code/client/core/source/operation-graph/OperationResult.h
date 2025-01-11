@@ -12,10 +12,7 @@ namespace Soup::Core
 	/// <summary>
 	/// A node result that tacks the observed output from previous runs
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class OperationResult
+	export class OperationResult
 	{
 	public:
 		bool WasSuccessfulRun;

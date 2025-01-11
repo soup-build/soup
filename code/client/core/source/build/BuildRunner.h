@@ -25,10 +25,7 @@ namespace Soup::Core
 	/// The build runner that knows how to perform the correct build for a recipe
 	/// and all of its development and runtime dependencies
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class BuildRunner
+	export class BuildRunner
 	{
 	private:
 		// Root arguments

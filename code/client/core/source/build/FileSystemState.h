@@ -4,10 +4,7 @@
 
 #pragma once
 
-#ifdef SOUP_BUILD
-export
-#endif
-namespace Soup::Core
+export namespace Soup::Core
 {
 	using FileId = uint32_t;
 

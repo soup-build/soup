@@ -9,10 +9,7 @@
 #include "utilities/HandledException.h"
 #include "BuildConstants.h"
 
-#ifdef SOUP_BUILD
-export
-#endif
-namespace Soup::Core
+export namespace Soup::Core
 {
 	using PackageId = int;
 	using PackageGraphId = int;

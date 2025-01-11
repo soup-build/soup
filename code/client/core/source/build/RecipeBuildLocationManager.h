@@ -15,10 +15,7 @@ namespace Soup::Core
 	/// The recipe build location manager that knows how to generate the unique folder for building a 
 	/// Recipe with a given set of parameters
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class RecipeBuildLocationManager
+	export class RecipeBuildLocationManager
 	{
 	private:
 		// Known languages

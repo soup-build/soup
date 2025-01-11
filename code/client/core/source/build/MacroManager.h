@@ -9,10 +9,7 @@ namespace Soup::Core
 	/// <summary>
 	/// The macro manager handles all things macro... It just replaces stuff.
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class MacroManager
+	export class MacroManager
 	{
 	private:
 		const std::map<std::string, std::string>& _macros;

@@ -6,10 +6,7 @@
 
 namespace Soup::Core
 {
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	struct KnownLanguage
+	export struct KnownLanguage
 	{
 		KnownLanguage(
 			std::string extensionOwner,
