@@ -55,12 +55,12 @@ import CryptoPP;
 import Monitor.Host;
 import Opal;
 
+export import :HandledException;
+export import :SequenceMap;
+
 using namespace Opal;
 
 #define CLIENT_CORE_IMPLEMENTATION
-
-export import :HandledException;
-export import :SequenceMap;
 
 #include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"
