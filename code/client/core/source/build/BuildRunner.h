@@ -3,11 +3,7 @@
 // </copyright>
 
 #pragma once
-#include "DependencyTargetSet.h"
-#include "MacroManager.h"
 #include "IEvaluateEngine.h"
-#include "BuildConstants.h"
-#include "BuildFailedException.h"
 #include "PackageProvider.h"
 #include "RecipeBuildArguments.h"
 #include "RecipeBuildLocationManager.h"

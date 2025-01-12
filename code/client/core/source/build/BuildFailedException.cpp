@@ -1,8 +1,16 @@
-﻿// <copyright file="BuildFailedException.h" company="Soup">
+﻿// <copyright file="BuildFailedException.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <exception>
+
+export module Soup.Core:BuildFailedException;
+
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

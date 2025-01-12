@@ -15,7 +15,12 @@ Source: [
 	'source/value-table/Value.cpp'
 ]
 Partitions: [
+	{ Source: 'source/build/BuildConstants.cpp' }
+	{ Source: 'source/build/BuildFailedException.cpp' }
+	{ Source: 'source/build/DependencyTargetSet.cpp' }
 	{ Source: 'source/build/FileSystemState.cpp' }
+	{ Source: 'source/build/KnownLanguage.cpp' }
+	{ Source: 'source/build/MacroManager.cpp' }
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
 	{ Source: 'source/utilities/HandledException.cpp' }
 	{ Source: 'source/utilities/SequenceMap.cpp' }

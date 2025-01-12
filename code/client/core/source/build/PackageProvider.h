@@ -6,7 +6,6 @@
 #include "package-lock/PackageLockExtensions.h"
 #include "RecipeBuildArguments.h"
 #include "recipe/RecipeCache.h"
-#include "BuildConstants.h"
 
 export namespace Soup::Core
 {

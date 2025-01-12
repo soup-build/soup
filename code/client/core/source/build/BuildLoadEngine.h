@@ -7,8 +7,6 @@
 #include "RecipeBuildArguments.h"
 #include "recipe/PackageIdentifier.h"
 #include "recipe/RecipeCache.h"
-#include "BuildConstants.h"
-#include "KnownLanguage.h"
 
 namespace Soup::Core
 {

@@ -7,7 +7,6 @@
 #include "value-table/ValueTableWriter.h"
 #include "PackageProvider.h"
 #include "RecipeBuildCacheState.h"
-#include "KnownLanguage.h"
 
 namespace Soup::Core
 {

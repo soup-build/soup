@@ -55,8 +55,16 @@ import CryptoPP;
 import Monitor.Host;
 import Opal;
 
+// Build
+export import :BuildConstants;
+export import :BuildFailedException;
 export import :CommandInfo;
+export import :DependencyTargetSet;
 export import :FileSystemState;
+export import :KnownLanguage;
+export import :MacroManager;
+
+// Utilities
 export import :HandledException;
 export import :SequenceMap;
 

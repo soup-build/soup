@@ -1,8 +1,17 @@
-﻿// <copyright file="MacroManager.h" company="Soup">
+﻿// <copyright file="MacroManager.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <map>
+#include <string>
+
+export module Soup.Core:MacroManager;
+
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

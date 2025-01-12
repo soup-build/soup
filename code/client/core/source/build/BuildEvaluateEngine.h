@@ -4,7 +4,6 @@
 
 #pragma once
 #include "IEvaluateEngine.h"
-#include "BuildFailedException.h"
 #include "BuildHistoryChecker.h"
 #include "operation-graph/OperationGraph.h"
 #include "SystemAccessTracker.h"

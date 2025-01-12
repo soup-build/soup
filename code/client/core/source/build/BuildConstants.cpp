@@ -1,8 +1,14 @@
-﻿// <copyright file="BuildConstants.h" company="Soup">
+﻿// <copyright file="BuildConstants.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+export module Soup.Core:BuildConstants;
+
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
