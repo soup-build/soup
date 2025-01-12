@@ -6,7 +6,6 @@
 #include "IEvaluateEngine.h"
 #include "BuildFailedException.h"
 #include "BuildHistoryChecker.h"
-#include "FileSystemState.h"
 #include "operation-graph/OperationGraph.h"
 #include "SystemAccessTracker.h"
 

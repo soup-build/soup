@@ -11,7 +11,6 @@
 #include "PackageProvider.h"
 #include "RecipeBuildArguments.h"
 #include "RecipeBuildLocationManager.h"
-#include "FileSystemState.h"
 #include "local-user-config/LocalUserConfig.h"
 #include "operation-graph/OperationGraphManager.h"
 #include "operation-graph/OperationResultsManager.h"

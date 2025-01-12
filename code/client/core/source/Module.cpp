@@ -55,6 +55,8 @@ import CryptoPP;
 import Monitor.Host;
 import Opal;
 
+export import :CommandInfo;
+export import :FileSystemState;
 export import :HandledException;
 export import :SequenceMap;
 

@@ -15,6 +15,8 @@ Source: [
 	'source/value-table/Value.cpp'
 ]
 Partitions: [
+	{ Source: 'source/build/FileSystemState.cpp' }
+	{ Source: 'source/operation-graph/CommandInfo.cpp' }
 	{ Source: 'source/utilities/HandledException.cpp' }
 	{ Source: 'source/utilities/SequenceMap.cpp' }
 ]
