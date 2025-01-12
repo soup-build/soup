@@ -4,8 +4,6 @@
 
 #pragma once
 #include "recipe/RecipeValue.h"
-#include "recipe/PackageReference.h"
-#include "recipe/PackageName.h"
 
 export namespace Soup::Core
 {

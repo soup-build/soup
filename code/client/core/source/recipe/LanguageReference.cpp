@@ -1,8 +1,19 @@
-﻿// <copyright file="LanguageReference.h" company="Soup">
+﻿// <copyright file="LanguageReference.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <format>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+
+export module Soup.Core:LanguageReference;
+
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

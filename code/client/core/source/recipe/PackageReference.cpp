@@ -1,9 +1,22 @@
-﻿// <copyright file="PackageReference.h" company="Soup">
+﻿// <copyright file="PackageReference.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "PackageIdentifier.h"
+module;
+
+#include <optional>
+#include <format>
+#include <regex>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+
+export module Soup.Core:PackageReference;
+
+import Opal;
+import :PackageIdentifier;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -3,8 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "LanguageReference.h"
-#include "PackageReference.h"
 #include "RecipeValue.h"
 
 namespace Soup::Core

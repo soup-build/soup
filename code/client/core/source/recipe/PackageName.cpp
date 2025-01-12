@@ -1,8 +1,19 @@
-﻿// <copyright file="PackageName.h" company="Soup">
+﻿// <copyright file="PackageName.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <optional>
+#include <regex>
+#include <sstream>
+#include <string>
+
+export module Soup.Core:PackageName;
+
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -68,6 +68,9 @@ export import :MacroManager;
 export import :HandledException;
 export import :SequenceMap;
 
+// Value Table
+export import :Value;
+
 using namespace Opal;
 
 #define CLIENT_CORE_IMPLEMENTATION

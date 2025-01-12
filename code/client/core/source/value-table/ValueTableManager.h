@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "Value.h"
 #include "ValueTableReader.h"
 #include "ValueTableWriter.h"
 
