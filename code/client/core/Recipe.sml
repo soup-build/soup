@@ -14,6 +14,10 @@ Source: [
 	'source/sml/SMLParser.cpp'
 	'source/value-table/Value.cpp'
 ]
+Partitions: [
+	{ Source: 'source/utilities/HandledException.cpp' }
+	{ Source: 'source/utilities/SequenceMap.cpp' }
+]
 Dependencies: {
 	Build: [
 		'mwasplund|Soup.Test.Cpp@0'

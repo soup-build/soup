@@ -15,7 +15,6 @@
 #include "local-user-config/LocalUserConfig.h"
 #include "operation-graph/OperationGraphManager.h"
 #include "operation-graph/OperationResultsManager.h"
-#include "utilities/HandledException.h"
 #include "value-table/ValueTableManager.h"
 #include "recipe/RecipeBuildStateConverter.h"
 

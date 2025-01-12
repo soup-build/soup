@@ -7,7 +7,6 @@
 #include "RecipeBuildArguments.h"
 #include "recipe/PackageIdentifier.h"
 #include "recipe/RecipeCache.h"
-#include "utilities/HandledException.h"
 #include "BuildConstants.h"
 #include "KnownLanguage.h"
 

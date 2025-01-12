@@ -2,7 +2,11 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <exception>
+
+export module Soup.Core:HandledException;
 
 namespace Soup::Core
 {

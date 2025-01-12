@@ -59,7 +59,9 @@ using namespace Opal;
 
 #define CLIENT_CORE_IMPLEMENTATION
 
-#include "utilities/SequenceMap.h"
+export import :HandledException;
+export import :SequenceMap;
+
 #include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"
 #include "local-user-config/LocalUserConfigExtensions.h"
