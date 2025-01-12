@@ -4,7 +4,6 @@
 
 #pragma once
 #include "operation-graph/OperationGraph.h"
-#include "operation-graph/OperationResults.h"
 
 namespace Soup::Core
 {

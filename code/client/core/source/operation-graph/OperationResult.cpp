@@ -1,9 +1,18 @@
-﻿// <copyright file="OperationInfo.h" company="Soup">
+﻿// <copyright file="OperationResult.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
 
+#include <chrono>
+#include <vector>
+
+export module Soup.Core:OperationResult;
+
+import Opal;
+import :FileSystemState;
+
+using namespace Opal;
 using namespace std::chrono_literals;
 
 namespace Soup::Core

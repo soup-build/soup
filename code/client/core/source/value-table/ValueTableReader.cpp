@@ -1,8 +1,19 @@
-﻿// <copyright file="ValueTableReader.h" company="Soup">
+﻿// <copyright file="ValueTableReader.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <array>
+#include <iostream>
+#include <sstream>
+
+export module Soup.Core:ValueTableReader;
+
+import Opal;
+import :Value;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -1,10 +1,18 @@
-﻿// <copyright file="OperationResults.h" company="Soup">
+﻿// <copyright file="OperationResults.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "OperationInfo.h"
-#include "OperationResult.h"
+module;
+
+#include <map>
+
+export module Soup.Core:OperationResults;
+
+import Opal;
+import :OperationInfo;
+import :OperationResult;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

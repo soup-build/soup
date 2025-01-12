@@ -1,10 +1,21 @@
-﻿// <copyright file="OperationResultsManager.h" company="Soup">
+﻿// <copyright file="OperationResultsManager.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "OperationResultsReader.h"
-#include "OperationResultsWriter.h"
+module;
+
+#include <chrono>
+#include <memory>
+#include <stdexcept>
+
+export module Soup.Core:OperationResultsManager;
+
+import Opal;
+import :FileSystemState;
+import :OperationResultsReader;
+import :OperationResultsWriter;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "OperationInfo.h"
 
 namespace Soup::Core
 {

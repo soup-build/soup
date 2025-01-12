@@ -1,8 +1,17 @@
-﻿// <copyright file="ValueTableWriter.h" company="Soup">
+﻿// <copyright file="ValueTableWriter.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <iostream>
+
+export module Soup.Core:ValueTableWriter;
+
+import Opal;
+import :Value;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
