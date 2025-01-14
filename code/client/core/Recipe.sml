@@ -20,6 +20,7 @@ Partitions: [
 	{ Source: 'source/build/FileSystemState.cpp' }
 	{ Source: 'source/build/KnownLanguage.cpp' }
 	{ Source: 'source/build/MacroManager.cpp' }
+	{ Source: 'source/build/SystemAccessTracker.cpp' }
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
 	{ Source: 'source/recipe/LanguageReference.cpp' }
 	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
@@ -27,13 +28,7 @@ Partitions: [
 	{ Source: 'source/recipe/PackageReference.cpp', Imports: [ 'source/recipe/PackageIdentifier.cpp' ] }
 	{ Source: 'source/utilities/HandledException.cpp' }
 	{ Source: 'source/utilities/SequenceMap.cpp' }
-	{
-		Source: 'source/value-table/Value.cpp'
-		Imports: [
-			'source/recipe/LanguageReference.cpp'
-			'source/recipe/PackageReference.cpp'
-		]
-	}
+	{ Source: 'source/value-table/Value.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp' ] }
 ]
 Dependencies: {
 	Build: [

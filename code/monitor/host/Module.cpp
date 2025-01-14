@@ -3,6 +3,9 @@ module;
 #ifdef _WIN32
 #include <windows.h>
 
+#ifdef SearchPath
+#undef SearchPath
+#endif
 #ifdef CreateProcess
 #undef CreateProcess
 #endif
