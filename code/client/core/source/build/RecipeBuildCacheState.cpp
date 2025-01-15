@@ -1,8 +1,18 @@
-﻿// <copyright file="RecipeBuildCacheState.h" company="Soup">
+﻿// <copyright file="RecipeBuildCacheState.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <map>
+#include <set>
+#include <string>
+
+export module Soup.Core:RecipeBuildCacheState;
+
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

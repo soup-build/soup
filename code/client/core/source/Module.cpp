@@ -63,6 +63,7 @@ export import :DependencyTargetSet;
 export import :FileSystemState;
 export import :KnownLanguage;
 export import :MacroManager;
+export import :RecipeBuildCacheState;
 export import :SystemAccessTracker;
 
 // Utilities

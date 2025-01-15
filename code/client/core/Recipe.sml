@@ -20,6 +20,7 @@ Partitions: [
 	{ Source: 'source/build/FileSystemState.cpp' }
 	{ Source: 'source/build/KnownLanguage.cpp' }
 	{ Source: 'source/build/MacroManager.cpp' }
+	{ Source: 'source/build/RecipeBuildCacheState.cpp' }
 	{ Source: 'source/build/SystemAccessTracker.cpp' }
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
 	{ Source: 'source/recipe/LanguageReference.cpp' }
