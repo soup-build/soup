@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="cd .\&#xD;&#xA;set ide=true&#xD;&#xA;dotnet &quot;$(TargetPath)&quot;" />
+	</Target>
+	<ItemGroup>
+		<PackageReference Include="WixSharp.Core" Version="2.1.3" />
+	</ItemGroup>
+</Project>
