@@ -315,7 +315,7 @@ namespace Monitor::Linux
 					throw;
 				}
 
-				ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+				ptrace(PTRACE_TRACEME, 0, 0, 0);
 
 				std::vector<const char*> arguments;
 				arguments.push_back(m_executable.ToString().c_str());
@@ -371,6 +371,18 @@ namespace Monitor::Linux
 			return activeProcesses.at(activeProcesses.size() - 1);
 		}
 
+		bool HasProcess(
+			std::vector<ProcessTraceState>& activeProcesses,
+			pid_t processId)
+		{
+			auto result = std::find_if(
+				activeProcesses.begin(),
+				activeProcesses.end(),
+				[processId](const ProcessTraceState& value) { return value.ProcessId == processId; });
+
+			return result != activeProcesses.end();
+		}
+
 		ProcessTraceState& FindProcess(
 			std::vector<ProcessTraceState>& activeProcesses,
 			pid_t processId)
@@ -404,8 +416,6 @@ namespace Monitor::Linux
 			if (currentProcessId == -1)
 				throw std::runtime_error("Wait failed");
 
-			auto& rootProcess = FindProcess(activeProcesses, currentProcessId);
-
 			// Enable SecComp filtering
 			unsigned int ptraceOptions =
 				// Make it easier to track our SIGTRAP events
@@ -425,7 +435,7 @@ namespace Monitor::Linux
 
 			if (ptrace(PTRACE_SETOPTIONS, m_processId, 0, ptraceOptions) < 0)
 				throw std::runtime_error(std::format("ptrace PTRACE_SETOPTIONS failed {0}", errno));
-			if (ptrace(PTRACE_CONT, m_processId, NULL, NULL) < 0)
+			if (ptrace(PTRACE_CONT, m_processId, 0, 0) < 0)
 				throw std::runtime_error(std::format("ptrace PTRACE_CONT failed {0}", errno));
 
 			int eventCount = 0;
@@ -442,10 +452,7 @@ namespace Monitor::Linux
 				if (currentProcessId == -1)
 					throw std::runtime_error(std::format("Wait failed {0}", wait_errno));
 
-				bool continueSysCall = false;
-				bool exited = WIFEXITED(status);
-
-				if (exited)
+				if (WIFEXITED(status))
 				{
 					int exitCode = WEXITSTATUS(status);
 					auto& currentProcess = FindProcess(activeProcesses, currentProcessId);
@@ -463,6 +470,9 @@ namespace Monitor::Linux
 				}
 				else if (WIFSTOPPED(status))
 				{
+					__ptrace_request continueRequest = PTRACE_CONT;
+					int continueSignal = 0;
+
 					auto signal = WSTOPSIG(status);
 					DebugTrace("Signal:", signal);
 					switch (signal)
@@ -503,8 +513,9 @@ namespace Monitor::Linux
 									{
 										if (!currentProcess.InSystemCall)
 										{
-											// Signal the system call to continue so we can monitor the return result
-											continueSysCall = true;
+											// Continue to the end of the next system call 
+											// so we can monitor the return result
+											continueRequest = PTRACE_SYSCALL;
 											currentProcess.InSystemCall = true;
 										} 
 										else
@@ -583,44 +594,39 @@ namespace Monitor::Linux
 						}
 						case SIGSTOP:
 						{
-							// Trace clone
 							DebugTrace("SIGSTOP");
-							InitializeProcess(activeProcesses, currentProcessId);
-							break;
-						}
-						case SIGCHLD:
-						{
-							// Child exit
-							DebugTrace("SIGCHLD");
+
+							// Check if this is the signal that a child process has started
+							if (HasProcess(activeProcesses, currentProcessId))
+							{
+								// Tracee received or was stopped by a signal
+								// Restart the tracee with that signal
+								continueSignal = signal;
+							}
+							else
+							{
+								// Ignore the signal and initialize the new process
+								DebugTrace("Initialize Process");
+								InitializeProcess(activeProcesses, currentProcessId);
+							}
+
 							break;
 						}
 						default:
 						{
-							Log::Warning("WARNING: Unknown Signal");
+							DebugTrace("Unknown Signal", signal);
+
+							// Tracee received or was stopped by a signal
+							// Restart the tracee with that signal
+							continueSignal = signal;
+
 							break;
 						}
 					}
-				}
-				else
-				{
-					Log::Warning("WARNING: Unknown Status");
-					break;
-				}
 
-				if (!exited)
-				{
-					if (continueSysCall)
-					{
-						DebugTrace("PTRACE_SYSCALL");
-						if (ptrace(PTRACE_SYSCALL, currentProcessId, 0, 0) < 0)
-							throw std::runtime_error(std::format("ptrace PTRACE_SYSCALL failed {0}", errno));
-					}
-					else
-					{
-						DebugTrace("PTRACE_CONT");
-						if (ptrace(PTRACE_CONT, currentProcessId, 0, 0) < 0)
-							throw std::runtime_error(std::format("ptrace PTRACE_CONT failed {0}", errno));
-					}
+					DebugTrace("CONTINUE");
+					if (ptrace(continueRequest, currentProcessId, 0, (unsigned long)continueSignal) < 0)
+						throw std::runtime_error(std::format("ptrace PTRACE_SYSCALL failed {0}", errno));
 
 					if (eventCount > 100)
 					{
@@ -631,6 +637,11 @@ namespace Monitor::Linux
 
 						eventCount = 0;
 					}
+				}
+				else
+				{
+					Log::Warning("WARNING: Unknown Status {0}", status);
+					break;
 				}
 			}
 		}
