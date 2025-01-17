@@ -1,5 +1,6 @@
 // Include all standard library headers in the global module
 #include <filesystem>
+#include <format>
 #include <memory>
 #include <string>
 
@@ -106,17 +107,29 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 		// Setup the real services
 		System::ISystem::Register(std::make_shared<System::STLSystem>());
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
+		#if defined(_WIN32)
+			System::IProcessManager::Register(std::make_shared<System::WindowsProcessManager>());
+		#elif defined(__linux__)
+			System::IProcessManager::Register(std::make_shared<System::LinuxProcessManager>());
+		#else
+			#error "Unknown Platform"
+		#endif
 
 		auto globalParameters = ValueTable();
 
+		// Find the built in folder root
+		auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
+		auto processDirectory = processFilename.GetParent();
+		auto rootDirectory = processDirectory.GetParent();
+		auto builtInPackageDirectory = rootDirectory + Path("./BuiltIn/");
+
 		// Load user config state
-		auto builtInPackageDirectory = Path("C:/Program Files/SoupBuild/Soup/Soup/BuiltIn/");
 		auto userDataPath = BuildEngine::GetSoupUserDataPath();
 		
 		auto recipeCache = RecipeCache();
 
 		auto packageProvider = BuildEngine::LoadBuildGraph(
-			builtInPackageDirectory,
+			builtInPackageDirectory, 
 			workingDirectory,
 			globalParameters,
 			userDataPath,
@@ -139,18 +152,18 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 		auto value = jsonResult.dump();
 		return value;
 	}
-	catch (const HandledException&)
+	catch (const HandledException& ex)
 	{
 		json11::Json jsonResult = json11::Json::object({
-			{ "Message", "FAILED" },
+			{ "Message", std::format("HANDLED ERROR: {0}", ex.GetExitCode()) },
 			{ "IsSuccess", false },
 		});
 		return jsonResult.dump();
 	}
-	catch(const std::exception& e)
+	catch(const std::exception& ex)
 	{
 		json11::Json jsonResult = json11::Json::object({
-			{ "Message", e.what() },
+			{ "Message", ex.what() },
 			{ "IsSuccess", false },
 		});
 		return jsonResult.dump();

@@ -17,5 +17,5 @@ soup target
 
 Print the target directory for a release Recipe in a different directory with the release flavor.
 ```
-soup target ./Code/MyProject/ -flavor release
+soup target ./Code/MyProject/ -flavor Release
 ```

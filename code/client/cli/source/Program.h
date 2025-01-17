@@ -61,7 +61,7 @@ namespace Soup::Client
 					System::IProcessManager::Register(std::make_shared<System::LinuxProcessManager>());
 					Monitor::IMonitorProcessManager::Register(std::make_shared<Monitor::Linux::LinuxMonitorProcessManager>());
 				#else
-				#error "Unknown Platform"
+					#error "Unknown Platform"
 				#endif
 				IO::IConsoleManager::Register(std::make_shared<IO::SystemConsoleManager>());
 
