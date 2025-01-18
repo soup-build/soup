@@ -7,6 +7,9 @@
 #ifdef _WIN32
 #include <combaseapi.h>
 #define SOUP_TOOLS_API __declspec(dllexport)
+#ifdef GetCurrentDirectory
+#undef GetCurrentDirectory
+#endif
 #else
 #define SOUP_TOOLS_API
 #define CoTaskMemAlloc(p) malloc(p)

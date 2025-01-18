@@ -154,7 +154,7 @@ public class OperationGraphViewModel : ContentPaneViewModel
 		string soupExe;
 		if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
 		{
-			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Soup/Soup.exe");
+			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Soup.exe");
 		}
 		else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
 		{
