@@ -19,5 +19,5 @@ soup run
 
 Run a release Recipe in a different directory and pass in a single parameter to the child executable.
 ```
-soup run ./Code/MyProject/ -flavor release -args MyParameter
+soup run ./Code/MyProject/ -flavor Release -args MyParameter
 ```

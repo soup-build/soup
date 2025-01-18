@@ -8,6 +8,11 @@ SET OutputDir=%RootDir%\out
 SET ClientCLIDir=%CodeDir%\client\cli
 SET MonitorClientDir=%CodeDir%\monitor\client
 
+REM - Restore the client
+echo soup restore %ClientCLIDir%
+call soup restore %ClientCLIDir%
+if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
+
 REM - Build each version of the monitor client dll
 echo soup build %MonitorClientDir% -architecture x64 -flavor %Flavor%
 call soup build %MonitorClientDir% -architecture x64 -flavor %Flavor%

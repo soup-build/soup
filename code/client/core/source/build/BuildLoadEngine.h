@@ -1210,7 +1210,7 @@ namespace Soup::Core
 					Log::HighPriority("The installation may be corrupted");
 
 					// Nothing we can do, exit
-					throw HandledException(1123124);
+					throw HandledException(1723124);
 				}
 
 				// Built in packages do not load the lock
