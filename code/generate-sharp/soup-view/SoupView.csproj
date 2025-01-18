@@ -15,7 +15,7 @@
 		<SoupConfigHash>OZlIVjblazFuKXg-raWUNoGEnG4</SoupConfigHash>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<SoupConfigHash>ltq7cGwk0Rbgy1I-3mCMDDE5yM</SoupConfigHash>
+		<SoupConfigHash>Oltq7cGwk0Rbgy1I-3mCMDDE5yM</SoupConfigHash>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(OS)'=='Windows_NT'">
 		<SoupToolsDll>SoupTools.dll</SoupToolsDll>
