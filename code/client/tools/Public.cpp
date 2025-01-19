@@ -1,11 +1,15 @@
 // Include all standard library headers in the global module
 #include <filesystem>
+#include <format>
 #include <memory>
 #include <string>
 
 #ifdef _WIN32
 #include <combaseapi.h>
 #define SOUP_TOOLS_API __declspec(dllexport)
+#ifdef GetCurrentDirectory
+#undef GetCurrentDirectory
+#endif
 #else
 #define SOUP_TOOLS_API
 #define CoTaskMemAlloc(p) malloc(p)
@@ -88,6 +92,7 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 	{
 		// Setup the filter
 		auto defaultTypes =
+			static_cast<uint32_t>(TraceEventFlag::Information) |
 			static_cast<uint32_t>(TraceEventFlag::HighPriority) |
 			static_cast<uint32_t>(TraceEventFlag::Warning) |
 			static_cast<uint32_t>(TraceEventFlag::Error) |
@@ -109,14 +114,17 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 
 		auto globalParameters = ValueTable();
 
+		// Find the built in folder root
+		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
+		auto builtInPackageDirectory = rootDirectory + Path("./BuiltIn/");
+
 		// Load user config state
-		auto builtInPackageDirectory = Path("C:/Program Files/SoupBuild/Soup/Soup/BuiltIn/");
 		auto userDataPath = BuildEngine::GetSoupUserDataPath();
 		
 		auto recipeCache = RecipeCache();
 
 		auto packageProvider = BuildEngine::LoadBuildGraph(
-			builtInPackageDirectory,
+			builtInPackageDirectory, 
 			workingDirectory,
 			globalParameters,
 			userDataPath,
@@ -139,18 +147,18 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 		auto value = jsonResult.dump();
 		return value;
 	}
-	catch (const HandledException&)
+	catch (const HandledException& ex)
 	{
 		json11::Json jsonResult = json11::Json::object({
-			{ "Message", "FAILED" },
+			{ "Message", std::format("HANDLED ERROR: {0}", ex.GetExitCode()) },
 			{ "IsSuccess", false },
 		});
 		return jsonResult.dump();
 	}
-	catch(const std::exception& e)
+	catch(const std::exception& ex)
 	{
 		json11::Json jsonResult = json11::Json::object({
-			{ "Message", e.what() },
+			{ "Message", ex.what() },
 			{ "IsSuccess", false },
 		});
 		return jsonResult.dump();

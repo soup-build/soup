@@ -66,13 +66,17 @@ namespace Soup::Client
 			#error "Unknown platform"
 			#endif
 
+			// Find the folder root
+			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto processDirectory = processFilename.GetParent();
+
 			// Execute the requested target
 			Log::Info("CreateProcess");
 			Log::Diag(executable.ToString());
 			auto process = System::IProcessManager::Current().CreateProcess(
 				executable,
 				std::move(arguments),
-				workingDirectory,
+				processDirectory,
 				false);
 			process->Start();
 			process->WaitForExit();
