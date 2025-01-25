@@ -66,6 +66,12 @@ export import :MacroManager;
 export import :RecipeBuildCacheState;
 export import :SystemAccessTracker;
 
+// Recipe
+export import :LanguageReference;
+export import :PackageIdentifier;
+export import :PackageName;
+export import :PackageReference;
+
 // Utilities
 export import :HandledException;
 export import :SequenceMap;
