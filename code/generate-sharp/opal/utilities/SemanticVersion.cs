@@ -205,16 +205,22 @@ public class SemanticVersion : IEquatable<SemanticVersion>
 	/// <param name="rhs">The right hand side.</param>
 	public static bool operator <(SemanticVersion lhs, SemanticVersion rhs)
 	{
-		return lhs.Major < rhs.Major ||
-			lhs.Minor < rhs.Minor ||
-			lhs.Patch < rhs.Patch;
+		if (lhs.Major != rhs.Major)
+			return lhs.Major < rhs.Major;
+		else if (lhs.Minor != rhs.Minor)
+			return lhs.Minor < rhs.Minor;
+		else
+			return lhs.Patch < rhs.Patch;
 	}
 
 	public static bool operator >(SemanticVersion lhs, SemanticVersion rhs)
 	{
-		return lhs.Major > rhs.Major ||
-			lhs.Minor > rhs.Minor ||
-			lhs.Patch > rhs.Patch;
+		if (lhs.Major != rhs.Major)
+			return lhs.Major > rhs.Major;
+		else if (lhs.Minor != rhs.Minor)
+			return lhs.Minor > rhs.Minor;
+		else
+			return lhs.Patch > rhs.Patch;
 	}
 
 	/// <summary>
