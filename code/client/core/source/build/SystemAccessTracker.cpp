@@ -1,4 +1,18 @@
-﻿#pragma once
+﻿// <copyright file="SystemAccessTracker.cpp" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
+module;
+
+#include <set>
+#include <string>
+
+export module Soup.Core:SystemAccessTracker;
+
+import Opal;
+import Monitor.Host;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

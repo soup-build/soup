@@ -3,15 +3,10 @@
 // </copyright>
 
 #pragma once
-#include "build/FileSystemState.h"
-#include "CommandInfo.h"
 
 using namespace std::chrono_literals;
 
-#ifdef SOUP_BUILD
-export
-#endif
-namespace Soup::Core
+export namespace Soup::Core
 {
 	using OperationId = uint32_t;
 

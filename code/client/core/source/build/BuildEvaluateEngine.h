@@ -4,11 +4,8 @@
 
 #pragma once
 #include "IEvaluateEngine.h"
-#include "BuildFailedException.h"
 #include "BuildHistoryChecker.h"
-#include "FileSystemState.h"
 #include "operation-graph/OperationGraph.h"
-#include "SystemAccessTracker.h"
 
 namespace Soup::Core
 {
@@ -118,10 +115,7 @@ namespace Soup::Core
 	/// <summary>
 	/// The core build evaluation engine that knows how to perform a build from a provided Operation Graph.
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class BuildEvaluateEngine : public IEvaluateEngine
+	export class BuildEvaluateEngine : public IEvaluateEngine
 	{
 	private:
 		bool _forceRebuild;

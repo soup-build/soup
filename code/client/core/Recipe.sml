@@ -12,7 +12,24 @@ Interface: 'source/Module.cpp'
 Source: [
 	'source/recipe/LanguageReferenceParser.cpp'
 	'source/sml/SMLParser.cpp'
-	'source/value-table/Value.cpp'
+]
+Partitions: [
+	{ Source: 'source/build/BuildConstants.cpp' }
+	{ Source: 'source/build/BuildFailedException.cpp' }
+	{ Source: 'source/build/DependencyTargetSet.cpp' }
+	{ Source: 'source/build/FileSystemState.cpp' }
+	{ Source: 'source/build/KnownLanguage.cpp' }
+	{ Source: 'source/build/MacroManager.cpp' }
+	{ Source: 'source/build/RecipeBuildCacheState.cpp' }
+	{ Source: 'source/build/SystemAccessTracker.cpp' }
+	{ Source: 'source/operation-graph/CommandInfo.cpp' }
+	{ Source: 'source/recipe/LanguageReference.cpp' }
+	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
+	{ Source: 'source/recipe/PackageName.cpp' }
+	{ Source: 'source/recipe/PackageReference.cpp', Imports: [ 'source/recipe/PackageIdentifier.cpp' ] }
+	{ Source: 'source/utilities/HandledException.cpp' }
+	{ Source: 'source/utilities/SequenceMap.cpp' }
+	{ Source: 'source/value-table/Value.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp' ] }
 ]
 Dependencies: {
 	Build: [

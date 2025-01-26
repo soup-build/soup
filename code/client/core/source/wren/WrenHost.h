@@ -7,10 +7,7 @@
 #include "sml/SML.h"
 #include "WrenHelpers.h"
 
-#ifdef SOUP_BUILD
-export
-#endif
-namespace Soup::Core
+export namespace Soup::Core
 {
 	class WrenHost
 	{
@@ -59,7 +56,7 @@ namespace Soup::Core
 			{
 				std::ifstream bundlesFile(_bundlesFile.value().ToString());
 				if (!bundlesFile.is_open())
-					throw std::runtime_error("Bundles does not exist");
+					throw std::runtime_error(std::format("Bundles does not exist: {0}", _bundlesFile.value().ToString()));
 
 				auto bundlesDocument = SMLDocument::Parse(bundlesFile);
 				if (!bundlesDocument.GetRoot().Contains("Bundles"))

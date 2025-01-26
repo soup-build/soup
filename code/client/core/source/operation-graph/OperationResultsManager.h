@@ -11,10 +11,7 @@ namespace Soup::Core
 	/// <summary>
 	/// The operation results manager
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class OperationResultsManager
+	export class OperationResultsManager
 	{
 	public:
 		/// <summary>

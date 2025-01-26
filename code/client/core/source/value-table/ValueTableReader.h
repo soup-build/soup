@@ -3,17 +3,13 @@
 // </copyright>
 
 #pragma once
-#include "Value.h"
 
 namespace Soup::Core
 {
 	/// <summary>
 	/// The value table state reader
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class ValueTableReader
+	export class ValueTableReader
 	{
 	private:
 		// Binary Value Table file format

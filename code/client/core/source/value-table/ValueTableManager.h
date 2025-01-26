@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "Value.h"
 #include "ValueTableReader.h"
 #include "ValueTableWriter.h"
 
@@ -12,10 +11,7 @@ namespace Soup::Core
 	/// <summary>
 	/// The Value Table state manager
 	/// </summary>
-	#ifdef SOUP_BUILD
-	export
-	#endif
-	class ValueTableManager
+	export class ValueTableManager
 	{
 	public:
 		/// <summary>
