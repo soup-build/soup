@@ -58,18 +58,19 @@ import Opal;
 // Build
 export import :BuildConstants;
 export import :BuildFailedException;
+export import :CommandInfo;
 export import :DependencyTargetSet;
 export import :FileSystemState;
 export import :KnownLanguage;
 export import :MacroManager;
+export import :RecipeBuildCacheState;
+export import :SystemAccessTracker;
 
-// Operation Graph
-export import :CommandInfo;
-export import :OperationInfo;
-export import :OperationResults;
-export import :OperationResultsManager;
-export import :OperationResultsReader;
-export import :OperationResultsWriter;
+// Recipe
+export import :LanguageReference;
+export import :PackageIdentifier;
+export import :PackageName;
+export import :PackageReference;
 
 // Utilities
 export import :HandledException;
@@ -77,8 +78,6 @@ export import :SequenceMap;
 
 // Value Table
 export import :Value;
-export import :ValueTableReader;
-export import :ValueTableWriter;
 
 using namespace Opal;
 

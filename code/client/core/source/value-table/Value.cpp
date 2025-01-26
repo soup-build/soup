@@ -4,6 +4,7 @@
 
 module;
 
+#include <cstdint>
 #include <map>
 #include <stdexcept>
 #include <string>

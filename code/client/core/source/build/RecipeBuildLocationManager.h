@@ -5,7 +5,6 @@
 #pragma once
 #include "recipe/Recipe.h"
 #include "PackageProvider.h"
-#include "RecipeBuildCacheState.h"
 
 namespace Soup::Core
 {

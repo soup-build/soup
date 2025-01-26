@@ -1,13 +1,18 @@
 #!/bin/bash
-echo "Build SoupView!"
+echo "Build SoupTools!"
 
 # Stop on first error
 set -e
 
+FLAVOR="$1"
 SCRIPTS_DIR=$(dirname "$0")
 CODE_DIR=$SCRIPTS_DIR/../../code
 TOOLS_DIR=$CODE_DIR/client/tools
 
+# Restore tools
+echo soup restore $TOOLS_DIR
+eval soup restore $TOOLS_DIR
+
 # Build tools
-echo soup build $TOOLS_DIR -flavor Release
-eval soup build $TOOLS_DIR -flavor Release
+echo soup build $TOOLS_DIR -flavor $FLAVOR
+eval soup build $TOOLS_DIR -flavor $FLAVOR

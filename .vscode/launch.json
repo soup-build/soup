@@ -13,6 +13,17 @@
       "console": "internalConsole"
     },
     {
+        "name": "Debug Soup View",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "",
+        "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
+        "args": [ "${workspaceFolder}/code/client/cli/Recipe.sml" ],
+        "cwd": "${workspaceFolder}/out/run",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+    },
+    {
       "name": "Debug Soup",
       "type": "cppdbg",
       "request": "launch",

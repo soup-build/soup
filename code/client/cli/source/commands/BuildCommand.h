@@ -59,11 +59,11 @@ namespace Soup::Client
 
 			// Platform specific defaults
 			#if defined(_WIN32)
-			arguments.HostPlatform = "Windows";
+				arguments.HostPlatform = "Windows";
 			#elif defined(__linux__)
-			arguments.HostPlatform = "Linux";
+				arguments.HostPlatform = "Linux";
 			#else
-			#error "Unknown Platform"
+				#error "Unknown Platform"
 			#endif
 
 			// Process well known parameters

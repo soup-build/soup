@@ -151,7 +151,21 @@ public class OperationGraphViewModel : ContentPaneViewModel
 
 	private async Task<Path> GetTargetPathAsync(Path packageDirectory)
 	{
-		var processInfo = new ProcessStartInfo("C:\\Program Files\\SoupBuild\\Soup\\Soup\\Soup.exe", $"target {packageDirectory}")
+		string soupExe;
+		if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+		{
+			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Soup.exe");
+		}
+		else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+		{
+			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "soup");
+		}
+		else
+		{
+			throw new NotSupportedException("Unknown OS Platform");
+		}
+
+		var processInfo = new ProcessStartInfo(soupExe, $"target {packageDirectory}")
 		{
 			RedirectStandardOutput = true,
 			CreateNoWindow = true,
