@@ -7,7 +7,7 @@ module;
 #include <memory>
 #include <stdexcept>
 
-export module Soup.Core:ValueTableReader;
+export module Soup.Core:ValueTableManager;
 
 import Opal;
 import :Value;

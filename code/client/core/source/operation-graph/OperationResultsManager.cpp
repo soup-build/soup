@@ -6,12 +6,14 @@ module;
 
 #include <chrono>
 #include <memory>
+#include <set>
 #include <stdexcept>
 
 export module Soup.Core:OperationResultsManager;
 
 import Opal;
 import :FileSystemState;
+import :OperationResults;
 import :OperationResultsReader;
 import :OperationResultsWriter;
 

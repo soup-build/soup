@@ -4,6 +4,7 @@
 
 module;
 
+#include <cstdint>
 #include <iostream>
 
 export module Soup.Core:ValueTableWriter;

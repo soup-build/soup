@@ -5,13 +5,18 @@
 module;
 
 #include <array>
+#include <cstring>
+#include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 export module Soup.Core:ValueTableReader;
 
 import Opal;
 import :Value;
+import :LanguageReference;
+import :PackageReference;
 
 using namespace Opal;
 

@@ -6,11 +6,16 @@ module;
 
 #include <array>
 #include <chrono>
+#include <cstring>
+#include <unordered_map>
+#include <vector>
 
 export module Soup.Core:OperationResultsReader;
 
 import Opal;
 import :FileSystemState;
+import :OperationInfo;
+import :OperationResult;
 import :OperationResults;
 
 using namespace Opal;

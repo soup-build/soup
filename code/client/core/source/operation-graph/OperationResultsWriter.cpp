@@ -11,6 +11,8 @@ export module Soup.Core:OperationResultsWriter;
 
 import Opal;
 import :FileSystemState;
+import :OperationInfo;
+import :OperationResult;
 import :OperationResults;
 
 using namespace Opal;
