@@ -1,9 +1,20 @@
-﻿// <copyright file="LocalUserConfig.h" company="Soup">
+﻿// <copyright file="LocalUserConfig.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "SDKConfig.h"
+module;
+
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+export module Soup.Core:LocalUserConfig;
+
+import Opal;
+import :RecipeValue;
+import :SDKConfig;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -7,7 +7,6 @@
 #include "PackageProvider.h"
 #include "RecipeBuildArguments.h"
 #include "RecipeBuildLocationManager.h"
-#include "local-user-config/LocalUserConfig.h"
 #include "recipe/RecipeBuildStateConverter.h"
 
 namespace Soup::Core

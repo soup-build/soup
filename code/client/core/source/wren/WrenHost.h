@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "sml/SML.h"
 #include "WrenHelpers.h"
 
 export namespace Soup::Core

@@ -1,8 +1,19 @@
-﻿// <copyright file="SDKConfig.h" company="Soup">
+﻿// <copyright file="SDKConfig.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+export module Soup.Core:SDKConfig;
+
+import Opal;
+import :RecipeValue;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

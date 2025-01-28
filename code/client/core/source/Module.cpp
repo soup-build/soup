@@ -65,6 +65,10 @@ export import :MacroManager;
 export import :RecipeBuildCacheState;
 export import :SystemAccessTracker;
 
+// Local User Config
+export import :LocalUserConfig;
+export import :SDKConfig;
+
 // Operation Graph
 export import :CommandInfo;
 export import :OperationGraph;
@@ -87,8 +91,12 @@ export import :PackageIdentifier;
 export import :PackageName;
 export import :PackageReference;
 export import :Recipe;
+export import :RecipeSML;
 export import :RecipeValue;
 export import :RootRecipe;
+
+// SML
+export import :SML;
 
 // Utilities
 export import :HandledException;
@@ -101,8 +109,6 @@ export import :ValueTableReader;
 export import :ValueTableWriter;
 
 using namespace Opal;
-
-#define CLIENT_CORE_IMPLEMENTATION
 
 #include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"

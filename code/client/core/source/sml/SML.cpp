@@ -1,8 +1,24 @@
-﻿// <copyright file="SML.h" company="Soup">
+﻿// <copyright file="SML.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <variant>
+#include <vector>
+
+export module Soup.Core:SML;
+
+import Opal;
+import :LanguageReference;
+import :PackageReference;
+import :SequenceMap;
+
+using namespace Opal;
 
 export namespace Soup::Core
 {
@@ -285,7 +301,6 @@ export namespace Soup::Core
 		return _value;
 	}
 
-#ifdef CLIENT_CORE_IMPLEMENTATION
 	std::ostream& operator<<(std::ostream& stream, const SMLDocument& document)
 	{
 		for (const auto& [key, value] : document.GetRoot().GetValue())
@@ -375,5 +390,4 @@ export namespace Soup::Core
 
 		return stream;
 	}
-#endif
 }

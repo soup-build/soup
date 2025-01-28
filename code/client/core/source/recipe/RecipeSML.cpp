@@ -1,9 +1,25 @@
-﻿// <copyright file="RecipeSML.h" company="Soup">
+﻿// <copyright file="RecipeSML.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "sml/SML.h"
+module;
+
+#include <format>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+export module Soup.Core:RecipeSML;
+
+import Opal;
+import :LanguageReference;
+import :PackageReference;
+import :RecipeValue;
+import :SequenceMap;
+import :SML;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
