@@ -34,6 +34,7 @@ Partitions: [
 	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
 	{ Source: 'source/recipe/PackageName.cpp' }
 	{ Source: 'source/recipe/PackageReference.cpp', Imports: [ 'source/recipe/PackageIdentifier.cpp' ] }
+	{ Source: 'source/recipe/RecipeValue.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp', 'source/utilities/SequenceMap.cpp' ] }
 	{ Source: 'source/utilities/HandledException.cpp' }
 	{ Source: 'source/utilities/SequenceMap.cpp' }
 	{ Source: 'source/value-table/Value.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp' ] }

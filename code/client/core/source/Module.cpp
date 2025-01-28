@@ -77,11 +77,12 @@ export import :OperationResultsWriter;
 // Package
 export import :PackageManager;
 
-// Recipe
+// Recipe 
 export import :LanguageReference;
 export import :PackageIdentifier;
 export import :PackageName;
 export import :PackageReference;
+export import :RecipeValue;
 
 // Utilities
 export import :HandledException;

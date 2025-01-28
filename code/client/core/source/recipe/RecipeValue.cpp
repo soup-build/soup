@@ -1,8 +1,22 @@
-﻿// <copyright file="RecipeValue.h" company="Soup">
+﻿// <copyright file="RecipeValue.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <stdexcept>
+#include <string>
+#include <variant>
+#include <vector>
+
+export module Soup.Core:RecipeValue;
+
+import Opal;
+import :LanguageReference;
+import :PackageReference;
+import :SequenceMap;
+
+using namespace Opal;
 
 export namespace Soup::Core
 {
