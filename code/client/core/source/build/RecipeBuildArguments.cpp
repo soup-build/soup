@@ -1,8 +1,18 @@
-﻿// <copyright file="RecipeBuildArguments.h" company="Soup">
+﻿// <copyright file="RecipeBuildArguments.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <map>
+#include <string>
+
+export module Soup.Core:RecipeBuildArguments;
+
+import Opal;
+import :Value;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

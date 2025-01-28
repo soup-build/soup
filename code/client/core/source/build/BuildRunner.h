@@ -5,7 +5,6 @@
 #pragma once
 #include "IEvaluateEngine.h"
 #include "PackageProvider.h"
-#include "RecipeBuildArguments.h"
 #include "RecipeBuildLocationManager.h"
 #include "recipe/RecipeBuildStateConverter.h"
 

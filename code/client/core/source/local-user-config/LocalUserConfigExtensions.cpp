@@ -1,8 +1,18 @@
-﻿// <copyright file="LocalUserConfigExtensions.h" company="Soup">
+﻿// <copyright file="LocalUserConfigExtensions.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <memory>
+
+export module Soup.Core:LocalUserConfigExtensions;
+
+import Opal;
+import :LocalUserConfig;
+import :RecipeSML;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

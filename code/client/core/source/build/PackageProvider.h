@@ -4,7 +4,6 @@
 
 #pragma once
 #include "package-lock/PackageLockExtensions.h"
-#include "RecipeBuildArguments.h"
 #include "recipe/RecipeCache.h"
 
 export namespace Soup::Core

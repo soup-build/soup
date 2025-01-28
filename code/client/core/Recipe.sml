@@ -19,10 +19,12 @@ Partitions: [
 	{ Source: 'source/build/DependencyTargetSet.cpp' }
 	{ Source: 'source/build/FileSystemState.cpp' }
 	{ Source: 'source/build/KnownLanguage.cpp' }
+	{ Source: 'source/build/RecipeBuildArguments.cpp', Imports: [ 'source/value-table/Value.cpp' ] }
 	{ Source: 'source/build/MacroManager.cpp' }
 	{ Source: 'source/build/RecipeBuildCacheState.cpp' }
 	{ Source: 'source/build/SystemAccessTracker.cpp' }
 	{ Source: 'source/local-user-config/LocalUserConfig.cpp', Imports: [ 'source/local-user-config/SDKConfig.cpp' ] }
+	{ Source: 'source/local-user-config/LocalUserConfigExtensions.cpp', Imports: [ 'source/local-user-config/LocalUserConfig.cpp', 'source/recipe/RecipeSML.cpp' ] }
 	{ Source: 'source/local-user-config/SDKConfig.cpp', Imports: [ 'source/recipe/RecipeValue.cpp' ] }
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
 	{ Source: 'source/operation-graph/OperationGraph.cpp', Imports: [ 'source/operation-graph/CommandInfo.cpp', 'source/operation-graph/OperationInfo.cpp' ] }

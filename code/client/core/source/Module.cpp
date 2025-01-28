@@ -62,11 +62,13 @@ export import :DependencyTargetSet;
 export import :FileSystemState;
 export import :KnownLanguage;
 export import :MacroManager;
+export import :RecipeBuildArguments;
 export import :RecipeBuildCacheState;
 export import :SystemAccessTracker;
 
 // Local User Config
 export import :LocalUserConfig;
+export import :LocalUserConfigExtensions;
 export import :SDKConfig;
 
 // Operation Graph
@@ -112,6 +114,5 @@ using namespace Opal;
 
 #include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"
-#include "local-user-config/LocalUserConfigExtensions.h"
 #include "wren/WrenHost.h"
 #include "wren/WrenValueTable.h"

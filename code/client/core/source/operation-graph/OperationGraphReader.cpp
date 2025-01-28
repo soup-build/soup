@@ -4,6 +4,7 @@
 
 module;
 
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
