@@ -8,7 +8,6 @@
 #include "RecipeBuildArguments.h"
 #include "RecipeBuildLocationManager.h"
 #include "local-user-config/LocalUserConfig.h"
-#include "operation-graph/OperationGraphManager.h"
 #include "recipe/RecipeBuildStateConverter.h"
 
 namespace Soup::Core

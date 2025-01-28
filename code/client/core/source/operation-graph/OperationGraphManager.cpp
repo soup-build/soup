@@ -1,10 +1,21 @@
-﻿// <copyright file="OperationGraphManager.h" company="Soup">
+﻿// <copyright file="OperationGraphManager.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "OperationGraphReader.h"
-#include "OperationGraphWriter.h"
+module;
+
+#include <memory>
+#include <set>
+
+export module Soup.Core:OperationGraphManager;
+
+import Opal;
+import :FileSystemState;
+import :OperationGraph;
+import :OperationGraphReader;
+import :OperationGraphWriter;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

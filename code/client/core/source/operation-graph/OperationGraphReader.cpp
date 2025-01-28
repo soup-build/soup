@@ -1,8 +1,24 @@
-﻿// <copyright file="OperationGraphReader.h" company="Soup">
+﻿// <copyright file="OperationGraphReader.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+export module Soup.Core:OperationGraphReader;
+
+import Opal;
+import :CommandInfo;
+import :FileSystemState;
+import :OperationGraph;
+import :OperationInfo;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

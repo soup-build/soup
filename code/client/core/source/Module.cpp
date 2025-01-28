@@ -68,6 +68,9 @@ export import :SystemAccessTracker;
 // Operation Graph
 export import :CommandInfo;
 export import :OperationGraph;
+export import :OperationGraphManager;
+export import :OperationGraphReader;
+export import :OperationGraphWriter;
 export import :OperationInfo;
 export import :OperationResult;
 export import :OperationResults;

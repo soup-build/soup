@@ -1,8 +1,23 @@
-﻿// <copyright file="OperationGraphWriter.h" company="Soup">
+﻿// <copyright file="OperationGraphWriter.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <set>
+#include <vector>
+
+export module Soup.Core:OperationGraphWriter;
+
+import Opal;
+import :FileSystemState;
+import :OperationGraph;
+import :OperationInfo;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
