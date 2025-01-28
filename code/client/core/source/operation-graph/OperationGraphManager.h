@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "OperationGraph.h"
 #include "OperationGraphReader.h"
 #include "OperationGraphWriter.h"
 

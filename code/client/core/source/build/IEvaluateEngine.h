@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "operation-graph/OperationGraph.h"
 
 namespace Soup::Core
 {

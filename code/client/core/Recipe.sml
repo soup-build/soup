@@ -23,6 +23,7 @@ Partitions: [
 	{ Source: 'source/build/RecipeBuildCacheState.cpp' }
 	{ Source: 'source/build/SystemAccessTracker.cpp' }
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
+	{ Source: 'source/operation-graph/OperationGraph.cpp', Imports: [ 'source/operation-graph/CommandInfo.cpp', 'source/operation-graph/OperationInfo.cpp' ]  }
 	{ Source: 'source/operation-graph/OperationInfo.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/CommandInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResult.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResults.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationInfo.cpp', 'source/operation-graph/OperationResult.cpp' ] }
@@ -34,7 +35,9 @@ Partitions: [
 	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
 	{ Source: 'source/recipe/PackageName.cpp' }
 	{ Source: 'source/recipe/PackageReference.cpp', Imports: [ 'source/recipe/PackageIdentifier.cpp' ] }
+	{ Source: 'source/recipe/Recipe.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp', 'source/recipe/RecipeValue.cpp' ] }
 	{ Source: 'source/recipe/RecipeValue.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp', 'source/utilities/SequenceMap.cpp' ] }
+	{ Source: 'source/recipe/RootRecipe.cpp', Imports: [ 'source/recipe/RecipeValue.cpp' ] }
 	{ Source: 'source/utilities/HandledException.cpp' }
 	{ Source: 'source/utilities/SequenceMap.cpp' }
 	{ Source: 'source/value-table/Value.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp' ] }

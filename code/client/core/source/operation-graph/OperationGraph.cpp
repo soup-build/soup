@@ -1,8 +1,21 @@
-﻿// <copyright file="OperationGraph.h" company="Soup">
+﻿// <copyright file="OperationGraph.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <map>
+#include <stdexcept>
+#include <unordered_map>
+#include <vector>
+
+export module Soup.Core:OperationGraph;
+
+import Opal;
+import :CommandInfo;
+import :OperationInfo;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

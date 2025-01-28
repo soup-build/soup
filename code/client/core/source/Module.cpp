@@ -67,6 +67,7 @@ export import :SystemAccessTracker;
 
 // Operation Graph
 export import :CommandInfo;
+export import :OperationGraph;
 export import :OperationInfo;
 export import :OperationResult;
 export import :OperationResults;
@@ -82,7 +83,9 @@ export import :LanguageReference;
 export import :PackageIdentifier;
 export import :PackageName;
 export import :PackageReference;
+export import :Recipe;
 export import :RecipeValue;
+export import :RootRecipe;
 
 // Utilities
 export import :HandledException;

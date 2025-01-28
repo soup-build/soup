@@ -5,7 +5,6 @@
 #pragma once
 #include "IEvaluateEngine.h"
 #include "BuildHistoryChecker.h"
-#include "operation-graph/OperationGraph.h"
 
 namespace Soup::Core
 {

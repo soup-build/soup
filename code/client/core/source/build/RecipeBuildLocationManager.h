@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "recipe/Recipe.h"
 #include "PackageProvider.h"
 
 namespace Soup::Core
