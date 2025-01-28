@@ -74,6 +74,9 @@ export import :OperationResultsManager;
 export import :OperationResultsReader;
 export import :OperationResultsWriter;
 
+// Package
+export import :PackageManager;
+
 // Recipe
 export import :LanguageReference;
 export import :PackageIdentifier;
@@ -97,6 +100,5 @@ using namespace Opal;
 #include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"
 #include "local-user-config/LocalUserConfigExtensions.h"
-#include "package/PackageManager.h"
 #include "wren/WrenHost.h"
 #include "wren/WrenValueTable.h"

@@ -29,6 +29,7 @@ Partitions: [
 	{ Source: 'source/operation-graph/OperationResultsManager.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResultsReader.cpp', 'source/operation-graph/OperationResultsWriter.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResultsReader.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResults.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResultsWriter.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResults.cpp' ] }
+	{ Source: 'source/package/PackageManager.cpp', Imports: [ 'source/utilities/HandledException.cpp' ] }
 	{ Source: 'source/recipe/LanguageReference.cpp' }
 	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
 	{ Source: 'source/recipe/PackageName.cpp' }

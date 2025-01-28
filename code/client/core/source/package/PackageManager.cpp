@@ -1,8 +1,19 @@
-﻿// <copyright file="PackageManager.h" company="Soup">
+﻿// <copyright file="PackageManager.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <sstream>
+#include <string>
+#include <vector>
+
+export module Soup.Core:PackageManager;
+
+import Opal;
+import :HandledException;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
