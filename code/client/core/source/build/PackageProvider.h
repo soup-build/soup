@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "package-lock/PackageLockExtensions.h"
 #include "recipe/RecipeCache.h"
 
 export namespace Soup::Core

@@ -1,8 +1,20 @@
-// <copyright file="WrenHelpers.h" company="Soup">
+// <copyright file="WrenHelpers.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include "wren/wren.h"
+
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+export module Soup.Core:WrenHelpers;
+
+import Opal;
+
+using namespace Opal;
 
 export namespace Soup::Core
 {

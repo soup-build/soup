@@ -1,8 +1,18 @@
-﻿// <copyright file="PackageLockExtensions.h" company="Soup">
+﻿// <copyright file="PackageLockExtensions.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <memory>
+
+export module Soup.Core:PackageLockExtensions;
+
+import Opal;
+import :PackageLock;
+import :RecipeSML;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

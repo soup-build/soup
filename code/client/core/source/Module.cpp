@@ -91,6 +91,7 @@ export import :PackageManager;
 
 // Package Lock
 export import :PackageLock;
+export import :PackageLockExtensions;
 
 // Recipe 
 export import :LanguageReference;
@@ -115,9 +116,12 @@ export import :ValueTableManager;
 export import :ValueTableReader;
 export import :ValueTableWriter;
 
+// Wren
+export import :WrenHelpers;
+export import :WrenHost;
+export import :WrenValueTable;
+
 using namespace Opal;
 
 #include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"
-#include "wren/WrenHost.h"
-#include "wren/WrenValueTable.h"

@@ -1,8 +1,21 @@
-// <copyright file="WrenValueTable.h" company="Soup">
+// <copyright file="WrenValueTable.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include "wren/wren.h"
+
+#include <stdexcept>
+#include <string>
+
+export module Soup.Core:WrenValueTable;
+
+import Opal;
+import :Value;
+import :WrenHelpers;
+
+using namespace Opal;
 
 export namespace Soup::Core
 {

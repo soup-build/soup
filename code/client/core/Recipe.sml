@@ -41,6 +41,7 @@ Partitions: [
 	{ Source: 'source/operation-graph/OperationResultsWriter.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResults.cpp' ] }
 	{ Source: 'source/package/PackageManager.cpp', Imports: [ 'source/utilities/HandledException.cpp' ] }
 	{ Source: 'source/package-lock/PackageLock.cpp', Imports: [ 'source/recipe/PackageName.cpp', 'source/recipe/PackageReference.cpp', 'source/recipe/RecipeValue.cpp' ] }
+	{ Source: 'source/package-lock/PackageLockExtensions.cpp', Imports: [ 'source/package-lock/PackageLock.cpp', 'source/recipe/RecipeSML.cpp' ] }
 	{ Source: 'source/recipe/LanguageReference.cpp' }
 	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
 	{ Source: 'source/recipe/PackageName.cpp' }
@@ -56,6 +57,9 @@ Partitions: [
 	{ Source: 'source/value-table/ValueTableManager.cpp', Imports: [ 'source/value-table/Value.cpp',  'source/value-table/ValueTableReader.cpp',  'source/value-table/ValueTableWriter.cpp' ] }
 	{ Source: 'source/value-table/ValueTableReader.cpp', Imports: [ 'source/recipe/LanguageReference.cpp', 'source/recipe/PackageReference.cpp', 'source/value-table/Value.cpp' ] }
 	{ Source: 'source/value-table/ValueTableWriter.cpp', Imports: [ 'source/value-table/Value.cpp' ] }
+	{ Source: 'source/wren/WrenHelpers.cpp' }
+	{ Source: 'source/wren/WrenHost.cpp', Imports: [ 'source/sml/SML.cpp', 'source/wren/WrenHelpers.cpp' ] }
+	{ Source: 'source/wren/WrenValueTable.cpp', Imports: [ 'source/value-table/Value.cpp', 'source/wren/WrenHelpers.cpp' ] }
 ]
 Dependencies: {
 	Build: [
