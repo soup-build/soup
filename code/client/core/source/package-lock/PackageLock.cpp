@@ -1,8 +1,22 @@
-﻿// <copyright file="PackageLock.h" company="Soup">
+﻿// <copyright file="PackageLock.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <stdexcept>
+#include <map>
+#include <optional>
+#include <string>
+
+export module Soup.Core:PackageLock;
+
+import Opal;
+import :PackageName;
+import :PackageReference;
+import :RecipeValue;
+
+using namespace Opal;
 
 export namespace Soup::Core
 {

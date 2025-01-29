@@ -58,8 +58,10 @@ import Opal;
 // Build
 export import :BuildConstants;
 export import :BuildFailedException;
+export import :BuildHistoryChecker;
 export import :DependencyTargetSet;
 export import :FileSystemState;
+export import :IEvaluateEngine;
 export import :KnownLanguage;
 export import :MacroManager;
 export import :RecipeBuildArguments;
@@ -86,6 +88,9 @@ export import :OperationResultsWriter;
 
 // Package
 export import :PackageManager;
+
+// Package Lock
+export import :PackageLock;
 
 // Recipe 
 export import :LanguageReference;

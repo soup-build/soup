@@ -1,8 +1,18 @@
-﻿// <copyright file="BuildHistoryChecker.h" company="Soup">
+﻿// <copyright file="BuildHistoryChecker.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <chrono>
+#include <vector>
+
+export module Soup.Core:BuildHistoryChecker;
+
+import Opal;
+import :FileSystemState;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -3,8 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "IEvaluateEngine.h"
-#include "BuildHistoryChecker.h"
 
 namespace Soup::Core
 {

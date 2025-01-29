@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "PackageLock.h"
 
 namespace Soup::Core
 {

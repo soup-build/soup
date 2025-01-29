@@ -16,8 +16,10 @@ Source: [
 Partitions: [
 	{ Source: 'source/build/BuildConstants.cpp' }
 	{ Source: 'source/build/BuildFailedException.cpp' }
+	{ Source: 'source/build/BuildHistoryChecker.cpp', Imports: [ 'source/build/FileSystemState.cpp' ] }
 	{ Source: 'source/build/DependencyTargetSet.cpp' }
 	{ Source: 'source/build/FileSystemState.cpp' }
+	{ Source: 'source/build/IEvaluateEngine.cpp', Imports: [ 'source/operation-graph/OperationGraph.cpp', 'source/operation-graph/OperationResults.cpp' ] }
 	{ Source: 'source/build/KnownLanguage.cpp' }
 	{ Source: 'source/build/RecipeBuildArguments.cpp', Imports: [ 'source/value-table/Value.cpp' ] }
 	{ Source: 'source/build/MacroManager.cpp' }
@@ -38,6 +40,7 @@ Partitions: [
 	{ Source: 'source/operation-graph/OperationResultsReader.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResults.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResultsWriter.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResults.cpp' ] }
 	{ Source: 'source/package/PackageManager.cpp', Imports: [ 'source/utilities/HandledException.cpp' ] }
+	{ Source: 'source/package-lock/PackageLock.cpp', Imports: [ 'source/recipe/PackageName.cpp', 'source/recipe/PackageReference.cpp', 'source/recipe/RecipeValue.cpp' ] }
 	{ Source: 'source/recipe/LanguageReference.cpp' }
 	{ Source: 'source/recipe/PackageIdentifier.cpp', Imports: [ 'source/recipe/PackageName.cpp' ] }
 	{ Source: 'source/recipe/PackageName.cpp' }

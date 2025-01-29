@@ -1,8 +1,18 @@
-﻿// <copyright file="IBuildEvaluateEngine.h" company="Soup">
+﻿// <copyright file="IEvaluateEngine.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <vector>
+
+export module Soup.Core:IEvaluateEngine;
+
+import Opal;
+import :OperationGraph;
+import :OperationResults;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

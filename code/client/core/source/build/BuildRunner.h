@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "IEvaluateEngine.h"
 #include "PackageProvider.h"
 #include "RecipeBuildLocationManager.h"
 #include "recipe/RecipeBuildStateConverter.h"
