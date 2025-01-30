@@ -1,8 +1,18 @@
-﻿// <copyright file="RootRecipeExtensions.h" company="Soup">
+﻿// <copyright file="RootRecipeExtensions.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <stdexcept>
+
+export module Soup.Core:RootRecipeExtensions;
+
+import Opal;
+import :RootRecipe;
+import :RecipeSML;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

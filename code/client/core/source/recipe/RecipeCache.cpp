@@ -1,10 +1,24 @@
-﻿// <copyright file="RecipeCache.h" company="Soup">
+﻿// <copyright file="RecipeCache.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "recipe/RecipeExtensions.h"
-#include "recipe/RootRecipeExtensions.h"
+module;
+
+#include <stdexcept>
+#include <format>
+#include <map>
+#include <string>
+
+export module Soup.Core:RecipeCache;
+
+import Opal;
+import :PackageReference;
+import :Recipe;
+import :RecipeExtensions;
+import :RootRecipe;
+import :RootRecipeExtensions;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

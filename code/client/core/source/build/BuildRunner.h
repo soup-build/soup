@@ -5,7 +5,6 @@
 #pragma once
 #include "PackageProvider.h"
 #include "RecipeBuildLocationManager.h"
-#include "recipe/RecipeBuildStateConverter.h"
 
 namespace Soup::Core
 {

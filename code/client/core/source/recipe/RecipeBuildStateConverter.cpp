@@ -1,8 +1,19 @@
-﻿// <copyright file="RecipeBuildStateConverter.h" company="Soup">
+﻿// <copyright file="RecipeBuildStateConverter.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <stdexcept>
+
+export module Soup.Core:RecipeBuildStateConverter;
+
+import Opal;
+import :PackageReference;
+import :RecipeValue;
+import :Value;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

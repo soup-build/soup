@@ -99,9 +99,13 @@ export import :PackageIdentifier;
 export import :PackageName;
 export import :PackageReference;
 export import :Recipe;
+export import :RecipeBuildStateConverter;
+export import :RecipeCache;
+export import :RecipeExtensions;
 export import :RecipeSML;
 export import :RecipeValue;
 export import :RootRecipe;
+export import :RootRecipeExtensions;
 
 // SML
 export import :SML;

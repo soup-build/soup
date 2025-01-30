@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "recipe/RecipeCache.h"
 
 namespace Soup::Core
 {
