@@ -1,9 +1,28 @@
-﻿// <copyright file="RecipeBuildLocationManager.h" company="Soup">
+﻿// <copyright file="RecipeBuildLocationManager.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "PackageProvider.h"
+module;
+
+#include <format>
+#include <map>
+#include <string>
+
+export module Soup.Core:RecipeBuildLocationManager;
+
+import CryptoPP;
+import Opal;
+import :HandledException;
+import :KnownLanguage;
+import :PackageName;
+import :Recipe;
+import :RecipeCache;
+import :RootRecipe;
+import :RootRecipeExtensions;
+import :Value;
+import :ValueTableWriter;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

@@ -1,8 +1,24 @@
-﻿// <copyright file="PackageProvider.h" company="Soup">
+﻿// <copyright file="PackageProvider.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <format>
+#include <stdexcept>
+#include <map>
+#include <string>
+#include <vector>
+
+export module Soup.Core:PackageProvider;
+
+import Opal;
+import :PackageName;
+import :PackageReference;
+import :Recipe;
+import :Value;
+
+using namespace Opal;
 
 export namespace Soup::Core
 {

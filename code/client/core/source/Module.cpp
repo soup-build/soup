@@ -64,8 +64,10 @@ export import :FileSystemState;
 export import :IEvaluateEngine;
 export import :KnownLanguage;
 export import :MacroManager;
+export import :PackageProvider;
 export import :RecipeBuildArguments;
 export import :RecipeBuildCacheState;
+export import :RecipeBuildLocationManager;
 export import :SystemAccessTracker;
 
 // Local User Config
@@ -127,5 +129,4 @@ export import :WrenValueTable;
 
 using namespace Opal;
 
-#include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"

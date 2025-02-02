@@ -3,8 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "PackageProvider.h"
-#include "RecipeBuildLocationManager.h"
 
 namespace Soup::Core
 {

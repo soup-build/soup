@@ -23,7 +23,9 @@ Partitions: [
 	{ Source: 'source/build/KnownLanguage.cpp' }
 	{ Source: 'source/build/RecipeBuildArguments.cpp', Imports: [ 'source/value-table/Value.cpp' ] }
 	{ Source: 'source/build/MacroManager.cpp' }
+	{ Source: 'source/build/PackageProvider.cpp', Imports: [ 'source/recipe/PackageName.cpp', 'source/recipe/PackageReference.cpp','source/recipe/Recipe.cpp', 'source/value-table/Value.cpp' ] }
 	{ Source: 'source/build/RecipeBuildCacheState.cpp' }
+	{ Source: 'source/build/RecipeBuildLocationManager.cpp', Imports: [ 'source/build/KnownLanguage.cpp', 'source/recipe/PackageName.cpp', 'source/recipe/Recipe.cpp', 'source/recipe/RecipeCache.cpp', 'source/recipe/RootRecipeExtensions.cpp', 'source/value-table/Value.cpp', 'source/value-table/ValueTableWriter.cpp', 'source/utilities/HandledException.cpp' ] }
 	{ Source: 'source/build/SystemAccessTracker.cpp' }
 	{ Source: 'source/local-user-config/LocalUserConfig.cpp', Imports: [ 'source/local-user-config/SDKConfig.cpp' ] }
 	{ Source: 'source/local-user-config/LocalUserConfigExtensions.cpp', Imports: [ 'source/local-user-config/LocalUserConfig.cpp', 'source/recipe/RecipeSML.cpp' ] }
