@@ -16,7 +16,7 @@ Closures: {
 			'mwasplund|Detours': { Version: 4.0.12, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Opal': { Version: 0.11.5, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.4.2, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|reflex': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|reflex': { Version: '/home/mwasplund/source/repos/RE-flex/', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|wren': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
 		}
 		Wren: {
