@@ -6,6 +6,7 @@ module;
 
 #include <memory>
 #include <set>
+#include <stdexcept>
 
 export module Soup.Core:OperationGraphManager;
 
