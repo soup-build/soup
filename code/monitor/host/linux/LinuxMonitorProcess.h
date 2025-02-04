@@ -251,8 +251,8 @@ namespace Monitor::Linux
 				auto environment = std::vector<std::string>();
 
 				environment.push_back("HOME=/");
-				environment.push_back("USER=USERNAME");
-				environment.push_back("PAHT=/usr/bin");
+				environment.push_back("USER=user1");
+				environment.push_back("PATH=/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
 
 				scmp_filter_ctx ctx;
 				try
