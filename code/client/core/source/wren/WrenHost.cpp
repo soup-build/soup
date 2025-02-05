@@ -8,6 +8,7 @@ module;
 
 #include <cstring>
 #include <format>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <optional>

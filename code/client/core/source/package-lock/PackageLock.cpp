@@ -8,6 +8,7 @@ module;
 #include <map>
 #include <optional>
 #include <string>
+#include <vector>
 
 export module Soup.Core:PackageLock;
 
@@ -15,6 +16,7 @@ import Opal;
 import :PackageName;
 import :PackageReference;
 import :RecipeValue;
+import :SequenceMap;
 
 using namespace Opal;
 

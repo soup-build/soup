@@ -5,6 +5,7 @@
 module;
 
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 export module Soup.Core:SequenceMap;
