@@ -7,6 +7,7 @@ module;
 #include <format>
 #include <map>
 #include <string>
+#include <sstream>
 
 export module Soup.Core:RecipeBuildLocationManager;
 

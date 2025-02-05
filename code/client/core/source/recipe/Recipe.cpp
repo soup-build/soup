@@ -7,6 +7,7 @@ module;
 #include <format>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 #include <vector>
 
 export module Soup.Core:Recipe;

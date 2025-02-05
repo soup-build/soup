@@ -7,6 +7,7 @@ module;
 #include "wren/wren.h"
 
 #include <stdexcept>
+#include <sstream>
 #include <string>
 
 export module Soup.Core:WrenValueTable;
