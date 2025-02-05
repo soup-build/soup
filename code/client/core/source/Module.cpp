@@ -58,19 +58,59 @@ import Opal;
 // Build
 export import :BuildConstants;
 export import :BuildFailedException;
-export import :CommandInfo;
+export import :BuildHistoryChecker;
 export import :DependencyTargetSet;
 export import :FileSystemState;
+export import :IEvaluateEngine;
 export import :KnownLanguage;
 export import :MacroManager;
+export import :PackageProvider;
+export import :RecipeBuildArguments;
 export import :RecipeBuildCacheState;
+export import :RecipeBuildLocationManager;
 export import :SystemAccessTracker;
 
-// Recipe
+// Local User Config
+export import :LocalUserConfig;
+export import :LocalUserConfigExtensions;
+export import :SDKConfig;
+
+// Operation Graph
+export import :CommandInfo;
+export import :OperationGraph;
+export import :OperationGraphManager;
+export import :OperationGraphReader;
+export import :OperationGraphWriter;
+export import :OperationInfo;
+export import :OperationResult;
+export import :OperationResults;
+export import :OperationResultsManager;
+export import :OperationResultsReader;
+export import :OperationResultsWriter;
+
+// Package
+export import :PackageManager;
+
+// Package Lock
+export import :PackageLock;
+export import :PackageLockExtensions;
+
+// Recipe 
 export import :LanguageReference;
 export import :PackageIdentifier;
 export import :PackageName;
 export import :PackageReference;
+export import :Recipe;
+export import :RecipeBuildStateConverter;
+export import :RecipeCache;
+export import :RecipeExtensions;
+export import :RecipeSML;
+export import :RecipeValue;
+export import :RootRecipe;
+export import :RootRecipeExtensions;
+
+// SML
+export import :SML;
 
 // Utilities
 export import :HandledException;
@@ -78,14 +118,15 @@ export import :SequenceMap;
 
 // Value Table
 export import :Value;
+export import :ValueTableManager;
+export import :ValueTableReader;
+export import :ValueTableWriter;
+
+// Wren
+export import :WrenHelpers;
+export import :WrenHost;
+export import :WrenValueTable;
 
 using namespace Opal;
 
-#define CLIENT_CORE_IMPLEMENTATION
-
-#include "build/RecipeBuildLocationManager.h"
 #include "build/BuildEngine.h"
-#include "local-user-config/LocalUserConfigExtensions.h"
-#include "package/PackageManager.h"
-#include "wren/WrenHost.h"
-#include "wren/WrenValueTable.h"
