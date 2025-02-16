@@ -165,7 +165,7 @@ public:
 
     bool TryParse()
     {
-        std::unordered_map<std::string, SMLValue> table;
+        SequenceMap<std::string, SMLValue> table;
         if (TryParseTableContents(table))
         {
             // Verify we are at the end of the content
@@ -240,52 +240,55 @@ private:
 
     bool TryParsePackageReference(PackageReference& packageReference)
     {
-        // Verify match assign
+        // Check for optional language name
         MoveNext();
-        if (_currentToken != SMLToken::ExtendedKeyLiteral &&
-            _currentToken != SMLToken::KeyLiteral)
+        std::optional<std::string> languageName = std::nullopt;
+        if (_currentToken == SMLToken::OpenParenthesis)
+        {
+            // Verify match package name
+            MoveNext();
+            if (_currentToken != SMLToken::AlphaLiteral &&
+                _currentToken != SMLToken::AlphaExt3Literal)
+                return false;
+
+            // Key token already matched
+            languageName = str();
+
+            // Check end of content
+            MoveNext();
+            if (_currentToken != SMLToken::CloseParenthesis)
+                return false;
+
+            // Move beyond
+            MoveNext();
+        }
+
+        // Verify match user name
+        if (_currentToken != SMLToken::AlphaLiteral &&
+            _currentToken != SMLToken::AlphaExt1Literal)
             return false;
 
         // Key token already matched
-        auto key1 = str();
+        auto userName = str();
 
-        std::optional<std::string> userName;
-        std::string packageName;
-
-        // Check separator for user or package name
+        // Check separator
         MoveNext();
-        switch (_currentToken)
-        {
-            case SMLToken::Pipe:
-            {
-                // Saw user name
-                userName = std::move(key1);
+        if (_currentToken != SMLToken::Pipe)
+            return false;
 
-                // Get the package name
-                MoveNext();
-                if (_currentToken != SMLToken::KeyLiteral)
-                    return false;
+        // Verify match package name
+        MoveNext();
+        if (_currentToken != SMLToken::AlphaLiteral &&
+            _currentToken != SMLToken::AlphaExt2Literal)
+            return false;
 
-                packageName = str();
+        // Key token already matched
+        auto packageName = str();
 
-                // Verify the at sign
-                MoveNext();
-                if (_currentToken != SMLToken::AtSign)
-                    return false;
-
-                break;
-            }
-            case SMLToken::AtSign:
-            {
-                // Saw package name
-                packageName = std::move(key1);
-                break;
-            }
-            default:
-            {
-                return false;
-            }
-        }
+        // Verify the separator
+        MoveNext();
+        if (_currentToken != SMLToken::AtSign)
+            return false;
 
         // Check version type
         SemanticVersion version;
@@ -316,7 +319,7 @@ private:
             return false;
 
         packageReference = PackageReference(
-            std::nullopt,
+            std::move(languageName),
             std::move(userName),
             std::move(packageName),
             version);
@@ -326,7 +329,7 @@ private:
 
     bool TryParseTable(SMLTable& table)
     {
-        std::unordered_map<std::string, SMLValue> tableValues;
+        SequenceMap<std::string, SMLValue> tableValues;
         if (TryParseTableContents(tableValues))
         {
             // Verify we are at the end of the content
@@ -342,7 +345,7 @@ private:
         }
     }
 
-    bool TryParseTableContents(std::unordered_map<std::string, SMLValue>& tableValues)
+    bool TryParseTableContents(SequenceMap<std::string, SMLValue>& tableValues)
     {
         // Odd move next to allow for optional extra delimiter checks at end
         MoveNext();
@@ -363,7 +366,7 @@ private:
         if (!tableValue.has_value())
             return true;
 
-        tableValues.emplace(std::move(key), std::move(tableValue.value()));
+        tableValues.Insert(std::move(key), std::move(tableValue.value()));
 
         // Check for zero or more optional values
         while (true)
@@ -389,7 +392,7 @@ private:
                     return true;
             }
 
-            tableValues.emplace(std::move(key), std::move(tableValue.value()));
+            tableValues.Insert(std::move(key), std::move(tableValue.value()));
         }
     }
 
@@ -401,7 +404,7 @@ private:
         {
             case SMLToken::Integer:
                 // Integer is a special case of Key and should be allowed
-            case SMLToken::KeyLiteral:
+            case SMLToken::AlphaLiteral:
             {
                 // Key token already matched
                 key = str();
@@ -565,7 +568,7 @@ private:
             }
             case SMLToken::LessThan:
             {
-                SMLPackageReference packageReference;
+                PackageReference packageReference;
                 if (!TryParsePackageReference(packageReference))
                     return false;
 

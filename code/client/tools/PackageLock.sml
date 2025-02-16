@@ -14,7 +14,7 @@ Closures: {
 			'mwasplund|Opal': { Version: 0.11.5, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.4.2, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|json11': { Version: 1.1.3, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|reflex': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|reflex': { Version:  5.2.1, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|wren': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
