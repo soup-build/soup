@@ -2,27 +2,35 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#include <algorithm>
-#include <filesystem>
-#include <fstream>
-#include <map>
-#include <optional>
-#include <set>
-#include <stdexcept>
-#include <string>
-#include <sstream>
+#include <iostream>
+#include <memory>
 #include <vector>
 
 import Opal;
-import Soup.Core;
+import reflex;
+import Soup.ParseModules;
 
 using namespace Opal;
 
-// TODO import
-// TODO: Treat wren as C code
-#include "wren/wren.h"
+void Parse(std::istream& stream)
+{
+	auto input = reflex::Input(stream);
+	auto parser = Soup::ParseModules::ModuleParser(stream);
+	if (parser.TryParse())
+	{
+		// return parser.GetResult();
+	}
+	else
+	{
+		auto line = parser.lineno();
+		auto column = parser.columno();
+		auto text = parser.text();
 
-#include "GenerateTestHost.h"
+		std::stringstream message;
+		message << "Failed to parse at " << line << ":" << column << " " << text;
+		throw std::runtime_error(message.str());
+	}
+}
 
 int main(int argc, char** argv)
 {
@@ -52,7 +60,7 @@ int main(int argc, char** argv)
 
 		Log::Diag("ProgramStart");
 
-		if (argc < 2 || argc > 3)
+		if (argc < 2)
 		{
 			Log::Error("Invalid parameters. Expected one or two parameter.");
 			return -1;
@@ -60,16 +68,16 @@ int main(int argc, char** argv)
 
 		auto scriptFile = Path::Parse(argv[1]);
 
-		std::optional<Path> bundlesFile;
-		if (argc > 2)
+		// Open the file to read from
+		Log::Diag("Load File: {}", scriptFile.ToString());
+		std::shared_ptr<System::IInputFile> file;
+		if (!System::IFileSystem::Current().TryOpenRead(scriptFile, false, file))
 		{
-			bundlesFile = Path::Parse(argv[2]);
+			Log::Warning("File does not exist");
+			return -2;
 		}
 
-		auto host = std::make_unique<Soup::Core::Generate::GenerateTestHost>(
-			std::move(scriptFile),
-			std::move(bundlesFile));
-		host->InterpretMain();
+		Parse(file->GetInStream());
 	}
 	catch (const std::exception& ex)
 	{

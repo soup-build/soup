@@ -20,7 +20,7 @@
 #define REFLEX_OPTION_fast                true
 #define REFLEX_OPTION_lex                 lex
 #define REFLEX_OPTION_lexer               Lexer
-#define REFLEX_OPTION_namespace           Soup::ModuleParser
+#define REFLEX_OPTION_namespace           Soup::ParseModules
 #define REFLEX_OPTION_nodefault           true
 #define REFLEX_OPTION_noline              true
 #define REFLEX_OPTION_outfile             "/home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.cpp"
@@ -35,15 +35,13 @@
 
 module;
 
-// #define SHOW_TOKENS
-
 # include <iostream>
 # include <chrono>
 # include <optional>
 # include <unordered_map>
 # include <vector>
 
-module Soup.ModuleParser;
+export module Soup.ParseModules:ModuleParser;
 import reflex;
 
 enum class SimplifiedCppToken : int
@@ -67,7 +65,9 @@ enum class SimplifiedCppToken : int
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifndef SOUP_BUILD
 #include <reflex/matcher.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -75,7 +75,9 @@ enum class SimplifiedCppToken : int
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifndef SOUP_BUILD
 #include <reflex/abslexer.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -84,7 +86,7 @@ enum class SimplifiedCppToken : int
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Soup {
-namespace ModuleParser {
+namespace ParseModules {
 
 class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
  public:
@@ -99,7 +101,6 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
   {
   }
   static const int INITIAL = 0;
-  static const int QUOTE = 1;
   // the lexer function defined by SECTION 2
   virtual int lex(void);
   // lexer functions accepting new input to scan
@@ -118,23 +119,7 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
 };
 
 } // namespace Soup
-} // namespace ModuleParser
-
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//  SECTION 1: %{ user code %}                                                //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-
-// BasicCharacter:
-//      Tab Character, Letter, Number, Marks, Punctuation, Symbols, Separators
-//      except "Quotation Mark", "Reverse Solidus"
-//      (Everything except controls)
-
-// KeyCharacter:
-//      Letter, Numbers
-// TODO: Remove extra symbols
-
+} // namespace ParseModules
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -143,30 +128,20 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Soup {
-namespace ModuleParser {
+namespace ParseModules {
 extern void reflex_code_INITIAL(reflex::Matcher&);
 } // namespace Soup
-} // namespace ModuleParser
-namespace Soup {
-namespace ModuleParser {
-extern void reflex_code_QUOTE(reflex::Matcher&);
-} // namespace Soup
-} // namespace ModuleParser
+} // namespace ParseModules
 
-int Soup::ModuleParser::Lexer::lex(void)
+int Soup::ParseModules::Lexer::lex(void)
 {
   static const reflex::Pattern PATTERN_INITIAL(reflex_code_INITIAL);
-  static const reflex::Pattern PATTERN_QUOTE(reflex_code_QUOTE);
   if (!has_matcher())
   {
     matcher(new Matcher(PATTERN_INITIAL, stdinit(), this));
   }
   while (true)
   {
-    switch (start())
-    {
-      case INITIAL:
-        matcher().pattern(PATTERN_INITIAL);
         switch (matcher().scan())
         {
           case 0:
@@ -180,58 +155,34 @@ int Soup::ModuleParser::Lexer::lex(void)
               return int();
             }
             break;
-          case 1: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:50: {whitespace} :
+          case 1: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:38: {whitespace} :
 { /* ignore whitespace */ }
             break;
-          case 2: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:51: {preprocessor} :
+          case 2: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:39: {preprocessor} :
 { /* ignore preprocessor statements */ }
             break;
-          case 3: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:52: {comment} :
+          case 3: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:40: {comment} :
 { /* ignore comments */ }
             break;
-          case 4: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:53: {newline} :
+          case 4: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:41: {newline} :
 return (int)SimplifiedCppToken::Newline;
             break;
-          case 5: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:54: "import" :
+          case 5: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:42: "import" :
 return (int)SimplifiedCppToken::Import;
             break;
-          case 6: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:55: "export" :
-return (int)SMLToken::Export;
+          case 6: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:43: "export" :
+return (int)SimplifiedCppToken::Export;
             break;
-          case 7: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:56: "module" :
-return (int)SMLToken::Module;
+          case 7: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:44: "module" :
+return (int)SimplifiedCppToken::Module;
             break;
-          case 8: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:57: ":" :
-return (int)SMLToken::Colon;
+          case 8: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:45: ":" :
+return (int)SimplifiedCppToken::Colon;
             break;
-          case 9: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:58: ";" :
-return (int)SMLToken::Semicolon;
-            break;
-          case 10: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:59: . :
-return (int)SMLToken::Error;
+          case 9: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:46: ";" :
+return (int)SimplifiedCppToken::Semicolon;
             break;
         }
-        break;
-      case QUOTE:
-        matcher().pattern(PATTERN_QUOTE);
-        switch (matcher().scan())
-        {
-          case 0:
-            if (matcher().at_end())
-            {
-              return int();
-            }
-            else
-            {
-              lexer_error("scanner jammed");
-              return int();
-            }
-            break;
-        }
-        break;
-      default:
-        start(0);
-    }
   }
 }
 
@@ -242,23 +193,21 @@ return (int)SMLToken::Error;
 ////////////////////////////////////////////////////////////////////////////////
 
 
-namespace Soup::Core
+namespace Soup::ParseModules
 {
 
 /// <summary>
 /// Gradient decent Module parser
 /// </summary>
-class ModuleParser : public ModuleParser::Lexer
+export class ModuleParser : public Lexer
 {
 private:
-    SMLToken _currentToken;
-    SMLTable _root;
+    SimplifiedCppToken _currentToken;
 
 public:
     ModuleParser(const reflex::Input& input) :
         Lexer(input),
-        _currentToken(),
-        _root()
+        _currentToken()
     {
     }
 
@@ -268,10 +217,9 @@ public:
         if (TryParseTranslationUnit(imports))
         {
             // Verify we are at the end of the content
-            if (_currentToken != SMLToken::EndOfFile)
+            if (_currentToken != SimplifiedCppToken::EndOfFile)
                 return false;
 
-            _root = SMLTable(std::move(table));
             return true;
         }
         else
@@ -283,106 +231,46 @@ public:
 private:
     bool TryParseTranslationUnit(std::vector<std::string>& imports)
     {
-        // Verify match language name
+        // Verify first token is module
         MoveNext();
-        if (_currentToken != SMLToken::AlphaLiteral &&
-            _currentToken != SMLToken::AlphaExt3Literal)
+        if (_currentToken != SimplifiedCppToken::Module)
             return false;
 
-        // Key token already matched
-        auto languageName = str();
-
-        // Verify the separator
+        // Verify semicolon
         MoveNext();
-        if (_currentToken != SMLToken::AtSign)
+        if (_currentToken != SimplifiedCppToken::Semicolon)
             return false;
-
-        // Check version type
-        SemanticVersion version;
-        MoveNext();
-        switch (_currentToken)
-        {
-            case SMLToken::Integer:
-            {
-                int64_t majorVersion = std::stoll(text());
-                version = SemanticVersion(majorVersion);
-                break;
-            }
-            case SMLToken::Decimal:
-            {
-                auto versionText = std::string_view(text());
-                version = SemanticVersion::Parse(versionText);
-                break;
-            }
-            default:
-            {
-                return false;
-            }
-        }
-
-        // Verify we are at the end of the content
-        MoveNext();
-        if (_currentToken != SMLToken::CloseParenthesis)
-            return false;
-
-        languageReference = LanguageReference(
-            std::move(languageName),
-            version);
 
         return true;
     }
 
-    SMLToken MoveNext()
+    SimplifiedCppToken MoveNext()
     {
-        _currentToken = (SMLToken)lex();
+        _currentToken = (SimplifiedCppToken)lex();
 
         #ifdef SHOW_TOKENS
             switch (_currentToken)
             {
-                case SMLToken::EndOfFile:
+                case SimplifiedCppToken::EndOfFile:
                     std::cout << "Token: " << "EndOfFile" << '\n';
                     break;
-                case SMLToken::Newline:
+                case SimplifiedCppToken::Module:
+                    std::cout << "Token: " << "Module" << '\n';
+                    break;
+                case SimplifiedCppToken::Export:
+                    std::cout << "Token: " << "Export" << '\n';
+                    break;
+                case SimplifiedCppToken::Import:
+                    std::cout << "Token: " << "Import" << '\n';
+                    break;
+                case SimplifiedCppToken::Newline:
                     std::cout << "Token: " << "Newline" << '\n';
                     break;
-                case SMLToken::KeyLiteral:
-                    std::cout << "Token: " << "KeyLiteral" << '\n';
-                    break;
-                case SMLToken::Integer:
-                    std::cout << "Token: " << "Integer" << '\n';
-                    break;
-                case SMLToken::Decimal:
-                    std::cout << "Token: " << "Decimal" << '\n';
-                    break;
-                case SMLToken::Colon:
+                case SimplifiedCppToken::Colon:
                     std::cout << "Token: " << "Colon" << '\n';
                     break;
-                case SMLToken::Comma:
-                    std::cout << "Token: " << "Comma" << '\n';
-                    break;
-                case SMLToken::OpenBracket:
-                    std::cout << "Token: " << "OpenBracket" << '\n';
-                    break;
-                case SMLToken::CloseBracket:
-                    std::cout << "Token: " << "CloseBracket" << '\n';
-                    break;
-                case SMLToken::OpenBrace:
-                    std::cout << "Token: " << "OpenBrace" << '\n';
-                    break;
-                case SMLToken::CloseBrace:
-                    std::cout << "Token: " << "CloseBrace" << '\n';
-                    break;
-                case SMLToken::StringLiteral:
-                    std::cout << "Token: " << "StringLiteral" << '\n';
-                    break;
-                case SMLToken::True:
-                    std::cout << "Token: " << "True" << '\n';
-                    break;
-                case SMLToken::False:
-                    std::cout << "Token: " << "False" << '\n';
-                    break;
-                case SMLToken::Error:
-                    std::cout << "Token: " << "Error" << '\n';
+                case SimplifiedCppToken::Semicolon:
+                    std::cout << "Token: " << "Semicolon" << '\n';
                     break;
                 default:
                     std::cout << "Token: " << "UNKNOWN" << '\n';
@@ -394,46 +282,6 @@ private:
     }
 };
 
-/*static*/ SMLDocument SMLDocument::Parse(std::istream& stream)
-{
-    auto input = reflex::Input(stream);
-    auto parser = SMLParser(stream);
-    if (parser.TryParse())
-    {
-        return parser.GetResult();
-    }
-    else
-    {
-        auto line = parser.lineno();
-        auto column = parser.columno();
-        auto text = parser.text();
-
-        std::stringstream message;
-        message << "Failed to parse at " << line << ":" << column << " " << text;
-        throw std::runtime_error(message.str());
-    }
-}
-
-/*static*/ SMLDocument SMLDocument::Parse(const char* data, size_t size)
-{
-    auto input = reflex::Input(data, size);
-    auto parser = SMLParser(input);
-    if (parser.TryParse())
-    {
-        return parser.GetResult();
-    }
-    else
-    {
-        auto line = parser.lineno();
-        auto column = parser.columno();
-        auto text = parser.text();
-
-        std::stringstream message;
-        message << "Failed to parse at " << line << ":" << column << " " << text;
-        throw std::runtime_error(message.str());
-    }
-}
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -442,7 +290,9 @@ private:
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifndef SOUP_BUILD
 #include <reflex/matcher.h>
+#endif
 
 #if defined(OS_WIN)
 #pragma warning(disable:4101 4102)
@@ -455,7 +305,7 @@ private:
 #endif
 
 namespace Soup {
-namespace ModuleParser {
+namespace ParseModules {
 
 void reflex_code_INITIAL(reflex::Matcher& m)
 {
@@ -465,252 +315,183 @@ void reflex_code_INITIAL(reflex::Matcher& m)
 S0:
   m.FSM_FIND();
   c = m.FSM_CHAR();
-  if (c == 'm') goto S40;
-  if (c == 'i') goto S32;
-  if (c == 'e') goto S36;
-  if (c == ';') goto S47;
-  if (c == ':') goto S44;
-  if (c == '/') goto S22;
-  if (c == '#') goto S17;
+  if (c == 'm') goto S29;
+  if (c == 'i') goto S25;
+  if (c == 'e') goto S27;
+  if (c == ';') goto S33;
+  if (c == ':') goto S31;
+  if (c == '/') goto S19;
+  if (c == '#') goto S16;
   if (c == ' ') goto S12;
-  if (c == '\r') goto S26;
-  if (c == '\n') goto S30;
+  if (c == '\r') goto S21;
+  if (c == '\n') goto S23;
   if (c == '\t') goto S12;
-  if (0 <= c) goto S50;
   return m.FSM_HALT(c);
 
 S12:
   m.FSM_TAKE(1);
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  if (c == ' ') goto S53;
-  if (c == '\t') goto S53;
+  if (c == ' ') goto S12;
+  if (c == '\t') goto S12;
   return m.FSM_HALT(c);
 
-S17:
-  m.FSM_TAKE(10);
+S16:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S61;
-  if (c == '\r') goto S57;
-  if (c == '\n') goto S59;
-  if (0 <= c) goto S65;
+  if (c == '\r') goto S35;
+  if (c == '\n') goto S37;
+  if (0 <= c) goto S39;
   return m.FSM_HALT(c);
 
-S22:
-  m.FSM_TAKE(10);
+S19:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  if (c == '/') goto S67;
+  if (c == '/') goto S41;
   return m.FSM_HALT(c);
 
-S26:
-  m.FSM_TAKE(10);
+S21:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  if (c == '\n') goto S30;
+  if (c == '\n') goto S23;
   return m.FSM_HALT(c);
 
-S30:
+S23:
   m.FSM_TAKE(4);
   return m.FSM_HALT();
 
-S32:
-  m.FSM_TAKE(10);
+S25:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  if (c == 'm') goto S70;
+  if (c == 'm') goto S44;
   return m.FSM_HALT(c);
 
-S36:
-  m.FSM_TAKE(10);
+S27:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  if (c == 'x') goto S72;
+  if (c == 'x') goto S46;
   return m.FSM_HALT(c);
 
-S40:
-  m.FSM_TAKE(10);
+S29:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  if (c == 'o') goto S74;
+  if (c == 'o') goto S48;
   return m.FSM_HALT(c);
 
-S44:
+S31:
   m.FSM_TAKE(8);
-  c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  return m.FSM_HALT(c);
+  return m.FSM_HALT();
 
-S47:
+S33:
   m.FSM_TAKE(9);
+  return m.FSM_HALT();
+
+S35:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
+  if (c == '\n') goto S37;
+  if (0 <= c) goto S39;
   return m.FSM_HALT(c);
 
-S50:
-  m.FSM_TAKE(10);
-  c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S50;
-  return m.FSM_HALT(c);
-
-S53:
-  m.FSM_TAKE(1);
-  c = m.FSM_CHAR();
-  if (c == ' ') goto S53;
-  if (c == '\t') goto S53;
-  return m.FSM_HALT(c);
-
-S57:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S59;
-  if (0 <= c) goto S65;
-  return m.FSM_HALT(c);
-
-S59:
+S37:
   m.FSM_TAKE(2);
   return m.FSM_HALT();
 
-S61:
-  m.FSM_TAKE(10);
+S39:
   c = m.FSM_CHAR();
-  if (128 <= c && c <= 191) goto S61;
-  if (c == '\n') goto S59;
-  if (0 <= c) goto S65;
+  if (c == '\n') goto S37;
+  if (0 <= c) goto S39;
   return m.FSM_HALT(c);
 
-S65:
+S41:
   c = m.FSM_CHAR();
-  if (c == '\n') goto S59;
-  if (0 <= c) goto S65;
+  if (c == '\r') goto S50;
+  if (c == '\n') goto S52;
+  if (0 <= c) goto S54;
   return m.FSM_HALT(c);
 
-S67:
+S44:
   c = m.FSM_CHAR();
-  if (c == '\r') goto S76;
-  if (c == '\n') goto S78;
-  if (0 <= c) goto S80;
+  if (c == 'p') goto S56;
+  return m.FSM_HALT(c);
+
+S46:
+  c = m.FSM_CHAR();
+  if (c == 'p') goto S58;
+  return m.FSM_HALT(c);
+
+S48:
+  c = m.FSM_CHAR();
+  if (c == 'd') goto S60;
+  return m.FSM_HALT(c);
+
+S50:
+  c = m.FSM_CHAR();
+  if (c == '\n') goto S52;
+  if (0 <= c) goto S54;
+  return m.FSM_HALT(c);
+
+S52:
+  m.FSM_TAKE(3);
+  return m.FSM_HALT();
+
+S54:
+  c = m.FSM_CHAR();
+  if (c == '\n') goto S52;
+  if (0 <= c) goto S54;
+  return m.FSM_HALT(c);
+
+S56:
+  c = m.FSM_CHAR();
+  if (c == 'o') goto S62;
+  return m.FSM_HALT(c);
+
+S58:
+  c = m.FSM_CHAR();
+  if (c == 'o') goto S64;
+  return m.FSM_HALT(c);
+
+S60:
+  c = m.FSM_CHAR();
+  if (c == 'u') goto S66;
+  return m.FSM_HALT(c);
+
+S62:
+  c = m.FSM_CHAR();
+  if (c == 'r') goto S68;
+  return m.FSM_HALT(c);
+
+S64:
+  c = m.FSM_CHAR();
+  if (c == 'r') goto S70;
+  return m.FSM_HALT(c);
+
+S66:
+  c = m.FSM_CHAR();
+  if (c == 'l') goto S72;
+  return m.FSM_HALT(c);
+
+S68:
+  c = m.FSM_CHAR();
+  if (c == 't') goto S74;
   return m.FSM_HALT(c);
 
 S70:
   c = m.FSM_CHAR();
-  if (c == 'p') goto S82;
+  if (c == 't') goto S76;
   return m.FSM_HALT(c);
 
 S72:
   c = m.FSM_CHAR();
-  if (c == 'p') goto S84;
+  if (c == 'e') goto S78;
   return m.FSM_HALT(c);
 
 S74:
-  c = m.FSM_CHAR();
-  if (c == 'd') goto S86;
-  return m.FSM_HALT(c);
-
-S76:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S78;
-  if (0 <= c) goto S80;
-  return m.FSM_HALT(c);
-
-S78:
-  m.FSM_TAKE(3);
-  return m.FSM_HALT();
-
-S80:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S78;
-  if (0 <= c) goto S80;
-  return m.FSM_HALT(c);
-
-S82:
-  c = m.FSM_CHAR();
-  if (c == 'o') goto S88;
-  return m.FSM_HALT(c);
-
-S84:
-  c = m.FSM_CHAR();
-  if (c == 'o') goto S90;
-  return m.FSM_HALT(c);
-
-S86:
-  c = m.FSM_CHAR();
-  if (c == 'u') goto S92;
-  return m.FSM_HALT(c);
-
-S88:
-  c = m.FSM_CHAR();
-  if (c == 'r') goto S94;
-  return m.FSM_HALT(c);
-
-S90:
-  c = m.FSM_CHAR();
-  if (c == 'r') goto S96;
-  return m.FSM_HALT(c);
-
-S92:
-  c = m.FSM_CHAR();
-  if (c == 'l') goto S98;
-  return m.FSM_HALT(c);
-
-S94:
-  c = m.FSM_CHAR();
-  if (c == 't') goto S100;
-  return m.FSM_HALT(c);
-
-S96:
-  c = m.FSM_CHAR();
-  if (c == 't') goto S102;
-  return m.FSM_HALT(c);
-
-S98:
-  c = m.FSM_CHAR();
-  if (c == 'e') goto S104;
-  return m.FSM_HALT(c);
-
-S100:
   m.FSM_TAKE(5);
   return m.FSM_HALT();
 
-S102:
+S76:
   m.FSM_TAKE(6);
   return m.FSM_HALT();
 
-S104:
+S78:
   m.FSM_TAKE(7);
   return m.FSM_HALT();
 }
 
 } // namespace Soup
 
-} // namespace ModuleParser
-
-#include <reflex/matcher.h>
-
-#if defined(OS_WIN)
-#pragma warning(disable:4101 4102)
-#elif defined(__GNUC__)
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-label"
-#elif defined(__clang__)
-#pragma clang diagnostic ignored "-Wunused-variable"
-#pragma clang diagnostic ignored "-Wunused-label"
-#endif
-
-namespace Soup {
-namespace ModuleParser {
-
-void reflex_code_QUOTE(reflex::Matcher& m)
-{
-  int c = 0;
-  m.FSM_INIT(c);
-
-S0:
-  m.FSM_FIND();
-  m.FSM_TAKE(1);
-  return m.FSM_HALT();
-}
-
-} // namespace Soup
-
-} // namespace ModuleParser
+} // namespace ParseModules
 
