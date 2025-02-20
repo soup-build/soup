@@ -101,6 +101,8 @@ private:
         if (_currentToken != SimplifiedCppToken::Module)
             return false;
 
+        MoveNext();
+
         std::string moduleName;
         if (!TryParseModuleName(moduleName))
             return false;
@@ -108,6 +110,14 @@ private:
         // Verify semicolon after module name
         if (_currentToken != SimplifiedCppToken::Semicolon)
             return false;
+
+        std::cout << "module " << moduleName << std::endl;
+
+        std::string importName;
+        while (TryParseImportModule(importName))
+        {
+            std::cout << "import " << importName << std::endl;
+        }
 
         return true;
     }
@@ -117,23 +127,87 @@ private:
         auto result = std::string();
 
         // Verify first token is an identifier
-        MoveNext();
-        if (_currentToken != SimplifiedCppToken::Identifier)
+        if (_currentToken == SimplifiedCppToken::Identifier)
+            result += str();
+        else
             return false;
 
         // Check for optional period separators
         MoveNext();
         while (_currentToken == SimplifiedCppToken::Period)
         {
+            result += str();
+
             // Verify required identifier
             MoveNext();
-            if (_currentToken != SimplifiedCppToken::Identifier)
+            if (_currentToken == SimplifiedCppToken::Identifier)
+                result += str();
+            else
                 return false;
 
             MoveNext();
         }
 
-        result = std::move(result);
+        name = std::move(result);
+        return true;
+    }
+
+    bool TryParseModulePartition(std::string& name)
+    {
+      auto result = std::string();
+
+      // Verify first token is a colon
+      if (_currentToken != SimplifiedCppToken::Colon)
+          return false;
+
+      MoveNext();
+      return TryParseModuleName(name);
+    }
+
+    bool TryParseHeaderName(std::string& name)
+    {
+        // TODO: Implement header imports
+        return false;
+    }
+
+    bool TryParseImportModule(std::string& name)
+    {
+        // Check for optional first export
+        MoveNext();
+        if (_currentToken == SimplifiedCppToken::Export)
+        {
+          // Has Export
+          MoveNext();
+        }
+
+        // Verify required import
+        if (_currentToken != SimplifiedCppToken::Import)
+            return false;
+
+        MoveNext();
+
+        auto result = std::string();
+        if (TryParseModuleName(result))
+        {
+          name = std::move(result);
+        }
+        else if (TryParseModulePartition(result))
+        {
+          name = std::move(result);
+        }
+        else if (TryParseHeaderName(result))
+        {
+          name = std::move(result);
+        }
+        else
+        {
+          return false;
+        }
+
+        // Verify semicolon at end
+        if (_currentToken != SimplifiedCppToken::Semicolon)
+            return false;
+
         return true;
     }
 
