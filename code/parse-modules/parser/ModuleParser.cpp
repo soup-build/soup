@@ -47,14 +47,13 @@ import reflex;
 enum class SimplifiedCppToken : int
 {
     EndOfFile = 0,
-    Newline,
+    Identifier,
+    Period,
     Colon,
     Semicolon,
-    Comma,
     Module,
     Import,
     Export,
-    Error,
 };
 
 
@@ -155,32 +154,38 @@ int Soup::ParseModules::Lexer::lex(void)
               return int();
             }
             break;
-          case 1: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:38: {whitespace} :
+          case 1: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:37: {whitespace} :
 { /* ignore whitespace */ }
             break;
-          case 2: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:39: {preprocessor} :
+          case 2: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:38: {preprocessor} :
 { /* ignore preprocessor statements */ }
             break;
-          case 3: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:40: {comment} :
+          case 3: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:39: {comment} :
 { /* ignore comments */ }
             break;
-          case 4: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:41: {newline} :
-return (int)SimplifiedCppToken::Newline;
+          case 4: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:40: {newline} :
+{ /* ignore newlines */ }
             break;
-          case 5: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:42: "import" :
+          case 5: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:41: "import" :
 return (int)SimplifiedCppToken::Import;
             break;
-          case 6: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:43: "export" :
+          case 6: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:42: "export" :
 return (int)SimplifiedCppToken::Export;
             break;
-          case 7: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:44: "module" :
+          case 7: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:43: "module" :
 return (int)SimplifiedCppToken::Module;
             break;
-          case 8: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:45: ":" :
+          case 8: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:44: "." :
+return (int)SimplifiedCppToken::Period;
+            break;
+          case 9: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:45: ":" :
 return (int)SimplifiedCppToken::Colon;
             break;
-          case 9: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:46: ";" :
+          case 10: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:46: ";" :
 return (int)SimplifiedCppToken::Semicolon;
+            break;
+          case 11: // rule /home/mwasplund/source/repos/soup/scripts/linux/../../code/parse-modules/parser/ModuleParser.l:47: {identifier} :
+return (int)SimplifiedCppToken::Identifier;
             break;
         }
   }
@@ -216,10 +221,6 @@ public:
         std::vector<std::string> imports;
         if (TryParseTranslationUnit(imports))
         {
-            // Verify we are at the end of the content
-            if (_currentToken != SimplifiedCppToken::EndOfFile)
-                return false;
-
             return true;
         }
         else
@@ -241,6 +242,49 @@ private:
         if (_currentToken != SimplifiedCppToken::Semicolon)
             return false;
 
+        // Verify first token is export
+        MoveNext();
+        if (_currentToken != SimplifiedCppToken::Export)
+            return false;
+
+        // Verify first token is module
+        MoveNext();
+        if (_currentToken != SimplifiedCppToken::Module)
+            return false;
+
+        std::string moduleName;
+        if (!TryParseModuleName(moduleName))
+            return false;
+
+        // Verify semicolon after module name
+        if (_currentToken != SimplifiedCppToken::Semicolon)
+            return false;
+
+        return true;
+    }
+
+    bool TryParseModuleName(std::string& name)
+    {
+        auto result = std::string();
+
+        // Verify first token is an identifier
+        MoveNext();
+        if (_currentToken != SimplifiedCppToken::Identifier)
+            return false;
+
+        // Check for optional period separators
+        MoveNext();
+        while (_currentToken == SimplifiedCppToken::Period)
+        {
+            // Verify required identifier
+            MoveNext();
+            if (_currentToken != SimplifiedCppToken::Identifier)
+                return false;
+
+            MoveNext();
+        }
+
+        result = std::move(result);
         return true;
     }
 
@@ -263,14 +307,17 @@ private:
                 case SimplifiedCppToken::Import:
                     std::cout << "Token: " << "Import" << '\n';
                     break;
-                case SimplifiedCppToken::Newline:
-                    std::cout << "Token: " << "Newline" << '\n';
-                    break;
                 case SimplifiedCppToken::Colon:
                     std::cout << "Token: " << "Colon" << '\n';
                     break;
                 case SimplifiedCppToken::Semicolon:
                     std::cout << "Token: " << "Semicolon" << '\n';
+                    break;
+                case SimplifiedCppToken::Period:
+                    std::cout << "Token: " << "Period" << '\n';
+                    break;
+                case SimplifiedCppToken::Identifier:
+                    std::cout << "Token: " << "Identifier" << '\n';
                     break;
                 default:
                     std::cout << "Token: " << "UNKNOWN" << '\n';
@@ -315,180 +362,268 @@ void reflex_code_INITIAL(reflex::Matcher& m)
 S0:
   m.FSM_FIND();
   c = m.FSM_CHAR();
-  if (c == 'm') goto S29;
-  if (c == 'i') goto S25;
-  if (c == 'e') goto S27;
-  if (c == ';') goto S33;
-  if (c == ':') goto S31;
-  if (c == '/') goto S19;
-  if (c == '#') goto S16;
-  if (c == ' ') goto S12;
-  if (c == '\r') goto S21;
-  if (c == '\n') goto S23;
-  if (c == '\t') goto S12;
-  return m.FSM_HALT(c);
-
-S12:
-  m.FSM_TAKE(1);
-  c = m.FSM_CHAR();
-  if (c == ' ') goto S12;
-  if (c == '\t') goto S12;
+  if (c == 'm') goto S41;
+  if (c == 'i') goto S29;
+  if (c == 'e') goto S35;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  if (c == ';') goto S51;
+  if (c == ':') goto S49;
+  if (c == '/') goto S23;
+  if (c == '.') goto S47;
+  if (c == '#') goto S20;
+  if (c == ' ') goto S16;
+  if (c == '\r') goto S25;
+  if (c == '\n') goto S27;
+  if (c == '\t') goto S16;
   return m.FSM_HALT(c);
 
 S16:
+  m.FSM_TAKE(1);
   c = m.FSM_CHAR();
-  if (c == '\r') goto S35;
-  if (c == '\n') goto S37;
-  if (0 <= c) goto S39;
+  if (c == ' ') goto S16;
+  if (c == '\t') goto S16;
   return m.FSM_HALT(c);
 
-S19:
+S20:
   c = m.FSM_CHAR();
-  if (c == '/') goto S41;
-  return m.FSM_HALT(c);
-
-S21:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S23;
+  if (c == '\r') goto S58;
+  if (c == '\n') goto S60;
+  if (0 <= c) goto S62;
   return m.FSM_HALT(c);
 
 S23:
-  m.FSM_TAKE(4);
-  return m.FSM_HALT();
+  c = m.FSM_CHAR();
+  if (c == '/') goto S64;
+  return m.FSM_HALT(c);
 
 S25:
   c = m.FSM_CHAR();
-  if (c == 'm') goto S44;
+  if (c == '\n') goto S27;
   return m.FSM_HALT(c);
 
 S27:
-  c = m.FSM_CHAR();
-  if (c == 'x') goto S46;
-  return m.FSM_HALT(c);
+  m.FSM_TAKE(4);
+  return m.FSM_HALT();
 
 S29:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == 'o') goto S48;
+  if (c == 'm') goto S67;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
-
-S31:
-  m.FSM_TAKE(8);
-  return m.FSM_HALT();
-
-S33:
-  m.FSM_TAKE(9);
-  return m.FSM_HALT();
 
 S35:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == '\n') goto S37;
-  if (0 <= c) goto S39;
-  return m.FSM_HALT(c);
-
-S37:
-  m.FSM_TAKE(2);
-  return m.FSM_HALT();
-
-S39:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S37;
-  if (0 <= c) goto S39;
+  if (c == 'x') goto S73;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
 
 S41:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == '\r') goto S50;
-  if (c == '\n') goto S52;
-  if (0 <= c) goto S54;
+  if (c == 'o') goto S79;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
 
-S44:
-  c = m.FSM_CHAR();
-  if (c == 'p') goto S56;
-  return m.FSM_HALT(c);
-
-S46:
-  c = m.FSM_CHAR();
-  if (c == 'p') goto S58;
-  return m.FSM_HALT(c);
-
-S48:
-  c = m.FSM_CHAR();
-  if (c == 'd') goto S60;
-  return m.FSM_HALT(c);
-
-S50:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S52;
-  if (0 <= c) goto S54;
-  return m.FSM_HALT(c);
-
-S52:
-  m.FSM_TAKE(3);
+S47:
+  m.FSM_TAKE(8);
   return m.FSM_HALT();
 
-S54:
-  c = m.FSM_CHAR();
-  if (c == '\n') goto S52;
-  if (0 <= c) goto S54;
-  return m.FSM_HALT(c);
+S49:
+  m.FSM_TAKE(9);
+  return m.FSM_HALT();
 
-S56:
+S51:
+  m.FSM_TAKE(10);
+  return m.FSM_HALT();
+
+S53:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == 'o') goto S62;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
 
 S58:
   c = m.FSM_CHAR();
-  if (c == 'o') goto S64;
+  if (c == '\n') goto S60;
+  if (0 <= c) goto S62;
   return m.FSM_HALT(c);
 
 S60:
-  c = m.FSM_CHAR();
-  if (c == 'u') goto S66;
-  return m.FSM_HALT(c);
+  m.FSM_TAKE(2);
+  return m.FSM_HALT();
 
 S62:
   c = m.FSM_CHAR();
-  if (c == 'r') goto S68;
+  if (c == '\n') goto S60;
+  if (0 <= c) goto S62;
   return m.FSM_HALT(c);
 
 S64:
   c = m.FSM_CHAR();
-  if (c == 'r') goto S70;
+  if (c == '\r') goto S85;
+  if (c == '\n') goto S87;
+  if (0 <= c) goto S89;
   return m.FSM_HALT(c);
 
-S66:
+S67:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == 'l') goto S72;
+  if (c == 'p') goto S91;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
 
-S68:
+S73:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == 't') goto S74;
+  if (c == 'p') goto S97;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
 
-S70:
+S79:
+  m.FSM_TAKE(11);
   c = m.FSM_CHAR();
-  if (c == 't') goto S76;
+  if (c == 'd') goto S103;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
   return m.FSM_HALT(c);
 
-S72:
+S85:
   c = m.FSM_CHAR();
-  if (c == 'e') goto S78;
+  if (c == '\n') goto S87;
+  if (0 <= c) goto S89;
   return m.FSM_HALT(c);
 
-S74:
+S87:
+  m.FSM_TAKE(3);
+  return m.FSM_HALT();
+
+S89:
+  c = m.FSM_CHAR();
+  if (c == '\n') goto S87;
+  if (0 <= c) goto S89;
+  return m.FSM_HALT(c);
+
+S91:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'o') goto S109;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S97:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'o') goto S115;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S103:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'u') goto S121;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S109:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'r') goto S127;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S115:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'r') goto S133;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S121:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'l') goto S139;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S127:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 't') goto S145;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S133:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 't') goto S150;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S139:
+  m.FSM_TAKE(11);
+  c = m.FSM_CHAR();
+  if (c == 'e') goto S155;
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
+
+S145:
   m.FSM_TAKE(5);
-  return m.FSM_HALT();
+  c = m.FSM_CHAR();
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
 
-S76:
+S150:
   m.FSM_TAKE(6);
-  return m.FSM_HALT();
+  c = m.FSM_CHAR();
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
 
-S78:
+S155:
   m.FSM_TAKE(7);
-  return m.FSM_HALT();
+  c = m.FSM_CHAR();
+  if ('a' <= c && c <= 'z') goto S53;
+  if (c == '_') goto S53;
+  if ('A' <= c && c <= 'Z') goto S53;
+  return m.FSM_HALT(c);
 }
 
 } // namespace Soup

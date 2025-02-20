@@ -14,7 +14,8 @@ import reflex;
 enum class SimplifiedCppToken : int
 {
     EndOfFile = 0,
-    Newline,
+    Identifier,
+    Period,
     Colon,
     Semicolon,
     Module,
@@ -26,22 +27,24 @@ enum class SimplifiedCppToken : int
 
 %option fast unicode noline nodefault namespace=Soup::ParseModules
 
-basic_char           [\t\p{L}\p{N}\p{M}\p{P}\p{S}\p{Z}]{-}['\\]
 whitespace           [ \t]+
 newline              \r?\n
 preprocessor         "#".*?\r?\n
 comment              "//".*?\r?\n
+identifier           [A-Za-z_]+
 
 %%
 {whitespace}         { /* ignore whitespace */ }
 {preprocessor}       { /* ignore preprocessor statements */ }
 {comment}            { /* ignore comments */ }
-{newline}            return (int)SimplifiedCppToken::Newline;
+{newline}            { /* ignore newlines */ }
 "import"             return (int)SimplifiedCppToken::Import;
 "export"             return (int)SimplifiedCppToken::Export;
 "module"             return (int)SimplifiedCppToken::Module;
+"."                  return (int)SimplifiedCppToken::Period;
 ":"                  return (int)SimplifiedCppToken::Colon;
 ";"                  return (int)SimplifiedCppToken::Semicolon;
+{identifier}         return (int)SimplifiedCppToken::Identifier;
 %%
 
 namespace Soup::ParseModules
@@ -67,10 +70,6 @@ public:
         std::vector<std::string> imports;
         if (TryParseTranslationUnit(imports))
         {
-            // Verify we are at the end of the content
-            if (_currentToken != SimplifiedCppToken::EndOfFile)
-                return false;
-
             return true;
         }
         else
@@ -92,6 +91,49 @@ private:
         if (_currentToken != SimplifiedCppToken::Semicolon)
             return false;
 
+        // Verify first token is export
+        MoveNext();
+        if (_currentToken != SimplifiedCppToken::Export)
+            return false;
+
+        // Verify first token is module
+        MoveNext();
+        if (_currentToken != SimplifiedCppToken::Module)
+            return false;
+
+        std::string moduleName;
+        if (!TryParseModuleName(moduleName))
+            return false;
+
+        // Verify semicolon after module name
+        if (_currentToken != SimplifiedCppToken::Semicolon)
+            return false;
+
+        return true;
+    }
+
+    bool TryParseModuleName(std::string& name)
+    {
+        auto result = std::string();
+
+        // Verify first token is an identifier
+        MoveNext();
+        if (_currentToken != SimplifiedCppToken::Identifier)
+            return false;
+
+        // Check for optional period separators
+        MoveNext();
+        while (_currentToken == SimplifiedCppToken::Period)
+        {
+            // Verify required identifier
+            MoveNext();
+            if (_currentToken != SimplifiedCppToken::Identifier)
+                return false;
+
+            MoveNext();
+        }
+
+        result = std::move(result);
         return true;
     }
 
@@ -114,14 +156,17 @@ private:
                 case SimplifiedCppToken::Import:
                     std::cout << "Token: " << "Import" << '\n';
                     break;
-                case SimplifiedCppToken::Newline:
-                    std::cout << "Token: " << "Newline" << '\n';
-                    break;
                 case SimplifiedCppToken::Colon:
                     std::cout << "Token: " << "Colon" << '\n';
                     break;
                 case SimplifiedCppToken::Semicolon:
                     std::cout << "Token: " << "Semicolon" << '\n';
+                    break;
+                case SimplifiedCppToken::Period:
+                    std::cout << "Token: " << "Period" << '\n';
+                    break;
+                case SimplifiedCppToken::Identifier:
+                    std::cout << "Token: " << "Identifier" << '\n';
                     break;
                 default:
                     std::cout << "Token: " << "UNKNOWN" << '\n';
