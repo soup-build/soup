@@ -18,8 +18,8 @@ The entire system is programming language agnostic and allows for easy integrati
 ### More Information:
 * [Design Requirements and Goals](./docs/design-requirements-goals.md) - The core goals and requirements for the system.
 * [Architecture](./docs/architecture.md) - An up to date breakdown of the system Runtime and Design.
-* [Command Line Interface (CLI)](./docs/CLI.md) - The help documentation for the Soup Command line application.
-* [Simple Minimal Language (SML)](./docs/SML.md) - The documentation for the Declarative language used by Soup Recipes.
+* [Command Line Interface (CLI)](./docs/cli.md) - The help documentation for the Soup Command line application.
+* [Simple Minimal Language (SML)](./docs/sml.md) - The documentation for the Declarative language used by Soup Recipes.
 
 ## Release Status
 Soup is currently in an `Beta` stage. This means that anyone is welcome to play around with the source code or the releases on GitHub, however there may be breaking changes in the internal structures and definitions as work is completed. It is therefor recommended not to be used in any production capacity. The design is stabilizing over time and [Version 1](https://github.com/soup-build/soup/milestone/2) will be released when we believe there will be no more breaking changes or security concerns that would block a first release.
