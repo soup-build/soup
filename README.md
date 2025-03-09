@@ -16,8 +16,8 @@ The clean isolation individual projects, coupled with the ability to write custo
 The entire system is programming language agnostic and allows for easy integration with any language. This allows for developers to learn one solution and apply that knowledge to any project regardless of the languages it uses.
 
 ### More Information:
-* [Design Requirements and Goals](./docs/Design-Requirements-Goals.md) - The core goals and requirements for the system.
-* [Architecture](./docs/Architecture.md) - An up to date breakdown of the system Runtime and Design.
+* [Design Requirements and Goals](./docs/design-requirements-goals.md) - The core goals and requirements for the system.
+* [Architecture](./docs/architecture.md) - An up to date breakdown of the system Runtime and Design.
 * [Command Line Interface (CLI)](./docs/CLI.md) - The help documentation for the Soup Command line application.
 * [Simple Minimal Language (SML)](./docs/SML.md) - The documentation for the Declarative language used by Soup Recipes.
 
