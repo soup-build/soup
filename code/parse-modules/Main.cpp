@@ -12,10 +12,11 @@ import Soup.ParseModules;
 
 using namespace Opal;
 
-void Parse(std::istream& stream)
+void Parse(const Path& file)
 {
-	auto input = reflex::Input(stream);
-	auto parser = Soup::ParseModules::ModuleParser(stream);
+	// Use the c api file so the input auto detects the format and converts to utf8 if necessary
+	auto input = reflex::Input(fopen(file.ToString().c_str(), "r"));
+	auto parser = Soup::ParseModules::ModuleParser(input);
 	if (parser.TryParse())
 	{
 		// return parser.GetResult();
@@ -58,8 +59,6 @@ int main(int argc, char** argv)
 		// Setup the real services
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
-		Log::Diag("ProgramStart");
-
 		if (argc < 2)
 		{
 			Log::Error("Invalid parameters. Expected one or two parameter.");
@@ -67,17 +66,7 @@ int main(int argc, char** argv)
 		}
 
 		auto scriptFile = Path::Parse(argv[1]);
-
-		// Open the file to read from
-		Log::Diag("Load File: {}", scriptFile.ToString());
-		std::shared_ptr<System::IInputFile> file;
-		if (!System::IFileSystem::Current().TryOpenRead(scriptFile, false, file))
-		{
-			Log::Warning("File does not exist");
-			return -2;
-		}
-
-		Parse(file->GetInStream());
+		Parse(scriptFile);
 	}
 	catch (const std::exception& ex)
 	{
