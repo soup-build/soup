@@ -2,14 +2,14 @@
 
 ## Quick Links
 * [Official Site](https://www.soupbuild.com/)
-* [Getting Started](./docs/Getting-Started.md)
-* [Command Line Interface (CLI)](./docs/CLI.md)
-* [Samples](./docs/Samples.md)
+* [Getting Started](./docs/getting-started.md)
+* [Command Line Interface (CLI)](./docs/cli.md)
+* [Samples](./docs/samples.md)
 
 ## Overview
 Soup is a cross platform build system for developing software as a community, with a primary focus on developer velocity. Soup was built from the ground up to support guaranteed minimum incremental builds while allowing for reusability of both build logic and runtime code.
 
-The system utilizes a three phased approach to building code. A **declarative** frontend [Recipe](./docs/Architecture/Recipe.md) tells the build **what** to build. A **generate** layer uses [Extensions](./docs/Architecture/Build-Extension.md) to define **how** to build. And finally, the **evaluate** engine executes the build [Operations](./docs/Architecture/Build-Operation.md) to generate the desired output.
+The system utilizes a three phased approach to building code. A **declarative** frontend [Recipe](./docs/architecture/recipe.md) tells the build **what** to build. A **generate** layer uses [Extensions](./docs/architecture/build-extension.md) to define **how** to build. And finally, the **evaluate** engine executes the build [Operations](./docs/architecture/build-operation.md) to generate the desired output.
 
 The clean isolation individual projects, coupled with the ability to write custom build logic work together to allow for easy authoring of a package that can be shared with other teams or organizations through a public source based [Package Manager](https://www.soupbuild.com/).
 
@@ -26,6 +26,6 @@ Soup is currently in an `Beta` stage. This means that anyone is welcome to play 
 
 ## Contributing
 Soup is currently in active prototyping and testing. If you are interested in contributing to the project feel free to submit a PR or download the latest release and file an issue with suggestions or bugs. :smile:.
-* [Getting Started](./docs/Getting-Started.md)
-* [Samples](./docs/Samples.md)
-* [Developer Setup](./docs/Developer-Setup.md)
+* [Getting Started](./docs/getting-started.md)
+* [Samples](./docs/samples.md)
+* [Developer Setup](./docs/developer-setup.md)
