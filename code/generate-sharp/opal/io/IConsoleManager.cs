@@ -13,5 +13,5 @@ public interface IConsoleManager
 	/// <summary>
 	/// Get the standard input stream.
 	/// </summary>
-	public IConsoleInput GetStandardInput();
+	IConsoleInput GetStandardInput();
 }
