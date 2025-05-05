@@ -12,7 +12,7 @@ namespace Soup.Build.PackageManager;
 /// </summary>
 public interface IZipManager
 {
-	public void ExtractToDirectory(Path sourceArchiveFileName, Path destinationDirectoryName);
+	void ExtractToDirectory(Path sourceArchiveFileName, Path destinationDirectoryName);
 
-	public IZipArchive OpenCreate(Path archivePath);
+	IZipArchive OpenCreate(Path archivePath);
 }

@@ -13,5 +13,5 @@ public interface ILibraryManager
 	/// <summary>
 	/// Loads a library with the provided path.
 	/// </summary>
-	public abstract ILibrary LoadDynamicLibrary(Path library);
+	abstract ILibrary LoadDynamicLibrary(Path library);
 }

@@ -13,7 +13,7 @@ public interface IProcessManager
 	/// <summary>
 	/// Gets the process file name.
 	/// </summary>
-	public abstract Path GetCurrentProcessFileName();
+	abstract Path GetCurrentProcessFileName();
 
 	/// <summary>
 	/// Creates a process for the provided executable path.
@@ -21,7 +21,7 @@ public interface IProcessManager
 	/// <param name="executable">The executable.</param>
 	/// <param name="arguments">The arguments.</param>
 	/// <param name="workingDirectory">The working directory.</param>
-	public abstract IProcess CreateProcess(
+	abstract IProcess CreateProcess(
 		string executable,
 		string arguments,
 		Path workingDirectory);

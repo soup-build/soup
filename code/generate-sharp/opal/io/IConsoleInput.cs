@@ -13,10 +13,10 @@ public interface IConsoleInput
 	/// <summary>
 	/// Read a line from the stream.
 	/// </summary>
-	public string ReadLine();
+	string ReadLine();
 
 	/// <summary>
 	/// Read a password from the stream.
 	/// </summary>
-	public string ReadPassword();
+	string ReadPassword();
 }

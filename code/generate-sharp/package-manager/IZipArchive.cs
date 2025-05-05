@@ -13,5 +13,5 @@ namespace Soup.Build.PackageManager;
 /// </summary>
 public interface IZipArchive : IDisposable
 {
-	public void CreateEntryFromFile(Path sourceFileName, string entryName);
+	void CreateEntryFromFile(Path sourceFileName, string entryName);
 }
