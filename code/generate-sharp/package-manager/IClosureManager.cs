@@ -13,7 +13,7 @@ namespace Soup.Build.PackageManager;
 /// </summary>
 public interface IClosureManager
 {
-	public Task GenerateAndRestoreRecursiveLocksAsync(
+	Task GenerateAndRestoreRecursiveLocksAsync(
 		Path workingDirectory,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,

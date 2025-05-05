@@ -175,7 +175,7 @@ public class PackageVersionsClient
 				break;
 			default:
 				throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
-		};
+		}
 	}
 
 	/// <summary>

@@ -39,7 +39,7 @@ public class InitializeCommand
 
 		// Todo: Opal path should have a way to get individual directories
 		var workingFolderValue = workingDirectory.ToString();
-		workingFolderValue = workingFolderValue.Remove(workingFolderValue.Length - 1, 1);
+		workingFolderValue = workingFolderValue[..^1];
 		var workingFolder = new Path(workingFolderValue);
 
 		var recipe = new Recipe(
