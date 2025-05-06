@@ -2,6 +2,8 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
+#include <filesystem>
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -15,7 +17,12 @@ using namespace Opal;
 void Parse(const Path& file)
 {
 	// Use the c api file so the input auto detects the format and converts to utf8 if necessary
-	auto input = reflex::Input(fopen(file.ToString().c_str(), "r"));
+	FILE* stream;
+	auto error = fopen_s(&stream, file.ToString().c_str(), "r");
+	if (error != 0)
+		throw new std::runtime_error("Faild to open file");
+
+	auto input = reflex::Input(stream);
 	auto parser = Soup::ParseModules::ModuleParser(input);
 	if (parser.TryParse())
 	{

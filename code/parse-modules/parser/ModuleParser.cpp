@@ -374,6 +374,7 @@ private:
         #endif
 
         // TODO: Implement header imports
+        name = "TODO";
         return false;
     }
 
@@ -493,7 +494,7 @@ void reflex_code_INITIAL(reflex::Matcher& m)
   int c = 0;
   m.FSM_INIT(c);
 
-S0:
+// S0:
   m.FSM_FIND();
   c = m.FSM_CHAR();
   if (c == 'm') goto S44;
