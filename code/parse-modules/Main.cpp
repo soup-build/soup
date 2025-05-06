@@ -17,9 +17,8 @@ using namespace Opal;
 void Parse(const Path& file)
 {
 	// Use the c api file so the input auto detects the format and converts to utf8 if necessary
-	FILE* stream;
-	auto error = fopen_s(&stream, file.ToString().c_str(), "r");
-	if (error != 0)
+	auto stream = std::fopen(file.ToString().c_str(), "r");
+	if (stream == nullptr)
 		throw new std::runtime_error("Faild to open file");
 
 	auto input = reflex::Input(stream);
