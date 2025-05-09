@@ -24,18 +24,33 @@
         "console": "internalConsole"
     },
     {
+      "name": "Debug Soup (VS)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/run/Soup/Soup.exe",
+      "args": [
+        "build",
+        "samples/c++/build-extension/executable",
+        "-v:d"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true
+    },
+    {
       "name": "Debug Soup",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/out/run/soup",
       "args": [
         "build",
-        "Samples/Cpp/ConsoleApplication/"
+        "samples/c++/build-extension/executable"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": false,
+      "externalConsole": true,
       "linux": {
         "MIMode": "gdb"
       },

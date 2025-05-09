@@ -28,7 +28,7 @@ namespace Soup::Core
 	{
 	private:
 		// Binary Operation graph file format
-		static constexpr uint32_t FileVersion = 6;
+		static constexpr uint32_t FileVersion = 7;
 
 	public:
 		static void Serialize(
@@ -89,6 +89,9 @@ namespace Soup::Core
 			// Write out the declared output files
 			WriteValues(stream, operation.DeclaredOutput);
 
+			// Write out the finalizer task
+			WriteOptionalValue(stream, operation.FinalizerTask);
+
 			// Write out the read access list
 			WriteValues(stream, operation.ReadAccess);
 
@@ -122,6 +125,19 @@ namespace Soup::Core
 		{
 			WriteValue(stream, static_cast<uint32_t>(value.size()));
 			stream.write(value.data(), value.size());
+		}
+
+		static void WriteOptionalValue(std::ostream& stream, const std::optional<std::string>& value)
+		{
+			if (value.has_value())
+			{
+				WriteValue(stream, static_cast<uint32_t>(value.value().size()));
+				stream.write(value.value().data(), value.value().size());
+			}
+			else
+			{
+				WriteValue(stream, 0u);
+			}
 		}
 
 		static void WriteValues(std::ostream& stream, const std::vector<std::string>& values)

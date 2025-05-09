@@ -2,7 +2,8 @@ Version: 5
 Closures: {
 	Root: {
 		'C++': {
-			'Soup.ParseModules': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+			'parse.module': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|parse.module': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Opal': { Version: 0.11.5, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
 		}

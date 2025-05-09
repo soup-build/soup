@@ -69,7 +69,7 @@ Partitions: [
 ]
 Dependencies: {
 	Build: [
-		'mwasplund|Soup.Test.Cpp@0'
+		# 'mwasplund|Soup.Test.Cpp@0'
 	]
 	Runtime: [
 		'mwasplund|Opal@0'

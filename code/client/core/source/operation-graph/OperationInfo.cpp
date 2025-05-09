@@ -31,6 +31,8 @@ export namespace Soup::Core
 		CommandInfo Command;
 		std::vector<FileId> DeclaredInput;
 		std::vector<FileId> DeclaredOutput;
+		std::optional<std::string> FinalizerTask;
+
 		std::vector<FileId> ReadAccess;
 		std::vector<FileId> WriteAccess;
 		std::vector<OperationId> Children;
@@ -43,6 +45,7 @@ export namespace Soup::Core
 			Command(),
 			DeclaredInput(),
 			DeclaredOutput(),
+			FinalizerTask(std::nullopt),
 			ReadAccess(),
 			WriteAccess(),
 			Children(),
@@ -56,6 +59,7 @@ export namespace Soup::Core
 			CommandInfo command,
 			std::vector<FileId> declaredInput,
 			std::vector<FileId> declaredOutput,
+			std::optional<std::string> finalizerTask,
 			std::vector<FileId> readAccess,
 			std::vector<FileId> writeAccess) :
 			Id(id),
@@ -63,6 +67,7 @@ export namespace Soup::Core
 			Command(std::move(command)),
 			DeclaredInput(std::move(declaredInput)),
 			DeclaredOutput(std::move(declaredOutput)),
+			FinalizerTask(std::move(finalizerTask)),
 			ReadAccess(std::move(readAccess)),
 			WriteAccess(std::move(writeAccess)),
 			Children(),
@@ -76,6 +81,7 @@ export namespace Soup::Core
 			CommandInfo command,
 			std::vector<FileId> declaredInput,
 			std::vector<FileId> declaredOutput,
+			std::optional<std::string> finalizerTask,
 			std::vector<FileId> readAccess,
 			std::vector<FileId> writeAccess,
 			std::vector<OperationId> children,
@@ -85,6 +91,7 @@ export namespace Soup::Core
 			Command(std::move(command)),
 			DeclaredInput(std::move(declaredInput)),
 			DeclaredOutput(std::move(declaredOutput)),
+			FinalizerTask(std::move(finalizerTask)),
 			ReadAccess(std::move(readAccess)),
 			WriteAccess(std::move(writeAccess)),
 			Children(std::move(children)),

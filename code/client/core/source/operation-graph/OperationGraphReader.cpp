@@ -8,6 +8,7 @@ module;
 #include <cstdint>
 #include <cstring>
 #include <iostream>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -30,7 +31,7 @@ namespace Soup::Core
 	{
 	private:
 		// Binary Operation Graph file format
-		static constexpr uint32_t FileVersion = 6;
+		static constexpr uint32_t FileVersion = 7;
 
 	public:
 		static OperationGraph Deserialize(std::istream& stream, FileSystemState& fileSystemState)
@@ -164,6 +165,9 @@ namespace Soup::Core
 			// Write out the declared output files
 			auto declaredOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
 
+			// Write the finalizer task
+			auto finalizerTask = ReadOptionalString(data, size, offset);
+
 			// Write out the read access list
 			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
 
@@ -185,6 +189,7 @@ namespace Soup::Core
 					std::move(arguments)),
 				std::move(declaredInput),
 				std::move(declaredOutput),
+				std::move(finalizerTask),
 				std::move(readAccess),
 				std::move(writeAccess),
 				std::move(children),
@@ -206,6 +211,22 @@ namespace Soup::Core
 			Read(data, size, offset, result.data(), stringLength);
 
 			return result;
+		}
+
+		static std::optional<std::string> ReadOptionalString(char* data, size_t size, size_t& offset)
+		{
+			auto stringLength = ReadUInt32(data, size, offset);
+			if (stringLength > 0)
+			{
+				auto result = std::string(stringLength, '\0');
+				Read(data, size, offset, result.data(), stringLength);
+
+				return result;
+			}
+			else
+			{
+				return std::nullopt;
+			}
 		}
 
 		static std::vector<std::string> ReadStringList(char* data, size_t size, size_t& offset)

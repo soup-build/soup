@@ -3,18 +3,23 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "Build Linux",
-      "command": "./Scripts/linux-build",
+      "label": "Build",
       "args": [],
       "options": {
         "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "command": "scripts/windows/build Debug"
+      },
+      "linux": {
+        "command": "scripts/linux/build Debug"
       },
       "problemMatcher": [],
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "detail": "Run the build linux script."
+      "detail": "Run the build script."
     }
   ]
 }
