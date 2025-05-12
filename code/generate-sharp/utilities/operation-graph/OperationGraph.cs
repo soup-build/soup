@@ -16,6 +16,9 @@ public class OperationGraph
 	private readonly Dictionary<OperationId, OperationInfo> operations;
 	private readonly Dictionary<CommandInfo, OperationId> operationLookup;
 
+	private readonly Dictionary<OperationProxyId, OperationProxyInfo> operationProxies;
+	private readonly Dictionary<CommandInfo, OperationProxyId> operationProxyLookup;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="OperationGraph"/> class.
 	/// </summary>
@@ -25,6 +28,8 @@ public class OperationGraph
 		this.RootOperationIds = [];
 		this.operations = [];
 		this.operationLookup = [];
+		this.operationProxies = [];
+		this.operationProxyLookup = [];
 	}
 
 	/// <summary>
@@ -33,17 +38,25 @@ public class OperationGraph
 	public OperationGraph(
 		IList<(FileId FileId, Path Path)> referencedFiles,
 		IList<OperationId> rootOperations,
-		IList<OperationInfo> operations)
+		IList<OperationInfo> operations,
+		IList<OperationProxyInfo> operationProxies)
 	{
 		this.ReferencedFiles = referencedFiles;
 		this.RootOperationIds = rootOperations;
 		this.operations = [];
 		this.operationLookup = [];
+		this.operationProxies = [];
+		this.operationProxyLookup = [];
 
 		// Store the incoming vector of operations as a lookup for fast checks
 		foreach (var info in operations)
 		{
 			AddOperation(info);
+		}
+
+		foreach (var info in operationProxies)
+		{
+			AddOperationProxy(info);
 		}
 	}
 
@@ -104,5 +117,14 @@ public class OperationGraph
 	{
 		this.operationLookup.Add(info.Command, info.Id);
 		this.operations.Add(info.Id, info);
+	}
+
+	/// <summary>
+	/// Add an operation proxy info
+	/// </summary>
+	public void AddOperationProxy(OperationProxyInfo info)
+	{
+		this.operationProxyLookup.Add(info.Command, info.Id);
+		this.operationProxies.Add(info.Id, info);
 	}
 }

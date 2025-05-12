@@ -111,16 +111,11 @@ namespace Soup::Core::Generate
 			std::vector<std::string> arguments,
 			std::string workingDirectory,
 			std::vector<std::string> declaredInput,
-			std::vector<std::string> declaredOutput,
 			std::string finalizerTask)
 		{
 			auto declaredInputPaths = std::vector<Path>();
 			for (auto& value : declaredInput)
 				declaredInputPaths.push_back(Path(std::move(value)));
-
-			auto declaredOutputPaths = std::vector<Path>();
-			for (auto& value : declaredOutput)
-				declaredOutputPaths.push_back(Path(std::move(value)));
 
 			_graphGenerator.CreateOperationProxy(
 				std::move(title),
@@ -128,7 +123,6 @@ namespace Soup::Core::Generate
 				std::move(arguments),
 				Path(std::move(workingDirectory)),
 				std::move(declaredInputPaths),
-				std::move(declaredOutputPaths),
 				std::move(finalizerTask));
 		}
 

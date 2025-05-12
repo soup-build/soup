@@ -14,7 +14,7 @@ namespace Soup.Build.Utilities;
 internal static class OperationGraphReader
 {
 	// Binary Operation Graph file format
-	private static uint FileVersion => 6;
+	private static uint FileVersion => 7;
 
 	public static OperationGraph Deserialize(System.IO.BinaryReader reader)
 	{
@@ -85,6 +85,23 @@ internal static class OperationGraphReader
 			operations.Add(ReadOperationInfo(reader));
 		}
 
+		// Read the set of operation proxies
+		headerBuffer = reader.ReadBytes(4);
+		if (headerBuffer[0] != 'O' ||
+			headerBuffer[1] != 'P' ||
+			headerBuffer[2] != 'P' ||
+			headerBuffer[3] != '\0')
+		{
+			throw new InvalidOperationException("Invalid operation graph operations header");
+		}
+
+		var operationProxyCount = reader.ReadUInt32();
+		var operationProxies = new List<OperationProxyInfo>();
+		for (var i = 0; i < operationProxyCount; i++)
+		{
+			operationProxies.Add(ReadOperationProxyInfo(reader));
+		}
+
 		if (reader.BaseStream.Position != reader.BaseStream.Length)
 		{
 			var remaining = reader.BaseStream.Length - reader.BaseStream.Position;
@@ -94,7 +111,8 @@ internal static class OperationGraphReader
 		return new OperationGraph(
 			files,
 			rootOperationIds,
-			operations);
+			operations,
+			operationProxies);
 	}
 
 	private static OperationInfo ReadOperationInfo(System.IO.BinaryReader reader)
@@ -145,6 +163,44 @@ internal static class OperationGraphReader
 			writeAccess,
 			children,
 			dependencyCount);
+	}
+
+	private static OperationProxyInfo ReadOperationProxyInfo(System.IO.BinaryReader reader)
+	{
+		// Read the operation proxy id
+		var id = new OperationProxyId(reader.ReadUInt32());
+
+		// Read the operation proxy title
+		var title = ReadString(reader);
+
+		// Read the command working directory
+		var workingDirectory = ReadString(reader);
+
+		// Read the command executable
+		var executable = ReadString(reader);
+
+		// Read the command arguments
+		var arguments = ReadStringList(reader);
+
+		// Read the declared input files
+		var declaredInput = ReadFileIdList(reader);
+
+		// Read the command working directory
+		var finalizerTask = ReadString(reader);
+
+		// Read the read access list
+		var readAccess = ReadFileIdList(reader);
+
+		return new OperationProxyInfo(
+			id,
+			title,
+			new CommandInfo(
+				new Path(workingDirectory),
+				new Path(executable),
+				arguments),
+			declaredInput,
+			finalizerTask,
+			readAccess);
 	}
 
 	private static string ReadString(System.IO.BinaryReader reader)

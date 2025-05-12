@@ -31,11 +31,12 @@ Partitions: [
 	{ Source: 'source/local-user-config/LocalUserConfigExtensions.cpp', Imports: [ 'source/local-user-config/LocalUserConfig.cpp', 'source/recipe/RecipeSML.cpp' ] }
 	{ Source: 'source/local-user-config/SDKConfig.cpp', Imports: [ 'source/recipe/RecipeValue.cpp' ] }
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
-	{ Source: 'source/operation-graph/OperationGraph.cpp', Imports: [ 'source/operation-graph/CommandInfo.cpp', 'source/operation-graph/OperationInfo.cpp' ] }
+	{ Source: 'source/operation-graph/OperationGraph.cpp', Imports: [ 'source/operation-graph/CommandInfo.cpp', 'source/operation-graph/OperationInfo.cpp', 'source/operation-graph/OperationProxyInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraphManager.cpp', Imports: [ 'source/operation-graph/OperationGraphReader.cpp', 'source/operation-graph/OperationGraphWriter.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraphReader.cpp', Imports: [ 'source/operation-graph/OperationGraph.cpp', 'source/build/FileSystemState.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraphWriter.cpp', Imports: [ 'source/operation-graph/OperationGraph.cpp', 'source/build/FileSystemState.cpp' ] }
 	{ Source: 'source/operation-graph/OperationInfo.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/CommandInfo.cpp' ] }
+	{ Source: 'source/operation-graph/OperationProxyInfo.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/CommandInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResult.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResults.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationInfo.cpp', 'source/operation-graph/OperationResult.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResultsManager.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResultsReader.cpp', 'source/operation-graph/OperationResultsWriter.cpp' ] }

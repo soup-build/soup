@@ -196,7 +196,7 @@ namespace Soup::Core::Generate
 						return SoupLoadSharedState;
 					else if (signature == "createOperation_(_,_,_,_,_,_)")
 						return SoupCreateOperation;
-					else if (signature == "createOperationProxy_(_,_,_,_,_,_,_)")
+					else if (signature == "createOperationProxy_(_,_,_,_,_,_)")
 						return SoupCreateOperationProxy;
 					else if (signature == "info_(_)")
 						return SoupLogInfo;
@@ -381,16 +381,10 @@ namespace Soup::Core::Generate
 				auto declaredInput = WrenHelpers::GetSlotStringList(_vm, 5, 8);
 
 				auto parameter6 = wrenGetSlotType(_vm, 6);
-				if (parameter6 != WREN_TYPE_LIST) {
-					throw std::runtime_error("SoupCreateOperationProxy parameter 6 must be of type list");
+				if (parameter6 != WREN_TYPE_STRING) {
+					throw std::runtime_error("SoupCreateOperationProxy parameter 6 must be of type string");
 				}
-				auto declaredOutput = WrenHelpers::GetSlotStringList(_vm, 6, 8);
-
-				auto parameter7 = wrenGetSlotType(_vm, 7);
-				if (parameter7 != WREN_TYPE_STRING) {
-					throw std::runtime_error("SoupCreateOperationProxy parameter 7 must be of type string");
-				}
-				auto finalizerTask = std::string(wrenGetSlotString(_vm, 2));
+				auto finalizerTask = std::string(wrenGetSlotString(_vm, 6));
 
 				_state->CreateOperationProxy(
 					std::move(title),
@@ -398,7 +392,6 @@ namespace Soup::Core::Generate
 					std::move(arguments),
 					std::move(workingDirectory),
 					std::move(declaredInput),
-					std::move(declaredOutput),
 					std::move(finalizerTask));
 
 				// No return value
@@ -491,6 +484,9 @@ namespace Soup::Core::Generate
 			"	static runAfter { [] }\n"
 			"	static evaluate() {}\n"
 			"}\n"
+			"class SoupFinalizerTask {\n"
+			"	static evaluate(result) {}\n"
+			"}\n"
 			"\n"
 			"class Soup {\n"
 			"	static globalState {\n"
@@ -518,15 +514,14 @@ namespace Soup::Core::Generate
 			"		createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
 			"	}\n"
 			"\n"
-			"	static createOperationProxy(title, executable, arguments, workingDirectory, declaredInput, declaredOutput, finalizerTask) {\n"
+			"	static createOperationProxy(title, executable, arguments, workingDirectory, declaredInput, finalizerTask) {\n"
 			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
 			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
 			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
 			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a string.\")\n"
 			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
-			"		if (!(declaredOutput is List)) Fiber.abort(\"DeclaredOutput must be a list.\")\n"
 			"		if (!(finalizerTask is String)) Fiber.abort(\"Executable must be a string.\")\n"
-			"		createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput, finalizerTask)\n"
+			"		createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, finalizerTask)\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"
@@ -548,7 +543,7 @@ namespace Soup::Core::Generate
 			"	foreign static loadActiveState_()\n"
 			"	foreign static loadSharedState_()\n"
 			"	foreign static createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
-			"	foreign static createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput, finalizerTask)\n"
+			"	foreign static createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, finalizerTask)\n"
 			"	foreign static info_(message)\n"
 			"	foreign static warning_(message)\n"
 			"	foreign static error_(message)\n"

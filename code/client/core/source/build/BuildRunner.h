@@ -430,7 +430,6 @@ namespace Soup::Core
 					std::move(generateArguments)),
 				{},
 				{},
-				std::nullopt,
 				{},
 				{});
 			generateOperation.DependencyCount = 1;

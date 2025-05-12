@@ -59,9 +59,18 @@ namespace Soup::Core
 			auto& operations = state.GetOperations();
 			stream.write("OPS\0", 4);
 			WriteValue(stream, static_cast<uint32_t>(operations.size()));
-			for (auto& operationValue : state.GetOperations())
+			for (auto& operationValue : operations)
 			{
 				WriteOperationInfo(stream, operationValue.second);
+			}
+			
+			// Write out the set of operation proxies
+			auto& operationProxies = state.GetOperationProxies();
+			stream.write("OPP", 4);
+			WriteValue(stream, static_cast<uint32_t>(operationProxies.size()));
+			for (auto& operationProxyValue : operationProxies)
+			{
+				WriteOperationProxyInfo(stream, operationProxyValue.second);
 			}
 		}
 
@@ -89,9 +98,6 @@ namespace Soup::Core
 			// Write out the declared output files
 			WriteValues(stream, operation.DeclaredOutput);
 
-			// Write out the finalizer task
-			WriteOptionalValue(stream, operation.FinalizerTask);
-
 			// Write out the read access list
 			WriteValues(stream, operation.ReadAccess);
 
@@ -103,6 +109,35 @@ namespace Soup::Core
 
 			// Write out the dependency count
 			WriteValue(stream, operation.DependencyCount);
+		}
+
+		static void WriteOperationProxyInfo(
+			std::ostream& stream,
+			const OperationProxyInfo& operationProxy)
+		{
+			// Write out the operation id
+			WriteValue(stream, operationProxy.Id);
+
+			// Write out the operation title
+			WriteValue(stream, operationProxy.Title);
+
+			// Write the command working directory
+			WriteValue(stream, operationProxy.Command.WorkingDirectory.ToString());
+
+			// Write the command executable
+			WriteValue(stream, operationProxy.Command.Executable.ToString());
+
+			// Write the command arguments
+			WriteValues(stream, operationProxy.Command.Arguments);
+
+			// Write out the declared input files
+			WriteValues(stream, operationProxy.DeclaredInput);
+
+			// Write out the finalizer task
+			WriteValue(stream, operationProxy.FinalizerTask);
+
+			// Write out the read access list
+			WriteValues(stream, operationProxy.ReadAccess);
 		}
 
 		static void WriteValue(std::ostream& stream, uint32_t value)
@@ -125,19 +160,6 @@ namespace Soup::Core
 		{
 			WriteValue(stream, static_cast<uint32_t>(value.size()));
 			stream.write(value.data(), value.size());
-		}
-
-		static void WriteOptionalValue(std::ostream& stream, const std::optional<std::string>& value)
-		{
-			if (value.has_value())
-			{
-				WriteValue(stream, static_cast<uint32_t>(value.value().size()));
-				stream.write(value.value().data(), value.value().size());
-			}
-			else
-			{
-				WriteValue(stream, 0u);
-			}
 		}
 
 		static void WriteValues(std::ostream& stream, const std::vector<std::string>& values)

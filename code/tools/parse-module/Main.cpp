@@ -14,6 +14,8 @@ import Soup.ParseModules;
 
 using namespace Opal;
 
+#pragma warning(disable:4996)
+
 void Parse(const Path& file)
 {
 	// Use the c api file so the input auto detects the format and converts to utf8 if necessary
@@ -34,8 +36,8 @@ void Parse(const Path& file)
 		auto text = parser.text();
 
 		std::stringstream message;
-		message << "Failed to parse at " << line << ":" << column << " " << text;
-		throw std::runtime_error(message.str());
+		message << "FAILED: " << line << ":" << column << " " << text;
+		Log::Info(message.str());
 	}
 }
 
@@ -52,7 +54,7 @@ int main(int argc, char** argv)
 			static_cast<uint32_t>(TraceEventFlag::Error) |
 			static_cast<uint32_t>(TraceEventFlag::Critical);
 		auto filter = std::make_shared<EventTypeFilter>(
-				static_cast<TraceEventFlag>(defaultTypes));
+			static_cast<TraceEventFlag>(defaultTypes));
 
 		// Setup the console listener
 		Log::RegisterListener(

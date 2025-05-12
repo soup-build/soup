@@ -64,7 +64,7 @@ namespace Soup::Core::Generate
 				std::move(arguments));
 
 			// Ensure this is the a unique operation
-			if (_graph.HasCommand(commandInfo))
+			if (_graph.HasOperationCommand(commandInfo))
 			{
 				throw std::runtime_error("Operation with this command already exists.");
 			}
@@ -106,7 +106,6 @@ namespace Soup::Core::Generate
 				commandInfo,
 				declaredInputFileIds,
 				declaredOutputFileIds,
-				std::nullopt,
 				readAccessFileIds,
 				writeAccessFileIds);
 			auto& operationInfoReference = _graph.AddOperation(std::move(operationInfo));
@@ -125,7 +124,6 @@ namespace Soup::Core::Generate
 			std::vector<std::string> arguments,
 			Path workingDirectory,
 			std::vector<Path> declaredInput,
-			std::vector<Path> declaredOutput,
 			std::string finalizerTask)
 		{
 			Log::Diag("Create Operation Proxy: {}", title);
@@ -140,9 +138,9 @@ namespace Soup::Core::Generate
 				std::move(arguments));
 
 			// Ensure this is the a unique operation
-			if (_graph.HasCommand(commandInfo))
+			if (_graph.HasOperationProxyCommand(commandInfo))
 			{
-				throw std::runtime_error("Operation with this command already exists.");
+				throw std::runtime_error("Operation Proxy with this command already exists.");
 			}
 
 			// Verify allowed read access
@@ -155,40 +153,24 @@ namespace Soup::Core::Generate
 			for (auto& file : _readAccessList)
 				Log::Diag(file.ToString());
 
-			// Verify allowed write access
-			if (!IsAllowedAccess(_writeAccessList, declaredOutput, commandInfo.WorkingDirectory))
-			{
-				throw std::runtime_error("Operation does not have permission to write requested output.");
-			}
-
-			Log::Diag("Write Access Subset:");
-			for (auto& file : _writeAccessList)
-				Log::Diag(file.ToString());
-
 			// Generate a unique id for this new operation
 			_uniqueId++;
 			auto operationId = _uniqueId;
 
 			// Resolve the requested files to unique ids
 			auto declaredInputFileIds = _fileSystemState.ToFileIds(declaredInput, commandInfo.WorkingDirectory);
-			auto declaredOutputFileIds = _fileSystemState.ToFileIds(declaredOutput, commandInfo.WorkingDirectory);
 			auto readAccessFileIds = _fileSystemState.ToFileIds(_readAccessList, commandInfo.WorkingDirectory);
-			auto writeAccessFileIds = _fileSystemState.ToFileIds(_writeAccessList, commandInfo.WorkingDirectory);
 
 			// Build up the declared build operation
-			auto operationInfo = OperationInfo(
+			auto operationProxyInfo = OperationProxyInfo(
 				operationId,
 				title,
 				commandInfo,
 				declaredInputFileIds,
-				declaredOutputFileIds,
 				finalizerTask,
-				readAccessFileIds,
-				writeAccessFileIds);
-			auto& operationInfoReference = _graph.AddOperation(std::move(operationInfo));
-
-			StoreLookupInfo(operationInfoReference);
-			ResolveDependencies(operationInfoReference);
+				readAccessFileIds);
+			auto& operationProxyInfoReference = _graph.AddOperationProxy(std::move(operationProxyInfo));
+			(operationProxyInfoReference);
 		}
 
 		OperationGraph FinalizeGraph()

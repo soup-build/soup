@@ -1,4 +1,4 @@
-﻿// <copyright file="OperationInfo.cpp" company="Soup">
+﻿// <copyright file="CommandInfo.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

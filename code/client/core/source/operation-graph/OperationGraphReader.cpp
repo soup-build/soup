@@ -8,7 +8,6 @@ module;
 #include <cstdint>
 #include <cstring>
 #include <iostream>
-#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -136,13 +135,33 @@ namespace Soup::Core
 				operations[i] = ReadOperationInfo(data, size, offset, activeFileIdMap);
 			}
 
+			// Read the set of operation proxies
+			Read(data, size, offset, headerBuffer.data(), 4);
+			if (headerBuffer[0] != 'O' ||
+				headerBuffer[1] != 'P' ||
+				headerBuffer[2] != 'P' ||
+				headerBuffer[3] != '\0')
+			{
+				throw std::runtime_error("Invalid operation graph operation proxies header");
+			}
+
+			auto operationProxyCount = ReadUInt32(data, size, offset);
+			auto operationProxies = std::vector<OperationProxyInfo>(operationProxyCount);
+			for (auto i = 0u; i < operationProxyCount; i++)
+			{
+				operationProxies[i] = ReadOperationProxyInfo(data, size, offset, activeFileIdMap);
+			}
+
 			return OperationGraph(
 				std::move(rootOperationIds),
 				std::move(operations));
 		}
 
 		static OperationInfo ReadOperationInfo(
-			char* data, size_t size, size_t& offset, const std::unordered_map<FileId, FileId>& activeFileIdMap)
+			char* data,
+			size_t size,
+			size_t& offset,
+			const std::unordered_map<FileId, FileId>& activeFileIdMap)
 		{
 			// Write out the operation id
 			auto id = ReadUInt32(data, size, offset);
@@ -165,9 +184,6 @@ namespace Soup::Core
 			// Write out the declared output files
 			auto declaredOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
 
-			// Write the finalizer task
-			auto finalizerTask = ReadOptionalString(data, size, offset);
-
 			// Write out the read access list
 			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
 
@@ -189,11 +205,52 @@ namespace Soup::Core
 					std::move(arguments)),
 				std::move(declaredInput),
 				std::move(declaredOutput),
-				std::move(finalizerTask),
 				std::move(readAccess),
 				std::move(writeAccess),
 				std::move(children),
 				dependencyCount);
+		}
+
+		static OperationProxyInfo ReadOperationProxyInfo(
+			char* data,
+			size_t size,
+			size_t& offset,
+			const std::unordered_map<FileId, FileId>& activeFileIdMap)
+		{
+			// Write out the operation proxy id
+			auto id = ReadUInt32(data, size, offset);
+
+			// Write the operation proxy title
+			auto title = ReadString(data, size, offset);
+
+			// Write the command working directory
+			auto workingDirectory = ReadString(data, size, offset);
+
+			// Write the command executable
+			auto executable = ReadString(data, size, offset);
+
+			// Write the command arguments
+			auto arguments = ReadStringList(data, size, offset);
+
+			// Write out the declared input files
+			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			// Write the finalizer task
+			auto finalizerTask = ReadString(data, size, offset);
+
+			// Write out the read access list
+			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			return OperationProxyInfo(
+				id,
+				std::move(title),
+				CommandInfo(
+					Path(workingDirectory),
+					Path(executable),
+					std::move(arguments)),
+				std::move(declaredInput),
+				std::move(finalizerTask),
+				std::move(readAccess));
 		}
 
 		static uint32_t ReadUInt32(char* data, size_t size, size_t& offset)
@@ -211,22 +268,6 @@ namespace Soup::Core
 			Read(data, size, offset, result.data(), stringLength);
 
 			return result;
-		}
-
-		static std::optional<std::string> ReadOptionalString(char* data, size_t size, size_t& offset)
-		{
-			auto stringLength = ReadUInt32(data, size, offset);
-			if (stringLength > 0)
-			{
-				auto result = std::string(stringLength, '\0');
-				Read(data, size, offset, result.data(), stringLength);
-
-				return result;
-			}
-			else
-			{
-				return std::nullopt;
-			}
 		}
 
 		static std::vector<std::string> ReadStringList(char* data, size_t size, size_t& offset)

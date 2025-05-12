@@ -82,6 +82,7 @@ export import :OperationGraphManager;
 export import :OperationGraphReader;
 export import :OperationGraphWriter;
 export import :OperationInfo;
+export import :OperationProxyInfo;
 export import :OperationResult;
 export import :OperationResults;
 export import :OperationResultsManager;

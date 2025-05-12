@@ -14,6 +14,7 @@ export module Soup.Core:OperationGraph;
 import Opal;
 import :CommandInfo;
 import :OperationInfo;
+import :OperationProxyInfo;
 
 using namespace Opal;
 
@@ -28,6 +29,9 @@ namespace Soup::Core
 		std::vector<OperationId> _rootOperations;
 		std::map<OperationId, OperationInfo> _operations;
 		std::unordered_map<CommandInfo, OperationId> _operationLookup;
+		
+		std::map<OperationProxyId, OperationProxyInfo> _operationProxies;
+		std::unordered_map<CommandInfo, OperationProxyId> _operationProxyLookup;
 
 	public:
 		/// <summary>
@@ -36,7 +40,9 @@ namespace Soup::Core
 		OperationGraph() :
 			_rootOperations(),
 			_operations(),
-			_operationLookup()
+			_operationLookup(),
+			_operationProxies(),
+			_operationProxyLookup()
 		{
 		}
 
@@ -48,7 +54,9 @@ namespace Soup::Core
 			std::vector<OperationInfo> operations) :
 			_rootOperations(std::move(rootOperations)),
 			_operations(),
-			_operationLookup()
+			_operationLookup(),
+			_operationProxies(),
+			_operationProxyLookup()
 		{
 			// Store the incoming vector of operations as a lookup for fast checks
 			for (auto& info : operations)
@@ -90,11 +98,27 @@ namespace Soup::Core
 		}
 
 		/// <summary>
+		/// Get Operation Proxies
+		/// </summary>
+		const std::map<OperationProxyId, OperationProxyInfo>& GetOperationProxies() const
+		{
+			return _operationProxies;
+		}
+
+		/// <summary>
 		/// Find an operation info
 		/// </summary>
-		bool HasCommand(const CommandInfo& command)
+		bool HasOperationCommand(const CommandInfo& command)
 		{
 			return _operationLookup.contains(command);
+		}
+
+		/// <summary>
+		/// Find an operation info
+		/// </summary>
+		bool HasOperationProxyCommand(const CommandInfo& command)
+		{
+			return _operationProxyLookup.contains(command);
 		}
 
 		/// <summary>
@@ -161,12 +185,29 @@ namespace Soup::Core
 		}
 
 		/// <summary>
+		/// Add an operation proxy info
+		/// </summary>
+		OperationProxyInfo& AddOperationProxy(OperationProxyInfo info)
+		{
+			auto insertLookupResult = _operationProxyLookup.emplace(info.Command, info.Id);
+			if (!insertLookupResult.second)
+				throw std::runtime_error("The provided command already exists in the graph");
+
+			auto [insertIterator, wasInserted] = _operationProxies.emplace(info.Id, std::move(info));
+			if (!wasInserted)
+				throw std::runtime_error("The provided operation proxy id already exists in the graph");
+
+			return insertIterator->second;
+		}
+
+		/// <summary>
 		/// Equality operator
 		/// </summary>
 		bool operator ==(const OperationGraph& rhs) const
 		{
 			return _rootOperations == rhs._rootOperations &&
-				_operations == rhs._operations;
+				_operations == rhs._operations &&
+				_operationProxies == rhs._operationProxies;
 		}
 
 		/// <summary>
