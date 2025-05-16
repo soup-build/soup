@@ -132,9 +132,9 @@ namespace Soup::Core::Generate
 			_sharedState = std::move(sharedState);
 		}
 
-		OperationGraph BuildOperationGraph()
+		GenerateResult BuildGenerateResult()
 		{
-			return _graphGenerator.FinalizeGraph();
+			return _graphGenerator.FinalizeState();
 		}
 	};
 }

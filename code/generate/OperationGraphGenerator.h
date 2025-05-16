@@ -17,7 +17,7 @@ namespace Soup::Core::Generate
 		std::vector<Path> _readAccessList;
 		std::vector<Path> _writeAccessList;
 		OperationId _uniqueId;
-		OperationGraph _graph;
+		GenerateResult _result;
 
 		// Running state used to build graph dynamically
 		std::map<FileId, std::vector<OperationId>> _inputFileLookup;
@@ -33,7 +33,7 @@ namespace Soup::Core::Generate
 			_readAccessList(std::move(readAccessList)),
 			_writeAccessList(std::move(writeAccessList)),
 			_uniqueId(0),
-			_graph(),
+			_result(),
 			_inputFileLookup(),
 			_outputFileLookup(),
 			_outputDirectoryLookup()
@@ -64,7 +64,7 @@ namespace Soup::Core::Generate
 				std::move(arguments));
 
 			// Ensure this is the a unique operation
-			if (_graph.HasOperationCommand(commandInfo))
+			if (_result.GetEvaluateGraph().HasOperationCommand(commandInfo))
 			{
 				throw std::runtime_error("Operation with this command already exists.");
 			}
@@ -108,7 +108,7 @@ namespace Soup::Core::Generate
 				declaredOutputFileIds,
 				readAccessFileIds,
 				writeAccessFileIds);
-			auto& operationInfoReference = _graph.AddOperation(std::move(operationInfo));
+			auto& operationInfoReference = _result.GetEvaluateGraph().AddOperation(std::move(operationInfo));
 
 			StoreLookupInfo(operationInfoReference);
 			ResolveDependencies(operationInfoReference);
@@ -138,7 +138,7 @@ namespace Soup::Core::Generate
 				std::move(arguments));
 
 			// Ensure this is the a unique operation
-			if (_graph.HasOperationProxyCommand(commandInfo))
+			if (_result.HasOperationProxyCommand(commandInfo))
 			{
 				throw std::runtime_error("Operation Proxy with this command already exists.");
 			}
@@ -169,15 +169,15 @@ namespace Soup::Core::Generate
 				declaredInputFileIds,
 				finalizerTask,
 				readAccessFileIds);
-			auto& operationProxyInfoReference = _graph.AddOperationProxy(std::move(operationProxyInfo));
+			auto& operationProxyInfoReference = _result.AddOperationProxy(std::move(operationProxyInfo));
 			(operationProxyInfoReference);
 		}
 
-		OperationGraph FinalizeGraph()
+		GenerateResult FinalizeState()
 		{
 			// Add any operation with zero dependencies to the root
 			auto rootOperations = std::vector<OperationId>();
-			for (auto& [_, activeOperationInfo] : _graph.GetOperations())
+			for (auto& [_, activeOperationInfo] : _result.GetEvaluateGraph().GetOperations())
 			{
 				if (activeOperationInfo.DependencyCount == 0)
 				{
@@ -186,12 +186,12 @@ namespace Soup::Core::Generate
 				}
 			}
 
-			_graph.SetRootOperationIds(std::move(rootOperations));
+			_result.GetEvaluateGraph().SetRootOperationIds(std::move(rootOperations));
 
 			// Remove extra dependency references that are already covered by upstream references
 			auto recursiveChildren = std::map<OperationId, std::set<OperationId>>();
-			BuildRecursiveChildSets(recursiveChildren, _graph.GetRootOperationIds());
-			for (auto& [_, operation] : _graph.GetOperations())
+			BuildRecursiveChildSets(recursiveChildren, _result.GetEvaluateGraph().GetRootOperationIds());
+			for (auto& [_, operation] : _result.GetEvaluateGraph().GetOperations())
 			{
 				// Check each child to see if it is already covered by another child
 				for (auto iterator = operation.Children.begin(); iterator != operation.Children.end();)
@@ -216,7 +216,7 @@ namespace Soup::Core::Generate
 					if (isDuplicate)
 					{
 						// Update the child dependency count
-						auto& childOperation = _graph.GetOperationInfo(childId);
+						auto& childOperation = _result.GetEvaluateGraph().GetOperationInfo(childId);
 						childOperation.DependencyCount--;
 
 						// Remove the duplicate
@@ -229,7 +229,7 @@ namespace Soup::Core::Generate
 				}
 			}
 
-			return _graph;
+			return std::move(_result);
 		}
 
 	private:
@@ -271,7 +271,7 @@ namespace Soup::Core::Generate
 				if (TryGetOutputFileOperation(file, matchedOperation))
 				{
 					// The active operation must run after the matched output operation
-					CheckAddChildOperation(_graph.GetOperationInfo(matchedOperation), operationInfo);
+					CheckAddChildOperation(_result.GetEvaluateGraph().GetOperationInfo(matchedOperation), operationInfo);
 				}
 			}
 
@@ -284,7 +284,7 @@ namespace Soup::Core::Generate
 					for (auto matchedOperation : matchedOperations)
 					{
 						// The active operation must run before the matched output operation
-						CheckAddChildOperation(operationInfo, _graph.GetOperationInfo(matchedOperation));
+						CheckAddChildOperation(operationInfo, _result.GetEvaluateGraph().GetOperationInfo(matchedOperation));
 					}
 				}
 			}
@@ -303,7 +303,7 @@ namespace Soup::Core::Generate
 						if (outputFilePath.ToString().starts_with(filePath.ToString()))
 						{
 							// The active operation must run before the matched file output operation
-							CheckAddChildOperation(operationInfo, _graph.GetOperationInfo(outputFile.second));
+							CheckAddChildOperation(operationInfo, _result.GetEvaluateGraph().GetOperationInfo(outputFile.second));
 						}
 					}
 				}
@@ -324,7 +324,7 @@ namespace Soup::Core::Generate
 						if (TryGetOutputDirectoryOperation(parentDirectoryId, matchedOperation))
 						{
 							// The matched directory output operation must run before the active operation
-							CheckAddChildOperation(_graph.GetOperationInfo(matchedOperation), operationInfo);
+							CheckAddChildOperation(_result.GetEvaluateGraph().GetOperationInfo(matchedOperation), operationInfo);
 						}
 					}
 
@@ -355,7 +355,7 @@ namespace Soup::Core::Generate
 				{
 					closure.insert(operationId);
 
-					auto& operation = _graph.GetOperationInfo(operationId);
+					auto& operation = _result.GetEvaluateGraph().GetOperationInfo(operationId);
 					BuildChildClosure(operation.Children, closure);
 				}
 			}
@@ -367,7 +367,7 @@ namespace Soup::Core::Generate
 		{
 			for (auto operationId : operations)
 			{
-				auto& operation = _graph.GetOperationInfo(operationId);
+				auto& operation = _result.GetEvaluateGraph().GetOperationInfo(operationId);
 				BuildRecursiveChildSets(recursiveChildren, operation.Children);
 
 				// Check if this node was already handled in a different branch
@@ -509,7 +509,7 @@ namespace Soup::Core::Generate
 			if (findResult != _outputFileLookup.end())
 			{
 				auto& filePath = _fileSystemState.GetFilePath(file);
-				auto& existingOperation = _graph.GetOperationInfo(findResult->second);
+				auto& existingOperation = _result.GetEvaluateGraph().GetOperationInfo(findResult->second);
 				throw std::runtime_error(
 					std::format("File \"{}\" already written to by operation \"{}\"",
 					filePath.ToString(),
@@ -529,7 +529,7 @@ namespace Soup::Core::Generate
 			if (findResult != _outputDirectoryLookup.end())
 			{
 				auto& filePath = _fileSystemState.GetFilePath(file);
-				auto& existingOperation = _graph.GetOperationInfo(findResult->second);
+				auto& existingOperation = _result.GetEvaluateGraph().GetOperationInfo(findResult->second);
 				throw std::runtime_error(
 					std::format(
 						"Directory \"{}\" already written to by operation \"{}\"",

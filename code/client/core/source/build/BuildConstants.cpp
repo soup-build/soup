@@ -30,6 +30,12 @@ namespace Soup::Core
 			return value;
 		}
 
+		static const Path& GenerateResultFileName()
+		{
+			static const auto value = Path("./GenerateResult.bgr");
+			return value;
+		}
+
 		static const Path& GenerateInputFileName()
 		{
 			static const auto value = Path("./GenerateInput.bvt");
@@ -57,6 +63,12 @@ namespace Soup::Core
 		static const Path& PackageLockFileName()
 		{
 			static const auto value = Path("./PackageLock.sml");
+			return value;
+		}
+
+		static const Path& ProxiesResultsFileName()
+		{
+			static const auto value = Path("./Proxies.bor");
 			return value;
 		}
 

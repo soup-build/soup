@@ -155,7 +155,7 @@ namespace Soup::Core::Generate
 
 			// Grab the build results
 			auto generateInfoTable = buildState.GetGenerateInfo();
-			auto evaluateGraph = buildState.BuildOperationGraph();
+			auto generateResult = buildState.BuildGenerateResult();
 			auto sharedState = buildState.GetSharedState();
 
 			// Save the runtime information so Soup View can easily visualize runtime
@@ -165,11 +165,11 @@ namespace Soup::Core::Generate
 
 			// Resolve macros before saving evaluate graph
 			Log::Diag("Resolve build macros in evaluate graph");
-			ResolveMacros(evaluateMacroManager, evaluateGraph);
+			ResolveMacros(evaluateMacroManager, generateResult);
 
 			// Save the operation graph so the evaluate phase can load it
-			auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-			OperationGraphManager::SaveState(evaluateGraphFile, evaluateGraph, _fileSystemState);
+			auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
+			GenerateResultManager::SaveState(generateResultFile, generateResult, _fileSystemState);
 
 			// Save the shared state that is to be passed to the downstream builds
 			auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
@@ -396,9 +396,9 @@ namespace Soup::Core::Generate
 
 		void ResolveMacros(
 			MacroManager& macroManager,
-			OperationGraph& operationGraph)
+			GenerateResult& generateResult)
 		{
-			for (auto& [operationId, operation] : operationGraph.GetOperations())
+			for (auto& [operationId, operation] : generateResult.GetEvaluateGraph().GetOperations())
 			{
 				ResolveMacros(macroManager, operation.Command.Arguments);
 				operation.Command.WorkingDirectory = macroManager.ResolveMacros(std::move(operation.Command.WorkingDirectory));
@@ -407,6 +407,15 @@ namespace Soup::Core::Generate
 				ResolveMacros(macroManager, operation.DeclaredOutput);
 				ResolveMacros(macroManager, operation.ReadAccess);
 				ResolveMacros(macroManager, operation.WriteAccess);
+			}
+
+			for (auto& [operationProxyId, operationProxy] : generateResult.GetOperationProxies())
+			{
+				ResolveMacros(macroManager, operationProxy.Command.Arguments);
+				operationProxy.Command.WorkingDirectory = macroManager.ResolveMacros(std::move(operationProxy.Command.WorkingDirectory));
+				operationProxy.Command.Executable = macroManager.ResolveMacros(std::move(operationProxy.Command.Executable));
+				ResolveMacros(macroManager, operationProxy.DeclaredInput);
+				ResolveMacros(macroManager, operationProxy.ReadAccess);
 			}
 		}
 

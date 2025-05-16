@@ -1,4 +1,4 @@
-﻿// <copyright file="OperationGraphWriter.cpp" company="Soup">
+﻿// <copyright file="GenerateResultWriter.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -10,35 +10,36 @@ module;
 #include <set>
 #include <vector>
 
-export module Soup.Core:OperationGraphWriter;
+export module Soup.Core:GenerateResultWriter;
 
 import Opal;
 import :FileSystemState;
-import :OperationGraph;
-import :OperationInfo;
+import :GenerateResult;
+import :OperationGraphWriter;
+import :OperationProxyInfo;
 
 using namespace Opal;
 
 namespace Soup::Core
 {
 	/// <summary>
-	/// The operation graph state writer
+	/// The operation State writer
 	/// </summary>
-	export class OperationGraphWriter
+	export class GenerateResultWriter
 	{
 	private:
-		// Binary Operation graph file format
-		static constexpr uint32_t FileVersion = 6;
+		// Binary Operation state file format
+		static constexpr uint32_t FileVersion = 1;
 
 	public:
 		static void Serialize(
-			const OperationGraph& state,
+			const GenerateResult& state,
 			const std::set<FileId>& files,
 			const FileSystemState& fileSystemState,
 			std::ostream& stream)
 		{
 			// Write the File Header with version
-			stream.write("BOG\0", 4);
+			stream.write("BGR\0", 4);
 			WriteValue(stream, FileVersion);
 
 			// Write out the set of files
@@ -53,55 +54,57 @@ namespace Soup::Core
 
 			// Write out the root operation ids
 			stream.write("ROP\0", 4);
-			WriteValues(stream, state.GetRootOperationIds());
+			WriteValues(stream, state.GetEvaluateGraph().GetRootOperationIds());
 
 			// Write out the set of operations
-			auto& operations = state.GetOperations();
+			auto& operations = state.GetEvaluateGraph().GetOperations();
 			stream.write("OPS\0", 4);
 			WriteValue(stream, static_cast<uint32_t>(operations.size()));
 			for (auto& operationValue : operations)
 			{
-				WriteOperationInfo(stream, operationValue.second);
+				OperationGraphWriter::WriteOperationInfo(stream, operationValue.second);
+			}
+			
+			// Write out the set of operation proxies
+			auto& operationProxies = state.GetOperationProxies();
+			stream.write("OPP", 4);
+			WriteValue(stream, static_cast<uint32_t>(operationProxies.size()));
+			for (auto& operationProxyValue : operationProxies)
+			{
+				WriteOperationProxyInfo(stream, operationProxyValue.second);
 			}
 		}
 
-		static void WriteOperationInfo(std::ostream& stream, const OperationInfo& operation)
+	private:
+		static void WriteOperationProxyInfo(
+			std::ostream& stream,
+			const OperationProxyInfo& operationProxy)
 		{
 			// Write out the operation id
-			WriteValue(stream, operation.Id);
+			WriteValue(stream, operationProxy.Id);
 
 			// Write out the operation title
-			WriteValue(stream, operation.Title);
+			WriteValue(stream, operationProxy.Title);
 
 			// Write the command working directory
-			WriteValue(stream, operation.Command.WorkingDirectory.ToString());
+			WriteValue(stream, operationProxy.Command.WorkingDirectory.ToString());
 
 			// Write the command executable
-			WriteValue(stream, operation.Command.Executable.ToString());
+			WriteValue(stream, operationProxy.Command.Executable.ToString());
 
 			// Write the command arguments
-			WriteValues(stream, operation.Command.Arguments);
+			WriteValues(stream, operationProxy.Command.Arguments);
 
 			// Write out the declared input files
-			WriteValues(stream, operation.DeclaredInput);
+			WriteValues(stream, operationProxy.DeclaredInput);
 
-			// Write out the declared output files
-			WriteValues(stream, operation.DeclaredOutput);
+			// Write out the finalizer task
+			WriteValue(stream, operationProxy.FinalizerTask);
 
 			// Write out the read access list
-			WriteValues(stream, operation.ReadAccess);
-
-			// Write out the write access list
-			WriteValues(stream, operation.WriteAccess);
-
-			// Write out the child operation ids
-			WriteValues(stream, operation.Children);
-
-			// Write out the dependency count
-			WriteValue(stream, operation.DependencyCount);
+			WriteValues(stream, operationProxy.ReadAccess);
 		}
 
-	private:
 		static void WriteValue(std::ostream& stream, uint32_t value)
 		{
 			stream.write(reinterpret_cast<char*>(&value), sizeof(uint32_t));

@@ -77,6 +77,10 @@ export import :SDKConfig;
 
 // Operation Graph
 export import :CommandInfo;
+export import :GenerateResult;
+export import :GenerateResultManager;
+export import :GenerateResultReader;
+export import :GenerateResultWriter;
 export import :OperationGraph;
 export import :OperationGraphManager;
 export import :OperationGraphReader;

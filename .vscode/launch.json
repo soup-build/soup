@@ -30,13 +30,14 @@
       "program": "${workspaceFolder}/out/run/Soup/Soup.exe",
       "args": [
         "build",
-        "samples/c++/build-extension/executable",
+        "samples/c++/console-application",
+        "-force",
         "-v:d"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": true
+      "externalConsole": false
     },
     {
       "name": "Debug Soup",

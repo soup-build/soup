@@ -1,4 +1,4 @@
-﻿// <copyright file="OperationGraphReader.cpp" company="Soup">
+﻿// <copyright file="GenerateResultReader.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -11,29 +11,31 @@ module;
 #include <unordered_map>
 #include <vector>
 
-export module Soup.Core:OperationGraphReader;
+export module Soup.Core:GenerateResultReader;
 
 import Opal;
 import :CommandInfo;
 import :FileSystemState;
-import :OperationGraph;
+import :GenerateResult;
+import :OperationGraphReader;
 import :OperationInfo;
+import :OperationProxyInfo;
 
 using namespace Opal;
 
 namespace Soup::Core
 {
 	/// <summary>
-	/// The operation graph state reader
+	/// The operation state reader
 	/// </summary>
-	export class OperationGraphReader
+	export class GenerateResultReader
 	{
 	private:
-		// Binary Operation Graph file format
-		static constexpr uint32_t FileVersion = 6;
+		// Binary Operation State file format
+		static constexpr uint32_t FileVersion = 1;
 
 	public:
-		static OperationGraph Deserialize(std::istream& stream, FileSystemState& fileSystemState)
+		static GenerateResult Deserialize(std::istream& stream, FileSystemState& fileSystemState)
 		{
 			// Read the entire file for fastest read operation
 			stream.seekg(0, std::ios_base::end);
@@ -55,62 +57,8 @@ namespace Soup::Core
 			return result;
 		}
 
-		static OperationInfo ReadOperationInfo(
-			char* data,
-			size_t size,
-			size_t& offset,
-			const std::unordered_map<FileId, FileId>& activeFileIdMap)
-		{
-			// Write out the operation id
-			auto id = ReadUInt32(data, size, offset);
-
-			// Write the operation title
-			auto title = ReadString(data, size, offset);
-
-			// Write the command working directory
-			auto workingDirectory = ReadString(data, size, offset);
-
-			// Write the command executable
-			auto executable = ReadString(data, size, offset);
-
-			// Write the command arguments
-			auto arguments = ReadStringList(data, size, offset);
-
-			// Write out the declared input files
-			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the declared output files
-			auto declaredOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the read access list
-			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the write access list
-			auto writeAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the child operation ids
-			auto children = ReadOperationIdList(data, size, offset);
-
-			// Write out the dependency count
-			auto dependencyCount = ReadUInt32(data, size, offset);
-
-			return OperationInfo(
-				id,
-				std::move(title),
-				CommandInfo(
-					Path(workingDirectory),
-					Path(executable),
-					std::move(arguments)),
-				std::move(declaredInput),
-				std::move(declaredOutput),
-				std::move(readAccess),
-				std::move(writeAccess),
-				std::move(children),
-				dependencyCount);
-		}
-
 	private:
-		static OperationGraph Deserialize(
+		static GenerateResult Deserialize(
 			char* data, size_t size, size_t& offset, FileSystemState& fileSystemState)
 		{
 			// BUG: Why does this need to be at the start of the file?
@@ -120,8 +68,8 @@ namespace Soup::Core
 			auto headerBuffer = std::array<char, 4>();
 			Read(data, size, offset, headerBuffer.data(), 4);
 			if (headerBuffer[0] != 'B' ||
-				headerBuffer[1] != 'O' ||
-				headerBuffer[2] != 'G' ||
+				headerBuffer[1] != 'G' ||
+				headerBuffer[2] != 'R' ||
 				headerBuffer[3] != '\0')
 			{
 				throw std::runtime_error("Invalid operation graph file header");
@@ -186,12 +134,73 @@ namespace Soup::Core
 			auto operations = std::vector<OperationInfo>(operationCount);
 			for (auto i = 0u; i < operationCount; i++)
 			{
-				operations[i] = ReadOperationInfo(data, size, offset, activeFileIdMap);
+				operations[i] = OperationGraphReader::ReadOperationInfo(data, size, offset, activeFileIdMap);
 			}
 
-			return OperationGraph(
-				std::move(rootOperationIds),
-				std::move(operations));
+			// Read the set of operation proxies
+			Read(data, size, offset, headerBuffer.data(), 4);
+			if (headerBuffer[0] != 'O' ||
+				headerBuffer[1] != 'P' ||
+				headerBuffer[2] != 'P' ||
+				headerBuffer[3] != '\0')
+			{
+				throw std::runtime_error("Invalid operation graph operation proxies header");
+			}
+
+			auto operationProxyCount = ReadUInt32(data, size, offset);
+			auto operationProxies = std::vector<OperationProxyInfo>(operationProxyCount);
+			for (auto i = 0u; i < operationProxyCount; i++)
+			{
+				operationProxies[i] = ReadOperationProxyInfo(data, size, offset, activeFileIdMap);
+			}
+
+			return GenerateResult(
+				OperationGraph(
+					std::move(rootOperationIds),
+					std::move(operations)),
+				std::move(operationProxies));
+		}
+
+		static OperationProxyInfo ReadOperationProxyInfo(
+			char* data,
+			size_t size,
+			size_t& offset,
+			const std::unordered_map<FileId, FileId>& activeFileIdMap)
+		{
+			// Write out the operation proxy id
+			auto id = ReadUInt32(data, size, offset);
+
+			// Write the operation proxy title
+			auto title = ReadString(data, size, offset);
+
+			// Write the command working directory
+			auto workingDirectory = ReadString(data, size, offset);
+
+			// Write the command executable
+			auto executable = ReadString(data, size, offset);
+
+			// Write the command arguments
+			auto arguments = ReadStringList(data, size, offset);
+
+			// Write out the declared input files
+			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			// Write the finalizer task
+			auto finalizerTask = ReadString(data, size, offset);
+
+			// Write out the read access list
+			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			return OperationProxyInfo(
+				id,
+				std::move(title),
+				CommandInfo(
+					Path(workingDirectory),
+					Path(executable),
+					std::move(arguments)),
+				std::move(declaredInput),
+				std::move(finalizerTask),
+				std::move(readAccess));
 		}
 
 		static uint32_t ReadUInt32(char* data, size_t size, size_t& offset)
