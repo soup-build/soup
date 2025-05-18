@@ -3,6 +3,7 @@
 // </copyright>
 
 #include <filesystem>
+#include <fstream>
 #include <sstream>
 #include <iostream>
 #include <memory>
@@ -16,7 +17,7 @@ using namespace Opal;
 
 #pragma warning(disable:4996)
 
-void Parse(const Path& file)
+std::vector<std::string> Parse(const Path& file)
 {
 	// Use the c api file so the input auto detects the format and converts to utf8 if necessary
 	auto stream = std::fopen(file.ToString().c_str(), "r");
@@ -27,7 +28,7 @@ void Parse(const Path& file)
 	auto parser = Soup::ParseModules::ModuleParser(input);
 	if (parser.TryParse())
 	{
-		// return parser.GetResult();
+		return parser.GetResult();
 	}
 	else
 	{
@@ -38,6 +39,8 @@ void Parse(const Path& file)
 		std::stringstream message;
 		message << "FAILED: " << line << ":" << column << " " << text;
 		Log::Info(message.str());
+
+		return std::vector<std::string>();
 	}
 }
 
@@ -67,14 +70,23 @@ int main(int argc, char** argv)
 		// Setup the real services
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
-		if (argc < 2)
+		if (argc < 3)
 		{
-			Log::Error("Invalid parameters. Expected one or two parameter.");
+			Log::Error("Invalid parameters. Expected two parameter.");
 			return -1;
 		}
 
-		auto scriptFile = Path::Parse(argv[1]);
-		Parse(scriptFile);
+		auto resultFilePath = Path::Parse(argv[1]);
+		auto sourceFilePath = Path::Parse(argv[2]);
+		auto result = Parse(sourceFilePath);
+
+		auto resultFile = std::fstream(resultFilePath.ToString(), std::ios::out);
+		for (auto& line : result)
+		{
+			resultFile << line << std::endl;
+		}
+
+		resultFile.close();
 	}
 	catch (const std::exception& ex)
 	{

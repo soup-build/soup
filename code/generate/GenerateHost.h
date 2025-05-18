@@ -11,6 +11,7 @@ namespace Soup::Core::Generate
 		static inline const char* SoupModuleName = "soup";
 		static inline const char* SoupClassName = "Soup";
 		static inline const char* SoupTaskClassName = "SoupTask";
+		static inline const char* SoupFinalizerTaskClassName = "SoupFinalizerTask";
 
 	private:
 		GenerateState* _state;
@@ -64,6 +65,41 @@ namespace Soup::Core::Generate
 			return extensions;
 		}
 
+		std::vector<ExtensionTaskDetails> DiscoverFinalizers()
+		{
+			auto extensions = std::vector<ExtensionTaskDetails>();
+
+			// Discover all class types
+			wrenEnsureSlots(_vm, 1);
+			auto variableCount = wrenGetVariableCount(_vm, _scriptFile.ToString().c_str());
+			for (auto i = 0; i < variableCount; i++)
+			{
+				wrenGetVariableAt(_vm, _scriptFile.ToString().c_str(), i, 0);
+
+				// Check if a class
+				auto type = wrenGetSlotType(_vm, 0);
+				if (type == WREN_TYPE_UNKNOWN)
+				{
+					auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
+					if (WrenHelpers::HasParentType(_vm, classHandle, SoupFinalizerTaskClassName))
+					{
+						Log::Diag("Found Build Finalizer Task");
+						auto className = WrenHelpers::GetClassName(_vm, classHandle);
+
+						extensions.push_back(
+							ExtensionTaskDetails(
+								std::move(className),
+								_scriptFile,
+								_bundlesFile,
+								{},
+								{}));
+					}
+				}
+			}
+
+			return extensions;
+		}
+
 		void EvaluateTask(const std::string& className)
 		{
 			// Load up the class
@@ -80,6 +116,30 @@ namespace Soup::Core::Generate
 
 			// Call Evaluate
 			auto evaluateMethodHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "evaluate()"));
+
+			wrenSetSlotHandle(_vm, 0, classHandle);
+			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
+		}
+
+		void EvaluateFinalizerTask(const std::string& className, const std::string& result)
+		{
+			// Load up the class
+			wrenEnsureSlots(_vm, 2);
+			wrenGetVariable(_vm, _scriptFile.ToString().c_str(), className.c_str(), 0);
+
+			// Check if a class
+			auto type = wrenGetSlotType(_vm, 0);
+			if (type != WREN_TYPE_UNKNOWN) {
+				throw std::runtime_error("Extension class name was not a class");
+			}
+
+			auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
+
+			// Load up the result
+			wrenSetSlotString(_vm, 1, result.c_str());
+
+			// Call Evaluate
+			auto evaluateMethodHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "evaluate(_)"));
 
 			wrenSetSlotHandle(_vm, 0, classHandle);
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
@@ -196,7 +256,7 @@ namespace Soup::Core::Generate
 						return SoupLoadSharedState;
 					else if (signature == "createOperation_(_,_,_,_,_,_)")
 						return SoupCreateOperation;
-					else if (signature == "createOperationProxy_(_,_,_,_,_,_)")
+					else if (signature == "createOperationProxy_(_,_,_,_,_,_,_)")
 						return SoupCreateOperationProxy;
 					else if (signature == "info_(_)")
 						return SoupLogInfo;
@@ -384,7 +444,13 @@ namespace Soup::Core::Generate
 				if (parameter6 != WREN_TYPE_STRING) {
 					throw std::runtime_error("SoupCreateOperationProxy parameter 6 must be of type string");
 				}
-				auto finalizerTask = std::string(wrenGetSlotString(_vm, 6));
+				auto resultFile = std::string(wrenGetSlotString(_vm, 6));
+
+				auto parameter7 = wrenGetSlotType(_vm, 7);
+				if (parameter7 != WREN_TYPE_STRING) {
+					throw std::runtime_error("SoupCreateOperationProxy parameter 7 must be of type string");
+				}
+				auto finalizerTask = std::string(wrenGetSlotString(_vm, 7));
 
 				_state->CreateOperationProxy(
 					std::move(title),
@@ -392,6 +458,7 @@ namespace Soup::Core::Generate
 					std::move(arguments),
 					std::move(workingDirectory),
 					std::move(declaredInput),
+					std::move(resultFile),
 					std::move(finalizerTask));
 
 				// No return value
@@ -514,14 +581,15 @@ namespace Soup::Core::Generate
 			"		createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
 			"	}\n"
 			"\n"
-			"	static createOperationProxy(title, executable, arguments, workingDirectory, declaredInput, finalizerTask) {\n"
+			"	static createOperationProxy(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask) {\n"
 			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
 			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
 			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
 			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a string.\")\n"
 			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
-			"		if (!(finalizerTask is String)) Fiber.abort(\"Executable must be a string.\")\n"
-			"		createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, finalizerTask)\n"
+			"		if (!(resultFile is String)) Fiber.abort(\"Result File must be a string.\")\n"
+			"		if (!(finalizerTask is String)) Fiber.abort(\"Finalizer Task must be a string.\")\n"
+			"		createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask)\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"
@@ -543,7 +611,7 @@ namespace Soup::Core::Generate
 			"	foreign static loadActiveState_()\n"
 			"	foreign static loadSharedState_()\n"
 			"	foreign static createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
-			"	foreign static createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, finalizerTask)\n"
+			"	foreign static createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask)\n"
 			"	foreign static info_(message)\n"
 			"	foreign static warning_(message)\n"
 			"	foreign static error_(message)\n"

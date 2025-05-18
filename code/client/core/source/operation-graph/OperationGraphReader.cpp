@@ -61,37 +61,37 @@ namespace Soup::Core
 			size_t& offset,
 			const std::unordered_map<FileId, FileId>& activeFileIdMap)
 		{
-			// Write out the operation id
+			// Read the operation id
 			auto id = ReadUInt32(data, size, offset);
 
-			// Write the operation title
+			// Read the operation title
 			auto title = ReadString(data, size, offset);
 
-			// Write the command working directory
+			// Read the command working directory
 			auto workingDirectory = ReadString(data, size, offset);
 
-			// Write the command executable
+			// Read the command executable
 			auto executable = ReadString(data, size, offset);
 
-			// Write the command arguments
+			// Read the command arguments
 			auto arguments = ReadStringList(data, size, offset);
 
-			// Write out the declared input files
+			// Read the declared input files
 			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
 
-			// Write out the declared output files
+			// Read the declared output files
 			auto declaredOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
 
-			// Write out the read access list
+			// Read the read access list
 			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
 
-			// Write out the write access list
+			// Read the write access list
 			auto writeAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
 
-			// Write out the child operation ids
+			// Read the child operation ids
 			auto children = ReadOperationIdList(data, size, offset);
 
-			// Write out the dependency count
+			// Read the dependency count
 			auto dependencyCount = ReadUInt32(data, size, offset);
 
 			return OperationInfo(

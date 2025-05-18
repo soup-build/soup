@@ -30,6 +30,7 @@ export namespace Soup::Core
 		std::string Title;
 		CommandInfo Command;
 		std::vector<FileId> DeclaredInput;
+		FileId ResultFile;
 		std::string FinalizerTask;
 
 		std::vector<FileId> ReadAccess;
@@ -40,6 +41,7 @@ export namespace Soup::Core
 			Title(),
 			Command(),
 			DeclaredInput(),
+			ResultFile(),
 			FinalizerTask(),
 			ReadAccess()
 		{
@@ -50,12 +52,14 @@ export namespace Soup::Core
 			std::string title,
 			CommandInfo command,
 			std::vector<FileId> declaredInput,
+			FileId resultFile,
 			std::string finalizerTask,
 			std::vector<FileId> readAccess) :
 			Id(id),
 			Title(std::move(title)),
 			Command(std::move(command)),
 			DeclaredInput(std::move(declaredInput)),
+			ResultFile(resultFile),
 			FinalizerTask(std::move(finalizerTask)),
 			ReadAccess(std::move(readAccess))
 		{
@@ -67,6 +71,7 @@ export namespace Soup::Core
 				Title == rhs.Title &&
 				Command == rhs.Command &&
 				DeclaredInput == rhs.DeclaredInput &&
+				ResultFile == rhs.ResultFile &&
 				FinalizerTask == rhs.FinalizerTask &&
 				ReadAccess == rhs.ReadAccess;
 		}

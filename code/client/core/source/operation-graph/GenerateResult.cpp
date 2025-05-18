@@ -95,7 +95,7 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets a value indicating if there are any proxy operations
 		/// </summary>
-		bool HasProxyOperations()
+		bool HasOperationProxies()
 		{
 			return !_operationProxies.empty();
 		}

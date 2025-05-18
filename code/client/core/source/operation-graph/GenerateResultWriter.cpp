@@ -29,7 +29,7 @@ namespace Soup::Core
 	{
 	private:
 		// Binary Operation state file format
-		static constexpr uint32_t FileVersion = 1;
+		static constexpr uint32_t FileVersion = 2;
 
 	public:
 		static void Serialize(
@@ -97,6 +97,9 @@ namespace Soup::Core
 
 			// Write out the declared input files
 			WriteValues(stream, operationProxy.DeclaredInput);
+
+			// Write out the result file
+			WriteValue(stream, operationProxy.ResultFile);
 
 			// Write out the finalizer task
 			WriteValue(stream, operationProxy.FinalizerTask);

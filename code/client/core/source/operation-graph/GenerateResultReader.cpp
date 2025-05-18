@@ -32,7 +32,7 @@ namespace Soup::Core
 	{
 	private:
 		// Binary Operation State file format
-		static constexpr uint32_t FileVersion = 1;
+		static constexpr uint32_t FileVersion = 2;
 
 	public:
 		static GenerateResult Deserialize(std::istream& stream, FileSystemState& fileSystemState)
@@ -167,28 +167,31 @@ namespace Soup::Core
 			size_t& offset,
 			const std::unordered_map<FileId, FileId>& activeFileIdMap)
 		{
-			// Write out the operation proxy id
+			// Read the operation proxy id
 			auto id = ReadUInt32(data, size, offset);
 
-			// Write the operation proxy title
+			// Read the operation proxy title
 			auto title = ReadString(data, size, offset);
 
-			// Write the command working directory
+			// Read the command working directory
 			auto workingDirectory = ReadString(data, size, offset);
 
-			// Write the command executable
+			// Read the command executable
 			auto executable = ReadString(data, size, offset);
 
-			// Write the command arguments
+			// Read the command arguments
 			auto arguments = ReadStringList(data, size, offset);
 
-			// Write out the declared input files
+			// Read the declared input files
 			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
 
-			// Write the finalizer task
+			// Read the result file
+			auto resultFile = ReadUInt32(data, size, offset);
+
+			// Read the finalizer task
 			auto finalizerTask = ReadString(data, size, offset);
 
-			// Write out the read access list
+			// Read the read access list
 			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
 
 			return OperationProxyInfo(
@@ -199,6 +202,7 @@ namespace Soup::Core
 					Path(executable),
 					std::move(arguments)),
 				std::move(declaredInput),
+				resultFile,
 				std::move(finalizerTask),
 				std::move(readAccess));
 		}

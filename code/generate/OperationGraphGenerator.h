@@ -124,6 +124,7 @@ namespace Soup::Core::Generate
 			std::vector<std::string> arguments,
 			Path workingDirectory,
 			std::vector<Path> declaredInput,
+			Path resultFile,
 			std::string finalizerTask)
 		{
 			Log::Diag("Create Operation Proxy: {}", title);
@@ -153,6 +154,13 @@ namespace Soup::Core::Generate
 			for (auto& file : _readAccessList)
 				Log::Diag(file.ToString());
 
+			// Verify allowed write access
+			auto declaredOutput = std::vector<Path>({resultFile});
+			if (!IsAllowedAccess(_writeAccessList, declaredOutput, commandInfo.WorkingDirectory))
+			{
+				throw std::runtime_error("Operation does not have permission to write requested output.");
+			}
+
 			// Generate a unique id for this new operation
 			_uniqueId++;
 			auto operationId = _uniqueId;
@@ -160,6 +168,7 @@ namespace Soup::Core::Generate
 			// Resolve the requested files to unique ids
 			auto declaredInputFileIds = _fileSystemState.ToFileIds(declaredInput, commandInfo.WorkingDirectory);
 			auto readAccessFileIds = _fileSystemState.ToFileIds(_readAccessList, commandInfo.WorkingDirectory);
+			auto resultFileId = _fileSystemState.ToFileId(resultFile, commandInfo.WorkingDirectory);
 
 			// Build up the declared build operation
 			auto operationProxyInfo = OperationProxyInfo(
@@ -167,6 +176,7 @@ namespace Soup::Core::Generate
 				title,
 				commandInfo,
 				declaredInputFileIds,
+				resultFileId,
 				finalizerTask,
 				readAccessFileIds);
 			auto& operationProxyInfoReference = _result.AddOperationProxy(std::move(operationProxyInfo));

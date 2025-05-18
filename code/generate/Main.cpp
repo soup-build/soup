@@ -53,15 +53,30 @@ int main(int argc, char** argv)
 
 		Log::Diag("ProgramStart");
 
-		if (argc != 2)
+		if (argc != 3)
 		{
-			Log::Error("Invalid parameters. Expected one parameter.");
+			Log::Error("Invalid parameters. Expected two parameters.");
 			return -1;
 		}
 
-		auto soupTargetDirectory = Path(argv[1]);
+		auto generatePhase = std::string(argv[1]);
+		auto soupTargetDirectory = Path::Parse(argv[2]);
 		auto generateEngine = Soup::Core::Generate::GenerateEngine();
-		generateEngine.Run(soupTargetDirectory);
+		if (generatePhase == "Core")
+		{
+			generateEngine.RunCore(soupTargetDirectory);
+		}
+		else if (generatePhase == "Finalizer")
+		{
+			generateEngine.RunFinalizer(soupTargetDirectory);
+		}
+		else
+		{
+			Log::Error("Invalid parameters. Unknown build phase.");
+			return -1;
+		}
+
+		return 0;
 	}
 	catch (const std::exception& ex)
 	{

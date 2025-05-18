@@ -111,6 +111,7 @@ namespace Soup::Core::Generate
 			std::vector<std::string> arguments,
 			std::string workingDirectory,
 			std::vector<std::string> declaredInput,
+			std::string resultFile,
 			std::string finalizerTask)
 		{
 			auto declaredInputPaths = std::vector<Path>();
@@ -123,6 +124,7 @@ namespace Soup::Core::Generate
 				std::move(arguments),
 				Path(std::move(workingDirectory)),
 				std::move(declaredInputPaths),
+				Path(std::move(resultFile)),
 				std::move(finalizerTask));
 		}
 

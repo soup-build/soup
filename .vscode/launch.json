@@ -40,6 +40,20 @@
       "externalConsole": false
     },
     {
+      "name": "Debug Generate (VS)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/run/Soup/Soup.Generate.exe",
+      "args": [
+        "Finalizer",
+        "${workspaceFolder}/out/C++/Local/Samples.Cpp.ConsoleApplication/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false
+    },
+    {
       "name": "Debug Soup",
       "type": "cppdbg",
       "request": "launch",
