@@ -85,6 +85,7 @@ namespace Soup::Core
 			{
 				auto& operationProxy = operationProxyReference.second;
 				files.insert(operationProxy.DeclaredInput.begin(), operationProxy.DeclaredInput.end());
+				files.insert(operationProxy.ResultFile);
 				files.insert(operationProxy.ReadAccess.begin(), operationProxy.ReadAccess.end());
 			}
 

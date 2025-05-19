@@ -81,10 +81,10 @@ namespace Soup::Core
 			std::ostream& stream,
 			const OperationProxyInfo& operationProxy)
 		{
-			// Write out the operation id
+			// Write out the operation proxy id
 			WriteValue(stream, operationProxy.Id);
 
-			// Write out the operation title
+			// Write out the operation proxy title
 			WriteValue(stream, operationProxy.Title);
 
 			// Write the command working directory

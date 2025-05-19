@@ -50,7 +50,7 @@ internal static class OperationGraphWriter
 		}
 	}
 
-	private static void WriteOperationInfo(BinaryWriter writer, OperationInfo operation)
+	public static void WriteOperationInfo(BinaryWriter writer, OperationInfo operation)
 	{
 		// Write out the operation id
 		writer.Write(operation.Id.Value);

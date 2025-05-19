@@ -26,7 +26,7 @@ public sealed class ValueTableWriter
 
 		// Write out the root table
 		writer.Write(TBL);
-		WriteValue(writer, state);
+		WriteValueTable(writer, state);
 	}
 
 	private static void WriteValue(BinaryWriter writer, Value value)
@@ -37,7 +37,7 @@ public sealed class ValueTableWriter
 		switch (value.Type)
 		{
 			case ValueType.Table:
-				WriteValue(writer, value.AsTable());
+				WriteValueTable(writer, value.AsTable());
 				break;
 			case ValueType.List:
 				WriteValue(writer, value.AsList());
@@ -68,7 +68,7 @@ public sealed class ValueTableWriter
 		}
 	}
 
-	private static void WriteValue(BinaryWriter writer, ValueTable value)
+	public static void WriteValueTable(BinaryWriter writer, ValueTable value)
 	{
 		// Write the count of values
 		writer.Write((uint)value.Count);
