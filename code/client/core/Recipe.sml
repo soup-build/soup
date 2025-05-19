@@ -33,14 +33,14 @@ Partitions: [
 	{ Source: 'source/operation-graph/CommandInfo.cpp' }
 	{ Source: 'source/operation-graph/GenerateResult.cpp', Imports: [ 'source/operation-graph/CommandInfo.cpp', 'source/operation-graph/OperationGraph.cpp', 'source/operation-graph/OperationProxyInfo.cpp' ] }
 	{ Source: 'source/operation-graph/GenerateResultManager.cpp', Imports: [ 'source/operation-graph/GenerateResultReader.cpp', 'source/operation-graph/GenerateResultWriter.cpp' ] }
-	{ Source: 'source/operation-graph/GenerateResultReader.cpp', Imports: [ 'source/operation-graph/GenerateResult.cpp', 'source/operation-graph/OperationGraphReader.cpp', 'source/build/FileSystemState.cpp' ] }
-	{ Source: 'source/operation-graph/GenerateResultWriter.cpp', Imports: [ 'source/operation-graph/GenerateResult.cpp', 'source/operation-graph/OperationGraphWriter.cpp', 'source/build/FileSystemState.cpp' ] }
+	{ Source: 'source/operation-graph/GenerateResultReader.cpp', Imports: [ 'source/operation-graph/GenerateResult.cpp', 'source/operation-graph/OperationGraphReader.cpp', 'source/build/FileSystemState.cpp', 'source/value-table/ValueTableReader.cpp' ] }
+	{ Source: 'source/operation-graph/GenerateResultWriter.cpp', Imports: [ 'source/operation-graph/GenerateResult.cpp', 'source/operation-graph/OperationGraphWriter.cpp', 'source/build/FileSystemState.cpp', 'source/value-table/ValueTableWriter.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraph.cpp', Imports: [ 'source/operation-graph/CommandInfo.cpp', 'source/operation-graph/OperationInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraphManager.cpp', Imports: [ 'source/operation-graph/OperationGraphReader.cpp', 'source/operation-graph/OperationGraphWriter.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraphReader.cpp', Imports: [ 'source/operation-graph/OperationGraph.cpp', 'source/build/FileSystemState.cpp' ] }
 	{ Source: 'source/operation-graph/OperationGraphWriter.cpp', Imports: [ 'source/operation-graph/OperationGraph.cpp', 'source/build/FileSystemState.cpp' ] }
 	{ Source: 'source/operation-graph/OperationInfo.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/CommandInfo.cpp' ] }
-	{ Source: 'source/operation-graph/OperationProxyInfo.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/CommandInfo.cpp' ] }
+	{ Source: 'source/operation-graph/OperationProxyInfo.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/CommandInfo.cpp', 'source/value-table/Value.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResult.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationInfo.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResults.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationInfo.cpp', 'source/operation-graph/OperationResult.cpp' ] }
 	{ Source: 'source/operation-graph/OperationResultsManager.cpp', Imports: [ 'source/build/FileSystemState.cpp', 'source/operation-graph/OperationResultsReader.cpp', 'source/operation-graph/OperationResultsWriter.cpp' ] }

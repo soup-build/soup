@@ -17,19 +17,20 @@ import :FileSystemState;
 import :GenerateResult;
 import :OperationGraphWriter;
 import :OperationProxyInfo;
+import :ValueTableWriter;
 
 using namespace Opal;
 
 namespace Soup::Core
 {
 	/// <summary>
-	/// The operation State writer
+	/// The generate result writer
 	/// </summary>
 	export class GenerateResultWriter
 	{
 	private:
-		// Binary Operation state file format
-		static constexpr uint32_t FileVersion = 2;
+		// Binary generate result file format
+		static constexpr uint32_t FileVersion = 1;
 
 	public:
 		static void Serialize(
@@ -103,6 +104,9 @@ namespace Soup::Core
 
 			// Write out the finalizer task
 			WriteValue(stream, operationProxy.FinalizerTask);
+
+			// Write out the finalizer task
+			ValueTableWriter::WriteValueTable(stream, operationProxy.FinalizerState);
 
 			// Write out the read access list
 			WriteValues(stream, operationProxy.ReadAccess);

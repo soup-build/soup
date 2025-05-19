@@ -20,19 +20,20 @@ import :GenerateResult;
 import :OperationGraphReader;
 import :OperationInfo;
 import :OperationProxyInfo;
+import :ValueTableReader;
 
 using namespace Opal;
 
 namespace Soup::Core
 {
 	/// <summary>
-	/// The operation state reader
+	/// The generate result reader
 	/// </summary>
 	export class GenerateResultReader
 	{
 	private:
-		// Binary Operation State file format
-		static constexpr uint32_t FileVersion = 2;
+		// Binary generate result file format
+		static constexpr uint32_t FileVersion = 1;
 
 	public:
 		static GenerateResult Deserialize(std::istream& stream, FileSystemState& fileSystemState)
@@ -51,7 +52,7 @@ namespace Soup::Core
 
 			if (offset != contentBuffer.size())
 			{
-				throw std::runtime_error("Value Table file corrupted - Did not read the entire file");
+				throw std::runtime_error("Generate Result file corrupted - Did not read the entire file");
 			}
 
 			return result;
@@ -191,6 +192,9 @@ namespace Soup::Core
 			// Read the finalizer task
 			auto finalizerTask = ReadString(data, size, offset);
 
+			// Read the finalizer state
+			auto finalizerState = ValueTableReader::ReadValueTable(data, size, offset);
+
 			// Read the read access list
 			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
 
@@ -204,6 +208,7 @@ namespace Soup::Core
 				std::move(declaredInput),
 				resultFile,
 				std::move(finalizerTask),
+				std::move(finalizerState),
 				std::move(readAccess));
 		}
 

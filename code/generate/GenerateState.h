@@ -112,7 +112,8 @@ namespace Soup::Core::Generate
 			std::string workingDirectory,
 			std::vector<std::string> declaredInput,
 			std::string resultFile,
-			std::string finalizerTask)
+			std::string finalizerTask,
+			ValueTable finalizerState)
 		{
 			auto declaredInputPaths = std::vector<Path>();
 			for (auto& value : declaredInput)
@@ -125,7 +126,8 @@ namespace Soup::Core::Generate
 				Path(std::move(workingDirectory)),
 				std::move(declaredInputPaths),
 				Path(std::move(resultFile)),
-				std::move(finalizerTask));
+				std::move(finalizerTask),
+				std::move(finalizerState));
 		}
 
 		void Update(ValueTable activeState, ValueTable sharedState)

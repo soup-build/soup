@@ -49,7 +49,7 @@ namespace Soup::Core
 
 			if (offset != contentBuffer.size())
 			{
-				throw std::runtime_error("Value Table file corrupted - Did not read the entire file");
+				throw std::runtime_error("Operation Graph file corrupted - Did not read the entire file");
 			}
 
 			return result;

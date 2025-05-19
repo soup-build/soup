@@ -124,7 +124,7 @@ namespace Soup::Core::Generate
 		void EvaluateFinalizerTask(const std::string& className, const std::string& result)
 		{
 			// Load up the class
-			wrenEnsureSlots(_vm, 2);
+			wrenEnsureSlots(_vm, 3);
 			wrenGetVariable(_vm, _scriptFile.ToString().c_str(), className.c_str(), 0);
 
 			// Check if a class
@@ -135,11 +135,14 @@ namespace Soup::Core::Generate
 
 			auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
 
+			// Load up the state
+			WrenValueTable::SetSlotTable(_vm, 1, ValueTable());
+
 			// Load up the result
-			wrenSetSlotString(_vm, 1, result.c_str());
+			wrenSetSlotString(_vm, 2, result.c_str());
 
 			// Call Evaluate
-			auto evaluateMethodHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "evaluate(_)"));
+			auto evaluateMethodHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "evaluate(_,_)"));
 
 			wrenSetSlotHandle(_vm, 0, classHandle);
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
@@ -256,7 +259,7 @@ namespace Soup::Core::Generate
 						return SoupLoadSharedState;
 					else if (signature == "createOperation_(_,_,_,_,_,_)")
 						return SoupCreateOperation;
-					else if (signature == "createOperationProxy_(_,_,_,_,_,_,_)")
+					else if (signature == "createOperationProxy_(_,_,_,_,_,_,_,_)")
 						return SoupCreateOperationProxy;
 					else if (signature == "info_(_)")
 						return SoupLogInfo;
@@ -426,7 +429,7 @@ namespace Soup::Core::Generate
 				if (parameter3 != WREN_TYPE_LIST) {
 					throw std::runtime_error("SoupCreateOperationProxy parameter 3 must be of type list");
 				}
-				auto arguments = WrenHelpers::GetSlotStringList(_vm, 3, 8);
+				auto arguments = WrenHelpers::GetSlotStringList(_vm, 3, 9);
 				
 				auto parameter4 = wrenGetSlotType(_vm, 4);
 				if (parameter4 != WREN_TYPE_STRING) {
@@ -438,7 +441,7 @@ namespace Soup::Core::Generate
 				if (parameter5 != WREN_TYPE_LIST) {
 					throw std::runtime_error("SoupCreateOperationProxy parameter 5 must be of type list");
 				}
-				auto declaredInput = WrenHelpers::GetSlotStringList(_vm, 5, 8);
+				auto declaredInput = WrenHelpers::GetSlotStringList(_vm, 5, 9);
 
 				auto parameter6 = wrenGetSlotType(_vm, 6);
 				if (parameter6 != WREN_TYPE_STRING) {
@@ -452,6 +455,12 @@ namespace Soup::Core::Generate
 				}
 				auto finalizerTask = std::string(wrenGetSlotString(_vm, 7));
 
+				auto parameter8 = wrenGetSlotType(_vm, 8);
+				if (parameter8 != WREN_TYPE_MAP) {
+					throw std::runtime_error("SoupCreateOperationProxy parameter 8 must be of type map");
+				}
+				auto finalizerState = WrenValueTable::GetSlotTable(_vm, 8);
+
 				_state->CreateOperationProxy(
 					std::move(title),
 					std::move(executable),
@@ -459,7 +468,8 @@ namespace Soup::Core::Generate
 					std::move(workingDirectory),
 					std::move(declaredInput),
 					std::move(resultFile),
-					std::move(finalizerTask));
+					std::move(finalizerTask),
+					std::move(finalizerState));
 
 				// No return value
 				wrenEnsureSlots(_vm, 1);
@@ -552,7 +562,7 @@ namespace Soup::Core::Generate
 			"	static evaluate() {}\n"
 			"}\n"
 			"class SoupFinalizerTask {\n"
-			"	static evaluate(result) {}\n"
+			"	static evaluate(state, results) {}\n"
 			"}\n"
 			"\n"
 			"class Soup {\n"
@@ -581,7 +591,7 @@ namespace Soup::Core::Generate
 			"		createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
 			"	}\n"
 			"\n"
-			"	static createOperationProxy(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask) {\n"
+			"	static createOperationProxy(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask, finalizerState) {\n"
 			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
 			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
 			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
@@ -589,7 +599,8 @@ namespace Soup::Core::Generate
 			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
 			"		if (!(resultFile is String)) Fiber.abort(\"Result File must be a string.\")\n"
 			"		if (!(finalizerTask is String)) Fiber.abort(\"Finalizer Task must be a string.\")\n"
-			"		createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask)\n"
+			"		if (!(finalizerState is Map)) Fiber.abort(\"Finalizer Task must be a map.\")\n"
+			"		createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask, finalizerState)\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"
@@ -611,7 +622,7 @@ namespace Soup::Core::Generate
 			"	foreign static loadActiveState_()\n"
 			"	foreign static loadSharedState_()\n"
 			"	foreign static createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
-			"	foreign static createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask)\n"
+			"	foreign static createOperationProxy_(title, executable, arguments, workingDirectory, declaredInput, resultFile, finalizerTask, finalizerState)\n"
 			"	foreign static info_(message)\n"
 			"	foreign static warning_(message)\n"
 			"	foreign static error_(message)\n"

@@ -102,12 +102,12 @@ namespace Soup::Core::Generate
 			// Build up the declared build operation
 			auto operationInfo = OperationInfo(
 				operationId,
-				title,
-				commandInfo,
-				declaredInputFileIds,
-				declaredOutputFileIds,
-				readAccessFileIds,
-				writeAccessFileIds);
+				std::move(title),
+				std::move(commandInfo),
+				std::move(declaredInputFileIds),
+				std::move(declaredOutputFileIds),
+				std::move(readAccessFileIds),
+				std::move(writeAccessFileIds));
 			auto& operationInfoReference = _result.GetEvaluateGraph().AddOperation(std::move(operationInfo));
 
 			StoreLookupInfo(operationInfoReference);
@@ -125,7 +125,8 @@ namespace Soup::Core::Generate
 			Path workingDirectory,
 			std::vector<Path> declaredInput,
 			Path resultFile,
-			std::string finalizerTask)
+			std::string finalizerTask,
+			ValueTable finalizerState)
 		{
 			Log::Diag("Create Operation Proxy: {}", title);
 
@@ -173,12 +174,13 @@ namespace Soup::Core::Generate
 			// Build up the declared build operation
 			auto operationProxyInfo = OperationProxyInfo(
 				operationId,
-				title,
-				commandInfo,
-				declaredInputFileIds,
+				std::move(title),
+				std::move(commandInfo),
+				std::move(declaredInputFileIds),
 				resultFileId,
-				finalizerTask,
-				readAccessFileIds);
+				std::move(finalizerTask),
+				std::move(finalizerState),
+				std::move(readAccessFileIds));
 			auto& operationProxyInfoReference = _result.AddOperationProxy(std::move(operationProxyInfo));
 			(operationProxyInfoReference);
 		}

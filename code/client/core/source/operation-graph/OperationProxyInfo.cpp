@@ -1,10 +1,11 @@
-﻿// <copyright file="OperationInfo.cpp" company="Soup">
+﻿// <copyright file="OperationProxyInfo.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
 module;
 
 #include <chrono>
+#include <map>
 #include <string>
 
 export module Soup.Core:OperationProxyInfo;
@@ -12,6 +13,7 @@ export module Soup.Core:OperationProxyInfo;
 import Opal;
 import :CommandInfo;
 import :FileSystemState;
+import :Value;
 
 using namespace Opal;
 using namespace std::chrono_literals;
@@ -32,6 +34,7 @@ export namespace Soup::Core
 		std::vector<FileId> DeclaredInput;
 		FileId ResultFile;
 		std::string FinalizerTask;
+		ValueTable FinalizerState;
 
 		std::vector<FileId> ReadAccess;
 
@@ -43,6 +46,7 @@ export namespace Soup::Core
 			DeclaredInput(),
 			ResultFile(),
 			FinalizerTask(),
+			FinalizerState(),
 			ReadAccess()
 		{
 		}
@@ -54,6 +58,7 @@ export namespace Soup::Core
 			std::vector<FileId> declaredInput,
 			FileId resultFile,
 			std::string finalizerTask,
+			ValueTable finalizerState,
 			std::vector<FileId> readAccess) :
 			Id(id),
 			Title(std::move(title)),
@@ -61,6 +66,7 @@ export namespace Soup::Core
 			DeclaredInput(std::move(declaredInput)),
 			ResultFile(resultFile),
 			FinalizerTask(std::move(finalizerTask)),
+			FinalizerState(std::move(finalizerState)),
 			ReadAccess(std::move(readAccess))
 		{
 		}
@@ -73,6 +79,7 @@ export namespace Soup::Core
 				DeclaredInput == rhs.DeclaredInput &&
 				ResultFile == rhs.ResultFile &&
 				FinalizerTask == rhs.FinalizerTask &&
+				FinalizerState == rhs.FinalizerState &&
 				ReadAccess == rhs.ReadAccess;
 		}
 	};
