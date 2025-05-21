@@ -5,6 +5,7 @@
 module;
 
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 
 export module Soup.Core:RecipeExtensions;
