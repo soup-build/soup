@@ -27,7 +27,7 @@
 		<None Remove="assets/Soup.ico" />
 		<AvaloniaResource Include="assets/Soup.ico" />
 	</ItemGroup>
-	<ItemGroup >
+	<ItemGroup>
 		<None Include="../../../out/C++/Local/SoupTools/1.0.0/$(SoupConfigHash)/bin/$(SoupToolsDll)" Link="$(SoupToolsDll)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -47,5 +47,10 @@
 	<ItemGroup>
 		<ProjectReference Include="../opal/Opal.csproj" />
 		<ProjectReference Include="../utilities/Soup.Utilities.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="views\FinalizerTaskGraphView.axaml.cs">
+	    <DependentUpon>FinalizerTaskGraphView.axaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 </Project>

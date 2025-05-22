@@ -2,7 +2,7 @@
   "profiles": {
     "SoupView": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\mwasp\\source\\repos\\soup\\samples\\c++\\build-extension\\executable\\Recipe.sml",
+      "commandLineArgs": "C:\\Users\\mwasp\\source\\repos\\soup\\samples\\c++\\console-application\\Recipe.sml",
       "workingDirectory": "C:\\Users\\mwasp\\source\\repos\\soup\\out\\run\\Soup",
       "nativeDebugging": true
     }

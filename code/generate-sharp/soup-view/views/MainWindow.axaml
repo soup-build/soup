@@ -64,6 +64,10 @@
 					Command="{Binding SelectTasksCommand}"
 					IsSelected="{Binding IsTasksSelected}" />
 				<v:SelectedButton
+					Content="Finalizer Tasks"
+					Command="{Binding SelectFinalizerTasksCommand}"
+					IsSelected="{Binding IsFinalizerTasksSelected}" />
+				<v:SelectedButton
 					Content="Operations"
 					Command="{Binding SelectOperationsCommand}"
 					IsSelected="{Binding IsOperationsSelected}" />

@@ -14,26 +14,28 @@ namespace Soup::Core::Generate
 	class ExtensionFinalizer
 	{
 	private:
-		std::map<std::string, ExtensionTaskDetails> _tasks;
+		std::map<std::string, ExtensionTaskDetails> _finalizerTasks;
+		ValueTable _extensionTaskInfoTable;
 
 	public:
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ExtensionFinalizer"/> class.
 		/// </summary>
 		ExtensionFinalizer() :
-			_tasks()
+			_finalizerTasks(),
+			_extensionTaskInfoTable()
 		{
 		}
 
 		/// <summary>
 		/// Register extension task
 		/// </summary>
-		void RegisterExtensionTask(ExtensionTaskDetails extensionTaskDetails)
+		void RegisterFinalizerTask(ExtensionTaskDetails extensionTaskDetails)
 		{
 			auto name = extensionTaskDetails.Name;
-			Log::Diag("RegisterExtensionTask: {}", name);
+			Log::Diag("RegisterFinalizerTask: {}", name);
 
-			auto insertResult = _tasks.emplace(name, std::move(extensionTaskDetails));
+			auto insertResult = _finalizerTasks.emplace(name, std::move(extensionTaskDetails));
 			if (!insertResult.second)
 			{
 				Log::HighPriority("An extension task with the provided name has already been registered: {}", name);
@@ -44,68 +46,47 @@ namespace Soup::Core::Generate
 		/// <summary>
 		/// Execute all build extensions
 		/// </summary>
-		void Execute(GenerateState& state)
+		void Execute(GenerateState& state, const OperationProxyInfo& operationProxy)
 		{
-			auto runtimeOrderList = ValueList();
-			auto extensionTaskInfoTable = ValueTable();
-
 			// Run all finalizer tasks
-			for (auto& [taskName, currentTask] : _tasks)
+			auto finalizerTaskResult = _finalizerTasks.find(operationProxy.FinalizerTask);
+			if (finalizerTaskResult == _finalizerTasks.end())
 			{
-				// Create a Wren Host to evaluate the extension task
-				auto host = std::make_unique<GenerateHost>(currentTask.ScriptFile, currentTask.BundlesFile);
-				host->InterpretMain();
-
-				// Set the current state AFTER we initialize to prevent pre-loading
-				host->SetState(state);
-
-				Log::Info("FinalizerTaskStart: {}", currentTask.Name);
-
-				host->EvaluateFinalizerTask(currentTask.Name, "TEST RESULT");
-
-				Log::Info("FinalizerTaskDone: {}", currentTask.Name);
-
-				// Get the final state to be passed to the next extension
-				auto updatedActiveState = host->GetUpdatedActiveState();
-				auto updatedSharedState = host->GetUpdatedSharedState();
-
-				auto runBeforeList = ValueList();
-				for (const auto& value : currentTask.RunBeforeList)
-					runBeforeList.push_back(Value(value));
-
-				auto runAfterList = ValueList();
-				for (const auto& value : currentTask.RunAfterList)
-					runAfterList.push_back(Value(value));
-
-				auto runAfterClosureList = ValueList();
-				for (const auto& value : currentTask.RunAfterClosureList)
-					runAfterClosureList.push_back(Value(value));
-
-				// Build the extension task info
-				auto extensionTaskInfo = ValueTable();
-				extensionTaskInfo.emplace("ActiveState", Value(updatedActiveState));
-				extensionTaskInfo.emplace("SharedState", Value(updatedSharedState));
-				extensionTaskInfo.emplace("RunBeforeList", Value(std::move(runBeforeList)));
-				extensionTaskInfo.emplace("RunAfterList", Value(std::move(runAfterList)));
-				extensionTaskInfo.emplace("RunAfterClosureList", Value(std::move(runAfterClosureList)));
-
-				extensionTaskInfoTable.emplace(currentTask.Name, Value(std::move(extensionTaskInfo)));
-				runtimeOrderList.push_back(Value(currentTask.Name));
-
-				// Mark the extension task completed
-				currentTask.HasRun = true;
-
-				// Update state for next extension task
-				Log::Info("UpdateState");
-				state.Update(std::move(updatedActiveState), std::move(updatedSharedState));
+				Log::HighPriority("Finalizer Task does not exist: {}", operationProxy.FinalizerTask);
+				throw std::runtime_error("Missing finalizer task");
 			}
 
+			auto& currentTask = finalizerTaskResult->second;
+
+			// Create a Wren Host to evaluate the extension task
+			auto host = std::make_unique<GenerateHost>(currentTask.ScriptFile, currentTask.BundlesFile);
+			host->InterpretMain();
+
+			// Set the current state AFTER we initialize to prevent pre-loading
+			host->SetState(state);
+
+			Log::Info("FinalizerTaskStart: {}", currentTask.Name);
+
+			auto finalizerResult = std::string("TEST RESULT");
+
+			host->EvaluateFinalizerTask(currentTask.Name, operationProxy.FinalizerState, finalizerResult);
+
+			Log::Info("FinalizerTaskDone: {}", currentTask.Name);
+
+			// Build the extension task info
+			auto extensionTaskInfo = ValueTable();
+			extensionTaskInfo.emplace("FinalizerState", Value(operationProxy.FinalizerState));
+			extensionTaskInfo.emplace("FinalizerResult", Value(finalizerResult));
+
+			_extensionTaskInfoTable.emplace(currentTask.Name, Value(std::move(extensionTaskInfo)));
+		}
+
+		void BuildGenerateInfo(GenerateState& state)
+		{
 			// Store the runtime information for easy debugging
 			auto generateInfoTable = ValueTable();
-			generateInfoTable.emplace("Version", Value("0.1"));
-			generateInfoTable.emplace("RuntimeOrder", Value(std::move(runtimeOrderList)));
-			generateInfoTable.emplace("TaskInfo", Value(std::move(extensionTaskInfoTable)));
-			generateInfoTable.emplace("GlobalState", Value(state.GetGlobalState()));
+			generateInfoTable.emplace("Version", Value(std::string("0.1")));
+			generateInfoTable.emplace("TaskInfo", Value(std::move(_extensionTaskInfoTable)));
 
 			state.SetGenerateInfo(std::move(generateInfoTable));
 		}

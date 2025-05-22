@@ -57,11 +57,15 @@ public class GenerateResult
 	/// </summary>
 	public OperationGraph EvaluateGraph { get; }
 
-
 	/// <summary>
 	/// Get Operations
 	/// </summary>
 	public IReadOnlyDictionary<OperationProxyId, OperationProxyInfo> OperationProxies => this.operationProxies;
+
+	/// <summary>
+	/// Get a value indicating if there are operation proxies
+	/// </summary>
+	public bool HasOperationProxies => this.operationProxies.Count > 0;
 
 	/// <summary>
 	/// Add an operation proxy info

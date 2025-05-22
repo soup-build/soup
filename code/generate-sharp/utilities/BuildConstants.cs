@@ -52,7 +52,17 @@ public static class BuildConstants
 	public static Path EvaluateResultsFileName => new Path("./Evaluate.bor");
 
 	/// <summary>
+	/// Gets the Generate Result file name
+	/// </summary>
+	public static Path GenerateResultFileName => new Path("./Generate.bgr");
+
+	/// <summary>
 	/// Gets the Generate info Value Table file name
 	/// </summary>
 	public static Path GenerateInfoFileName => new Path("./GenerateInfo.bvt");
+
+	/// <summary>
+	/// Gets the Generate finalizer info Value Table file name
+	/// </summary>
+	public static Path GenerateFinalizerInfoFileName => new Path("./GenerateFinalizerInfo.bvt");
 }
