@@ -5,6 +5,7 @@
 module;
 
 #include <set>
+#include <sstream>
 #include <string>
 
 export module Soup.Core:SystemAccessTracker;
