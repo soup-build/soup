@@ -5,6 +5,7 @@
 module;
 
 #include <memory>
+#include <sstream>
 
 export module Soup.Core:LocalUserConfigExtensions;
 

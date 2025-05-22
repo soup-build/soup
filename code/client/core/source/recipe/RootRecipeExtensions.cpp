@@ -4,6 +4,7 @@
 
 module;
 
+#include <sstream>
 #include <stdexcept>
 
 export module Soup.Core:RootRecipeExtensions;
