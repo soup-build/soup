@@ -63,11 +63,20 @@ public class OperationGraphViewModel : ContentPaneViewModel
 
 					var soupTargetDirectory = targetPath + new Path("./.soup/");
 
-					var evaluateGraphFile = soupTargetDirectory + BuildConstants.EvaluateGraphFileName;
-					if (!OperationGraphManager.TryLoadState(evaluateGraphFile, this.fileSystemState, out var evaluateGraph))
+					var generateResultFile = soupTargetDirectory + BuildConstants.GenerateResultFileName;
+					if (!GenerateResultManager.TryLoadState(generateResultFile, this.fileSystemState, out var generateResult))
 					{
-						NotifyError($"Failed to load Operation Graph: {evaluateGraphFile}");
+						NotifyError($"Failed to load generate result: {generateResultFile}");
 						return null;
+					}
+
+					// Check for the optional evaluate graph
+					var evaluateGraphFile = soupTargetDirectory + BuildConstants.EvaluateGraphFileName;
+					OperationGraph? evaluateGraph = null;
+					if (generateResult.HasOperationProxies &&
+						OperationGraphManager.TryLoadState(evaluateGraphFile, this.fileSystemState, out var loadEvaluateGraph))
+					{
+						evaluateGraph = loadEvaluateGraph;
 					}
 
 					// Check for the optional results
@@ -78,7 +87,7 @@ public class OperationGraphViewModel : ContentPaneViewModel
 						operationResults = loadOperationResults;
 					}
 
-					return BuildGraph(evaluateGraph, operationResults);
+					return BuildGraph(generateResult, evaluateGraph, operationResults);
 				}
 				else
 				{
@@ -94,13 +103,16 @@ public class OperationGraphViewModel : ContentPaneViewModel
 	}
 
 	private List<GraphNodeViewModel> BuildGraph(
-		OperationGraph evaluateGraph,
+		GenerateResult generateResult,
+		OperationGraph? evaluateGraph,
 		OperationResults? operationResults)
 	{
 		this.operationDetailsLookup.Clear();
 
-		var graph = evaluateGraph.Operations
-			.Select(value => (value.Value, value.Value.Children.Select(value => evaluateGraph.Operations[value])));
+		var activeGraph = evaluateGraph is not null ? evaluateGraph : generateResult.EvaluateGraph;
+
+		var graph = activeGraph.Operations
+			.Select(value => (value.Value, value.Value.Children.Select(value => activeGraph.Operations[value])));
 
 		// TODO: Should the layout be a visual aspect of the view? Yes, yes it should.
 		var graphView = GraphBuilder.BuildDirectedAcyclicGraphView(

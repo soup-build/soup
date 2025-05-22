@@ -121,7 +121,7 @@ namespace Soup::Core::Generate
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
 		}
 
-		void EvaluateFinalizerTask(const std::string& className, const std::string& result)
+		void EvaluateFinalizerTask(const std::string& className, const ValueTable& state, const std::string& result)
 		{
 			// Load up the class
 			wrenEnsureSlots(_vm, 3);
@@ -136,7 +136,7 @@ namespace Soup::Core::Generate
 			auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
 
 			// Load up the state
-			WrenValueTable::SetSlotTable(_vm, 1, ValueTable());
+			WrenValueTable::SetSlotTable(_vm, 1, state);
 
 			// Load up the result
 			wrenSetSlotString(_vm, 2, result.c_str());

@@ -90,6 +90,12 @@ namespace Soup::Core
 			return value;
 		}
 
+		static const Path& GenerateFinalizerInfoFileName()
+		{
+			static const auto value = Path("./GenerateFinalizerInfo.bvt");
+			return value;
+		}
+
 		static const Path& SoupTargetDirectory()
 		{
 			static const auto value = Path("./.soup/");

@@ -26,6 +26,12 @@ public static class DesignData
 			SelectedTask = new TaskDetailsViewModel([]),
 		};
 
+	public static FinalizerTaskGraphViewModel ExampleFinalizerTaskGraph { get; } =
+		new FinalizerTaskGraphViewModel()
+		{
+			SelectedTask = new TaskDetailsViewModel([]),
+		};
+
 	public static OperationGraphViewModel ExampleOperationGraph { get; } =
 		new OperationGraphViewModel()
 		{

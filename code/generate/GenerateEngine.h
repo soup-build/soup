@@ -184,6 +184,15 @@ namespace Soup::Core::Generate
 			// Run all build operation proxy finalizers
 			Log::Diag("Build generate finalizer: {}", soupTargetDirectory.ToString());
 
+			// Load the operation graph so the evaluate phase can load it
+			auto generateResult = GenerateResult();
+			auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
+			if (!GenerateResultManager::TryLoadState(generateResultFile, generateResult, _fileSystemState))
+			{
+				Log::Error("Failed to load the generate result file: {}", generateResultFile.ToString());
+				throw std::runtime_error("Failed to load generate result file.");
+			}
+
 			// Load the input file
 			auto inputFile = soupTargetDirectory + BuildConstants::GenerateInputFileName();
 			auto inputTable = ValueTable();
@@ -302,7 +311,7 @@ namespace Soup::Core::Generate
 
 				for (auto& finalizer : finalizers)
 				{
-					extensionFinalizer.RegisterExtensionTask(std::move(finalizer));
+					extensionFinalizer.RegisterFinalizerTask(std::move(finalizer));
 				}
 			}
 
@@ -312,18 +321,30 @@ namespace Soup::Core::Generate
 				_fileSystemState,
 				evaluateAllowedReadAccess,
 				evaluateAllowedWriteAccess);
-			extensionFinalizer.Execute(buildState);
+
+			for (auto& [operationProxyId, operationProxy] : generateResult.GetOperationProxies())
+			{
+				extensionFinalizer.Execute(buildState, operationProxy);
+			}
+
+			extensionFinalizer.BuildGenerateInfo(buildState);
 
 			// Grab the build results
-			auto generateResult = buildState.BuildGenerateResult();
+			auto generateInfoTable = buildState.GetGenerateInfo();
+			auto updatedGenerateResult = buildState.BuildGenerateResult();
+
+			// Save the runtime information so Soup View can easily visualize runtime
+			auto generateFinalizerInfoStateFile = soupTargetDirectory + BuildConstants::GenerateFinalizerInfoFileName();
+			Log::Info("Save Generate Finalizer Info State: {}", generateFinalizerInfoStateFile.ToString());
+			ValueTableManager::SaveState(generateFinalizerInfoStateFile, generateInfoTable);
 
 			// Resolve macros before saving evaluate graph
 			Log::Diag("Resolve build macros in evaluate graph");
-			ResolveMacros(evaluateMacroManager, generateResult);
+			ResolveMacros(evaluateMacroManager, updatedGenerateResult);
 
 			// Save the operation graph so the evaluate phase can load it
 			auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-			OperationGraphManager::SaveState(evaluateGraphFile, generateResult.GetEvaluateGraph(), _fileSystemState);
+			OperationGraphManager::SaveState(evaluateGraphFile, updatedGenerateResult.GetEvaluateGraph(), _fileSystemState);
 
 			Log::Diag("Build generate finalize end");
 		}

@@ -14,6 +14,7 @@ public class MainWindowViewModel : ViewModelBase
 	private Path? recipeFile;
 	private readonly DependencyGraphViewModel dependencyGraph;
 	private readonly TaskGraphViewModel taskGraph;
+	private readonly FinalizerTaskGraphViewModel finalizerTaskGraph;
 	private readonly OperationGraphViewModel operationGraph;
 
 	public IStorageProvider? StorageProvider { get; set; }
@@ -25,6 +26,8 @@ public class MainWindowViewModel : ViewModelBase
 	public ICommand SelectRootCommand { get; }
 
 	public ICommand SelectTasksCommand { get; }
+
+	public ICommand SelectFinalizerTasksCommand { get; }
 
 	public ICommand SelectOperationsCommand { get; }
 
@@ -54,6 +57,7 @@ public class MainWindowViewModel : ViewModelBase
 			{
 				this.RaisePropertyChanged(nameof(this.IsRootSelected));
 				this.RaisePropertyChanged(nameof(this.IsTasksSelected));
+				this.RaisePropertyChanged(nameof(this.IsFinalizerTasksSelected));
 				this.RaisePropertyChanged(nameof(this.IsOperationsSelected));
 			}
 		}
@@ -66,10 +70,12 @@ public class MainWindowViewModel : ViewModelBase
 
 		this.SelectRootCommand = ReactiveCommand.Create(OnSelectRoot);
 		this.SelectTasksCommand = ReactiveCommand.Create(OnSelectTasks);
+		this.SelectFinalizerTasksCommand = ReactiveCommand.Create(OnSelectFinalizerTasks);
 		this.SelectOperationsCommand = ReactiveCommand.Create(OnSelectOperations);
 
 		this.dependencyGraph = new DependencyGraphViewModel();
 		this.taskGraph = new TaskGraphViewModel();
+		this.finalizerTaskGraph = new FinalizerTaskGraphViewModel();
 		this.operationGraph = new OperationGraphViewModel();
 
 		this.dependencyGraph.PropertyChanged += DependencyGraph_PropertyChanged;
@@ -87,6 +93,7 @@ public class MainWindowViewModel : ViewModelBase
 		if (e.PropertyName == nameof(this.dependencyGraph.SelectedProject))
 		{
 			_ = this.taskGraph.LoadProjectAsync(this.dependencyGraph.SelectedProject?.Path, this.dependencyGraph.SelectedProject?.Owner);
+			_ = this.finalizerTaskGraph.LoadProjectAsync(this.dependencyGraph.SelectedProject?.Path, this.dependencyGraph.SelectedProject?.Owner);
 			_ = this.operationGraph.LoadProjectAsync(this.dependencyGraph.SelectedProject?.Path);
 
 			this.RaisePropertyChanged(nameof(this.SelectedPackageName));
@@ -98,6 +105,8 @@ public class MainWindowViewModel : ViewModelBase
 	public bool IsRootSelected => ReferenceEquals(this.content, this.dependencyGraph);
 
 	public bool IsTasksSelected => ReferenceEquals(this.content, this.taskGraph);
+
+	public bool IsFinalizerTasksSelected => ReferenceEquals(this.content, this.finalizerTaskGraph);
 
 	public bool IsOperationsSelected => ReferenceEquals(this.content, this.operationGraph);
 
@@ -144,6 +153,11 @@ public class MainWindowViewModel : ViewModelBase
 	private void OnSelectTasks()
 	{
 		this.Content = this.taskGraph;
+	}
+
+	private void OnSelectFinalizerTasks()
+	{
+		this.Content = this.finalizerTaskGraph;
 	}
 
 	private void OnSelectOperations()
