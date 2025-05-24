@@ -73,7 +73,7 @@ public class OperationGraphViewModel : ContentPaneViewModel
 					// Check for the optional evaluate graph
 					var evaluateGraphFile = soupTargetDirectory + BuildConstants.EvaluateGraphFileName;
 					OperationGraph? evaluateGraph = null;
-					if (generateResult.HasOperationProxies &&
+					if (generateResult.IsPreprocessor &&
 						OperationGraphManager.TryLoadState(evaluateGraphFile, this.fileSystemState, out var loadEvaluateGraph))
 					{
 						evaluateGraph = loadEvaluateGraph;

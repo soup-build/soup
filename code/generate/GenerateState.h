@@ -102,41 +102,13 @@ namespace Soup::Core::Generate
 				std::move(declaredOutputPaths));
 		}
 
-		/// <summary>
-		/// Create a operation proxy
-		/// </summary>
-		void CreateOperationProxy(
-			std::string title,
-			std::string executable,
-			std::vector<std::string> arguments,
-			std::string workingDirectory,
-			std::vector<std::string> declaredInput,
-			std::string resultFile,
-			std::string finalizerTask,
-			ValueTable finalizerState)
-		{
-			auto declaredInputPaths = std::vector<Path>();
-			for (auto& value : declaredInput)
-				declaredInputPaths.push_back(Path(std::move(value)));
-
-			_graphGenerator.CreateOperationProxy(
-				std::move(title),
-				Path(std::move(executable)),
-				std::move(arguments),
-				Path(std::move(workingDirectory)),
-				std::move(declaredInputPaths),
-				Path(std::move(resultFile)),
-				std::move(finalizerTask),
-				std::move(finalizerState));
-		}
-
 		void Update(ValueTable activeState, ValueTable sharedState)
 		{
 			_activeState = std::move(activeState);
 			_sharedState = std::move(sharedState);
 		}
 
-		GenerateResult BuildGenerateResult()
+		OperationGraph BuildOperationGraph()
 		{
 			return _graphGenerator.FinalizeState();
 		}

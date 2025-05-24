@@ -3,7 +3,6 @@
 // </copyright>
 
 #pragma once
-#include "ExtensionFinalizer.h"
 #include "ExtensionManager.h"
 #include "GenerateState.h"
 
@@ -19,7 +18,7 @@ namespace Soup::Core::Generate
 		{
 		}
 
-		void RunCore(const Path& soupTargetDirectory)
+		void Run(bool isFirstRun, const Path& soupTargetDirectory)
 		{
 			// Run all build operations in the correct order with incremental build checks
 			Log::Diag("Build generate core: {}", soupTargetDirectory.ToString());
@@ -123,6 +122,57 @@ namespace Soup::Core::Generate
 				}
 			}
 
+			if (!isFirstRun)
+			{
+				// Load up the preprocessor results
+				auto phase1GenerateResult = GenerateResult();
+				auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
+				if (!GenerateResultManager::TryLoadState(generateResultFile, phase1GenerateResult, _fileSystemState))
+				{
+					Log::Error("Failed to load the result from phase 1: {}", generateResultFile.ToString());
+					throw std::runtime_error("Failed to load phase 1 result.");
+				}
+
+				if (!phase1GenerateResult.IsPreprocessor())
+				{
+					Log::Error("Phase 1 was not for a preprocessor, why are you running a phase 2?");
+					throw std::runtime_error("Invalid phase 1 result.");
+				}
+
+				auto preprocessorResults = ValueList();
+				for (auto& [_, operation] : phase1GenerateResult.GetEvaluateGraph().GetOperations())
+				{
+					auto preprocessorOperationResult = ValueTable();
+
+					preprocessorOperationResult.emplace("Title", Value(operation.Title));
+
+					auto preprocessorResult = ValueList();
+					if (operation.DeclaredOutput.size() > 0)
+					{
+						// Read the results file as text
+						std::shared_ptr<System::IInputFile> file;
+						auto resultFilePath = _fileSystemState.GetFilePath(operation.DeclaredOutput.at(0));
+						if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, file))
+						{
+							Log::Info("Failed to open results file");
+							throw std::runtime_error("Failed to open results file");
+						}
+
+						std::string line;
+						while (std::getline(file->GetInStream(), line))
+						{
+							preprocessorResult.push_back(Value(std::move(line)));
+						}
+					}
+					
+					preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
+
+					preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
+				}
+
+				globalState.emplace("Preprocessors", Value(std::move(preprocessorResults)));
+			}
+
 			// Create a new build system for the requested build
 			auto extensionManager = ExtensionManager();
 
@@ -138,11 +188,21 @@ namespace Soup::Core::Generate
 				// Create a temporary Wren Host to discover all build extensions
 				auto host = std::make_unique<GenerateHost>(buildExtension.first, buildExtension.second);
 				host->InterpretMain();
-				auto extensions = host->DiscoverExtensions();
 
-				for (auto& extension : extensions)
+				// Check if there are optional preprocessing tasks on the first run
+				if (isFirstRun)
 				{
-					extensionManager.RegisterExtensionTask(std::move(extension));
+					auto preprocessorTasks = host->DiscoverPreprocessorTasks();
+					for (auto& task : preprocessorTasks)
+					{
+						extensionManager.RegisterPreprocessorTask(std::move(task));
+					}
+				}
+
+				auto extensionTasks = host->DiscoverTasks();
+				for (auto& task : extensionTasks)
+				{
+					extensionManager.RegisterExtensionTask(std::move(task));
 				}
 			}
 
@@ -152,11 +212,21 @@ namespace Soup::Core::Generate
 				_fileSystemState,
 				evaluateAllowedReadAccess,
 				evaluateAllowedWriteAccess);
-			extensionManager.Execute(buildState);
+
+			if (extensionManager.HasPreprocessorTasks())
+			{
+				extensionManager.ExecutePreprocessorTasks(buildState);
+			}
+			else
+			{
+				extensionManager.ExecuteExtensionTasks(buildState);
+			}
 
 			// Grab the build results
 			auto generateInfoTable = buildState.GetGenerateInfo();
-			auto generateResult = buildState.BuildGenerateResult();
+			auto generateResult = GenerateResult(
+				buildState.BuildOperationGraph(),
+				extensionManager.HasPreprocessorTasks());
 			auto sharedState = buildState.GetSharedState();
 
 			// Save the runtime information so Soup View can easily visualize runtime
@@ -168,185 +238,27 @@ namespace Soup::Core::Generate
 			Log::Diag("Resolve build macros in evaluate graph");
 			ResolveMacros(evaluateMacroManager, generateResult);
 
-			// Save the operation graph so the evaluate phase can load it
-			auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
-			GenerateResultManager::SaveState(generateResultFile, generateResult, _fileSystemState);
+			if (isFirstRun)
+			{
+				// Save the operation graph so the evaluate phase can load it
+				auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
+				GenerateResultManager::SaveState(generateResultFile, generateResult, _fileSystemState);
+			}
+			else
+			{
+				// Save the operation graph so the evaluate phase can load it
+				auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
+				OperationGraphManager::SaveState(evaluateGraphFile, generateResult.GetEvaluateGraph(), _fileSystemState);
+			}
 
-			// Save the shared state that is to be passed to the downstream builds
-			auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
-			ValueTableManager::SaveState(sharedStateFile, sharedState);
+			if (!generateResult.IsPreprocessor())
+			{
+				// Save the shared state that is to be passed to the downstream builds
+				auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
+				ValueTableManager::SaveState(sharedStateFile, sharedState);
+			}
 
 			Log::Diag("Build generate core end");
-		}
-
-		void RunFinalizer(const Path& soupTargetDirectory)
-		{
-			// Run all build operation proxy finalizers
-			Log::Diag("Build generate finalizer: {}", soupTargetDirectory.ToString());
-
-			// Load the operation graph so the evaluate phase can load it
-			auto generateResult = GenerateResult();
-			auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
-			if (!GenerateResultManager::TryLoadState(generateResultFile, generateResult, _fileSystemState))
-			{
-				Log::Error("Failed to load the generate result file: {}", generateResultFile.ToString());
-				throw std::runtime_error("Failed to load generate result file.");
-			}
-
-			// Load the input file
-			auto inputFile = soupTargetDirectory + BuildConstants::GenerateInputFileName();
-			auto inputTable = ValueTable();
-			if (!ValueTableManager::TryLoadState(inputFile, inputTable))
-			{
-				Log::Error("Failed to load the input file: {}", inputFile.ToString());
-				throw std::runtime_error("Failed to load input file.");
-			}
-
-			auto packageRoot = Path(inputTable.at("PackageRoot").AsString());
-			auto userDataPath = Path(inputTable.at("UserDataPath").AsString());
-
-			// Load the local user config and any sdk content
-			auto sdkParameters = ValueList();
-			auto sdkReadAccess = std::vector<Path>();
-			LoadLocalUserConfig(userDataPath, sdkParameters, sdkReadAccess);
-
-			// Load the recipe file
-			auto recipeFile = packageRoot + BuildConstants::RecipeFileName();
-			Recipe recipe;
-			if (!RecipeExtensions::TryLoadRecipeFromFile(recipeFile, recipe))
-			{
-				Log::Error("Failed to load the recipe: {}", recipeFile.ToString());
-				throw std::runtime_error("Failed to load recipe.");
-			}
-
-			// Load the input macro definition
-			auto generateMacros = std::map<std::string, std::string>();
-			for (auto& [key, value] : inputTable.at("GenerateMacros").AsTable())
-				generateMacros.emplace(key, value.AsString());
-
-			// Load the input macro definition
-			auto generateSubGraphMacros = std::map<std::string, std::string>();
-			for (auto& [key, value] : inputTable.at("GenerateSubGraphMacros").AsTable())
-				generateSubGraphMacros.emplace(key, value.AsString());
-
-			// Load the input read access list
-			auto evaluateAllowedReadAccess = std::vector<Path>();
-			for (auto& value : inputTable.at("EvaluateReadAccess").AsList())
-				evaluateAllowedReadAccess.push_back(Path(value.AsString()));
-
-			// Load the input write access list
-			auto evaluateAllowedWriteAccess = std::vector<Path>();
-			for (auto& value : inputTable.at("EvaluateWriteAccess").AsList())
-				evaluateAllowedWriteAccess.push_back(Path(value.AsString()));
-
-			// Load the input macro definition
-			auto evaluateMacros = std::map<std::string, std::string>();
-			for (auto& [key, value] : inputTable.at("EvaluateMacros").AsTable())
-				evaluateMacros.emplace(key, value.AsString());
-
-			// Allow read access for all sdk directories
-			for (auto& value : sdkReadAccess)
-				evaluateAllowedReadAccess.push_back(std::move(value));
-
-			// Setup a macro manager to resolve macros
-			auto generateMacroManager = MacroManager(generateMacros);
-			auto generateSubGraphMacroManager = MacroManager(generateSubGraphMacros);
-			auto evaluateMacroManager = MacroManager(evaluateMacros);
-
-			// Combine all the dependencies shared state
-			auto dependenciesSharedState = LoadDependenciesSharedState(
-				generateSubGraphMacroManager,
-				inputTable);
-
-			// Generate the set of build extension libraries
-			auto buildExtensionLibraries = GenerateBuildExtensionSet(
-				generateMacroManager,
-				dependenciesSharedState);
-
-			// Start a new global state
-			auto globalState = ValueTable();
-
-			// Pass along the sdks
-			globalState.emplace("SDKs", std::move(sdkParameters));
-
-			// Initialize the Recipe Root Table
-			auto recipeState = RecipeBuildStateConverter::ConvertToBuildState(recipe.GetTable());
-			globalState.emplace("Recipe", Value(std::move(recipeState)));
-
-			// Initialize input global state
-			for (auto& [key, value] : inputTable.at("GlobalState").AsTable())
-			{
-				globalState.emplace(key, std::move(value));
-			}
-
-			// Merge the dependencies state
-			auto& globalDependenciesTable = globalState.at("Dependencies").AsTable();
-			for (auto& [dependencyType, dependencyTypeValue] : dependenciesSharedState)
-			{
-				auto& globalDependenciesType = globalDependenciesTable.at(dependencyType).AsTable();
-				auto& sharedStateDependenciesType = dependencyTypeValue.AsTable();
-				for (auto& [dependencyName, dependencySharedState] : sharedStateDependenciesType)
-				{
-					auto& globalDependency = globalDependenciesType.at(dependencyName).AsTable();
-					globalDependency.emplace("SharedState", std::move(dependencySharedState));
-				}
-			}
-
-			// Create a new build system for the requested build
-			auto extensionFinalizer = ExtensionFinalizer();
-
-			// Run all build extension register callbacks
-			for (auto buildExtension : buildExtensionLibraries)
-			{
-				Log::Info("Loading Extension Script: {}", buildExtension.first.ToString());
-				if (buildExtension.second.has_value())
-				{
-					Log::Info("Bundles: {}", buildExtension.second.value().ToString());
-				}
-
-				// Create a temporary Wren Host to discover all build extensions
-				auto host = std::make_unique<GenerateHost>(buildExtension.first, buildExtension.second);
-				host->InterpretMain();
-				auto finalizers = host->DiscoverFinalizers();
-
-				for (auto& finalizer : finalizers)
-				{
-					extensionFinalizer.RegisterFinalizerTask(std::move(finalizer));
-				}
-			}
-
-			// Evaluate the build extensions
-			auto buildState = GenerateState(
-				globalState,
-				_fileSystemState,
-				evaluateAllowedReadAccess,
-				evaluateAllowedWriteAccess);
-
-			for (auto& [operationProxyId, operationProxy] : generateResult.GetOperationProxies())
-			{
-				extensionFinalizer.Execute(buildState, operationProxy);
-			}
-
-			extensionFinalizer.BuildGenerateInfo(buildState);
-
-			// Grab the build results
-			auto generateInfoTable = buildState.GetGenerateInfo();
-			auto updatedGenerateResult = buildState.BuildGenerateResult();
-
-			// Save the runtime information so Soup View can easily visualize runtime
-			auto generateFinalizerInfoStateFile = soupTargetDirectory + BuildConstants::GenerateFinalizerInfoFileName();
-			Log::Info("Save Generate Finalizer Info State: {}", generateFinalizerInfoStateFile.ToString());
-			ValueTableManager::SaveState(generateFinalizerInfoStateFile, generateInfoTable);
-
-			// Resolve macros before saving evaluate graph
-			Log::Diag("Resolve build macros in evaluate graph");
-			ResolveMacros(evaluateMacroManager, updatedGenerateResult);
-
-			// Save the operation graph so the evaluate phase can load it
-			auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-			OperationGraphManager::SaveState(evaluateGraphFile, updatedGenerateResult.GetEvaluateGraph(), _fileSystemState);
-
-			Log::Diag("Build generate finalize end");
 		}
 
 	private:
@@ -578,15 +490,6 @@ namespace Soup::Core::Generate
 				ResolveMacros(macroManager, operation.DeclaredOutput);
 				ResolveMacros(macroManager, operation.ReadAccess);
 				ResolveMacros(macroManager, operation.WriteAccess);
-			}
-
-			for (auto& [operationProxyId, operationProxy] : generateResult.GetOperationProxies())
-			{
-				ResolveMacros(macroManager, operationProxy.Command.Arguments);
-				operationProxy.Command.WorkingDirectory = macroManager.ResolveMacros(std::move(operationProxy.Command.WorkingDirectory));
-				operationProxy.Command.Executable = macroManager.ResolveMacros(std::move(operationProxy.Command.Executable));
-				ResolveMacros(macroManager, operationProxy.DeclaredInput);
-				ResolveMacros(macroManager, operationProxy.ReadAccess);
 			}
 		}
 

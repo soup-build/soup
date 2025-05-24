@@ -60,21 +60,11 @@ int main(int argc, char** argv)
 		}
 
 		auto generatePhase = std::string(argv[1]);
+		auto isFirstRun = generatePhase == "true";
 		auto soupTargetDirectory = Path::Parse(argv[2]);
+
 		auto generateEngine = Soup::Core::Generate::GenerateEngine();
-		if (generatePhase == "Core")
-		{
-			generateEngine.RunCore(soupTargetDirectory);
-		}
-		else if (generatePhase == "Finalizer")
-		{
-			generateEngine.RunFinalizer(soupTargetDirectory);
-		}
-		else
-		{
-			Log::Error("Invalid parameters. Unknown build phase.");
-			return -1;
-		}
+		generateEngine.Run(isFirstRun, soupTargetDirectory);
 
 		return 0;
 	}

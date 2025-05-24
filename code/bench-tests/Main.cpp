@@ -300,8 +300,7 @@ int main()
 
 		auto myPackageOperationGraph = OperationGraph(
 			std::vector<OperationId>(),
-			std::vector<OperationInfo>(),
-			std::vector<OperationProxyInfo>());
+			std::vector<OperationInfo>());
 		auto myPackageFiles = std::set<FileId>();
 		auto myPackageOperationGraphContent = std::stringstream();
 		OperationGraphWriter::Serialize(myPackageOperationGraph, myPackageFiles, fileSystemState, myPackageOperationGraphContent);
@@ -311,8 +310,7 @@ int main()
 
 		auto soupCppOperationGraph = OperationGraph(
 			std::vector<OperationId>(),
-			std::vector<OperationInfo>(),
-			std::vector<OperationProxyInfo>());
+			std::vector<OperationInfo>());
 		auto soupCppFiles = std::set<FileId>();
 		auto soupCppOperationGraphContent = std::stringstream();
 		OperationGraphWriter::Serialize(soupCppOperationGraph, soupCppFiles, fileSystemState, soupCppOperationGraphContent);

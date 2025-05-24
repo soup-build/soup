@@ -14,32 +14,28 @@ export module Soup.Core:GenerateResult;
 import Opal;
 import :CommandInfo;
 import :OperationGraph;
-import :OperationProxyInfo;
 
 using namespace Opal;
 
 namespace Soup::Core 
 {
 	/// <summary>
-	/// The operation generate state that represents the known operation graph and any operation proxies that need to 
-	/// be evaluated
+	/// The generate result that represents the known operation graph that needs to 
+	/// be evaluated and a boolean indication if this is a preprocessing run
 	/// </summary>
 	export class GenerateResult
 	{
 	private:
 		OperationGraph _evaluateGraph;
-
-		std::map<OperationProxyId, OperationProxyInfo> _operationProxies;
-		std::unordered_map<CommandInfo, OperationProxyId> _operationProxyLookup;
+		bool _isPreprocessor;
 
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="OperationGraph"/> class.
+		/// Initializes a new instance of the <see cref="GenerateResult"/> class.
 		/// </summary>
 		GenerateResult() :
 			_evaluateGraph(),
-			_operationProxies(),
-			_operationProxyLookup()
+			_isPreprocessor()
 		{
 		}
 
@@ -48,16 +44,10 @@ namespace Soup::Core
 		/// </summary>
 		GenerateResult(
 			OperationGraph evaluateGraph,
-			std::vector<OperationProxyInfo> operationProxies) :
+			bool isPreprocessor) :
 			_evaluateGraph(std::move(evaluateGraph)),
-			_operationProxies(),
-			_operationProxyLookup()
+			_isPreprocessor(isPreprocessor)
 		{
-			// Store the incoming vector of operation proxies as a lookup for fast checks
-			for (auto& info : operationProxies)
-			{
-				AddOperationProxy(std::move(info));
-			}
 		}
 
 		/// <summary>
@@ -77,51 +67,11 @@ namespace Soup::Core
 		}
 
 		/// <summary>
-		/// Get Operation Proxies
+		/// Get a value indicating if the graph is for preprocessing files
 		/// </summary>
-		const std::map<OperationProxyId, OperationProxyInfo>& GetOperationProxies() const
+		bool IsPreprocessor() const
 		{
-			return _operationProxies;
-		}
-
-		/// <summary>
-		/// Get Operation Proxies
-		/// </summary>
-		std::map<OperationProxyId, OperationProxyInfo>& GetOperationProxies()
-		{
-			return _operationProxies;
-		}
-
-		/// <summary>
-		/// Gets a value indicating if there are any proxy operations
-		/// </summary>
-		bool HasOperationProxies()
-		{
-			return !_operationProxies.empty();
-		}
-
-		/// <summary>
-		/// Find an operation info
-		/// </summary>
-		bool HasOperationProxyCommand(const CommandInfo& command) const
-		{
-			return _operationProxyLookup.contains(command);
-		}
-
-		/// <summary>
-		/// Add an operation proxy info
-		/// </summary>
-		OperationProxyInfo& AddOperationProxy(OperationProxyInfo info)
-		{
-			auto insertLookupResult = _operationProxyLookup.emplace(info.Command, info.Id);
-			if (!insertLookupResult.second)
-				throw std::runtime_error("The provided command already exists in the graph");
-
-			auto [insertIterator, wasInserted] = _operationProxies.emplace(info.Id, std::move(info));
-			if (!wasInserted)
-				throw std::runtime_error("The provided operation proxy id already exists in the graph");
-
-			return insertIterator->second;
+			return _isPreprocessor;
 		}
 	};
 }

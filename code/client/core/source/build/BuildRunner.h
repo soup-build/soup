@@ -273,7 +273,7 @@ namespace Soup::Core
 			{
 				Log::Info("Previous generate result found");
 
-				if (previousGenerateResult.HasOperationProxies())
+				if (previousGenerateResult.IsPreprocessor())
 				{
 					// Load the previous operation graph and results if they exist
 					auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
@@ -310,6 +310,7 @@ namespace Soup::Core
 			}
 
 			auto ranGenerateCore = RunGenerateCore(
+				true,
 				packageInfo,
 				macroPackageDirectory,
 				macroTargetDirectory,
@@ -335,24 +336,28 @@ namespace Soup::Core
 			}
 
 			//////////////////////////////////////////////
-			// Proxy Evaluation
+			// Evaluate Preprocessor
 			/////////////////////////////////////////////
-			if (updatedGenerateResult.HasOperationProxies())
+			if (updatedGenerateResult.IsPreprocessor())
 			{
-				auto ranProxies = RunProxies(
-					previousGenerateResult,
-					updatedGenerateResult,
+				auto ranPreprocessors = RunPreprocessorOperations(
+					previousGenerateResult.GetEvaluateGraph(),
+					updatedGenerateResult.GetEvaluateGraph(),
 					realTargetDirectory,
 					soupTargetDirectory);
 
-				auto ranGenerateFinalizer = RunGenerateFinalizer(
+				auto ranGenerateCorePhase2 = RunGenerateCore(
+					false,
 					packageInfo,
+					macroPackageDirectory,
+					macroTargetDirectory,
 					realTargetDirectory,
 					soupTargetDirectory,
+					globalParameters,
 					packageAccessSet);
 
 				// TODO : Do I need this check
-				if (ranProxies || ranGenerateFinalizer)
+				if (ranPreprocessors || ranGenerateCorePhase2)
 				{
 					// Load the update operation graph and results if they exist
 					auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
@@ -365,18 +370,25 @@ namespace Soup::Core
 						throw std::runtime_error("Missing required evaluate operation graph after proxies evaluated.");
 					}
 				}
-			}
 
-			auto updatedEvaluateGraph = OperationGraph();
-			return std::make_tuple(
-				previousGenerateResult.HasOperationProxies() ? previousEvaluateGraph : previousGenerateResult.GetEvaluateGraph(),
-				updatedGenerateResult.HasOperationProxies() ? updatedEvaluateGraph : updatedGenerateResult.GetEvaluateGraph());
+				// TODO: Get phase 2 results
+				return std::make_tuple(
+					previousGenerateResult.GetEvaluateGraph(),
+					updatedGenerateResult.GetEvaluateGraph());
+			}
+			else
+			{
+				return std::make_tuple(
+					previousGenerateResult.GetEvaluateGraph(),
+					updatedGenerateResult.GetEvaluateGraph());
+			}
 		}
 
 		/// <summary>
 		/// Run the core generate phase
 		/// </summary>
-		bool RunGenerateCore( 
+		bool RunGenerateCore(
+			bool isFirstRun,
 			const PackageInfo& packageInfo,
 			const Path& macroPackageDirectory,
 			const Path& macroTargetDirectory,
@@ -477,7 +489,7 @@ namespace Soup::Core
 
 			OperationId generateOperationId = 1;
 			auto generateArguments = std::vector<std::string>();
-			generateArguments.push_back("Core");
+			generateArguments.push_back(isFirstRun ? "true" : "false");
 			generateArguments.push_back(soupTargetDirectory.ToString());
 			auto generateOperation = OperationInfo(
 				generateOperationId,
@@ -536,9 +548,9 @@ namespace Soup::Core
 				generateAllowedWriteAccess);
 		}
 
-		bool RunProxies(
-			const GenerateResult& previousResult,
-			const GenerateResult& updatedResult,
+		bool RunPreprocessorOperations(
+			const OperationGraph& previousGraph,
+			const OperationGraph& updatedGraph,
 			const Path& realTargetDirectory,
 			const Path& soupTargetDirectory)
 		{
@@ -565,10 +577,6 @@ namespace Soup::Core
 				Log::Info("Create Directory: {}", temporaryDirectory.ToString());
 				System::IFileSystem::Current().CreateDirectory(temporaryDirectory);
 			}
-
-			// Convert proxy information into operation graph for evaluation
-			auto previousGraph = BuildProxyOperationGraph(previousResult);
-			auto updatedGraph = BuildProxyOperationGraph(updatedResult);
 
 			// Evaluate the build
 			auto proxiesResultsFile = soupTargetDirectory + BuildConstants::ProxiesResultsFileName();
@@ -714,33 +722,6 @@ namespace Soup::Core
 			{
 				Log::Info("Nothing to do.");
 			}
-		}
-
-		/// <summary>
-		/// Build Operation Graph from Proxies
-		/// </summary>
-		OperationGraph BuildProxyOperationGraph(const GenerateResult& generateResult)
-		{
-			auto operationIds = std::vector<OperationId>();
-			auto operations = std::vector<OperationInfo>();
-
-			for (auto& [_, proxyInfo] : generateResult.GetOperationProxies())
-			{
-				operationIds.push_back(proxyInfo.Id);
-				operations.push_back(
-					OperationInfo(
-						proxyInfo.Id,
-						proxyInfo.Title,
-						proxyInfo.Command,
-						proxyInfo.DeclaredInput,
-						{},
-						proxyInfo.ReadAccess,
-						{},
-						{},
-						1));
-			}
-
-			return OperationGraph(std::move(operationIds), std::move(operations));
 		}
 
 		/// <summary>

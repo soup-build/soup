@@ -2,9 +2,6 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
-using Path = Opal.Path;
-
 namespace Soup.Build.Utilities;
 
 /// <summary>
@@ -13,44 +10,25 @@ namespace Soup.Build.Utilities;
 /// </summary>
 public class GenerateResult
 {
-	private readonly Dictionary<OperationProxyId, OperationProxyInfo> operationProxies;
-	private readonly Dictionary<CommandInfo, OperationProxyId> operationProxyLookup;
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GenerateResult"/> class.
 	/// </summary>
 	public GenerateResult()
 	{
-		this.ReferencedFiles = [];
 		this.EvaluateGraph = new OperationGraph();
-		this.operationProxies = [];
-		this.operationProxyLookup = [];
+		this.IsPreprocessor = false;
 	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GenerateResult"/> class.
 	/// </summary>
 	public GenerateResult(
-		IList<(FileId FileId, Path Path)> referencedFiles,
 		OperationGraph evaluateGraph,
-		IList<OperationProxyInfo> operationProxies)
+		bool isPreprocessor)
 	{
-		this.ReferencedFiles = referencedFiles;
 		this.EvaluateGraph = evaluateGraph;
-		this.operationProxies = [];
-		this.operationProxyLookup = [];
-
-		// Store the incoming vector of operations as a lookup for fast checks
-		foreach (var info in operationProxies)
-		{
-			AddOperationProxy(info);
-		}
+		this.IsPreprocessor = isPreprocessor;
 	}
-
-	/// <summary>
-	/// Get the set of referenced file ids that map to their paths
-	/// </summary>
-	public IList<(FileId FileId, Path Path)> ReferencedFiles { get; init; }
 
 	/// <summary>
 	/// Get Evaluate Graph
@@ -58,21 +36,7 @@ public class GenerateResult
 	public OperationGraph EvaluateGraph { get; }
 
 	/// <summary>
-	/// Get Operations
+	/// Get a value indicating if the graph is preprocessing
 	/// </summary>
-	public IReadOnlyDictionary<OperationProxyId, OperationProxyInfo> OperationProxies => this.operationProxies;
-
-	/// <summary>
-	/// Get a value indicating if there are operation proxies
-	/// </summary>
-	public bool HasOperationProxies => this.operationProxies.Count > 0;
-
-	/// <summary>
-	/// Add an operation proxy info
-	/// </summary>
-	public void AddOperationProxy(OperationProxyInfo info)
-	{
-		this.operationProxyLookup.Add(info.Command, info.Id);
-		this.operationProxies.Add(info.Id, info);
-	}
+	public bool IsPreprocessor { get; }
 }

@@ -19,8 +19,6 @@ import :FileSystemState;
 import :GenerateResult;
 import :OperationGraphReader;
 import :OperationInfo;
-import :OperationProxyInfo;
-import :ValueTableReader;
 
 using namespace Opal;
 
@@ -82,6 +80,8 @@ namespace Soup::Core
 				throw std::runtime_error("Operation graph file version does not match expected");
 			}
 
+			auto isPreprocessor = ReadBoolean(data, size, offset);
+
 			// Read the set of files
 			Read(data, size, offset, headerBuffer.data(), 4);
 			if (headerBuffer[0] != 'F' ||
@@ -138,78 +138,11 @@ namespace Soup::Core
 				operations[i] = OperationGraphReader::ReadOperationInfo(data, size, offset, activeFileIdMap);
 			}
 
-			// Read the set of operation proxies
-			Read(data, size, offset, headerBuffer.data(), 4);
-			if (headerBuffer[0] != 'O' ||
-				headerBuffer[1] != 'P' ||
-				headerBuffer[2] != 'P' ||
-				headerBuffer[3] != '\0')
-			{
-				throw std::runtime_error("Invalid operation graph operation proxies header");
-			}
-
-			auto operationProxyCount = ReadUInt32(data, size, offset);
-			auto operationProxies = std::vector<OperationProxyInfo>(operationProxyCount);
-			for (auto i = 0u; i < operationProxyCount; i++)
-			{
-				operationProxies[i] = ReadOperationProxyInfo(data, size, offset, activeFileIdMap);
-			}
-
 			return GenerateResult(
 				OperationGraph(
 					std::move(rootOperationIds),
 					std::move(operations)),
-				std::move(operationProxies));
-		}
-
-		static OperationProxyInfo ReadOperationProxyInfo(
-			char* data,
-			size_t size,
-			size_t& offset,
-			const std::unordered_map<FileId, FileId>& activeFileIdMap)
-		{
-			// Read the operation proxy id
-			auto id = ReadUInt32(data, size, offset);
-
-			// Read the operation proxy title
-			auto title = ReadString(data, size, offset);
-
-			// Read the command working directory
-			auto workingDirectory = ReadString(data, size, offset);
-
-			// Read the command executable
-			auto executable = ReadString(data, size, offset);
-
-			// Read the command arguments
-			auto arguments = ReadStringList(data, size, offset);
-
-			// Read the declared input files
-			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Read the result file
-			auto resultFile = ReadUInt32(data, size, offset);
-
-			// Read the finalizer task
-			auto finalizerTask = ReadString(data, size, offset);
-
-			// Read the finalizer state
-			auto finalizerState = ValueTableReader::ReadValueTable(data, size, offset);
-
-			// Read the read access list
-			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			return OperationProxyInfo(
-				id,
-				std::move(title),
-				CommandInfo(
-					Path(workingDirectory),
-					Path(executable),
-					std::move(arguments)),
-				std::move(declaredInput),
-				resultFile,
-				std::move(finalizerTask),
-				std::move(finalizerState),
-				std::move(readAccess));
+				isPreprocessor);
 		}
 
 		static uint32_t ReadUInt32(char* data, size_t size, size_t& offset)
@@ -218,6 +151,14 @@ namespace Soup::Core
 			Read(data, size, offset, reinterpret_cast<char*>(&result), sizeof(uint32_t));
 
 			return result;
+		}
+
+		static bool ReadBoolean(char* data, size_t size, size_t& offset)
+		{
+			uint32_t result = 0;
+			Read(data, size, offset, reinterpret_cast<char*>(&result), sizeof(uint32_t));
+
+			return result != 0;
 		}
 
 		static std::string ReadString(char* data, size_t size, size_t& offset)

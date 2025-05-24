@@ -92,7 +92,7 @@ namespace Soup::Core
 		/// <summary>
 		/// Find an operation info
 		/// </summary>
-		bool HasOperationCommand(const CommandInfo& command) const
+		bool HasCommand(const CommandInfo& command) const
 		{
 			return _operationLookup.contains(command);
 		}

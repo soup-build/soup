@@ -44,9 +44,9 @@ public static class GenerateResultManager
 
 			// Map up the incoming file ids to the active file system state ids
 			var activeFileIdMap = new Dictionary<FileId, FileId>();
-			for (var i = 0; i < loadedResult.ReferencedFiles.Count; i++)
+			for (var i = 0; i < loadedResult.EvaluateGraph.ReferencedFiles.Count; i++)
 			{
-				var fileReference = loadedResult.ReferencedFiles[i];
+				var fileReference = loadedResult.EvaluateGraph.ReferencedFiles[i];
 				var activeFileId = fileSystemState.ToFileId(fileReference.Path);
 				activeFileIdMap.Add(fileReference.FileId, activeFileId);
 
@@ -60,13 +60,6 @@ public static class GenerateResultManager
 				var operation = operationReference.Value;
 				UpdateFileIds(operation.DeclaredInput, activeFileIdMap);
 				UpdateFileIds(operation.DeclaredOutput, activeFileIdMap);
-			}
-
-			foreach (var operationReference in loadedResult.OperationProxies)
-			{
-				var operation = operationReference.Value;
-				UpdateFileIds(operation.DeclaredInput, activeFileIdMap);
-				operation.ResultFile = UpdateFileId(operation.ResultFile, activeFileIdMap);
 			}
 
 			result = loadedResult;
@@ -99,22 +92,14 @@ public static class GenerateResultManager
 			files.UnionWith(operation.WriteAccess);
 		}
 
-		foreach (var operationProxyReference in state.OperationProxies)
-		{
-			var operationProxy = operationProxyReference.Value;
-			files.UnionWith(operationProxy.DeclaredInput);
-			_ = files.Add(operationProxy.ResultFile);
-			files.UnionWith(operationProxy.ReadAccess);
-		}
-
 		var referencedFiles = new List<(FileId FileId, Path Path)>();
 		foreach (var fileId in files)
 		{
 			referencedFiles.Add((fileId, fileSystemState.GetFilePath(fileId)));
 		}
 
-		state.ReferencedFiles.Clear();
-		state.ReferencedFiles.AddRange(referencedFiles);
+		state.EvaluateGraph.ReferencedFiles.Clear();
+		state.EvaluateGraph.ReferencedFiles.AddRange(referencedFiles);
 
 		// Open the file to write to
 		using var fileStream = System.IO.File.Open(
@@ -134,11 +119,5 @@ public static class GenerateResultManager
 			var findActiveFileId = activeFileIdMap[fileIds[i]];
 			fileIds[i] = findActiveFileId;
 		}
-	}
-
-	private static FileId UpdateFileId(FileId fileId, Dictionary<FileId, FileId> activeFileIdMap)
-	{
-		var findActiveFileId = activeFileIdMap[fileId];
-		return findActiveFileId;
 	}
 }

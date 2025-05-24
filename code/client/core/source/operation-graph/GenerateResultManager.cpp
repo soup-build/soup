@@ -81,14 +81,6 @@ namespace Soup::Core
 				files.insert(operation.WriteAccess.begin(), operation.WriteAccess.end());
 			}
 
-			for (auto& operationProxyReference : state.GetOperationProxies())
-			{
-				auto& operationProxy = operationProxyReference.second;
-				files.insert(operationProxy.DeclaredInput.begin(), operationProxy.DeclaredInput.end());
-				files.insert(operationProxy.ResultFile);
-				files.insert(operationProxy.ReadAccess.begin(), operationProxy.ReadAccess.end());
-			}
-
 			// Open the file to write to
 			auto file = System::IFileSystem::Current().OpenWrite(generateResultFile, true);
 
