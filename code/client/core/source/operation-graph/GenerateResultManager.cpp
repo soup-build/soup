@@ -72,7 +72,7 @@ namespace Soup::Core
 
 			// Update the generate result referenced files
 			auto files = std::set<FileId>();
-			for (auto& operationReference : state.GetEvaluateGraph().GetOperations())
+			for (auto& operationReference : state.GetGraph().GetOperations())
 			{
 				auto& operation = operationReference.second;
 				files.insert(operation.DeclaredInput.begin(), operation.DeclaredInput.end());

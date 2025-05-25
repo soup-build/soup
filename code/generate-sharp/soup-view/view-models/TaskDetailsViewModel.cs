@@ -23,11 +23,11 @@ public class TaskDetailsViewModel : ViewModelBase
 		this.Properties = new HierarchicalTreeDataGridSource<ValueTableItemViewModel>(this.properties)
 		{
 			Columns =
-				{
-					new HierarchicalExpanderColumn<ValueTableItemViewModel>(
-						new TextColumn<ValueTableItemViewModel, string>("Title", x => x.Title),
-						x => x.Children),
-				},
+			{
+				new HierarchicalExpanderColumn<ValueTableItemViewModel>(
+					new TextColumn<ValueTableItemViewModel, string>("Title", x => x.Title),
+					x => x.Children),
+			},
 		};
 	}
 

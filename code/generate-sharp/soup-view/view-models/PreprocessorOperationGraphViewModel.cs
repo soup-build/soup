@@ -1,4 +1,4 @@
-﻿// <copyright file="OperationGraphViewModel.cs" company="Soup">
+﻿// <copyright file="PreprocessorOperationGraphViewModel.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Soup.View.ViewModels;
 
-public class OperationGraphViewModel : ContentPaneViewModel
+public class PreprocessorOperationGraphViewModel : ContentPaneViewModel
 {
 	private readonly FileSystemState fileSystemState;
 	private GraphNodeViewModel? selectedNode;
@@ -19,7 +19,7 @@ public class OperationGraphViewModel : ContentPaneViewModel
 	private IList<GraphNodeViewModel>? graph;
 	private readonly Dictionary<uint, OperationDetailsViewModel> operationDetailsLookup = [];
 
-	public OperationGraphViewModel(FileSystemState fileSystemState)
+	public PreprocessorOperationGraphViewModel(FileSystemState fileSystemState)
 	{
 		this.fileSystemState = fileSystemState;
 	}

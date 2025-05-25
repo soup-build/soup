@@ -125,26 +125,34 @@ namespace Soup::Core::Generate
 			if (!isFirstRun)
 			{
 				// Load up the preprocessor results
-				auto phase1GenerateResult = GenerateResult();
-				auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
-				if (!GenerateResultManager::TryLoadState(generateResultFile, phase1GenerateResult, _fileSystemState))
+				auto generatePhase1Result = GenerateResult();
+				auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+				if (!GenerateResultManager::TryLoadState(generatePhase1ResultFile, generatePhase1Result, _fileSystemState))
 				{
-					Log::Error("Failed to load the result from phase 1: {}", generateResultFile.ToString());
+					Log::Error("Failed to load the result from phase 1: {}", generatePhase1ResultFile.ToString());
 					throw std::runtime_error("Failed to load phase 1 result.");
 				}
 
-				if (!phase1GenerateResult.IsPreprocessor())
+				if (!generatePhase1Result.IsPreprocessor())
 				{
 					Log::Error("Phase 1 was not for a preprocessor, why are you running a phase 2?");
 					throw std::runtime_error("Invalid phase 1 result.");
 				}
 
 				auto preprocessorResults = ValueList();
-				for (auto& [_, operation] : phase1GenerateResult.GetEvaluateGraph().GetOperations())
+				for (auto& [_, operation] : generatePhase1Result.GetGraph().GetOperations())
 				{
 					auto preprocessorOperationResult = ValueTable();
 
 					preprocessorOperationResult.emplace("Title", Value(operation.Title));
+					preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable));
+
+					auto operationArguments = ValueList();
+					for (auto& argument : operation.Command.Arguments)
+					{
+						operationArguments.push_back(Value(std::move(argument)));
+					}
+					preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
 
 					auto preprocessorResult = ValueList();
 					if (operation.DeclaredOutput.size() > 0)
@@ -164,7 +172,7 @@ namespace Soup::Core::Generate
 							preprocessorResult.push_back(Value(std::move(line)));
 						}
 					}
-					
+
 					preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
 
 					preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
@@ -230,7 +238,9 @@ namespace Soup::Core::Generate
 			auto sharedState = buildState.GetSharedState();
 
 			// Save the runtime information so Soup View can easily visualize runtime
-			auto generateInfoStateFile = soupTargetDirectory + BuildConstants::GenerateInfoFileName();
+			auto generateInfoStateFile = isFirstRun ?
+				soupTargetDirectory + BuildConstants::GeneratePhase1InfoFileName()
+				: soupTargetDirectory + BuildConstants::GeneratePhase2InfoFileName();
 			Log::Info("Save Generate Info State: {}", generateInfoStateFile.ToString());
 			ValueTableManager::SaveState(generateInfoStateFile, generateInfoTable);
 
@@ -241,14 +251,16 @@ namespace Soup::Core::Generate
 			if (isFirstRun)
 			{
 				// Save the operation graph so the evaluate phase can load it
-				auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
-				GenerateResultManager::SaveState(generateResultFile, generateResult, _fileSystemState);
+				auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+				Log::Info("Save Generate Phase 1 Result: {}", generatePhase1ResultFile.ToString());
+				GenerateResultManager::SaveState(generatePhase1ResultFile, generateResult, _fileSystemState);
 			}
 			else
 			{
 				// Save the operation graph so the evaluate phase can load it
-				auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-				OperationGraphManager::SaveState(evaluateGraphFile, generateResult.GetEvaluateGraph(), _fileSystemState);
+				auto generatePhase2ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase2ResultFileName();
+				Log::Info("Save Generate Phase 2 Result: {}", generatePhase2ResultFile.ToString());
+				OperationGraphManager::SaveState(generatePhase2ResultFile, generateResult.GetGraph(), _fileSystemState);
 			}
 
 			if (!generateResult.IsPreprocessor())
@@ -481,7 +493,7 @@ namespace Soup::Core::Generate
 			MacroManager& macroManager,
 			GenerateResult& generateResult)
 		{
-			for (auto& [operationId, operation] : generateResult.GetEvaluateGraph().GetOperations())
+			for (auto& [operationId, operation] : generateResult.GetGraph().GetOperations())
 			{
 				ResolveMacros(macroManager, operation.Command.Arguments);
 				operation.Command.WorkingDirectory = macroManager.ResolveMacros(std::move(operation.Command.WorkingDirectory));

@@ -11,58 +11,35 @@ namespace Soup.Build.Utilities;
 /// </summary>
 public static class BuildConstants
 {
-	/// <summary>
-	/// Gets the Recipe file name
-	/// </summary>
-	public static Path RecipeFileName => new Path("./Recipe.sml");
+	public static Path EvaluateBuildResultsFileName => new Path("./evaluate-build.bor");
 
-	/// <summary>
-	/// Gets the Package Lock file name
-	/// </summary>
+	public static Path EvaluatePreprocessorResultsFileName => new Path("./evaluate-preprocessor.bor");
+
+	public static Path GenerateInputFileName => new Path("./generate-input.bvt");
+
+	public static Path GeneratePhase1InfoFileName => new Path("./generate-phase1-info.bvt");
+
+	public static Path GeneratePhase1OperationResultFileName => new Path("./generate-phase1.bor");
+
+	public static Path GeneratePhase1ResultFileName => new Path("./generate-phase1.bgr");
+
+	public static Path GeneratePhase2InfoFileName => new Path("./generate-phase2-info.bvt");
+
+	public static Path GeneratePhase2OperationResultFileName => new Path("./generate-phase2.bor");
+
+	public static Path GeneratePhase2ResultFileName => new Path("./generate-phase2.bog");
+
+	public static Path GenerateSharedStateFileName => new Path("./generate-shared-state.bvt");
+
+	public static Path LocalUserConfigFileName => new Path("./LocalUserConfig.sml");
+
 	public static Path PackageLockFileName => new Path("./PackageLock.sml");
 
-	/// <summary>
-	/// Gets the Generate Parameters Value Table file name
-	/// </summary>
-	public static Path GenerateParametersFileName => new Path("./GenerateParameters.bvt");
+	public static Path RecipeFileName => new Path("./Recipe.sml");
 
-	/// <summary>
-	/// Gets the Generate Read Access file name
-	/// </summary>
-	public static Path GenerateReadAccessFileName => new Path("./GenerateReadAccess.txt");
+	public static Path SoupLocalStoreDirectory => new Path("./.soup/");
 
-	/// <summary>
-	/// Gets the Generate Write Access file name
-	/// </summary>
-	public static Path GenerateWriteAccessFileName => new Path("./GenerateWriteAccess.txt");
+	public static Path SoupTargetDirectory => new Path("./.soup/");
 
-	/// <summary>
-	/// Gets the Generate Shared State Value Table file name
-	/// </summary>
-	public static Path GenerateSharedStateFileName => new Path("./GenerateSharedState.bvt");
-
-	/// <summary>
-	/// Gets the Evaluate Graph file name
-	/// </summary>
-	public static Path EvaluateGraphFileName => new Path("./Evaluate.bog");
-
-	/// <summary>
-	/// Gets the Evaluate Results file name
-	/// </summary>
-	public static Path EvaluateResultsFileName => new Path("./Evaluate.bor");
-
-	/// <summary>
-	/// Gets the Generate Result file name
-	/// </summary>
-	public static Path GenerateResultFileName => new Path("./Generate.bgr");
-
-	/// <summary>
-	/// Gets the Generate info Value Table file name
-	/// </summary>
-	public static Path GenerateInfoFileName => new Path("./GenerateInfo.bvt");
-
-	/// <summary>
-	/// Gets the Generate finalizer info Value Table file name
-	/// </summary>
-	public static Path GenerateFinalizerInfoFileName => new Path("./GenerateFinalizerInfo.bvt");
+	public static Path TemporaryFolderName => new Path("./temp/");
 }

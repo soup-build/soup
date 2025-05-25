@@ -45,10 +45,10 @@ public static class Program
 
 			var fileSystemState = new FileSystemState();
 
-			var evaluateGraphFile = targetPath + BuildConstants.EvaluateGraphFileName;
-			if (!OperationGraphManager.TryLoadState(evaluateGraphFile, fileSystemState, out var evaluateGraph))
+			var generatePhase1ResultsFile = targetPath + BuildConstants.GeneratePhase1ResultFileName;
+			if (!OperationGraphManager.TryLoadState(generatePhase1ResultsFile, fileSystemState, out var evaluateGraph))
 			{
-				Log.Error($"Failed to load Operation Graph: {evaluateGraphFile}");
+				Log.Error($"Failed to load Operation Graph: {generatePhase1ResultsFile}");
 				throw new HandledException();
 			}
 

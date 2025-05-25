@@ -26,7 +26,7 @@ namespace Soup::Core
 	export class GenerateResult
 	{
 	private:
-		OperationGraph _evaluateGraph;
+		OperationGraph _graph;
 		bool _isPreprocessor;
 
 	public:
@@ -34,7 +34,7 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="GenerateResult"/> class.
 		/// </summary>
 		GenerateResult() :
-			_evaluateGraph(),
+			_graph(),
 			_isPreprocessor()
 		{
 		}
@@ -43,27 +43,27 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="GenerateResult"/> class.
 		/// </summary>
 		GenerateResult(
-			OperationGraph evaluateGraph,
+			OperationGraph graph,
 			bool isPreprocessor) :
-			_evaluateGraph(std::move(evaluateGraph)),
+			_graph(std::move(graph)),
 			_isPreprocessor(isPreprocessor)
 		{
 		}
 
 		/// <summary>
-		/// Get the evaluation operation graph
+		/// Get the operation graph
 		/// </summary>
-		const OperationGraph& GetEvaluateGraph() const
+		const OperationGraph& GetGraph() const
 		{
-			return _evaluateGraph;
+			return _graph;
 		}
 
 		/// <summary>
-		/// Get the evaluation operation graph
+		/// Get the operation graph
 		/// </summary>
-		OperationGraph& GetEvaluateGraph()
+		OperationGraph& GetGraph()
 		{
-			return _evaluateGraph;
+			return _graph;
 		}
 
 		/// <summary>

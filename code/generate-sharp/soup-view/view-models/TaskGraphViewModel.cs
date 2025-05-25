@@ -6,12 +6,8 @@ using GraphShape;
 using ReactiveUI;
 using Soup.Build.Utilities;
 using Soup.View.Views;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Path = Opal.Path;
 using ValueType = Soup.Build.Utilities.ValueType;
 
 namespace Soup.View.ViewModels;
@@ -56,41 +52,15 @@ public class TaskGraphViewModel : ContentPaneViewModel
 		set => this.RaiseAndSetIfChanged(ref this.selectedTask, value);
 	}
 
-	public async Task LoadProjectAsync(Path? packageFolder, string? owner)
+	public void Load(ValueTable? generateInfoTable)
 	{
 		this.Graph = null;
 
-		var activeGraph = await Task.Run(async () =>
+		if (generateInfoTable is not null)
 		{
-			if (packageFolder is not null)
-			{
-				var recipeFile = packageFolder + BuildConstants.RecipeFileName;
-				var (isSuccess, result) = await RecipeExtensions.TryLoadRecipeFromFileAsync(recipeFile);
-				if (isSuccess)
-				{
-					var targetPath = await GetTargetPathAsync(packageFolder, owner);
-
-					var soupTargetDirectory = targetPath + new Path("./.soup/");
-
-					var generateInfoStateFile = soupTargetDirectory + BuildConstants.GenerateInfoFileName;
-					if (!ValueTableManager.TryLoadState(generateInfoStateFile, out var generateInfoTable))
-					{
-						NotifyError($"Failed to load Value Table: {generateInfoStateFile}");
-						return null;
-					}
-
-					return BuildGraph(generateInfoTable);
-				}
-				else
-				{
-					NotifyError($"Failed to load Recipe file: {packageFolder}");
-				}
-			}
-
-			return null;
-		});
-
-		this.Graph = activeGraph;
+			var activeGraph = BuildGraph(generateInfoTable);
+			this.Graph = activeGraph;
+		}
 	}
 
 	private List<GraphNodeViewModel>? BuildGraph(ValueTable generateInfoTable)
@@ -203,46 +173,5 @@ public class TaskGraphViewModel : ContentPaneViewModel
 		}
 
 		return result;
-	}
-
-	private async Task<Path> GetTargetPathAsync(Path packageDirectory, string? owner)
-	{
-		string soupExe;
-		if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-		{
-			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Soup.exe");
-		}
-		else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
-		{
-			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "soup");
-		}
-		else
-		{
-			throw new NotSupportedException("Unknown OS Platform");
-		}
-
-		var optionalOwnerFlag = owner is null ? string.Empty : $" -owner {owner}";
-		var processInfo = new ProcessStartInfo(soupExe, $"target {packageDirectory}{optionalOwnerFlag}")
-		{
-			RedirectStandardOutput = true,
-			CreateNoWindow = true,
-		};
-		using var process = new Process()
-		{
-			StartInfo = processInfo,
-		};
-
-		_ = process.Start();
-
-		await process.WaitForExitAsync();
-
-		if (process.ExitCode != 0)
-		{
-			NotifyError($"Soup process exited with error: {process.ExitCode}");
-			throw new InvalidOperationException();
-		}
-
-		var output = await process.StandardOutput.ReadToEndAsync();
-		return new Path(output);
 	}
 }

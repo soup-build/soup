@@ -257,49 +257,49 @@ namespace Soup::Core
 			const DependencyTargetSet& packageAccessSet)
 		{
 			//////////////////////////////////////////////
-			// Load Previous Run
+			// Setup Generate
 			/////////////////////////////////////////////
-			auto generateResultFile = soupTargetDirectory + BuildConstants::GenerateResultFileName();
-			Log::Info("Checking for existing Generate Result");
-			Log::Diag(generateResultFile.ToString());
-			auto previousGenerateResult = GenerateResult();
+			auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+			Log::Info("Checking for existing Generate Phase 1 Result");
+			Log::Diag(generatePhase1ResultFile.ToString());
+			auto previousGeneratePhase1Result = GenerateResult();
 			auto hasExistingResult = GenerateResultManager::TryLoadState(
-				generateResultFile,
-				previousGenerateResult,
+				generatePhase1ResultFile,
+				previousGeneratePhase1Result,
 				_fileSystemState);
 
-			auto previousEvaluateGraph = OperationGraph();
+			auto previousGeneratePhase2Result = OperationGraph();
+			auto generatePhase2ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase2ResultFileName();
 			if (hasExistingResult)
 			{
-				Log::Info("Previous generate result found");
+				Log::Info("Previous result found");
 
-				if (previousGenerateResult.IsPreprocessor())
+				if (previousGeneratePhase1Result.IsPreprocessor())
 				{
-					// Load the previous operation graph and results if they exist
-					auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-					Log::Info("Checking for existing Evaluate Operation Graph");
-					Log::Diag(evaluateGraphFile.ToString());
+					// Load the previous operation graph and result if they exist
+					Log::Info("Checking for existing Generate Phase 2 Result");
+					Log::Diag(generatePhase2ResultFile.ToString());
 					auto hasExistingGraph = OperationGraphManager::TryLoadState(
-						evaluateGraphFile,
-						previousEvaluateGraph,
+						generatePhase2ResultFile,
+						previousGeneratePhase2Result,
 						_fileSystemState);
 					if (hasExistingGraph)
 					{
-						Log::Info("Previous operation graph found");
+						Log::Info("Previous result found");
 					}
 					else
 					{
-						Log::Info("No previous operation graph found");
+						Log::Info("No previous result");
 					}
 				}
 			}
 			else
 			{
-				Log::Info("No previous generate result found");
+				Log::Info("No previous result");
 			}
 
 			//////////////////////////////////////////////
-			// Generate Core
+			// Run Generate Phase 1
 			/////////////////////////////////////////////
 
 			// Ensure the target directories exists
@@ -309,7 +309,7 @@ namespace Soup::Core
 				System::IFileSystem::Current().CreateDirectory(soupTargetDirectory);
 			}
 
-			auto ranGenerateCore = RunGenerateCore(
+			auto ranGeneratePhase1 = RunGenerateCore(
 				true,
 				packageInfo,
 				macroPackageDirectory,
@@ -322,31 +322,32 @@ namespace Soup::Core
 			//////////////////////////////////////////////
 			// Load Updated Result
 			/////////////////////////////////////////////
-			auto updatedGenerateResult = GenerateResult();
-			if (ranGenerateCore)
+			auto updatedGeneratePhase1Result = GenerateResult();
+			if (ranGeneratePhase1)
 			{
-				Log::Info("Loading new Generate Result");
+				Log::Info("Loading updated Generate Phase 1 Result");
+				Log::Diag(generatePhase1ResultFile.ToString());
 				if (!GenerateResultManager::TryLoadState(
-					generateResultFile,
-					updatedGenerateResult,
+					generatePhase1ResultFile,
+					updatedGeneratePhase1Result,
 					_fileSystemState))
 				{
-					throw std::runtime_error("Missing required generate result after generate evaluated.");
+					throw std::runtime_error("Missing required generate phase 1 result.");
 				}
 			}
 
 			//////////////////////////////////////////////
-			// Evaluate Preprocessor
+			// Evaluate Optional Preprocessor
 			/////////////////////////////////////////////
-			if (updatedGenerateResult.IsPreprocessor())
+			if (updatedGeneratePhase1Result.IsPreprocessor())
 			{
 				auto ranPreprocessors = RunPreprocessorOperations(
-					previousGenerateResult.GetEvaluateGraph(),
-					updatedGenerateResult.GetEvaluateGraph(),
+					previousGeneratePhase1Result.GetGraph(),
+					updatedGeneratePhase1Result.GetGraph(),
 					realTargetDirectory,
 					soupTargetDirectory);
 
-				auto ranGenerateCorePhase2 = RunGenerateCore(
+				auto ranGeneratePhase2 = RunGenerateCore(
 					false,
 					packageInfo,
 					macroPackageDirectory,
@@ -357,30 +358,30 @@ namespace Soup::Core
 					packageAccessSet);
 
 				// TODO : Do I need this check
-				if (ranPreprocessors || ranGenerateCorePhase2)
+				auto updatedGeneratePhase2Result = OperationGraph();
+				if (ranPreprocessors || ranGeneratePhase2)
 				{
-					// Load the update operation graph and results if they exist
-					auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-					Log::Info("Load Evaluate Operation Graph");
+					// Load the update operation graph and result if they exist
+					Log::Info("Load update Generate Phase 2 Result");
 					if (!OperationGraphManager::TryLoadState(
-						evaluateGraphFile,
-						previousEvaluateGraph,
+						generatePhase2ResultFile,
+						updatedGeneratePhase2Result,
 						_fileSystemState))
 					{
-						throw std::runtime_error("Missing required evaluate operation graph after proxies evaluated.");
+						throw std::runtime_error("Missing required generate phase 2 result.");
 					}
 				}
 
 				// TODO: Get phase 2 results
 				return std::make_tuple(
-					previousGenerateResult.GetEvaluateGraph(),
-					updatedGenerateResult.GetEvaluateGraph());
+					previousGeneratePhase2Result,
+					updatedGeneratePhase2Result);
 			}
 			else
 			{
 				return std::make_tuple(
-					previousGenerateResult.GetEvaluateGraph(),
-					updatedGenerateResult.GetEvaluateGraph());
+					previousGeneratePhase1Result.GetGraph(),
+					updatedGeneratePhase1Result.GetGraph());
 			}
 		}
 
@@ -538,11 +539,13 @@ namespace Soup::Core
 
 			// Evaluate the Generate phase
 			// TODO: For now it is easy to run generate with same graph, but this is extra work to merge a known same graph... Not much, but ¯\_(ツ)_/¯
-			auto generateResultsFile = soupTargetDirectory + BuildConstants::GenerateResultsFileName();
+			auto generateResultFile = isFirstRun ?
+				soupTargetDirectory + BuildConstants::GeneratePhase1OperationResultFileName()
+				: soupTargetDirectory + BuildConstants::GeneratePhase2OperationResultFileName();
 			return RunIncrementalEvaluate(
 				generateGraph,
 				generateGraph,
-				generateResultsFile,
+				generateResultFile,
 				temporaryDirectory,
 				generateAllowedReadAccess,
 				generateAllowedWriteAccess);
@@ -579,99 +582,14 @@ namespace Soup::Core
 			}
 
 			// Evaluate the build
-			auto proxiesResultsFile = soupTargetDirectory + BuildConstants::ProxiesResultsFileName();
+			auto generatePhase1ResultsFile = soupTargetDirectory + BuildConstants::GeneratePhase1OperationResultFileName();
 			return RunIncrementalEvaluate(
 				previousGraph,
 				updatedGraph,
-				proxiesResultsFile,
+				generatePhase1ResultsFile,
 				temporaryDirectory,
 				allowedReadAccess,
 				allowedWriteAccess);
-		}
-
-		/// <summary>
-		/// Run the finalizer generate phase
-		/// </summary>
-		bool RunGenerateFinalizer( 
-			const PackageInfo& packageInfo,
-			const Path& realTargetDirectory,
-			const Path& soupTargetDirectory,
-			const DependencyTargetSet& packageAccessSet)
-		{
-			// Run the incremental generate
-			auto generateGraph = OperationGraph();
-
-			// Add the single root operation to perform the generate
-			auto moduleName = System::IProcessManager::Current().GetCurrentProcessFileName();
-			auto generateFolder = moduleName.GetParent();
-
-			#if defined(_WIN32)
-			auto generateExecutable = generateFolder + Path("./Soup.Generate.exe");
-			#elif defined(__linux__)
-			auto generateExecutable = generateFolder + Path("./generate");
-			#else
-			#error "Unknown platform"
-			#endif
-
-			OperationId generateOperationId = 1;
-			auto generateArguments = std::vector<std::string>();
-			generateArguments.push_back("Finalizer");
-			generateArguments.push_back(soupTargetDirectory.ToString());
-			auto generateOperation = OperationInfo(
-				generateOperationId,
-				std::format("Generate Finalizer: [{}]{}", packageInfo.Recipe->GetLanguage().GetName(), packageInfo.Name.ToString()),
-				CommandInfo(
-					packageInfo.PackageRoot,
-					generateExecutable,
-					std::move(generateArguments)),
-				{},
-				{},
-				{},
-				{});
-			generateOperation.DependencyCount = 1;
-			generateGraph.AddOperation(std::move(generateOperation));
-
-			// Set the Generate operation as the root
-			generateGraph.SetRootOperationIds({
-				generateOperationId,
-			});
-
-			// Set Read and Write access fore the generate phase
-			auto generateAllowedReadAccess = std::vector<Path>();
-			auto generateAllowedWriteAccess = std::vector<Path>();
-
-			// Allow read access to the generate executable folder
-			generateAllowedReadAccess.push_back(generateFolder);
-
-			// Allow read access to the local user config
-			auto localUserConfigPath = _userDataPath + BuildConstants::LocalUserConfigFileName();
-			generateAllowedReadAccess.push_back(std::move(localUserConfigPath));
-
-			// TODO: Windows specific
-			generateAllowedReadAccess.push_back(Path("C:/Windows/"));
-			generateAllowedReadAccess.push_back(Path("C:/Program Files/dotnet/"));
-
-			// Pass along the read access set
-			for (auto& value : packageAccessSet.GenerateCurrentReadDirectories)
-				generateAllowedReadAccess.push_back(value);
-
-			// Pass along the write access set
-			for (auto& value : packageAccessSet.GenerateCurrentWriteDirectories)
-				generateAllowedWriteAccess.push_back(value);
-
-			// Set the temporary folder under the target folder
-			auto temporaryDirectory = realTargetDirectory + BuildConstants::TemporaryFolderName();
-
-			// Evaluate the Generate phase
-			// TODO: For now it is easy to run generate with same graph, but this is extra work to merge a known same graph... Not much, but ¯\_(ツ)_/¯
-			auto generateResultsFile = soupTargetDirectory + BuildConstants::GenerateResultsFileName();
-			return RunIncrementalEvaluate(
-				generateGraph,
-				generateGraph,
-				generateResultsFile,
-				temporaryDirectory,
-				generateAllowedReadAccess,
-				generateAllowedWriteAccess);
 		}
 
 		void RunEvaluate(
@@ -705,7 +623,7 @@ namespace Soup::Core
 			}
 
 			// Evaluate the build
-			auto evaluateResultsFile = soupTargetDirectory + BuildConstants::EvaluateResultsFileName();
+			auto evaluateResultsFile = soupTargetDirectory + BuildConstants::EvaluateBuildResultsFileName();
 			auto ranEvaluate = RunIncrementalEvaluate(
 				previousGraph,
 				updatedGraph,

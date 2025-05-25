@@ -45,7 +45,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/out/run/Soup/Soup.Generate.exe",
       "args": [
-        "Finalizer",
+        "false",
         "${workspaceFolder}/out/C++/Local/Samples.Cpp.ConsoleApplication/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
       ],
       "stopAtEntry": false,

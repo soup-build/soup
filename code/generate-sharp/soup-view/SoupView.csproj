@@ -48,9 +48,4 @@
 		<ProjectReference Include="../opal/Opal.csproj" />
 		<ProjectReference Include="../utilities/Soup.Utilities.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="views\FinalizerTaskGraphView.axaml.cs">
-	    <DependentUpon>FinalizerTaskGraphView.axaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
 </Project>

@@ -18,39 +18,63 @@ namespace Soup::Core
 	export class BuildConstants
 	{
 	public:
-		static const Path& EvaluateGraphFileName()
+		static const Path& EvaluateBuildResultsFileName()
 		{
-			static const auto value = Path("./Evaluate.bog");
+			static const auto value = Path("./evaluate-build.bor");
 			return value;
 		}
 
-		static const Path& EvaluateResultsFileName()
+		static const Path& EvaluatePreprocessorResultsFileName()
 		{
-			static const auto value = Path("./Evaluate.bor");
-			return value;
-		}
-
-		static const Path& GenerateResultFileName()
-		{
-			static const auto value = Path("./GenerateResult.bgr");
+			static const auto value = Path("./evaluate-preprocessor.bor");
 			return value;
 		}
 
 		static const Path& GenerateInputFileName()
 		{
-			static const auto value = Path("./GenerateInput.bvt");
+			static const auto value = Path("./generate-input.bvt");
+			return value;
+		}
+
+		static const Path& GeneratePhase1InfoFileName()
+		{
+			static const auto value = Path("./generate-phase1-info.bvt");
+			return value;
+		}
+
+		static const Path& GeneratePhase1OperationResultFileName()
+		{
+			static const auto value = Path("./generate-phase1.bor");
+			return value;
+		}
+
+		static const Path& GeneratePhase1ResultFileName()
+		{
+			static const auto value = Path("./generate-phase1.bgr");
+			return value;
+		}
+
+		static const Path& GeneratePhase2InfoFileName()
+		{
+			static const auto value = Path("./generate-phase2-info.bvt");
+			return value;
+		}
+
+		static const Path& GeneratePhase2OperationResultFileName()
+		{
+			static const auto value = Path("./generate-phase2.bor");
+			return value;
+		}
+
+		static const Path& GeneratePhase2ResultFileName()
+		{
+			static const auto value = Path("./generate-phase2.bog");
 			return value;
 		}
 
 		static const Path& GenerateSharedStateFileName()
 		{
-			static const auto value = Path("./GenerateSharedState.bvt");
-			return value;
-		}
-
-		static const Path& GenerateResultsFileName()
-		{
-			static const auto value = Path("./Generate.bor");
+			static const auto value = Path("./generate-shared-state.bvt");
 			return value;
 		}
 
@@ -66,33 +90,15 @@ namespace Soup::Core
 			return value;
 		}
 
-		static const Path& ProxiesResultsFileName()
-		{
-			static const auto value = Path("./Proxies.bor");
-			return value;
-		}
-
-		static const Path& SoupLocalStoreDirectory()
-		{
-			static const auto value = Path("./.soup/");
-			return value;
-		}
-
 		static const Path& RecipeFileName()
 		{
 			static const auto value = Path("./Recipe.sml");
 			return value;
 		}
 
-		static const Path& GenerateInfoFileName()
+		static const Path& SoupLocalStoreDirectory()
 		{
-			static const auto value = Path("./GenerateInfo.bvt");
-			return value;
-		}
-
-		static const Path& GenerateFinalizerInfoFileName()
-		{
-			static const auto value = Path("./GenerateFinalizerInfo.bvt");
+			static const auto value = Path("./.soup/");
 			return value;
 		}
 

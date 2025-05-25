@@ -60,13 +60,17 @@
 					IsSelected="{Binding IsRootSelected}"/>
 				<Label Content="/" />
 				<v:SelectedButton
+					Content="Preprocessor Tasks"
+					Command="{Binding SelectPreprocessorTasksCommand}"
+					IsSelected="{Binding IsPreprocessorTasksSelected}" />
+				<v:SelectedButton
+					Content="Preprocessor Operations"
+					Command="{Binding SelectPreprocessorOperationsCommand}"
+					IsSelected="{Binding IsPreprocessorOperationsSelected}" />
+				<v:SelectedButton
 					Content="Tasks"
 					Command="{Binding SelectTasksCommand}"
 					IsSelected="{Binding IsTasksSelected}" />
-				<v:SelectedButton
-					Content="Finalizer Tasks"
-					Command="{Binding SelectFinalizerTasksCommand}"
-					IsSelected="{Binding IsFinalizerTasksSelected}" />
 				<v:SelectedButton
 					Content="Operations"
 					Command="{Binding SelectOperationsCommand}"

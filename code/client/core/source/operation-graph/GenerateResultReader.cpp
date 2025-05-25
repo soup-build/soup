@@ -71,13 +71,13 @@ namespace Soup::Core
 				headerBuffer[2] != 'R' ||
 				headerBuffer[3] != '\0')
 			{
-				throw std::runtime_error("Invalid operation graph file header");
+				throw std::runtime_error("Invalid generate result file header");
 			}
 
 			auto fileVersion = ReadUInt32(data, size, offset);
 			if (fileVersion != FileVersion)
 			{
-				throw std::runtime_error("Operation graph file version does not match expected");
+				throw std::runtime_error("Generate Result file version does not match expected");
 			}
 
 			auto isPreprocessor = ReadBoolean(data, size, offset);
@@ -89,7 +89,7 @@ namespace Soup::Core
 				headerBuffer[2] != 'S' ||
 				headerBuffer[3] != '\0')
 			{
-				throw std::runtime_error("Invalid operation graph files header");
+				throw std::runtime_error("Invalid generate result files header");
 			}
 
 			// Map up the incoming file ids to the active file system state ids
@@ -115,7 +115,7 @@ namespace Soup::Core
 				headerBuffer[2] != 'P' ||
 				headerBuffer[3] != '\0')
 			{
-				throw std::runtime_error("Invalid operation graph root operations header");
+				throw std::runtime_error("Invalid generate result root operations header");
 			}
 
 			// Read the root operation ids
@@ -128,7 +128,7 @@ namespace Soup::Core
 				headerBuffer[2] != 'S' ||
 				headerBuffer[3] != '\0')
 			{
-				throw std::runtime_error("Invalid operation graph operations header");
+				throw std::runtime_error("Invalid generate result operations header");
 			}
 
 			auto operationCount = ReadUInt32(data, size, offset);

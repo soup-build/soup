@@ -1,13 +1,20 @@
-﻿using Avalonia;
+﻿// <copyright file="PreprocessorOperationGraphView.axaml.cs" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Soup.View.ViewModels;
 
 namespace Soup.View.Views;
 
-public partial class FinalizerTaskGraphView : UserControl
+/// <summary>
+/// The operation graph page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class PreprocessorOperationGraphView : UserControl
 {
-	public FinalizerTaskGraphView()
+	public PreprocessorOperationGraphView()
 	{
 		InitializeComponent();
 	}

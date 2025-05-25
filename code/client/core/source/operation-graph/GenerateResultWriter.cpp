@@ -40,6 +40,7 @@ namespace Soup::Core
 			// Write the File Header with version
 			stream.write("BGR\0", 4);
 			WriteValue(stream, FileVersion);
+
 			WriteValue(stream, state.IsPreprocessor());
 
 			// Write out the set of files
@@ -54,10 +55,10 @@ namespace Soup::Core
 
 			// Write out the root operation ids
 			stream.write("ROP\0", 4);
-			WriteValues(stream, state.GetEvaluateGraph().GetRootOperationIds());
+			WriteValues(stream, state.GetGraph().GetRootOperationIds());
 
 			// Write out the set of operations
-			auto& operations = state.GetEvaluateGraph().GetOperations();
+			auto& operations = state.GetGraph().GetOperations();
 			stream.write("OPS\0", 4);
 			WriteValue(stream, static_cast<uint32_t>(operations.size()));
 			for (auto& operationValue : operations)
