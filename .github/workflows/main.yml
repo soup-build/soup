@@ -95,35 +95,35 @@ jobs:
       run: soup build ./soup/samples/c/windows-application/ -flavor ${{matrix.config}}
 
     - name: Soup Restore C# BuildExtension
-      run: soup restore ./soup/samples/c#/build-extension/executable/
+      run: soup restore ./soup/samples/csharp/build-extension/executable/
     - name: Soup Build C# BuildExtension
-      run: soup build ./soup/samples/c#/build-extension/executable/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/csharp/build-extension/executable/ -flavor ${{matrix.config}}
     - name: Soup Build C# ConsoleApplication
-      run: soup build ./soup/samples/c#/console-application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/csharp/console-application/ -flavor ${{matrix.config}}
     - name: Soup Build C# Library
-      run: soup build ./soup/samples/c#/library/application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/csharp/library/application/ -flavor ${{matrix.config}}
 
     - name: Soup Restore C++ BuildExtension
-      run: soup restore ./soup/samples/c++/build-extension/executable/
+      run: soup restore ./soup/samples/cpp/build-extension/executable/
     - name: Soup Build C++ BuildExtension
-      run: soup build ./soup/samples/c++/build-extension/executable/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/build-extension/executable/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ConsoleApplication
-      run: soup build ./soup/samples/c++/console-application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/console-application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DirectX
       if: matrix.os == 'windows-2022'
-      run: soup build ./soup/samples/c++/directx/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/directx/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DynamicLibrary
-      run: soup build ./soup/samples/c++/dynamic-library/application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/dynamic-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleDynamicLibrary
-      run: soup build ./soup/samples/c++/module-dynamic-library/application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/module-dynamic-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleInterface
-      run: soup build ./soup/samples/c++/module-interface/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/module-interface/ -flavor ${{matrix.config}}
     - name: Soup Restore C++ ParseJson
-      run: soup restore ./soup/samples/c++/parse-json/
+      run: soup restore ./soup/samples/cpp/parse-json/
     - name: Soup Build C++ ParseJson
-      run: soup build ./soup/samples/c++/parse-json/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/parse-json/ -flavor ${{matrix.config}}
     - name: Soup Build C++ StaticLibrary
-      run: soup build ./soup/samples/c++/static-library/application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/static-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ WindowsApplication
       if: matrix.os == 'windows-2022'
-      run: soup build ./soup/samples/c++/windows-application/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/windows-application/ -flavor ${{matrix.config}}
