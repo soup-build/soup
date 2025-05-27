@@ -63,11 +63,13 @@ export class ModuleParser : public Lexer
 {
 private:
     SimplifiedCppToken _currentToken;
+    std::vector<std::string> _result;
 
 public:
     ModuleParser(const reflex::Input& input) :
         Lexer(input),
-        _currentToken()
+        _currentToken(),
+        _result()
     {
     }
 
@@ -85,15 +87,20 @@ public:
         if (!TryParseModuleDeclaration(moduleName))
             return false;
 
-        std::cout << "module " << moduleName << std::endl;
+        _result.push_back("module " + moduleName);
 
         std::string importName;
         while (TryParseImportModule(importName))
         {
-            std::cout << "import " << importName << std::endl;
+            _result.push_back("import " + importName);
         }
 
         return true;
+    }
+
+    std::vector<std::string> GetResult()
+    {
+      return std::move(_result);
     }
 
 private:
@@ -217,6 +224,7 @@ private:
         #endif
 
         // TODO: Implement header imports
+        name = "TODO";
         return false;
     }
 

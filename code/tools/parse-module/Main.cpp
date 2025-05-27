@@ -81,9 +81,16 @@ int main(int argc, char** argv)
 		auto result = Parse(sourceFilePath);
 
 		auto resultFile = std::fstream(resultFilePath.ToString(), std::ios::out);
+		bool isFirst = true;
 		for (auto& line : result)
 		{
-			resultFile << line << std::endl;
+			if (!isFirst)
+			{
+				resultFile << '\n';
+			}
+
+			resultFile << line;
+			isFirst = false;
 		}
 
 		resultFile.close();
