@@ -50,5 +50,3 @@ export inline void GetAssetsPath(_Out_writes_(pathSize) WCHAR* path, UINT pathSi
 		*(lastSlash + 1) = L'\0';
 	}
 }
-
-
