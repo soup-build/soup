@@ -142,40 +142,45 @@ namespace Soup::Core::Generate
 				auto preprocessorResults = ValueList();
 				for (auto& [_, operation] : generatePhase1Result.GetGraph().GetOperations())
 				{
-					auto preprocessorOperationResult = ValueTable();
-
-					preprocessorOperationResult.emplace("Title", Value(operation.Title));
-					preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable));
-
-					auto operationArguments = ValueList();
-					for (auto& argument : operation.Command.Arguments)
-					{
-						operationArguments.push_back(Value(std::move(argument)));
-					}
-					preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
-
-					auto preprocessorResult = ValueList();
 					if (operation.DeclaredOutput.size() > 0)
 					{
-						// Read the results file as text
-						std::shared_ptr<System::IInputFile> file;
+						// TODO: Need a way to indicate is a real preprocessor operation, not a normal one
 						auto resultFilePath = _fileSystemState.GetFilePath(operation.DeclaredOutput.at(0));
-						if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, file))
+						if (resultFilePath.HasFileName())
 						{
-							Log::Info("Failed to open results file");
-							throw std::runtime_error("Failed to open results file");
-						}
+							auto preprocessorOperationResult = ValueTable();
 
-						std::string line;
-						while (std::getline(file->GetInStream(), line))
-						{
-							preprocessorResult.push_back(Value(std::move(line)));
+							preprocessorOperationResult.emplace("Title", Value(operation.Title));
+							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable));
+
+							auto operationArguments = ValueList();
+							for (auto& argument : operation.Command.Arguments)
+							{
+								operationArguments.push_back(Value(std::move(argument)));
+							}
+							preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
+
+							auto preprocessorResult = ValueList();
+
+							// Read the results file as text
+							std::shared_ptr<System::IInputFile> file;
+							if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, file))
+							{
+								Log::Error("Failed to open results file {}", resultFilePath.ToString());
+								throw std::runtime_error("Failed to open results file");
+							}
+
+							std::string line;
+							while (std::getline(file->GetInStream(), line))
+							{
+								preprocessorResult.push_back(Value(std::move(line)));
+							}
+
+							preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
+
+							preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
 						}
 					}
-
-					preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
-
-					preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
 				}
 
 				globalState.emplace("Preprocessors", Value(std::move(preprocessorResults)));

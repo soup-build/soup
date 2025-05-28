@@ -30,8 +30,7 @@
       "program": "${workspaceFolder}/out/run/Soup/Soup.exe",
       "args": [
         "build",
-        "samples/c++/console-application",
-        "-force",
+        "samples/cpp/module-interface",
         "-v:d"
       ],
       "stopAtEntry": false,
@@ -46,7 +45,7 @@
       "program": "${workspaceFolder}/out/run/Soup/Soup.Generate.exe",
       "args": [
         "false",
-        "${workspaceFolder}/out/C++/Local/Samples.Cpp.ConsoleApplication/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+        "${workspaceFolder}/out/C++/Local/Samples.Cpp.ModuleInterface/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

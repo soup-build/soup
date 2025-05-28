@@ -18,15 +18,15 @@ namespace Soup::Core
 	export class BuildConstants
 	{
 	public:
-		static const Path& EvaluateBuildResultsFileName()
+		static const Path& EvaluatePhase1ResultsFileName()
 		{
-			static const auto value = Path("./evaluate-build.bor");
+			static const auto value = Path("./evaluate-phase1.bor");
 			return value;
 		}
 
-		static const Path& EvaluatePreprocessorResultsFileName()
+		static const Path& EvaluatePhase2ResultsFileName()
 		{
-			static const auto value = Path("./evaluate-preprocessor.bor");
+			static const auto value = Path("./evaluate-phase2.bor");
 			return value;
 		}
 

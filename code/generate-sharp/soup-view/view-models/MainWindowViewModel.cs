@@ -123,10 +123,42 @@ public class MainWindowViewModel : ViewModelBase
 				this.dependencyGraph.SelectedProject?.Path,
 				this.dependencyGraph.SelectedProject?.Owner);
 
-			this.preprocessorTaskGraph.Load(packageState?.GeneratePreprocessorInfo);
-			this.preprocessorOperationGraph.Load(packageState?.PreprocessorGraph, packageState?.PreprocessorResults);
-			this.taskGraph.Load(packageState?.GenerateEvaluateInfo);
-			this.operationGraph.Load(packageState?.EvaluateGraph, packageState?.EvaluateResults);
+			OperationGraph? generatePreprocessorGraph = null;
+			OperationResults? evaluatePreprocessorResults = null;
+			ValueTable? generatePreprocessorInfo = null;
+
+			OperationGraph? generateBuildGraph = null;
+			OperationResults? evaluateBuildResults = null;
+			ValueTable? generateBuildInfo = null;
+
+			if (packageState?.GeneratePhase1Result is not null)
+			{
+				if (packageState.GeneratePhase1Result.IsPreprocessor)
+				{
+					// Phase 1 is the preprocessing phase
+					generatePreprocessorGraph = packageState.GeneratePhase1Result.EvaluateGraph;
+					evaluatePreprocessorResults = packageState.EvaluatePhase1Results;
+					generatePreprocessorInfo = packageState.GeneratePhase1Info;
+
+					generateBuildGraph = packageState.GeneratePhase2Result;
+					evaluateBuildResults = packageState.EvaluatePhase2Results;
+					generateBuildInfo = packageState.GeneratePhase2Info;
+				}
+				else
+				{
+					// Phase 1 is normal evaluation
+					generateBuildGraph = packageState.GeneratePhase1Result.EvaluateGraph;
+					evaluateBuildResults = packageState.EvaluatePhase1Results;
+					generateBuildInfo = packageState.GeneratePhase1Info;
+
+				}
+			}
+
+			this.preprocessorTaskGraph.Load(generatePreprocessorInfo);
+			this.preprocessorOperationGraph.Load(generatePreprocessorGraph, evaluatePreprocessorResults);
+
+			this.taskGraph.Load(generateBuildInfo);
+			this.operationGraph.Load(generateBuildGraph, evaluateBuildResults);
 
 			this.RaisePropertyChanged(nameof(this.SelectedPackageName));
 		}
@@ -224,66 +256,57 @@ public class MainWindowViewModel : ViewModelBase
 					return null;
 				}
 
-				// Assume the generate result is an evaluation result
-				OperationGraph? evaluateGraph = generatePhase1Result.EvaluateGraph;
-				OperationResults? evaluateResults = null;
-				ValueTable? generateEvaluateInfoTable = null;
-
 				// Check for the optional results
-				var evaluateBuildResultsFile = soupTargetDirectory + BuildConstants.EvaluateBuildResultsFileName;
+				var evaluatePhase1ResultsFile = soupTargetDirectory + BuildConstants.EvaluatePhase1ResultsFileName;
+				OperationResults? evaluatePhase1Results = null;
 				if (OperationResultsManager.TryLoadState(
-					evaluateBuildResultsFile, this.fileSystemState, out var loadEvaluateBuildResults))
+					evaluatePhase1ResultsFile, this.fileSystemState, out var loadEvaluatePhase1Results))
 				{
-					evaluateResults = loadEvaluateBuildResults;
+					evaluatePhase1Results = loadEvaluatePhase1Results;
 				}
 
 				var generatePhase1InfoFile = soupTargetDirectory + BuildConstants.GeneratePhase1InfoFileName;
-				if (ValueTableManager.TryLoadState(generatePhase1InfoFile, out var generatePhase1InfoTable))
+				ValueTable? generatePhase1Info = null;
+				if (ValueTableManager.TryLoadState(generatePhase1InfoFile, out var loadGeneratePhase1InfoTable))
 				{
-					generateEvaluateInfoTable = generatePhase1InfoTable;
+					generatePhase1Info = loadGeneratePhase1InfoTable;
 				}
 
 				// Check for the optional evaluate graph if the initial phase was preprocessor
-				OperationGraph? preprocessorGraph = null;
-				OperationResults? preprocessorResults = null;
-				ValueTable? generatePeprocessorInfoTable = null;
+				OperationGraph? generatePhase2Result = null;
+				OperationResults? evaluatePhase2Results = null;
+				ValueTable? generatePhase2Info = null;
 				if (generatePhase1Result.IsPreprocessor)
 				{
-					// Convert the current graph to preprocessor
-					preprocessorGraph = evaluateGraph;
-					generatePeprocessorInfoTable = generateEvaluateInfoTable;
-					evaluateGraph = null;
-					generateEvaluateInfoTable = null;
-
 					var generatePhase2ResultFile = soupTargetDirectory + BuildConstants.GeneratePhase2ResultFileName;
 					if (OperationGraphManager.TryLoadState(
 						generatePhase2ResultFile, this.fileSystemState, out var loadGeneratePhase2Result))
 					{
-						evaluateGraph = loadGeneratePhase2Result;
+						generatePhase2Result = loadGeneratePhase2Result;
 					}
 
-					// Check for the optional preprocessor results
-					var evaluateResultsFile = soupTargetDirectory + BuildConstants.EvaluatePreprocessorResultsFileName;
+					// Check for the optional phase2 results
+					var evaluateResultsFile = soupTargetDirectory + BuildConstants.EvaluatePhase2ResultsFileName;
 					if (OperationResultsManager.TryLoadState(
 						evaluateResultsFile, this.fileSystemState, out var loadEvaluatePreprocessorResults))
 					{
-						preprocessorResults = loadEvaluatePreprocessorResults;
+						evaluatePhase2Results = loadEvaluatePreprocessorResults;
 					}
 
 					var generatePhase2InfoFile = soupTargetDirectory + BuildConstants.GeneratePhase2InfoFileName;
 					if (ValueTableManager.TryLoadState(generatePhase2InfoFile, out var generatePhase2InfoTable))
 					{
-						generateEvaluateInfoTable = generatePhase2InfoTable;
+						generatePhase2Info = generatePhase2InfoTable;
 					}
 				}
 
 				return new PackageState(
-					preprocessorGraph,
-					preprocessorResults,
-					generatePeprocessorInfoTable,
-					evaluateGraph,
-					evaluateResults,
-					generateEvaluateInfoTable);
+					generatePhase1Result,
+					evaluatePhase1Results,
+					generatePhase1Info,
+					generatePhase2Result,
+					evaluatePhase2Results,
+					generatePhase2Info);
 			}
 			else
 			{
@@ -337,10 +360,10 @@ public class MainWindowViewModel : ViewModelBase
 	}
 
 	private sealed record PackageState(
-		OperationGraph? PreprocessorGraph,
-		OperationResults? PreprocessorResults,
-		ValueTable? GeneratePreprocessorInfo,
-		OperationGraph? EvaluateGraph,
-		OperationResults? EvaluateResults,
-		ValueTable? GenerateEvaluateInfo);
+		GenerateResult? GeneratePhase1Result,
+		OperationResults? EvaluatePhase1Results,
+		ValueTable? GeneratePhase1Info,
+		OperationGraph? GeneratePhase2Result,
+		OperationResults? EvaluatePhase2Results,
+		ValueTable? GeneratePhase2Info);
 }

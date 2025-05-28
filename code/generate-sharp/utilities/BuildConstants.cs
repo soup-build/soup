@@ -11,9 +11,9 @@ namespace Soup.Build.Utilities;
 /// </summary>
 public static class BuildConstants
 {
-	public static Path EvaluateBuildResultsFileName => new Path("./evaluate-build.bor");
+	public static Path EvaluatePhase1ResultsFileName => new Path("./evaluate-phase2.bor");
 
-	public static Path EvaluatePreprocessorResultsFileName => new Path("./evaluate-preprocessor.bor");
+	public static Path EvaluatePhase2ResultsFileName => new Path("./evaluate-phase2.bor");
 
 	public static Path GenerateInputFileName => new Path("./generate-input.bvt");
 
