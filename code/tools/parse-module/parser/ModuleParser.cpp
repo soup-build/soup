@@ -330,6 +330,8 @@ private:
         if (_currentToken != SimplifiedCppToken::Semicolon)
             throw std::runtime_error("Malformed module declaration");
 
+        MoveNext();
+
         moduleName = std::move(result);
         return true;
     }
@@ -406,16 +408,19 @@ private:
           std::cout << "TryParseImportModule" << std::endl;
         #endif
 
-        // Check for optional first export
-        if (_currentToken == SimplifiedCppToken::Export)
+        // Check for optional first export and required import
+        if (_currentToken == SimplifiedCppToken::Import)
+        {
+        }
+        else if (_currentToken == SimplifiedCppToken::Export && PeekNext() == SimplifiedCppToken::Import)
         {
             // Has Export
             MoveNext();
         }
-
-        // Verify required import
-        if (_currentToken != SimplifiedCppToken::Import)
-            return false;
+        else
+        {
+          return false;
+        }
 
         MoveNext();
 
@@ -440,6 +445,8 @@ private:
         // Verify semicolon at end
         if (_currentToken != SimplifiedCppToken::Semicolon)
             return false;
+
+        MoveNext();
 
         return true;
     }
