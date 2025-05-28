@@ -658,11 +658,11 @@ namespace Soup::Core
 			}
 
 			// Evaluate the build
-			auto generatePhase1ResultsFile = soupTargetDirectory + BuildConstants::GeneratePhase1OperationResultFileName();
+			auto evaluatePhase1ResultsFile = soupTargetDirectory + BuildConstants::EvaluatePhase1ResultsFileName();
 			return RunIncrementalEvaluate(
 				operationGraph,
 				operationResults,
-				generatePhase1ResultsFile,
+				evaluatePhase1ResultsFile,
 				temporaryDirectory,
 				allowedReadAccess,
 				allowedWriteAccess);
