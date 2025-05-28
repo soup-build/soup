@@ -34,7 +34,7 @@ whitespace           [ \t]+
 newline              \r?\n
 preprocessor         "#".*?\r?\n
 comment              "//".*?\r?\n
-identifier           [A-Za-z_]+
+identifier           [A-Za-z_][A-Za-z_1-9]*
 
 %%
 {whitespace}         { /* ignore whitespace */ }
@@ -63,12 +63,14 @@ export class ModuleParser : public Lexer
 {
 private:
     SimplifiedCppToken _currentToken;
+    SimplifiedCppToken _nextToken;
     std::vector<std::string> _result;
 
 public:
     ModuleParser(const reflex::Input& input) :
         Lexer(input),
         _currentToken(),
+        _nextToken((SimplifiedCppToken)-1),
         _result()
     {
     }
@@ -80,14 +82,24 @@ public:
         // Check if there is an optional global module declaration
         if (TryParseOptionalGlobalModuleFragment())
         {
-            MoveNext();
+            // TODO: Parse global module fragment
+
+            // Must have a module declaration
+            std::string moduleName;
+            if (!TryParseModuleDeclaration(moduleName))
+                throw std::runtime_error("TU with global module fragment must have a module declaration");
+
+            _result.push_back("module " + moduleName);
         }
-
-        std::string moduleName;
-        if (!TryParseModuleDeclaration(moduleName))
-            return false;
-
-        _result.push_back("module " + moduleName);
+        else
+        {
+            // Check for optional module declarationn
+            std::string moduleName;
+            if (TryParseModuleDeclaration(moduleName))
+            {
+                _result.push_back("module " + moduleName);
+            }
+        }
 
         std::string importName;
         while (TryParseImportModule(importName))
@@ -111,18 +123,18 @@ private:
         #endif
 
         // Verify first token is module
-        if (_currentToken != SimplifiedCppToken::Module)
+        if (_currentToken == SimplifiedCppToken::Module &&
+          PeekNext() == SimplifiedCppToken::Semicolon)
         {
-            // There is no global module fragment, return success
+            // Move past the semicolon
+            MoveNext();
+            MoveNext();
+
+            // There is a global module fragment
             return true;
         }
 
-        // Verify semicolon
-        MoveNext();
-        if (_currentToken != SimplifiedCppToken::Semicolon)
-            return false;
-
-        return true;
+        return false;
     }
 
     bool TryParseModuleDeclaration(std::string& moduleName)
@@ -130,21 +142,25 @@ private:
         #ifdef SHOW_TOKENS
           std::cout << "TryParseModuleDeclaration" << std::endl;
         #endif
-  
-        // Verify first token is export
-        if (_currentToken != SimplifiedCppToken::Export)
-            return false;
 
-        // Verify first token is module
-        MoveNext();
+        // Check for optional first export token
+        if (_currentToken == SimplifiedCppToken::Export)
+        {
+            MoveNext();
+        }
+
+        // Verify required module token
         if (_currentToken != SimplifiedCppToken::Module)
+        {
+            // Only return false here since there is not tokens that indicate a module declaration
             return false;
+        }
 
         MoveNext();
 
         std::string result;
         if (!TryParseModuleName(result))
-            return false;
+            throw std::runtime_error("Malformed module name in module declaration");
 
         // Check for optional partition
         std::string partitionName;
@@ -155,7 +171,7 @@ private:
 
         // Verify semicolon after module name
         if (_currentToken != SimplifiedCppToken::Semicolon)
-            return false;
+            throw std::runtime_error("Malformed module declaration");
 
         moduleName = std::move(result);
         return true;
@@ -201,8 +217,6 @@ private:
           std::cout << "TryParseModulePartition" << std::endl;
         #endif
 
-        auto result = std::string(":");
-
         // Verify first token is a colon
         if (_currentToken != SimplifiedCppToken::Colon)
             return false;
@@ -212,6 +226,7 @@ private:
         if (!TryParseModuleName(moduleName))
           return false;
 
+        auto result = std::string(":");
         result += moduleName;
         name = std::move(result);
         return true;
@@ -235,7 +250,6 @@ private:
         #endif
 
         // Check for optional first export
-        MoveNext();
         if (_currentToken == SimplifiedCppToken::Export)
         {
             // Has Export
@@ -273,41 +287,59 @@ private:
         return true;
     }
 
+    SimplifiedCppToken PeekNext()
+    {
+        if (_nextToken == (SimplifiedCppToken)-1)
+        {
+            _nextToken = (SimplifiedCppToken)lex();
+        }
+
+        return _nextToken;
+    }
+
     SimplifiedCppToken MoveNext()
     {
-        _currentToken = (SimplifiedCppToken)lex();
+        if (_nextToken != (SimplifiedCppToken)-1)
+        {
+            _currentToken = _nextToken;
+            _nextToken = (SimplifiedCppToken)-1;
+        }
+        else
+        {
+            _currentToken = (SimplifiedCppToken)lex();
+        }
 
         #ifdef SHOW_TOKENS
-            switch (_currentToken)
-            {
-                case SimplifiedCppToken::EndOfFile:
-                    std::cout << "Token: " << "EndOfFile" << '\n';
-                    break;
-                case SimplifiedCppToken::Module:
-                    std::cout << "Token: " << "Module" << '\n';
-                    break;
-                case SimplifiedCppToken::Export:
-                    std::cout << "Token: " << "Export" << '\n';
-                    break;
-                case SimplifiedCppToken::Import:
-                    std::cout << "Token: " << "Import" << '\n';
-                    break;
-                case SimplifiedCppToken::Colon:
-                    std::cout << "Token: " << "Colon" << '\n';
-                    break;
-                case SimplifiedCppToken::Semicolon:
-                    std::cout << "Token: " << "Semicolon" << '\n';
-                    break;
-                case SimplifiedCppToken::Period:
-                    std::cout << "Token: " << "Period" << '\n';
-                    break;
-                case SimplifiedCppToken::Identifier:
-                    std::cout << "Token: " << "Identifier" << '\n';
-                    break;
-                default:
-                    std::cout << "Token: " << "UNKNOWN" << '\n';
-                    break;
-            }
+        switch (_currentToken)
+        {
+            case SimplifiedCppToken::EndOfFile:
+                std::cout << "Token: " << "EndOfFile" << '\n';
+                break;
+            case SimplifiedCppToken::Module:
+                std::cout << "Token: " << "Module" << '\n';
+                break;
+            case SimplifiedCppToken::Export:
+                std::cout << "Token: " << "Export" << '\n';
+                break;
+            case SimplifiedCppToken::Import:
+                std::cout << "Token: " << "Import" << '\n';
+                break;
+            case SimplifiedCppToken::Colon:
+                std::cout << "Token: " << "Colon" << '\n';
+                break;
+            case SimplifiedCppToken::Semicolon:
+                std::cout << "Token: " << "Semicolon" << '\n';
+                break;
+            case SimplifiedCppToken::Period:
+                std::cout << "Token: " << "Period" << '\n';
+                break;
+            case SimplifiedCppToken::Identifier:
+                std::cout << "Token: " << "Identifier" << '\n';
+                break;
+            default:
+                std::cout << "Token: " << "UNKNOWN" << '\n';
+                break;
+        }
         #endif
 
         return _currentToken;
