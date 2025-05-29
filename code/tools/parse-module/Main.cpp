@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 		auto sourceFilePath = Path::Parse(argv[2]);
 		auto result = Parse(sourceFilePath);
 
-		auto resultFile = std::fstream(resultFilePath.ToString(), std::ios::out);
+		auto resultFile = std::ofstream(resultFilePath.ToString(), std::ios::binary);
 		bool isFirst = true;
 		for (auto& line : result)
 		{
