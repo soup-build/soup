@@ -31,6 +31,7 @@ export namespace Soup::Core
 		CommandInfo Command;
 		std::vector<FileId> DeclaredInput;
 		std::vector<FileId> DeclaredOutput;
+
 		std::vector<FileId> ReadAccess;
 		std::vector<FileId> WriteAccess;
 		std::vector<OperationId> Children;

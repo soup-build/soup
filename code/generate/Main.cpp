@@ -53,15 +53,20 @@ int main(int argc, char** argv)
 
 		Log::Diag("ProgramStart");
 
-		if (argc != 2)
+		if (argc != 3)
 		{
-			Log::Error("Invalid parameters. Expected one parameter.");
+			Log::Error("Invalid parameters. Expected two parameters.");
 			return -1;
 		}
 
-		auto soupTargetDirectory = Path(argv[1]);
+		auto generatePhase = std::string(argv[1]);
+		auto isFirstRun = generatePhase == "true";
+		auto soupTargetDirectory = Path::Parse(argv[2]);
+
 		auto generateEngine = Soup::Core::Generate::GenerateEngine();
-		generateEngine.Run(soupTargetDirectory);
+		generateEngine.Run(isFirstRun, soupTargetDirectory);
+
+		return 0;
 	}
 	catch (const std::exception& ex)
 	{

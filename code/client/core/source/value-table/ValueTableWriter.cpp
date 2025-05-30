@@ -34,7 +34,22 @@ namespace Soup::Core
 
 			// Write out the root table
 			stream.write("TBL\0", 4);
-			WriteValue(stream, state);
+			WriteValueTable(stream, state);
+		}
+
+		static void WriteValueTable(std::ostream& stream, const ValueTable& table)
+		{
+			// Write the count of values
+			WriteValue(stream, static_cast<uint32_t>(table.size()));
+
+			for (const auto& [key, value] : table)
+			{
+				// Write the key
+				WriteValue(stream, std::string_view(key));
+
+				// Write the value
+				WriteValue(stream, value);
+			}
 		}
 
 	private:
@@ -47,7 +62,7 @@ namespace Soup::Core
 			switch (valueType)
 			{
 				case ValueType::Table:
-					WriteValue(stream, value.AsTable());
+					WriteValueTable(stream, value.AsTable());
 					break;
 				case ValueType::List:
 					WriteValue(stream, value.AsList());
@@ -75,21 +90,6 @@ namespace Soup::Core
 					break;
 				default:
 					throw std::runtime_error("Write Unknown ValueType");
-			}
-		}
-
-		static void WriteValue(std::ostream& stream, const ValueTable& table)
-		{
-			// Write the count of values
-			WriteValue(stream, static_cast<uint32_t>(table.size()));
-
-			for (const auto& [key, value] : table)
-			{
-				// Write the key
-				WriteValue(stream, std::string_view(key));
-
-				// Write the value
-				WriteValue(stream, value);
 			}
 		}
 

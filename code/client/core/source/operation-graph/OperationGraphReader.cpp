@@ -49,10 +49,64 @@ namespace Soup::Core
 
 			if (offset != contentBuffer.size())
 			{
-				throw std::runtime_error("Value Table file corrupted - Did not read the entire file");
+				throw std::runtime_error("Operation Graph file corrupted - Did not read the entire file");
 			}
 
 			return result;
+		}
+
+		static OperationInfo ReadOperationInfo(
+			char* data,
+			size_t size,
+			size_t& offset,
+			const std::unordered_map<FileId, FileId>& activeFileIdMap)
+		{
+			// Read the operation id
+			auto id = ReadUInt32(data, size, offset);
+
+			// Read the operation title
+			auto title = ReadString(data, size, offset);
+
+			// Read the command working directory
+			auto workingDirectory = ReadString(data, size, offset);
+
+			// Read the command executable
+			auto executable = ReadString(data, size, offset);
+
+			// Read the command arguments
+			auto arguments = ReadStringList(data, size, offset);
+
+			// Read the declared input files
+			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			// Read the declared output files
+			auto declaredOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			// Read the read access list
+			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			// Read the write access list
+			auto writeAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
+
+			// Read the child operation ids
+			auto children = ReadOperationIdList(data, size, offset);
+
+			// Read the dependency count
+			auto dependencyCount = ReadUInt32(data, size, offset);
+
+			return OperationInfo(
+				id,
+				std::move(title),
+				CommandInfo(
+					Path(workingDirectory),
+					Path(executable),
+					std::move(arguments)),
+				std::move(declaredInput),
+				std::move(declaredOutput),
+				std::move(readAccess),
+				std::move(writeAccess),
+				std::move(children),
+				dependencyCount);
 		}
 
 	private:
@@ -138,57 +192,6 @@ namespace Soup::Core
 			return OperationGraph(
 				std::move(rootOperationIds),
 				std::move(operations));
-		}
-
-		static OperationInfo ReadOperationInfo(
-			char* data, size_t size, size_t& offset, const std::unordered_map<FileId, FileId>& activeFileIdMap)
-		{
-			// Write out the operation id
-			auto id = ReadUInt32(data, size, offset);
-
-			// Write the operation title
-			auto title = ReadString(data, size, offset);
-
-			// Write the command working directory
-			auto workingDirectory = ReadString(data, size, offset);
-
-			// Write the command executable
-			auto executable = ReadString(data, size, offset);
-
-			// Write the command arguments
-			auto arguments = ReadStringList(data, size, offset);
-
-			// Write out the declared input files
-			auto declaredInput = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the declared output files
-			auto declaredOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the read access list
-			auto readAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the write access list
-			auto writeAccess = ReadFileIdList(data, size, offset, activeFileIdMap);
-
-			// Write out the child operation ids
-			auto children = ReadOperationIdList(data, size, offset);
-
-			// Write out the dependency count
-			auto dependencyCount = ReadUInt32(data, size, offset);
-
-			return OperationInfo(
-				id,
-				std::move(title),
-				CommandInfo(
-					Path(workingDirectory),
-					Path(executable),
-					std::move(arguments)),
-				std::move(declaredInput),
-				std::move(declaredOutput),
-				std::move(readAccess),
-				std::move(writeAccess),
-				std::move(children),
-				dependencyCount);
 		}
 
 		static uint32_t ReadUInt32(char* data, size_t size, size_t& offset)

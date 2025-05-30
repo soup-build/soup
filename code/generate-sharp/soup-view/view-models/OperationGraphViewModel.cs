@@ -1,4 +1,4 @@
-﻿// <copyright file="OperationGraphPageModel.cs" company="Soup">
+﻿// <copyright file="OperationGraphViewModel.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -6,22 +6,23 @@ using GraphShape;
 using ReactiveUI;
 using Soup.Build.Utilities;
 using Soup.View.Views;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Path = Opal.Path;
 
 namespace Soup.View.ViewModels;
 
 public class OperationGraphViewModel : ContentPaneViewModel
 {
-	private readonly FileSystemState fileSystemState = new FileSystemState();
+	private readonly FileSystemState fileSystemState;
 	private GraphNodeViewModel? selectedNode;
 	private OperationDetailsViewModel? selectedOperation;
 	private IList<GraphNodeViewModel>? graph;
 	private readonly Dictionary<uint, OperationDetailsViewModel> operationDetailsLookup = [];
+
+	public OperationGraphViewModel(FileSystemState fileSystemState)
+	{
+		this.fileSystemState = fileSystemState;
+	}
 
 	public IList<GraphNodeViewModel>? Graph
 	{
@@ -36,7 +37,8 @@ public class OperationGraphViewModel : ContentPaneViewModel
 		{
 			if (CheckRaiseAndSetIfChanged(ref this.selectedNode, value))
 			{
-				this.SelectedOperation = this.selectedNode is not null ? this.operationDetailsLookup[this.selectedNode.Id] : null;
+				this.SelectedOperation = this.selectedNode is not null ?
+					this.operationDetailsLookup[this.selectedNode.Id] : null;
 			}
 		}
 	}
@@ -47,50 +49,17 @@ public class OperationGraphViewModel : ContentPaneViewModel
 		set => this.RaiseAndSetIfChanged(ref this.selectedOperation, value);
 	}
 
-	public async Task LoadProjectAsync(Path? packageFolder)
+	public void Load(
+		OperationGraph? evaluateGraph,
+		OperationResults? operationResults)
 	{
 		this.Graph = null;
 
-		var activeGraph = await Task.Run(async () =>
+		if (evaluateGraph is not null)
 		{
-			if (packageFolder is not null)
-			{
-				var recipeFile = packageFolder + BuildConstants.RecipeFileName;
-				var loadResult = await RecipeExtensions.TryLoadRecipeFromFileAsync(recipeFile);
-				if (loadResult.IsSuccess)
-				{
-					var targetPath = await GetTargetPathAsync(packageFolder);
-
-					var soupTargetDirectory = targetPath + new Path("./.soup/");
-
-					var evaluateGraphFile = soupTargetDirectory + BuildConstants.EvaluateGraphFileName;
-					if (!OperationGraphManager.TryLoadState(evaluateGraphFile, this.fileSystemState, out var evaluateGraph))
-					{
-						NotifyError($"Failed to load Operation Graph: {evaluateGraphFile}");
-						return null;
-					}
-
-					// Check for the optional results
-					var evaluateResultsFile = soupTargetDirectory + BuildConstants.EvaluateResultsFileName;
-					OperationResults? operationResults = null;
-					if (OperationResultsManager.TryLoadState(evaluateResultsFile, this.fileSystemState, out var loadOperationResults))
-					{
-						operationResults = loadOperationResults;
-					}
-
-					return BuildGraph(evaluateGraph, operationResults);
-				}
-				else
-				{
-					NotifyError($"Failed to load Recipe file: {packageFolder}");
-					return null;
-				}
-			}
-
-			return null;
-		});
-
-		this.Graph = activeGraph;
+			var activeGraph = BuildGraph(evaluateGraph, operationResults);
+			this.Graph = activeGraph;
+		}
 	}
 
 	private List<GraphNodeViewModel> BuildGraph(
@@ -147,45 +116,5 @@ public class OperationGraphViewModel : ContentPaneViewModel
 		}
 
 		return result;
-	}
-
-	private async Task<Path> GetTargetPathAsync(Path packageDirectory)
-	{
-		string soupExe;
-		if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-		{
-			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Soup.exe");
-		}
-		else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
-		{
-			soupExe = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "soup");
-		}
-		else
-		{
-			throw new NotSupportedException("Unknown OS Platform");
-		}
-
-		var processInfo = new ProcessStartInfo(soupExe, $"target {packageDirectory}")
-		{
-			RedirectStandardOutput = true,
-			CreateNoWindow = true,
-		};
-		using var process = new Process()
-		{
-			StartInfo = processInfo,
-		};
-
-		_ = process.Start();
-
-		await process.WaitForExitAsync();
-
-		if (process.ExitCode != 0)
-		{
-			NotifyError($"Soup process exited with error: {process.ExitCode}");
-			throw new InvalidOperationException();
-		}
-
-		var output = await process.StandardOutput.ReadToEndAsync();
-		return new Path(output);
 	}
 }

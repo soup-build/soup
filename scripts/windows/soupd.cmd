@@ -13,9 +13,10 @@ SET ConfigHash=OZlIVjblazFuKXg-raWUNoGEnG4
 
 SET PKG_OWNER=mwasplund
 
-SET SOUP_VERSION=0.41.4
+SET SOUP_VERSION=0.42.0
 SET COPY_VERSION=1.1.0
 SET MKDIR_VERSION=1.1.0
+SET PARSE_MODULE_VERSION=1.0.0
 SET SOUP_WREN_VERSION=0.4.3
 
 REM - Use a copy of the final binary in case we are re-building itself
@@ -24,12 +25,18 @@ robocopy %OutDir%\C++\Local\Soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\
 
 robocopy %CodeDir%\tools\copy\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\copy\%COPY_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %OutDir%\C++\Local\copy\%COPY_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\copy\%COPY_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
+rename %RunDir%\Soup\BuiltIn\%PKG_OWNER%\copy\%COPY_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
 
 robocopy %CodeDir%\tools\mkdir\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %OutDir%\C++\Local\mkdir\%MKDIR_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
+rename %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
+
+robocopy %CodeDir%\tools\parse-module\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.module\%PARSE_MODULE_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
+robocopy %OutDir%\C++\Local\parse.module\%PARSE_MODULE_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.module\%PARSE_MODULE_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
 
 robocopy %GlobalPackagesDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %GlobalOutDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
+rename %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
 
 robocopy %MSBuildDir%\bin\Soup.Build.PackageManager\Debug\net9.0\win-x64\publish\ %RunDir%\Soup\PackageManager\ /MIR /NJH /NJS /NDL > NUL
 

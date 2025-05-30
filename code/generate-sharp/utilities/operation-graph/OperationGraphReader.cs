@@ -97,7 +97,7 @@ internal static class OperationGraphReader
 			operations);
 	}
 
-	private static OperationInfo ReadOperationInfo(System.IO.BinaryReader reader)
+	public static OperationInfo ReadOperationInfo(System.IO.BinaryReader reader)
 	{
 		// Read the operation id
 		var id = new OperationId(reader.ReadUInt32());
@@ -146,7 +146,6 @@ internal static class OperationGraphReader
 			children,
 			dependencyCount);
 	}
-
 	private static string ReadString(System.IO.BinaryReader reader)
 	{
 		var size = reader.ReadUInt32();

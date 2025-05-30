@@ -54,6 +54,26 @@ namespace Soup::Core
 			return result;
 		}
 
+		static ValueTable ReadValueTable(char* data, size_t size, size_t& offset)
+		{
+			// Write out the table size
+			auto tableSize = ReadUInt32(data, size, offset);
+
+			auto table = ValueTable();
+			for (auto i = 0u; i < tableSize; i++)
+			{
+				// Read the key
+				auto key = ReadString(data, size, offset);
+
+				// Read the value
+				auto value = ReadValue(data, size, offset);
+
+				table.emplace(std::move(key), std::move(value));
+			}
+
+			return table;
+		}
+
 	private:
 		static ValueTable Deserialize(
 			char* data, size_t size, size_t& offset)
@@ -118,26 +138,6 @@ namespace Soup::Core
 				default:
 					throw std::runtime_error("Read Unknown ValueType");
 			}
-		}
-
-		static ValueTable ReadValueTable(char* data, size_t size, size_t& offset)
-		{
-			// Write out the table size
-			auto tableSize = ReadUInt32(data, size, offset);
-
-			auto table = ValueTable();
-			for (auto i = 0u; i < tableSize; i++)
-			{
-				// Read the key
-				auto key = ReadString(data, size, offset);
-
-				// Read the value
-				auto value = ReadValue(data, size, offset);
-
-				table.emplace(std::move(key), std::move(value));
-			}
-
-			return table;
 		}
 
 		static ValueList ReadValueList(char* data, size_t size, size_t& offset)

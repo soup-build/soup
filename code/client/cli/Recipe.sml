@@ -1,5 +1,5 @@
 Name: 'Soup'
-Version: 0.41.4
+Version: 0.42.0
 Language: 'C++|0'
 Type: 'Executable'
 Source: [
@@ -19,6 +19,7 @@ Dependencies: {
 	Other: [
 		'../../tools/copy/'
 		'../../tools/mkdir/'
+		'../../tools/parse-module/'
 		'[Wren]Soup|Wren@0'
 	]
 	Build: [

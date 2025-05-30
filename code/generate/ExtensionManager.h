@@ -14,15 +14,33 @@ namespace Soup::Core::Generate
 	class ExtensionManager
 	{
 	private:
-		std::map<std::string, ExtensionTaskDetails> _tasks;
+		std::map<std::string, ExtensionTaskDetails> _preprocessorTasks;
+		std::map<std::string, ExtensionTaskDetails> _extensionTasks;
 
 	public:
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ExtensionManager"/> class.
 		/// </summary>
 		ExtensionManager() :
-			_tasks()
+			_preprocessorTasks(),
+			_extensionTasks()
 		{
+		}
+
+		/// <summary>
+		/// Register preprocessor task
+		/// </summary>
+		void RegisterPreprocessorTask(ExtensionTaskDetails preprocessorTaskDetails)
+		{
+			auto name = preprocessorTaskDetails.Name;
+			Log::Diag("RegisterPreprocessorTask: {}", name);
+
+			auto insertResult = _preprocessorTasks.emplace(name, std::move(preprocessorTaskDetails));
+			if (!insertResult.second)
+			{
+				Log::HighPriority("An preprocessor task with the provided name has already been registered: {}", name);
+				throw std::runtime_error("An preprocessor task with the provided name has already been registered");
+			}
 		}
 
 		/// <summary>
@@ -63,7 +81,7 @@ namespace Soup::Core::Generate
 			runAfterMessage << "]";
 			Log::Diag(runAfterMessage.str());
 
-			auto insertResult = _tasks.emplace(name, std::move(extensionTaskDetails));
+			auto insertResult = _extensionTasks.emplace(name, std::move(extensionTaskDetails));
 			if (!insertResult.second)
 			{
 				Log::HighPriority("An extension task with the provided name has already been registered: {}", name);
@@ -72,14 +90,39 @@ namespace Soup::Core::Generate
 		}
 
 		/// <summary>
+		/// Get a value indicating if there are proprocessor tasks
+		/// </summary>
+		bool HasPreprocessorTasks()
+		{
+			return _preprocessorTasks.size() > 0;
+		}
+
+		/// <summary>
 		/// Execute all build extensions
 		/// </summary>
-		void Execute(GenerateState& state)
+		void ExecutePreprocessorTasks(GenerateState& state)
+		{
+			Execute(state, _preprocessorTasks);
+		}
+
+		/// <summary>
+		/// Execute all build extensions
+		/// </summary>
+		void ExecuteExtensionTasks(GenerateState& state)
+		{
+			Execute(state, _extensionTasks);
+		}
+
+	private:
+		/// <summary>
+		/// Execute all build extensions
+		/// </summary>
+		void Execute(GenerateState& state, std::map<std::string, ExtensionTaskDetails>& tasks)
 		{
 			// Setup each extension to have a complete list of extensions that must run before itself
 			// Note: this is required to combine other extensions run before lists with the extensions
 			// own run after list
-			for (auto& [key, task] : _tasks)
+			for (auto& [key, task] : tasks)
 			{
 				// Copy their own run after list
 				task.RunAfterClosureList.insert(
@@ -91,8 +134,8 @@ namespace Soup::Core::Generate
 				for (auto& runBefore : task.RunBeforeList)
 				{
 					// Try to find the other task
-					auto beforeTaskContainer = _tasks.find(runBefore);
-					if (beforeTaskContainer != _tasks.end())
+					auto beforeTaskContainer = tasks.find(runBefore);
+					if (beforeTaskContainer != tasks.end())
 					{
 						beforeTaskContainer->second.RunAfterClosureList.push_back(task.Name);
 					}
@@ -105,7 +148,7 @@ namespace Soup::Core::Generate
 			// Run all tasks in the order they were registered
 			// ensuring they are run in the correct dependency order
 			ExtensionTaskDetails* currentTask;
-			while (TryFindNextTask(currentTask))
+			while (TryFindNextTask(currentTask, tasks))
 			{
 				if (currentTask == nullptr)
 					throw std::runtime_error("TryFindNextTask returned empty result");
@@ -168,17 +211,16 @@ namespace Soup::Core::Generate
 			state.SetGenerateInfo(std::move(generateInfoTable));
 		}
 
-	private:
 		/// <summary>
 		/// Try to find the next task that has yet to be run and is ready
 		/// Returns false if all tasks have been run
 		/// Throws error if we hit a deadlock
 		/// </summary>
-		bool TryFindNextTask(ExtensionTaskDetails*& extensionTask)
+		bool TryFindNextTask(ExtensionTaskDetails*& extensionTask, std::map<std::string, ExtensionTaskDetails>& tasks)
 		{
 			// Find the next task that is ready to be run
 			bool hasAnyStillWaiting = false;
-			for (auto& [key, task] : _tasks)
+			for (auto& [key, task] : tasks)
 			{
 				// Check if this extension has run already,
 				// if not check if all if all upstream extensions have finished
@@ -190,8 +232,8 @@ namespace Soup::Core::Generate
 					bool hasDependencyPending = false;
 					for (auto& runBefore : task.RunAfterClosureList)
 					{
-						auto findResult = _tasks.find(runBefore);
-						if (findResult != _tasks.end() && !findResult->second.HasRun)
+						auto findResult = tasks.find(runBefore);
+						if (findResult != tasks.end() && !findResult->second.HasRun)
 						{
 							// Found a dependency that hasn't run, keep trying
 							hasDependencyPending = true;

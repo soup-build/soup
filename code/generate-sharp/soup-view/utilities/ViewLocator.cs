@@ -13,6 +13,8 @@ public class ViewLocator : IDataTemplate
 		return param switch
 		{
 			DependencyGraphViewModel => new DependencyGraphView(),
+			PreprocessorTaskGraphViewModel => new PreprocessorTaskGraphView(),
+			PreprocessorOperationGraphViewModel => new PreprocessorOperationGraphView(),
 			OperationGraphViewModel => new OperationGraphView(),
 			TaskGraphViewModel => new TaskGraphView(),
 			_ => throw new InvalidOperationException("Failed to get the view type"),

@@ -18,10 +18,10 @@ namespace Soup::Core::Generate
 		{
 		}
 
-		void Run(const Path& soupTargetDirectory)
+		void Run(bool isFirstRun, const Path& soupTargetDirectory)
 		{
 			// Run all build operations in the correct order with incremental build checks
-			Log::Diag("Build generate start: {}", soupTargetDirectory.ToString());
+			Log::Diag("Build generate core: {}", soupTargetDirectory.ToString());
 
 			// Load the input file
 			auto inputFile = soupTargetDirectory + BuildConstants::GenerateInputFileName();
@@ -122,6 +122,70 @@ namespace Soup::Core::Generate
 				}
 			}
 
+			if (!isFirstRun)
+			{
+				// Load up the preprocessor results
+				auto generatePhase1Result = GenerateResult();
+				auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+				if (!GenerateResultManager::TryLoadState(generatePhase1ResultFile, generatePhase1Result, _fileSystemState))
+				{
+					Log::Error("Failed to load the result from phase 1: {}", generatePhase1ResultFile.ToString());
+					throw std::runtime_error("Failed to load phase 1 result.");
+				}
+
+				if (!generatePhase1Result.IsPreprocessor())
+				{
+					Log::Error("Phase 1 was not for a preprocessor, why are you running a phase 2?");
+					throw std::runtime_error("Invalid phase 1 result.");
+				}
+
+				auto preprocessorResults = ValueList();
+				for (auto& [_, operation] : generatePhase1Result.GetGraph().GetOperations())
+				{
+					if (operation.DeclaredOutput.size() > 0)
+					{
+						// TODO: Need a way to indicate is a real preprocessor operation, not a normal one
+						auto resultFilePath = _fileSystemState.GetFilePath(operation.DeclaredOutput.at(0));
+						if (resultFilePath.HasFileName())
+						{
+							auto preprocessorOperationResult = ValueTable();
+
+							preprocessorOperationResult.emplace("Title", Value(operation.Title));
+							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable));
+
+							auto operationArguments = ValueList();
+							for (auto& argument : operation.Command.Arguments)
+							{
+								operationArguments.push_back(Value(std::move(argument)));
+							}
+							preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
+
+							auto preprocessorResult = ValueList();
+
+							// Read the results file as text
+							std::shared_ptr<System::IInputFile> file;
+							if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, file))
+							{
+								Log::Error("Failed to open results file {}", resultFilePath.ToString());
+								throw std::runtime_error("Failed to open results file");
+							}
+
+							std::string line;
+							while (std::getline(file->GetInStream(), line))
+							{
+								preprocessorResult.push_back(Value(std::move(line)));
+							}
+
+							preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
+
+							preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
+						}
+					}
+				}
+
+				globalState.emplace("Preprocessors", Value(std::move(preprocessorResults)));
+			}
+
 			// Create a new build system for the requested build
 			auto extensionManager = ExtensionManager();
 
@@ -137,11 +201,21 @@ namespace Soup::Core::Generate
 				// Create a temporary Wren Host to discover all build extensions
 				auto host = std::make_unique<GenerateHost>(buildExtension.first, buildExtension.second);
 				host->InterpretMain();
-				auto extensions = host->DiscoverExtensions();
 
-				for (auto& extension : extensions)
+				// Check if there are optional preprocessing tasks on the first run
+				if (isFirstRun)
 				{
-					extensionManager.RegisterExtensionTask(std::move(extension));
+					auto preprocessorTasks = host->DiscoverPreprocessorTasks();
+					for (auto& task : preprocessorTasks)
+					{
+						extensionManager.RegisterPreprocessorTask(std::move(task));
+					}
+				}
+
+				auto extensionTasks = host->DiscoverTasks();
+				for (auto& task : extensionTasks)
+				{
+					extensionManager.RegisterExtensionTask(std::move(task));
 				}
 			}
 
@@ -151,31 +225,57 @@ namespace Soup::Core::Generate
 				_fileSystemState,
 				evaluateAllowedReadAccess,
 				evaluateAllowedWriteAccess);
-			extensionManager.Execute(buildState);
+
+			if (extensionManager.HasPreprocessorTasks())
+			{
+				extensionManager.ExecutePreprocessorTasks(buildState);
+			}
+			else
+			{
+				extensionManager.ExecuteExtensionTasks(buildState);
+			}
 
 			// Grab the build results
 			auto generateInfoTable = buildState.GetGenerateInfo();
-			auto evaluateGraph = buildState.BuildOperationGraph();
+			auto generateResult = GenerateResult(
+				buildState.BuildOperationGraph(),
+				extensionManager.HasPreprocessorTasks());
 			auto sharedState = buildState.GetSharedState();
 
 			// Save the runtime information so Soup View can easily visualize runtime
-			auto generateInfoStateFile = soupTargetDirectory + BuildConstants::GenerateInfoFileName();
+			auto generateInfoStateFile = isFirstRun ?
+				soupTargetDirectory + BuildConstants::GeneratePhase1InfoFileName()
+				: soupTargetDirectory + BuildConstants::GeneratePhase2InfoFileName();
 			Log::Info("Save Generate Info State: {}", generateInfoStateFile.ToString());
 			ValueTableManager::SaveState(generateInfoStateFile, generateInfoTable);
 
 			// Resolve macros before saving evaluate graph
 			Log::Diag("Resolve build macros in evaluate graph");
-			ResolveMacros(evaluateMacroManager, evaluateGraph);
+			ResolveMacros(evaluateMacroManager, generateResult);
 
-			// Save the operation graph so the evaluate phase can load it
-			auto evaluateGraphFile = soupTargetDirectory + BuildConstants::EvaluateGraphFileName();
-			OperationGraphManager::SaveState(evaluateGraphFile, evaluateGraph, _fileSystemState);
+			if (isFirstRun)
+			{
+				// Save the operation graph so the evaluate phase can load it
+				auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+				Log::Info("Save Generate Phase 1 Result: {}", generatePhase1ResultFile.ToString());
+				GenerateResultManager::SaveState(generatePhase1ResultFile, generateResult, _fileSystemState);
+			}
+			else
+			{
+				// Save the operation graph so the evaluate phase can load it
+				auto generatePhase2ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase2ResultFileName();
+				Log::Info("Save Generate Phase 2 Result: {}", generatePhase2ResultFile.ToString());
+				OperationGraphManager::SaveState(generatePhase2ResultFile, generateResult.GetGraph(), _fileSystemState);
+			}
 
-			// Save the shared state that is to be passed to the downstream builds
-			auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
-			ValueTableManager::SaveState(sharedStateFile, sharedState);
+			if (!generateResult.IsPreprocessor())
+			{
+				// Save the shared state that is to be passed to the downstream builds
+				auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
+				ValueTableManager::SaveState(sharedStateFile, sharedState);
+			}
 
-			Log::Diag("Build generate end");
+			Log::Diag("Build generate core end");
 		}
 
 	private:
@@ -239,6 +339,7 @@ namespace Soup::Core::Generate
 				{ "/(TARGET_Wren)/", "/(TARGET_Soup|Wren)/" },
 				{ "/(TARGET_mkdir)/", "/(TARGET_mwasplund|mkdir)/" },
 				{ "/(TARGET_copy)/", "/(TARGET_mwasplund|copy)/" },
+				{ "/(TARGET_parse.module)/", "/(TARGET_mwasplund|parse.module)/" },
 			});
 			auto hackMacroManager = MacroManager(hackMacros);
 
@@ -396,9 +497,9 @@ namespace Soup::Core::Generate
 
 		void ResolveMacros(
 			MacroManager& macroManager,
-			OperationGraph& operationGraph)
+			GenerateResult& generateResult)
 		{
-			for (auto& [operationId, operation] : operationGraph.GetOperations())
+			for (auto& [operationId, operation] : generateResult.GetGraph().GetOperations())
 			{
 				ResolveMacros(macroManager, operation.Command.Arguments);
 				operation.Command.WorkingDirectory = macroManager.ResolveMacros(std::move(operation.Command.WorkingDirectory));

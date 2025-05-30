@@ -59,13 +59,12 @@ namespace Soup::Core
 			auto& operations = state.GetOperations();
 			stream.write("OPS\0", 4);
 			WriteValue(stream, static_cast<uint32_t>(operations.size()));
-			for (auto& operationValue : state.GetOperations())
+			for (auto& operationValue : operations)
 			{
 				WriteOperationInfo(stream, operationValue.second);
 			}
 		}
 
-	private:
 		static void WriteOperationInfo(std::ostream& stream, const OperationInfo& operation)
 		{
 			// Write out the operation id
@@ -102,6 +101,7 @@ namespace Soup::Core
 			WriteValue(stream, operation.DependencyCount);
 		}
 
+	private:
 		static void WriteValue(std::ostream& stream, uint32_t value)
 		{
 			stream.write(reinterpret_cast<char*>(&value), sizeof(uint32_t));

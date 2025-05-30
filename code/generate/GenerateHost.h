@@ -11,6 +11,7 @@ namespace Soup::Core::Generate
 		static inline const char* SoupModuleName = "soup";
 		static inline const char* SoupClassName = "Soup";
 		static inline const char* SoupTaskClassName = "SoupTask";
+		static inline const char* SoupPreprocessorTaskClassName = "SoupPreprocessorTask";
 
 	private:
 		GenerateState* _state;
@@ -27,7 +28,7 @@ namespace Soup::Core::Generate
 			_state = &state;
 		}
 
-		std::vector<ExtensionTaskDetails> DiscoverExtensions()
+		std::vector<ExtensionTaskDetails> DiscoverTasks()
 		{
 			auto extensions = std::vector<ExtensionTaskDetails>();
 
@@ -64,6 +65,41 @@ namespace Soup::Core::Generate
 			return extensions;
 		}
 
+		std::vector<ExtensionTaskDetails> DiscoverPreprocessorTasks()
+		{
+			auto extensions = std::vector<ExtensionTaskDetails>();
+
+			// Discover all class types
+			wrenEnsureSlots(_vm, 1);
+			auto variableCount = wrenGetVariableCount(_vm, _scriptFile.ToString().c_str());
+			for (auto i = 0; i < variableCount; i++)
+			{
+				wrenGetVariableAt(_vm, _scriptFile.ToString().c_str(), i, 0);
+
+				// Check if a class
+				auto type = wrenGetSlotType(_vm, 0);
+				if (type == WREN_TYPE_UNKNOWN)
+				{
+					auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
+					if (WrenHelpers::HasParentType(_vm, classHandle, SoupPreprocessorTaskClassName))
+					{
+						Log::Diag("Found Build Finalizer Task");
+						auto className = WrenHelpers::GetClassName(_vm, classHandle);
+
+						extensions.push_back(
+							ExtensionTaskDetails(
+								std::move(className),
+								_scriptFile,
+								_bundlesFile,
+								{},
+								{}));
+					}
+				}
+			}
+
+			return extensions;
+		}
+
 		void EvaluateTask(const std::string& className)
 		{
 			// Load up the class
@@ -80,6 +116,33 @@ namespace Soup::Core::Generate
 
 			// Call Evaluate
 			auto evaluateMethodHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "evaluate()"));
+
+			wrenSetSlotHandle(_vm, 0, classHandle);
+			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
+		}
+
+		void EvaluateFinalizerTask(const std::string& className, const ValueTable& state, const std::string& result)
+		{
+			// Load up the class
+			wrenEnsureSlots(_vm, 3);
+			wrenGetVariable(_vm, _scriptFile.ToString().c_str(), className.c_str(), 0);
+
+			// Check if a class
+			auto type = wrenGetSlotType(_vm, 0);
+			if (type != WREN_TYPE_UNKNOWN) {
+				throw std::runtime_error("Extension class name was not a class");
+			}
+
+			auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
+
+			// Load up the state
+			WrenValueTable::SetSlotTable(_vm, 1, state);
+
+			// Load up the result
+			wrenSetSlotString(_vm, 2, result.c_str());
+
+			// Call Evaluate
+			auto evaluateMethodHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "evaluate(_,_)"));
 
 			wrenSetSlotHandle(_vm, 0, classHandle);
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
@@ -412,6 +475,9 @@ namespace Soup::Core::Generate
 			"class SoupTask {\n"
 			"	static runBefore { [] }\n"
 			"	static runAfter { [] }\n"
+			"	static evaluate() {}\n"
+			"}\n"
+			"class SoupPreprocessorTask {\n"
 			"	static evaluate() {}\n"
 			"}\n"
 			"\n"

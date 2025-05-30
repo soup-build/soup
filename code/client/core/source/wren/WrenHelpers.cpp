@@ -61,7 +61,7 @@ export namespace Soup::Core
 				}
 				case WREN_RESULT_RUNTIME_ERROR:
 				{
-					throw std::runtime_error( "Runtime Error!");
+					throw std::runtime_error("Runtime Error!");
 				}
 				case WREN_RESULT_SUCCESS:
 				{

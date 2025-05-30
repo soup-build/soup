@@ -110,7 +110,7 @@ namespace Soup::Core::Generate
 
 		OperationGraph BuildOperationGraph()
 		{
-			return _graphGenerator.FinalizeGraph();
+			return _graphGenerator.FinalizeState();
 		}
 	};
 }

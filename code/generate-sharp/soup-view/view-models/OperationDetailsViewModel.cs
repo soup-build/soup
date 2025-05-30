@@ -44,6 +44,7 @@ public class OperationDetailsViewModel : ViewModelBase
 		{
 			Children = [.. declaredOutputFiles.Select(value => new PropertyValueViewModel(string.Empty, value.ToString()))],
 		});
+
 		this.properties.Add(new PropertyValueViewModel("ReadAccess", null)
 		{
 			Children = [.. readAccessFiles.Select(value => new PropertyValueViewModel(string.Empty, value.ToString()))],

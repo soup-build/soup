@@ -54,6 +54,26 @@ public sealed class ValueTableReader
 		return rootTable;
 	}
 
+	public static ValueTable ReadValueTable(System.IO.BinaryReader reader)
+	{
+		// Write out the table size
+		var size = reader.ReadUInt32();
+
+		var table = new ValueTable();
+		for (var i = 0; i < size; i++)
+		{
+			// Read the key
+			var key = ReadString(reader);
+
+			// Read the value
+			var value = ReadValue(reader);
+
+			table.Add(key, value);
+		}
+
+		return table;
+	}
+
 	private static Value ReadValue(System.IO.BinaryReader reader)
 	{
 		// Read the value type
@@ -72,26 +92,6 @@ public sealed class ValueTableReader
 			ValueType.LanguageReference => new Value(ReadLanguageReference(reader)),
 			_ => throw new InvalidOperationException("Unknown ValueType"),
 		};
-	}
-
-	private static ValueTable ReadValueTable(System.IO.BinaryReader reader)
-	{
-		// Write out the table size
-		var size = reader.ReadUInt32();
-
-		var table = new ValueTable();
-		for (var i = 0; i < size; i++)
-		{
-			// Read the key
-			var key = ReadString(reader);
-
-			// Read the value
-			var value = ReadValue(reader);
-
-			table.Add(key, value);
-		}
-
-		return table;
 	}
 
 	private static ValueList ReadValueList(System.IO.BinaryReader reader)
