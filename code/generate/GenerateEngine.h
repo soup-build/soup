@@ -339,6 +339,7 @@ namespace Soup::Core::Generate
 				{ "/(TARGET_Wren)/", "/(TARGET_Soup|Wren)/" },
 				{ "/(TARGET_mkdir)/", "/(TARGET_mwasplund|mkdir)/" },
 				{ "/(TARGET_copy)/", "/(TARGET_mwasplund|copy)/" },
+				{ "/(TARGET_parse.module)/", "/(TARGET_mwasplund|parse.module)/" },
 			});
 			auto hackMacroManager = MacroManager(hackMacros);
 

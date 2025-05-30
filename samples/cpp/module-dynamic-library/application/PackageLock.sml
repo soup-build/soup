@@ -8,14 +8,14 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: '../../../../../soup-cpp/code/extension/' }
+			'Soup|Cpp': { Version: 0.15.0 }
 		}
 	}
 	Tool0: {
 		'C++': {
 			'mwasplund|copy': { Version: 1.1.0 }
 			'mwasplund|mkdir': { Version: 1.1.0 }
-			'mwasplund|parse.module': { Version: '../../../soup/code/tools/parse-module/' }
+			'mwasplund|parse.module': { Version: 1.0.0 }
 		}
 	}
 }
