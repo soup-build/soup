@@ -25,18 +25,15 @@ robocopy %OutDir%\C++\Local\Soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\
 
 robocopy %CodeDir%\tools\copy\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\copy\%COPY_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %OutDir%\C++\Local\copy\%COPY_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\copy\%COPY_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
-rename %RunDir%\Soup\BuiltIn\%PKG_OWNER%\copy\%COPY_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
 
 robocopy %CodeDir%\tools\mkdir\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %OutDir%\C++\Local\mkdir\%MKDIR_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
-rename %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
 
 robocopy %CodeDir%\tools\parse-modules\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.modules\%PARSE_MODULES_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %OutDir%\C++\Local\parse.modules\%PARSE_MODULES_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.modules\%PARSE_MODULES_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
 
 robocopy %GlobalPackagesDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %GlobalOutDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
-rename %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
 
 robocopy %MSBuildDir%\bin\Soup.Build.PackageManager\Release\net9.0\win-x64\publish\ %RunDir%\Soup\PackageManager\ /MIR /NJH /NJS /NDL > NUL
 
