@@ -1,5 +1,3 @@
-module;
-
 export module Soup.ParseModules;
 
 import Opal;
