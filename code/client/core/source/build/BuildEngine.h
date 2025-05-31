@@ -56,7 +56,7 @@ namespace Soup::Core
 							SemanticVersion(1, 1, 0)
 						},
 						{
-							PackageName("mwasplund", "parse.module"),
+							PackageName("mwasplund", "parse.modules"),
 							SemanticVersion(1, 0, 0)
 						},
 					}
