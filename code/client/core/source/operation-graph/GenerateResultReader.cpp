@@ -17,6 +17,7 @@ import Opal;
 import :CommandInfo;
 import :FileSystemState;
 import :GenerateResult;
+import :OperationGraph;
 import :OperationGraphReader;
 import :OperationInfo;
 

@@ -1,6 +1,4 @@
-module;
-
-export module Soup.ParseModules;
+export module parse.modules;
 
 import Opal;
 

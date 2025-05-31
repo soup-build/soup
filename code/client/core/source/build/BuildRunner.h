@@ -394,7 +394,9 @@ namespace Soup::Core
 					soupTargetDirectory);
 
 				// TODO: Only run gen if needed?
+				#ifdef WIN32
 				(ranPreprocessors);
+				#endif
 
 				auto ranGeneratePhase2 = RunGenerateCore(
 					false,

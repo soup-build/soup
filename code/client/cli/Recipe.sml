@@ -19,7 +19,7 @@ Dependencies: {
 	Other: [
 		'../../tools/copy/'
 		'../../tools/mkdir/'
-		'../../tools/parse-module/'
+		'../../tools/parse-modules/'
 		'[Wren]Soup|Wren@0'
 	]
 	Build: [
