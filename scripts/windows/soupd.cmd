@@ -16,7 +16,7 @@ SET PKG_OWNER=mwasplund
 SET SOUP_VERSION=0.42.0
 SET COPY_VERSION=1.1.0
 SET MKDIR_VERSION=1.1.0
-SET PARSE_MODULE_VERSION=1.0.0
+SET PARSE_MODULES_VERSION=1.0.0
 SET SOUP_WREN_VERSION=0.4.3
 
 REM - Use a copy of the final binary in case we are re-building itself
@@ -31,8 +31,8 @@ robocopy %CodeDir%\tools\mkdir\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_V
 robocopy %OutDir%\C++\Local\mkdir\%MKDIR_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
 rename %RunDir%\Soup\BuiltIn\%PKG_OWNER%\mkdir\%MKDIR_VERSION%\out\.soup\GenerateSharedState.bvt generate-shared-state.bvt > NUL
 
-robocopy %CodeDir%\tools\parse-module\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.module\%PARSE_MODULE_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
-robocopy %OutDir%\C++\Local\parse.module\%PARSE_MODULE_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.module\%PARSE_MODULE_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
+robocopy %CodeDir%\tools\parse-modules\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.modules\%PARSE_MODULES_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
+robocopy %OutDir%\C++\Local\parse.modules\%PARSE_MODULES_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\%PKG_OWNER%\parse.modules\%PARSE_MODULES_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
 
 robocopy %GlobalPackagesDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\ Recipe.sml /NJH /NJS /NDL > NUL
 robocopy %GlobalOutDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL

@@ -3,7 +3,7 @@ SETLOCAL
 SET Flavor=%1
 SET ScriptsDir=%~dp0
 SET RootDir=%ScriptsDir%..\..\
-SET ParseModuleDir=code\tools\parse-module
+SET ParseModuleDir=code\tools\parse-modules
 SET REFLEX=%UserProfile%\source\repos\RE-flex\bin\win64\reflex.exe
 
 pushd %RootDir%

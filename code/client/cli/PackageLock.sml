@@ -18,7 +18,7 @@ Closures: {
 			'mwasplund|Soup.Test.Assert': { Version: 0.4.2, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 5.2.1, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|wren': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
-			'parse.module': { Version: '../../tools/parse-module/', Build: 'Build0', Tool: 'Tool0' }
+			'parse.modules': { Version: '../../tools/parse-modules/', Build: 'Build0', Tool: 'Tool0' }
 		}
 		Wren: {
 			'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build2', Tool: 'Tool0' }

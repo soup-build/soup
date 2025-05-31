@@ -41,7 +41,7 @@ module;
 # include <unordered_map>
 # include <vector>
 
-export module Soup.ParseModules:ModuleParser;
+export module parse.modules:ModuleParser;
 import reflex;
 
 enum class SimplifiedCppToken : int
