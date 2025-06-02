@@ -115,7 +115,7 @@ Closures: {
   Build0: {
     Wren: {
       'Samples.Cpp.BuildExtension.Extension': { Version: '../Extension/' }
-      'Soup|Cpp': { Version: 0.15.1 }
+      'Soup|Cpp': { Version: 0.15.2 }
     }
   }
   Tool0: {

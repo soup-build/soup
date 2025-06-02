@@ -3,12 +3,12 @@ Closures: {
 	Root: {
 		'C++': {
 			'Samples.Cpp.ParseJson': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|json11': { Version: 1.1.3, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|json11': { Version: '../../../../json11/', Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.1 }
+			'Soup|Cpp': { Version: '../../../../soup-cpp/code/extension/' }
 		}
 	}
 	Tool0: {
