@@ -8,8 +8,9 @@ module;
 # include <unordered_map>
 # include <vector>
 
-export module Soup.ParseModules:ModuleParser;
+export module parse.modules:ModuleParser;
 import reflex;
+import :EarlyExitException;
 
 enum class SimplifiedCppToken : int
 {
@@ -34,12 +35,14 @@ whitespace           [ \t]+
 newline              \r?\n
 preprocessor         "#".*?\r?\n
 comment              "//".*?\r?\n
+multiline_comment    [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 identifier           [A-Za-z_][A-Za-z_1-9]*
 
 %%
 {whitespace}         { /* ignore whitespace */ }
 {preprocessor}       { /* ignore preprocessor statements */ }
 {comment}            { /* ignore comments */ }
+{multiline_comment}  { /* ignore comments */ }
 {newline}            { /* ignore newlines */ }
 "import"             return (int)SimplifiedCppToken::Import;
 "export"             return (int)SimplifiedCppToken::Export;
@@ -173,6 +176,8 @@ private:
         if (_currentToken != SimplifiedCppToken::Semicolon)
             throw std::runtime_error("Malformed module declaration");
 
+        MoveNext();
+
         moduleName = std::move(result);
         return true;
     }
@@ -249,16 +254,19 @@ private:
           std::cout << "TryParseImportModule" << std::endl;
         #endif
 
-        // Check for optional first export
-        if (_currentToken == SimplifiedCppToken::Export)
+        // Check for optional first export and required import
+        if (_currentToken == SimplifiedCppToken::Import)
+        {
+        }
+        else if (_currentToken == SimplifiedCppToken::Export && PeekNext() == SimplifiedCppToken::Import)
         {
             // Has Export
             MoveNext();
         }
-
-        // Verify required import
-        if (_currentToken != SimplifiedCppToken::Import)
-            return false;
+        else
+        {
+          return false;
+        }
 
         MoveNext();
 
@@ -284,7 +292,19 @@ private:
         if (_currentToken != SimplifiedCppToken::Semicolon)
             return false;
 
+        MoveNext();
+
         return true;
+    }
+
+    /// Lexer exceptions.
+    virtual void lexer_error(const char* message = nullptr) override
+    {
+        // TODO: Add check for allowed errors when in a module declaration
+        // For now, allow all errors
+        std::stringstream stream_message;
+        stream_message << (message != NULL ? message : "lexer error") << " at " << lineno() << ":" << columno();
+        throw EarlyExitException(stream_message.str());
     }
 
     SimplifiedCppToken PeekNext()

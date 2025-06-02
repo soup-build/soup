@@ -27,12 +27,12 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.1 }
+			'Soup|Cpp': { Version: 0.14.0 }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.1 }
+			'Soup|Cpp': { Version: 0.14.0 }
 			'mwasplund|Soup.Test.Cpp': { Version: 0.13.0 }
 		}
 	}
@@ -50,6 +50,7 @@ Closures: {
 		'C++': {
 			'mwasplund|copy': { Version: 1.1.0 }
 			'mwasplund|mkdir': { Version: 1.1.0 }
+			'mwasplund|parse.modules': { Version: 1.1.0 }
 		}
 	}
 }
