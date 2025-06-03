@@ -5,14 +5,6 @@ Version: 1.1.0
 Defines: [
 	# 'SHOW_TOKENS'
 ]
-Interface: 'Module.cpp'
-Partitions: [
-	{ Source: 'parser/ModuleParser.cpp', Imports: [ 'EarlyExitException.cpp' ] }
-	{ Source: 'EarlyExitException.cpp' }
-]
-Source: [
-	'Main.cpp'
-]
 Dependencies: {
 	Runtime: [
 		'mwasplund|Opal@0'

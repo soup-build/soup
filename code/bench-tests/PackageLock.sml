@@ -16,12 +16,12 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.2 }
+			'Soup|Cpp': { Version: 0.15.3 }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.2 }
+			'Soup|Cpp': { Version: 0.15.3 }
 			'mwasplund|Soup.Test.Cpp': { Version: 0.11.0 }
 		}
 	}

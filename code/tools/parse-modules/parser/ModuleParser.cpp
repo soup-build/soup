@@ -246,19 +246,27 @@ public:
             // TODO: Parse global module fragment
 
             // Must have a module declaration
+            bool isExport;
             std::string moduleName;
-            if (!TryParseModuleDeclaration(moduleName))
+            if (!TryParseModuleDeclaration(isExport, moduleName))
                 throw std::runtime_error("TU with global module fragment must have a module declaration");
 
-            _result.push_back("module " + moduleName);
+            if (isExport)
+                _result.push_back("module-interface " + moduleName);
+            else
+                _result.push_back("module-implementation " + moduleName);
         }
         else
         {
             // Check for optional module declarationn
+            bool isExport;
             std::string moduleName;
-            if (TryParseModuleDeclaration(moduleName))
+            if (TryParseModuleDeclaration(isExport, moduleName))
             {
-                _result.push_back("module " + moduleName);
+                if (isExport)
+                    _result.push_back("module-interface " + moduleName);
+                else
+                    _result.push_back("module-implementation " + moduleName);
             }
         }
 
@@ -298,14 +306,15 @@ private:
         return false;
     }
 
-    bool TryParseModuleDeclaration(std::string& moduleName)
+    bool TryParseModuleDeclaration(bool& isExport, std::string& moduleName)
     {
         #ifdef SHOW_TOKENS
           std::cout << "TryParseModuleDeclaration" << std::endl;
         #endif
 
         // Check for optional first export token
-        if (_currentToken == SimplifiedCppToken::Export)
+        bool hasExport = _currentToken == SimplifiedCppToken::Export;
+        if (hasExport)
         {
             MoveNext();
         }
@@ -336,6 +345,7 @@ private:
 
         MoveNext();
 
+        isExport = hasExport;
         moduleName = std::move(result);
         return true;
     }

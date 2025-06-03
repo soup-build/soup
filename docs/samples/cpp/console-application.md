@@ -24,7 +24,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.15.2 }
+      'Soup|Cpp': { Version: 0.15.3 }
     }
   }
   Tool0: {
