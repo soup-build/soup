@@ -3,6 +3,7 @@ Closures: {
 	Root: {
 		C: {
 			'mwasplund|libseccomp': { Version: 2.5.8, Build: 'Build3', Tool: 'Tool0' }
+			'mwasplund|wren': { Version: 'C:/Users/mwasp/dev/repos/wren/src/', Build: 'Build3', Tool: 'Tool0' }
 		}
 		'C++': {
 			'Monitor.Host': { Version: '../../monitor/host/', Build: 'Build0', Tool: 'Tool0' }
@@ -12,12 +13,11 @@ Closures: {
 			'Soup.Generate': { Version: '../../generate/', Build: 'Build0', Tool: 'Tool0' }
 			copy: { Version: '../../tools/copy/', Build: 'Build0', Tool: 'Tool0' }
 			mkdir: { Version: '../../tools/mkdir/', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|CryptoPP': { Version: 1.2.4, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|CryptoPP': { Version: 'C:/Users/mwasp/dev/repos/cryptopp/', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Detours': { Version: 4.0.13, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Opal': { Version: 0.12.0, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.4.2, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 5.5.0, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|wren': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
 			'parse.modules': { Version: '../../tools/parse-modules/', Build: 'Build0', Tool: 'Tool0' }
 		}
 		Wren: {

@@ -9,7 +9,7 @@ SCRIPTS_DIR=$(dirname "$0")
 ROOT_DIR=$SCRIPTS_DIR/../..
 CODE_DIR=$ROOT_DIR/code
 PARSE_MODULES_DIR=$CODE_DIR/parse-modules
-REFLEX=~/source/repos/RE-flex/bin/reflex
+REFLEX=~/dev/repos/RE-flex/bin/reflex
 
 echo $REFLEX $PARSE_MODULES_DIR/parser/ModuleParser.l -o $PARSE_MODULES_DIR/parser/ModuleParser.cpp
 eval $REFLEX $PARSE_MODULES_DIR/parser/ModuleParser.l -o $PARSE_MODULES_DIR/parser/ModuleParser.cpp

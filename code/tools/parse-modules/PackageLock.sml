@@ -10,7 +10,7 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 'C:/Users/mwasp/source/repos/soup-cpp/code/extension/' }
+			'Soup|Cpp': { Version: 'C:/Users/mwasp/dev/repos/soup-cpp/code/extension/' }
 		}
 	}
 	Tool0: {

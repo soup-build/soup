@@ -7,10 +7,6 @@ Defines: [
 	# 'ENABLE_MONITOR_DEBUG'
 	# 'TRACE_DETOUR_CLIENT'
 ]
-Source: [
-	'Main.cpp'
-]
-
 Dependencies: {
 	Runtime: [
 		'mwasplund|Detours@4'

@@ -5,7 +5,6 @@ Type: 'Executable'
 Source: [
 	'Program.cs'
 ]
-
 Dependencies: {
 	Runtime: [
 		'../swhere.core/'

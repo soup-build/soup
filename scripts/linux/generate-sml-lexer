@@ -9,7 +9,7 @@ SCRIPTS_DIR=$(dirname "$0")
 ROOT_DIR=$SCRIPTS_DIR/../..
 CODE_DIR=$ROOT_DIR/code
 CLIENT_CODE_DIR=$CODE_DIR/client/core/source
-REFLEX=~/source/repos/RE-flex/bin/reflex
+REFLEX=~/dev/repos/RE-flex/bin/reflex
 
 echo $REFLEX $CLIENT_CODE_DIR/sml/SMLParser.l -o $CLIENT_CODE_DIR/sml/SMLParser.cpp
 eval $REFLEX $CLIENT_CODE_DIR/sml/SMLParser.l -o $CLIENT_CODE_DIR/sml/SMLParser.cpp
