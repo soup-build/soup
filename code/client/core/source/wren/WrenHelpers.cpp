@@ -4,7 +4,7 @@
 
 module;
 
-#include "wren/wren.h"
+#include <wren/wren.hpp>
 
 #include <stdexcept>
 #include <string>

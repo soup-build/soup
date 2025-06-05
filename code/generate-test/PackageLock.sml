@@ -9,12 +9,12 @@ Closures: {
 			'Monitor.Shared': { Version: '../monitor/shared/', Build: 'Build0', Tool: 'Tool0' }
 			'Soup.Core': { Version: '../client/core/', Build: 'Build1', Tool: 'Tool0' }
 			'Soup.Generate.Test': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|CryptoPP': { Version: 1.2.4, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|CryptoPP': { Version: 1.2.5, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Detours': { Version: 4.0.13, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Opal': { Version: 0.12.0, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.4.2, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 5.5.0, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|wren': { Version: 1.0.5, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|wren': { Version: 1.1,0, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
