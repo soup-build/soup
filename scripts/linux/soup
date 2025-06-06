@@ -32,12 +32,10 @@ cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.Generate.exe $
 mkdir -p $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION
 cp -p $CODE_DIR/tools/copy/Recipe.sml $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/Recipe.sml
 cp -p -R $OUT_DIR/C++/Local/copy/$COPY_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/out/
-mv $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/out/.soup/GenerateSharedState.bvt $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/out/.soup/generate-shared-state.bvt
 
 mkdir -p $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION
 cp -p $CODE_DIR/tools/mkdir/Recipe.sml $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/Recipe.sml
 cp -p -R $OUT_DIR/C++/Local/mkdir/$MKDIR_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/out/
-mv $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/out/.soup/GenerateSharedState.bvt $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/out/.soup/generate-shared-state.bvt
 
 mkdir -p $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION
 cp -p $CODE_DIR/tools/parse-modules/Recipe.sml $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION/Recipe.sml
@@ -46,7 +44,6 @@ cp -p -R $OUT_DIR/C++/Local/parse.modules/$PARSE_MODULES_VERSION/$CONFIG_HASH/ $
 mkdir -p $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION
 cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/Recipe.sml $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/Recipe.sml
 cp -p -R $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/out/$CONFIG_HASH/ $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/
-mv $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/.soup/GenerateSharedState.bvt $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/.soup/generate-shared-state.bvt
 
 cp -p -R $MSBUILD_DIR/bin/Soup.Build.PackageManager/Release/net9.0/linux-x64/publish/ $RUN_DIR/PackageManager
 

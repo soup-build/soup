@@ -5,7 +5,6 @@ Defines: [
 	# 'TRACE_DETOUR_SERVER'
 	# 'TRACE_MONITOR_HOST'
 ]
-Interface: 'Module.cpp'
 Dependencies: {
 	Runtime: [
 		'mwasplund|Detours@4'
