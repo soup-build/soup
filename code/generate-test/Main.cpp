@@ -18,9 +18,7 @@ import Soup.Core;
 
 using namespace Opal;
 
-// TODO import
-// TODO: Treat wren as C code
-#include "wren/wren.h"
+#include <wren/wren.hpp>
 
 #include "GenerateTestHost.h"
 

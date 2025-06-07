@@ -2,8 +2,8 @@
   "profiles": {
     "SoupView": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\mwasp\\source\\repos\\soup\\samples\\cpp\\module-interface\\Recipe.sml",
-      "workingDirectory": "C:\\Users\\mwasp\\source\\repos\\soup\\out\\run\\Soup",
+      "commandLineArgs": "..\\..\\..\\code\\client\\cli\\Recipe.sml",
+      "workingDirectory": "..\\..\\..\\out\\run\\Soup\\",
       "nativeDebugging": true
     }
   }

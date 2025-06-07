@@ -3,12 +3,12 @@ Closures: {
 	Root: {
 		'C++': {
 			mkdir: { Version: '../Mkdir', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|Opal': { Version: 0.11.5, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|Opal': { Version: 0.12.0, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.14.0 }
+			'Soup|Cpp': { Version: 0.15.3 }
 		}
 	}
 	Tool0: {

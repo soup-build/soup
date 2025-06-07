@@ -5,7 +5,7 @@ Version: 1.0.0
 Dependencies: {
 	Runtime: [
 		'../client/core/'
-		'mwasplund|wren@1'
+		'[C]mwasplund|wren@1'
 		'mwasplund|Opal@0'
 	]
 }

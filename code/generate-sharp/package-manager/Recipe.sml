@@ -9,7 +9,6 @@ Source: [
 	'Program.cs'
 	'TokenCache.cs'
 ]
-
 Dependencies: {
 	Build: [
 		'Soup|CSharp.Nuget@0'

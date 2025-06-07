@@ -26,22 +26,29 @@ std::vector<std::string> Parse(const Path& file)
 
 	auto input = reflex::Input(stream);
 	auto parser = Soup::ParseModules::ModuleParser(input);
-	if (parser.TryParse())
+	try
 	{
-		return parser.GetResult();
+		if (parser.TryParse())
+		{
+			return parser.GetResult();
+		}
+		else
+		{
+			auto line = parser.lineno();
+			auto column = parser.columno();
+			auto text = parser.text();
+
+			std::stringstream message;
+			message << "FAILED: " << line << ":" << column << " " << text;
+			Log::Info(message.str());
+		}
 	}
-	else
+	catch (const Soup::ParseModules::EarlyExitException& ex)
 	{
-		auto line = parser.lineno();
-		auto column = parser.columno();
-		auto text = parser.text();
-
-		std::stringstream message;
-		message << "FAILED: " << line << ":" << column << " " << text;
-		Log::Info(message.str());
-
-		return std::vector<std::string>();
+		Log::Info(ex.what());
 	}
+
+	return parser.GetResult();
 }
 
 int main(int argc, char** argv)

@@ -22,13 +22,13 @@ Version: 5
 Closures: {
   Root: {
     'C++': {
-      'mwasplund|json11': { Version: 1.1.3, Build: 'Build0', Tool: 'Tool0' }
+      'mwasplund|json11': { Version: 1.1.4, Build: 'Build0', Tool: 'Tool0' }
       'Samples.Cpp.ParseJsonFile': { Version: '../ParseJsonFile', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.14.0 }
+      'Soup|Cpp': { Version: 0.15.3 }
     }
   }
   Tool0: {

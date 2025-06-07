@@ -2,5 +2,6 @@ export module parse.modules;
 
 import Opal;
 
-// Build
+// Parse
+export import :EarlyExitException;
 export import :ModuleParser;

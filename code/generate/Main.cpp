@@ -14,9 +14,7 @@
 #include <sstream>
 #include <vector>
 
-// TODO import
-// TODO: Treat wren as C code
-#include "wren/wren.h"
+#include <wren/wren.hpp>
 
 import Opal;
 import Soup.Core;

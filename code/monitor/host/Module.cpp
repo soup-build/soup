@@ -35,9 +35,7 @@ module;
 #include <elf.h>
 
 #include <seccomp.h>
-
-// The existing environment for this process
-extern char **environ;
+#include "linux/Environment.h"
 
 #endif
 
