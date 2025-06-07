@@ -7,12 +7,11 @@ This is a console application that has a custom build extension that alters the 
 The Recipe file that defines the build extension dynamic library "Samples.C.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.C.BuildExtension.Extension'
-Language: (Wren@0)
+Language: 'Wren|0'
 Version: 1.0.0
 Source: [
   'CustomBuildTask.wren'
 ]
-
 Dependencies: {
   Runtime: [
     'Soup|Build.Utils@0'
@@ -27,8 +26,8 @@ Version: 5
 Closures: {
   Root: {
     Wren: {
-      'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build0', Tool: 'Tool0' }
       'Samples.C.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
@@ -95,16 +94,12 @@ class CustomBuildTask is SoupTask {
 The Recipe file that defines the executable "Samples.C.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.C.SimpleBuildExtension.Executable'
-Language: (C@0)
+Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.c'
-]
-
 Dependencies: {
   Build: [
-    '../Extension/'
+    '../extension/'
   ]
 }
 ```
@@ -116,13 +111,13 @@ Version: 5
 Closures: {
   Root: {
     C: {
-      'Samples.C.SimpleBuildExtension.Executable': { Version: '../Executable', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.SimpleBuildExtension.Executable': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Samples.C.BuildExtension.Extension': { Version: '../Extension/' }
-      'Soup|C': { Version: 0.4.0 }
+      'Samples.C.BuildExtension.Extension': { Version: '../extension/' }
+      'Soup|C': { Version: 0.4.1 }
     }
   }
   Tool0: {

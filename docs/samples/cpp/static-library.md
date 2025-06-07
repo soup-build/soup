@@ -7,9 +7,8 @@ This is a console application that has a single static library dependency.
 The Recipe file that defines the static library "Samples.Cpp.StaticLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.StaticLibrary.Library'
-Language: (C++@0)
+Language: 'C++|0'
 Version: 1.0.0
-Interface: 'Module.cpp'
 Type: 'StaticLibrary'
 ```
 
@@ -26,14 +25,14 @@ export module Samples.Cpp.StaticLibrary.Library;
 // Note: The namespace does not have to match the module name
 export namespace Samples::Cpp::StaticLibrary::Library
 {
-    class Helper
+  class Helper
+  {
+  public:
+    static std::string GetName()
     {
-    public:
-        static std::string GetName()
-        {
-            return "Soup";
-        }
-    };
+      return "Soup";
+    }
+  };
 }
 ```
 
@@ -41,11 +40,13 @@ export namespace Samples::Cpp::StaticLibrary::Library
 The Recipe file that defines the executable "Samples.Cpp.StaticLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.StaticLibrary.Application'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
 Dependencies: {
-    Runtime: [ '../Library/' ]
+  Runtime: [
+    '../library/'
+  ]
 }
 ```
 
@@ -54,23 +55,24 @@ The package lock that was generated to capture the unique dependencies required 
 ```sml
 Version: 5
 Closures: {
-	Root: {
-		'C++': {
-			'Samples.Cpp.StaticLibrary.Application': { Version: '../Application', Build: 'Build0', Tool: 'Tool0' }
-			'Samples.Cpp.StaticLibrary.Library': { Version: '../Library/', Build: 'Build0', Tool: 'Tool0' }
-		}
-	}
-	Build0: {
-		Wren: {
-			'Soup|Cpp': { Version: 0.15.3 }
-		}
-	}
-	Tool0: {
-		'C++': {
-			'mwasplund|copy': { Version: 1.1.0 }
-			'mwasplund|mkdir': { Version: 1.1.0 }
-		}
-	}
+  Root: {
+    'C++': {
+      'Samples.Cpp.StaticLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.StaticLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Soup|Cpp': { Version: 0.15.3 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.1.0 }
+      'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
+    }
+  }
 }
 ```
 
@@ -80,7 +82,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 #include <iostream>
 
 import Samples.Cpp.StaticLibrary.Library;
-using namespace Samples.Cpp.StaticLibrary.Library;
+using namespace Samples::Cpp::StaticLibrary::Library;
 
 int main()
 {

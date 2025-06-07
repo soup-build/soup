@@ -7,11 +7,8 @@ This is a console application that has a single header library dependency.
 The Recipe file that defines the header library "Samples.Cpp.HeaderLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Library'
-Language: (C++@0)
+Language: 'C++|0'
 Version: 1.0.0
-IncludePaths: [
-  'public/'
-]
 PublicHeaders: [
   {
     Root: './'
@@ -44,16 +41,12 @@ namespace Samples::Cpp::HeaderLibrary::Library
 The Recipe file that defines the executable "Samples.Cpp.HeaderLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Application'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.cpp'
-]
-
 Dependencies: {
   Runtime: [
-    '../Library/'
+    '../library/'
   ]
 }
 ```
@@ -65,8 +58,8 @@ Version: 5
 Closures: {
   Root: {
     'C++': {
-      'Samples.Cpp.HeaderLibrary.Application': { Version: '../Application', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.Cpp.HeaderLibrary.Library': { Version: '../Library/', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.HeaderLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.HeaderLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
@@ -78,6 +71,7 @@ Closures: {
     'C++': {
       'mwasplund|copy': { Version: 1.1.0 }
       'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
     }
   }
 }

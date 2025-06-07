@@ -7,7 +7,7 @@ This is a windows application that demonstrates creating a GUI windows applicati
 The Recipe file that defines the sample application.
 ```
 Name: 'Samples.Cpp.WindowsApplication'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Windows'
 Version: 1.0.0
 Resources: 'WindowsProject.rc'
@@ -18,22 +18,23 @@ The package lock that was generated to capture the unique dependencies required 
 ```sml
 Version: 5
 Closures: {
-	Root: {
-		'C++': {
-			'Samples.Cpp.WindowsApplication': { Version: '../WindowsApplication', Build: 'Build0', Tool: 'Tool0' }
-		}
-	}
-	Build0: {
-		Wren: {
-			'Soup|Cpp': { Version: 0.15.3 }
-		}
-	}
-	Tool0: {
-		'C++': {
-			'mwasplund|copy': { Version: 1.1.0 }
-			'mwasplund|mkdir': { Version: 1.1.0 }
-		}
-	}
+  Root: {
+    'C++': {
+      'Samples.Cpp.WindowsApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Soup|Cpp': { Version: 0.15.3 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.1.0 }
+      'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
+    }
+  }
 }
 ```
 

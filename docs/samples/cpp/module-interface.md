@@ -7,13 +7,9 @@ A console application that uses a single module interface file used inside the s
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
 Name: 'Samples.Cpp.ModuleInterface'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
-Interface: 'Module.cpp'
-Source: [
-  'Main.cpp'
-]
 ```
 
 ## Executable/PackageLock.sml
@@ -23,7 +19,7 @@ Version: 5
 Closures: {
   Root: {
     'C++': {
-      'Samples.Cpp.ModuleInterface': { Version: '../ModuleInterface', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.ModuleInterface': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
@@ -35,6 +31,7 @@ Closures: {
     'C++': {
       'mwasplund|copy': { Version: 1.1.0 }
       'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
     }
   }
 }

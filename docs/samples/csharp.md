@@ -6,3 +6,6 @@ This is a console application that uses a custom build extension to set a prepro
 
 ## [Console Application](csharp/console-application.md)
 This is the smallest amount of code to get a console application building using Soup.
+
+## [Library](csharp/library.md)
+Sample project that shows creating a consuming a dynamic library.

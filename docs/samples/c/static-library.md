@@ -7,14 +7,19 @@ This is a console application that has a single static library dependency.
 The Recipe file that defines the static library "Samples.C.StaticLibrary.Library".
 ```sml
 Name: 'Samples.C.StaticLibrary.Library'
-Language: (C@0)
+Language: 'C|0'
 Version: 1.0.0
 Type: 'StaticLibrary'
-Source: [
-  'Library.c'
+IncludePaths: [
+  'public/'
 ]
 PublicHeaders: [
-  'Library.h'
+  {
+    Root: 'public/'
+    Files: [
+      'Library.h'
+    ]
+  }
 ]
 ```
 
@@ -39,17 +44,11 @@ const char* GetName()
 The Recipe file that defines the executable "Samples.C.StaticLibrary.Application".
 ```sml
 Name: 'Samples.C.StaticLibrary.Application'
-Language: (C@0)
+Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.c'
-]
-
 Dependencies: {
-  Runtime: [
-    '../Library/'
-  ]
+  Runtime: [ '../library/' ]
 }
 ```
 
@@ -60,13 +59,13 @@ Version: 5
 Closures: {
   Root: {
     C: {
-      'Samples.C.StaticLibrary.Application': { Version: '../Application', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.C.StaticLibrary.Library': { Version: '../Library/', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.StaticLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.StaticLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|C': { Version: 0.4.0 }
+      'Soup|C': { Version: 0.4.1 }
     }
   }
   Tool0: {
@@ -89,7 +88,6 @@ int main()
   printf("Hello World, %s Style!", GetName());
   return 0;
 }
-
 ```
 
 ## .gitignore

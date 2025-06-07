@@ -7,12 +7,9 @@ This is the smallest amount of code to get a console application building using 
 The Recipe file that sets the name, type, version and the single source file.
 ```sml
 Name: 'Samples.C.ConsoleApplication'
-Language: (C@0)
+Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.c'
-]
 ```
 
 ## PackageLock.sml
@@ -22,12 +19,12 @@ Version: 5
 Closures: {
   Root: {
     C: {
-      'Samples.C.ConsoleApplication': { Version: '../ConsoleApplication', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|C': { Version: 0.4.0 }
+      'Soup|C': { Version: 0.4.1 }
     }
   }
   Tool0: {

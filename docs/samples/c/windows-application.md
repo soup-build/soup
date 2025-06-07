@@ -7,13 +7,10 @@ This is a windows application that demonstrates creating a GUI windows applicati
 The Recipe file that defines the sample application.
 ```sml
 Name: 'Samples.C.WindowsApplication'
-Language: (C@0)
+Language: 'C|0'
 Type: 'Windows'
 Version: 1.0.0
 Resources: 'WindowsProject.rc'
-Source: [
-  'WindowsProject.c'
-]
 ```
 
 ## Library/PackageLock.sml
@@ -23,12 +20,12 @@ Version: 5
 Closures: {
   Root: {
     C: {
-      'Samples.C.WindowsApplication': { Version: '../WindowsApplication', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.WindowsApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|C': { Version: 0.4.0 }
+      'Soup|C': { Version: 0.4.1 }
     }
   }
   Tool0: {

@@ -7,14 +7,19 @@ This is a console application that has a single dynamic library dependency.
 The Recipe file that defines the static library "Samples.C.DynamicLibrary.Library".
 ```sml
 Name: 'Samples.C.DynamicLibrary.Library'
-Language: (C@0)
+Language: 'C|0'
 Version: 1.0.0
 Type: 'DynamicLibrary'
-Source: [
-  'Library.c'
+IncludePaths: [
+  'public/'
 ]
 PublicHeaders: [
-  'Library.h'
+  {
+    Root: 'public/'
+    Files: [
+      'Library.h'
+    ]
+  }
 ]
 ```
 
@@ -42,17 +47,11 @@ const char* GetName()
 The Recipe file that defines the executable "Samples.C.DynamicLibrary.Application".
 ```sml
 Name: 'Samples.C.DynamicLibrary.Application'
-Language: (C@0)
+Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.c'
-]
-
 Dependencies: {
-  Runtime: [
-    '../Library/'
-  ]
+  Runtime: [ '../library/' ]
 }
 ```
 
@@ -63,13 +62,13 @@ Version: 5
 Closures: {
   Root: {
     C: {
-      'Samples.C.DynamicLibrary.Application': { Version: '../Application', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.C.DynamicLibrary.Library': { Version: '../Library/', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.DynamicLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.C.DynamicLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|C': { Version: 0.4.0 }
+      'Soup|C': { Version: 0.4.1 }
     }
   }
   Tool0: {

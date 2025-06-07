@@ -3,11 +3,57 @@ This is a console application that has a custom build extension that alters the 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension)
 
+## Tool/Recipe.sml
+The Recipe file that defines the executable "Samples.Cpp.SimpleBuildExtension.Tool" that will be run as part of the build.
+```sml
+Name: 'Samples.SimpleBuildExtension.Tool'
+Language: 'C++|0'
+Type: 'Executable'
+Version: 1.0.0
+```
+
+## Tool/PackageLock.sml
+The package lock that was generated to capture the unique build dependencies required to build this project.
+```sml
+Version: 5
+Closures: {
+  Root: {
+    'C++': {
+      'Samples.SimpleBuildExtension.Tool': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Soup|Cpp': { Version: 0.15.3 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.1.0 }
+      'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
+    }
+  }
+}
+```
+
+## Tool/Main.cpp
+A simple main method that prints our "Tool, Soup Style!" during the build.
+```cpp
+#include <iostream>
+
+int main()
+{
+  std::cout << "Tool, Soup Style!" << std::endl;
+  return 0;
+}
+```
+
 ## Extension/Recipe.sml
 The Recipe file that defines the build extension dynamic library "Samples.Cpp.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.Cpp.BuildExtension.Extension'
-Language: (Wren@0)
+Language: 'Wren|0'
 Version: 1.0.0
 Source: [
   'CustomBuildTask.wren'
@@ -15,6 +61,9 @@ Source: [
 Dependencies: {
   Runtime: [
     'Soup|Build.Utils@0'
+  ]
+  Tool: [
+    '../tool/'
   ]
 }
 ```
@@ -26,8 +75,8 @@ Version: 5
 Closures: {
   Root: {
     Wren: {
-      'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build0', Tool: 'Tool0' }
       'Samples.Cpp.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
@@ -52,8 +101,10 @@ A Wren file defining a custom build Task that will run before the build definiti
 // </copyright>
 
 import "soup" for Soup, SoupTask
+import "Soup|Build.Utils:./Path" for Path
 import "Soup|Build.Utils:./ListExtensions" for ListExtensions
 import "Soup|Build.Utils:./MapExtensions" for MapExtensions
+import "Soup|Build.Utils:./SharedOperations" for SharedOperations
 
 class CustomBuildTask is SoupTask {
   /// <summary>
@@ -82,10 +133,40 @@ class CustomBuildTask is SoupTask {
     var preprocessorDefinitions = [
       "SPECIAL_BUILD",
     ]
-    
+
     ListExtensions.Append(
       MapExtensions.EnsureList(buildTable, "PreprocessorDefinitions"),
       preprocessorDefinitions)
+
+    var contextTable = Soup.globalState["Context"]
+    var packageRoot = Path.new(contextTable["PackageDirectory"])
+
+    CustomBuildTask.CreateCustomToolOperation(packageRoot)
+  }
+
+  /// <summary>
+  /// Create a build operation that will create a directory
+  /// </summary>
+  static CreateCustomToolOperation(workingDirectory) {
+    // Discover the dependency tool
+    var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExectable("Samples.SimpleBuildExtension.Tool")
+
+    var title = "Run Custom Tool"
+
+    var program = Path.new(toolExecutable)
+    var inputFiles = []
+    var outputFiles = []
+
+    // Build the arguments
+    var arguments = []
+
+    Soup.createOperation(
+      title,
+      program.toString,
+      arguments,
+      workingDirectory.toString,
+      ListExtensions.ConvertFromPathList(inputFiles),
+      ListExtensions.ConvertFromPathList(outputFiles))
   }
 }
 ```
@@ -94,11 +175,13 @@ class CustomBuildTask is SoupTask {
 The Recipe file that defines the executable "Samples.Cpp.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.SimpleBuildExtension.Executable'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
 Dependencies: {
-  Build: [ '../Extension/' ]
+  Build: [
+    '../extension/'
+  ]
 }
 ```
 
@@ -109,19 +192,21 @@ Version: 5
 Closures: {
   Root: {
     'C++': {
-      'Samples.SimpleBuildExtension.Executable': { Version: '../Executable', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.SimpleBuildExtension.Executable': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Samples.Cpp.BuildExtension.Extension': { Version: '../Extension/' }
+      'Samples.Cpp.BuildExtension.Extension': { Version: '../extension/' }
       'Soup|Cpp': { Version: 0.15.3 }
     }
   }
   Tool0: {
     'C++': {
+      'Samples.SimpleBuildExtension.Tool': { Version: '../tool/' }
       'mwasplund|copy': { Version: 1.1.0 }
       'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
     }
   }
 }
@@ -139,6 +224,7 @@ int main()
 #else
   std::cout << "Hello World..." << std::endl;
 #endif
+
   return 0;
 }
 ```

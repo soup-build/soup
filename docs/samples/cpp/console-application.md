@@ -7,7 +7,7 @@ This is the smallest amount of code to get a console application building using 
 The Recipe file that sets the name, type, version and the single source file.
 ```sml
 Name: 'Samples.Cpp.ConsoleApplication'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
 ```
@@ -19,7 +19,7 @@ Version: 5
 Closures: {
   Root: {
     'C++': {
-      'Samples.Cpp.ConsoleApplication': { Version: '../ConsoleApplication', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
@@ -31,6 +31,7 @@ Closures: {
     'C++': {
       'mwasplund|copy': { Version: 1.1.0 }
       'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
     }
   }
 }

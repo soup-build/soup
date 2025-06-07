@@ -7,12 +7,10 @@ This is a console application with the minimal amount of code to get up and runn
 The Recipe file that defines the static library "Samples.CSharp.ConsoleApplication".
 ```sml
 Name: 'Samples.CSharp.ConsoleApplication'
-Language: (C#@0)
+Language: 'C#|0'
+TargetFramework: 'net9.0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Program.cs'
-]
 ```
 
 ## PackageLock.sml
@@ -22,7 +20,7 @@ Version: 5
 Closures: {
   Root: {
     'C#': {
-      'Samples.CSharp.ConsoleApplication': { Version: '../ConsoleApplication', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.CSharp.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {

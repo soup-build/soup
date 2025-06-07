@@ -7,9 +7,8 @@ This is a console application that has a single dynamic library dependency.
 The Recipe file that defines the static library "Samples.Cpp.ModuleDynamicLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.ModuleDynamicLibrary.Library'
-Language: (C++@0)
+Language: 'C++|0'
 Version: 1.0.0
-Interface: 'Module.cpp'
 Type: 'DynamicLibrary'
 ```
 
@@ -21,22 +20,22 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.DynamicLibrary.Library;
+export module Samples.Cpp.ModuleDynamicLibrary.Library;
 
 // Note: The namespace does not have to match the module name
 export namespace Samples::Cpp::DynamicLibrary::Library
 {
-  class Helper
-  {
-  public:
-  #ifdef _WIN32
-    __declspec(dllexport)
-  #endif
-    static std::string GetName()
-    {
-      return "Soup";
-    }
-  };
+	class Helper
+	{
+	public:
+	#ifdef _WIN32
+		__declspec(dllexport)
+	#endif
+		static std::string GetName()
+		{
+			return "Soup";
+		}
+	};
 }
 ```
 
@@ -44,17 +43,13 @@ export namespace Samples::Cpp::DynamicLibrary::Library
 The Recipe file that defines the executable "Samples.Cpp.ModuleDynamicLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.ModuleDynamicLibrary.Application'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.cpp'
-]
-
 Dependencies: {
-  Runtime: [
-    '../Library/'
-  ]
+	Runtime: [
+		'../library/'
+	]
 }
 ```
 
@@ -63,23 +58,24 @@ The package lock that was generated to capture the unique dependencies required 
 ```sml
 Version: 5
 Closures: {
-  Root: {
-    'C++': {
-      'Samples.Cpp.ModuleDynamicLibrary.Application': { Version: '../Application', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.Cpp.ModuleDynamicLibrary.Library': { Version: '../Library/', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Cpp': { Version: 0.15.3 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.1.0 }
-      'mwasplund|mkdir': { Version: 1.1.0 }
-    }
-  }
+	Root: {
+		'C++': {
+			'Samples.Cpp.ModuleDynamicLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+			'Samples.Cpp.ModuleDynamicLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
+		}
+	}
+	Build0: {
+		Wren: {
+			'Soup|Cpp': { Version: 0.15.3 }
+		}
+	}
+	Tool0: {
+		'C++': {
+			'mwasplund|copy': { Version: 1.1.0 }
+			'mwasplund|mkdir': { Version: 1.1.0 }
+			'mwasplund|parse.modules': { Version: 1.1.0 }
+		}
+	}
 }
 ```
 
@@ -88,15 +84,14 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.DynamicLibrary.Library;
+import Samples.Cpp.ModuleDynamicLibrary.Library;
 using namespace Samples::Cpp::DynamicLibrary::Library;
 
 int main()
 {
-  std::cout << "Hello World, " << Helper::GetName() << " Style!" << std::endl;
-  return 0;
+	std::cout << "Hello World, " << Helper::GetName() << " Style!" << std::endl;
+	return 0;
 }
-
 ```
 
 ## .gitignore

@@ -7,7 +7,7 @@ This is a console application that has a single dynamic library dependency.
 The Recipe file that defines the static library "Samples.Cpp.DynamicLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.DynamicLibrary.Library'
-Language: (C++@0)
+Language: 'C++|0'
 Version: 1.0.0
 Type: 'DynamicLibrary'
 Defines: [
@@ -67,16 +67,12 @@ namespace Samples::Cpp::DynamicLibrary::Library
 The Recipe file that defines the executable "Samples.Cpp.DynamicLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.DynamicLibrary.Application'
-Language: (C++@0)
+Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
-Source: [
-  'Main.cpp'
-]
-
 Dependencies: {
   Runtime: [
-    '../Library/'
+    '../library/'
   ]
 }
 ```
@@ -88,8 +84,8 @@ Version: 5
 Closures: {
   Root: {
     'C++': {
-      'Samples.Cpp.DynamicLibrary.Application': { Version: '../Application', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.Cpp.DynamicLibrary.Library': { Version: '../Library/', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.DynamicLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.Cpp.DynamicLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
@@ -101,6 +97,7 @@ Closures: {
     'C++': {
       'mwasplund|copy': { Version: 1.1.0 }
       'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
     }
   }
 }
@@ -110,9 +107,9 @@ Closures: {
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
 ```cpp
 #include <iostream>
+#include <Library.h>
 
-import Samples.Cpp.DynamicLibrary.Library;
-using namespace Samples.Cpp.DynamicLibrary.Library;
+using namespace Samples::Cpp::DynamicLibrary::Library;
 
 int main()
 {
