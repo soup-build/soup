@@ -19,12 +19,12 @@ public class InitializeCommand
 	private const string CppTypeExecutable = "Executable";
 	private const string BuiltInLanguageCpp = "C++";
 
-	private readonly SemanticVersion builtInLanguageVersionCpp;
+	private readonly SemanticVersion languageVersionCpp;
 
 	public InitializeCommand(
-		SemanticVersion builtInLanguageVersionCpp)
+		SemanticVersion languageVersionCpp)
 	{
-		this.builtInLanguageVersionCpp = builtInLanguageVersionCpp;
+		this.languageVersionCpp = languageVersionCpp;
 	}
 
 	/// <summary>
@@ -47,14 +47,13 @@ public class InitializeCommand
 			new LanguageReference(
 				BuiltInLanguageCpp,
 				new SemanticVersion(
-					this.builtInLanguageVersionCpp.Major,
-					this.builtInLanguageVersionCpp.Minor,
+					this.languageVersionCpp.Major,
+					this.languageVersionCpp.Minor,
 					null)))
 		{
 			Type = CppTypeExecutable,
 			Version = new SemanticVersion(1, 0, 0)
 		};
-		recipe.AddSource("Main.cpp");
 
 		UpdateDefaultValues(recipe);
 

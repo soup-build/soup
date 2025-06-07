@@ -41,7 +41,7 @@ public static class Program
 			var workingDirectory = new Path(args[1]);
 
 			using var httpClient = new HttpClient();
-			SemanticVersion minimumLanguageVersionCpp = new SemanticVersion(0, 12, 0);
+			SemanticVersion minimumLanguageVersionCpp = new SemanticVersion(0, 15, 0);
 			SemanticVersion builtInLanguageVersionWren = new SemanticVersion(0, 4, 3);
 			var closureManager = new ClosureManager(
 				SoupApiEndpoint,
