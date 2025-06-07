@@ -11,9 +11,9 @@ Language: 'C++|0'
 Version: 1.0.0
 Type: 'Executable'
 Dependencies: {
-	Runtime: [
-		'mwasplund|json11@1'
-	]
+  Runtime: [
+    'mwasplund|json11@1'
+  ]
 }
 ```
 
@@ -22,24 +22,24 @@ The package lock that was generated to capture the unique dependencies required 
 ```
 Version: 5
 Closures: {
-	Root: {
-		'C++': {
-			'Samples.Cpp.ParseJson': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|json11': { Version: 1.1.4, Build: 'Build0', Tool: 'Tool0' }
-		}
-	}
-	Build0: {
-		Wren: {
-			'Soup|Cpp': { Version: 0.15.3 }
-		}
-	}
-	Tool0: {
-		'C++': {
-			'mwasplund|copy': { Version: 1.1.0 }
-			'mwasplund|mkdir': { Version: 1.1.0 }
-			'mwasplund|parse.modules': { Version: 1.1.0 }
-		}
-	}
+  Root: {
+    'C++': {
+      'Samples.Cpp.ParseJson': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'mwasplund|json11': { Version: 1.1.4, Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Soup|Cpp': { Version: 0.15.3 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.1.0 }
+      'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|parse.modules': { Version: 1.1.0 }
+    }
+  }
 }
 ```
 
@@ -63,20 +63,20 @@ import json11;
 
 int main()
 {
-	// Read in the contents of the json file
-	auto jsonFile = std::ifstream("./Message.json");
-	auto jsonContent = std::string(
-		std::istreambuf_iterator<char>(jsonFile),
-		std::istreambuf_iterator<char>());
+  // Read in the contents of the json file
+  auto jsonFile = std::ifstream("./Message.json");
+  auto jsonContent = std::string(
+    std::istreambuf_iterator<char>(jsonFile),
+    std::istreambuf_iterator<char>());
 
-	// Parse the json
-	std::string errorMessage;
-	auto json = json11::Json::parse(jsonContent, errorMessage);
+  // Parse the json
+  std::string errorMessage;
+  auto json = json11::Json::parse(jsonContent, errorMessage);
 
-	// Print the single property value
-	std::cout << "Message: " << json["message"].string_value() << std::endl;
+  // Print the single property value
+  std::cout << "Message: " << json["message"].string_value() << std::endl;
 
-	return 0;
+  return 0;
 }
 ```
 

@@ -17,13 +17,13 @@ A C# file that implements the helper function.
 ```C#
 namespace Samples.CSharp.Library
 {
-	public class Helper
-	{
-		public static string GetName()
-		{
-			return "Soup";
-		}
-	};
+  public class Helper
+  {
+    public static string GetName()
+    {
+      return "Soup";
+    }
+  };
 }
 ```
 
@@ -36,9 +36,9 @@ TargetFramework: 'net9.0'
 Type: 'Executable'
 Version: 1.0.0
 Dependencies: {
-	Runtime: [
-		'../library/'
-	]
+  Runtime: [
+    '../library/'
+  ]
 }
 ```
 
@@ -47,23 +47,23 @@ The package lock that was generated to capture the unique build dependencies req
 ```sml
 Version: 5
 Closures: {
-	Root: {
-		'C#': {
-			'Samples.CSharp.Library.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'Samples.CSharp.Library.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
-		}
-	}
-	Build0: {
-		Wren: {
-			'Soup|CSharp': { Version: 0.15.2 }
-		}
-	}
-	Tool0: {
-		'C++': {
-			'mwasplund|copy': { Version: 1.1.0 }
-			'mwasplund|mkdir': { Version: 1.1.0 }
-		}
-	}
+  Root: {
+    'C#': {
+      'Samples.CSharp.Library.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Samples.CSharp.Library.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Soup|CSharp': { Version: 0.15.2 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.1.0 }
+      'mwasplund|mkdir': { Version: 1.1.0 }
+    }
+  }
 }
 ```
 
@@ -74,13 +74,13 @@ using System;
 
 namespace Samples.CSharp.Library.Application
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
-			Console.WriteLine($"Hello World, {Helper.GetName()} Style!");
-		}
-	}
+  public class Program
+  {
+    public static void Main(string[] args)
+    {
+      Console.WriteLine($"Hello World, {Helper.GetName()} Style!");
+    }
+  }
 }
 ```
 
