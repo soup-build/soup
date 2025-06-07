@@ -136,8 +136,9 @@ namespace Monitor::Windows
 			std::string argumentsString = argumentsValue.str();
 
 			// Setup the input/output streams
-			// TODO: We need to read from the buffer to ensure it doesn't deadlock on the wait forever
-			int pipeBufferSize = 5 * 1024 * 1024;
+			// Allow non-blocking reads so we can check content in worker thread
+			int pipeBufferSize = 64 * 1024;
+			DWORD pipeMode = PIPE_NOWAIT;
 
 			// Set the bInheritHandle flag so pipe handles are inherited.
 			SECURITY_ATTRIBUTES securityAttributes;
@@ -150,6 +151,8 @@ namespace Monitor::Windows
 			HANDLE childStdOutWrite;
 			if (!CreatePipe(&childStdOutRead, &childStdOutWrite, &securityAttributes, pipeBufferSize))
 				throw std::runtime_error("Execute CreatePipe Failed");
+			if (!SetNamedPipeHandleState(childStdOutRead, &pipeMode, nullptr, nullptr))
+				throw std::runtime_error("Execute SetNamedPipeHandleState Failed");
 			m_stdOutReadHandle = Opal::System::SmartHandle(childStdOutRead);
 			m_stdOutWriteHandle = Opal::System::SmartHandle(childStdOutWrite);
 
@@ -162,6 +165,8 @@ namespace Monitor::Windows
 			HANDLE childStdErrWrite;
 			if (!CreatePipe(&childStdErrRead, &childStdErrWrite, &securityAttributes, pipeBufferSize))
 				throw std::runtime_error("Execute CreatePipe Failed");
+			if (!SetNamedPipeHandleState(childStdErrRead, &pipeMode, nullptr, nullptr))
+				throw std::runtime_error("Execute SetNamedPipeHandleState Failed");
 			m_stdErrReadHandle = Opal::System::SmartHandle(childStdErrRead);
 			m_stdErrWriteHandle = Opal::System::SmartHandle(childStdErrWrite);
 
@@ -350,34 +355,7 @@ namespace Monitor::Windows
 			m_stdOutWriteHandle.Close();
 			m_stdErrWriteHandle.Close();
 
-			// Read all and write to stdout
-			// TODO: May want to switch over to a background thread with peak to read in order
-			DWORD dwRead;
-			const int BufferSize = 256;
-			char buffer[BufferSize + 1];
-
-			// Read on output
-			while (true)
-			{
-				if(!ReadFile(m_stdOutReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
-					break;
-				if (dwRead == 0)
-					break;
-
-				m_stdOut << std::string_view(buffer, dwRead);
-			}
-
-			// Read all errors
-			while (true)
-			{
-				if(!ReadFile(m_stdErrReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
-					break;
-				if (dwRead == 0)
-					break;
-
-				// Make the string null terminated
-				m_stdErr << std::string_view(buffer, dwRead);
-			}
+			ReadAllAvailableStandardOutput();
 
 			// Wait for the worker thread to exit
 			m_workerThread.join();
@@ -421,6 +399,37 @@ namespace Monitor::Windows
 		}
 
 	private:
+		void ReadAllAvailableStandardOutput()
+		{
+			// Read all and write to stdout
+			DWORD dwRead;
+			const int BufferSize = 1024;
+			char buffer[BufferSize + 1];
+
+			// Read on output
+			while (true)
+			{
+				if(!ReadFile(m_stdOutReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
+					break;
+				if (dwRead == 0)
+					break;
+
+				m_stdOut << std::string_view(buffer, dwRead);
+			}
+
+			// Read all errors
+			while (true)
+			{
+				if(!ReadFile(m_stdErrReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
+					break;
+				if (dwRead == 0)
+					break;
+
+				// Make the string null terminated
+				m_stdErr << std::string_view(buffer, dwRead);
+			}
+		}
+
 		static void LoadStringList(
 			const std::vector<Path>& values,
 			char* rawValues,
@@ -463,9 +472,9 @@ namespace Monitor::Windows
 					// Wait for any of the pipe instances to signal
 					// This indicates that either a client connected to wrote to
 					// and open connection.
-					// Check every 500 milliseconds if the process has terminated unexpectedly
+					// Check every once in awhile if the process has terminated unexpectedly
 					bool waitForAll = false;
-					DWORD timeoutMilliseconds = 500;
+					DWORD timeoutMilliseconds = 1000;
 					DebugTrace("WorkerThread WaitForMultipleObjects");
 					auto waitResult = WaitForMultipleObjects(
 						static_cast<DWORD>(m_rawEventHandles.size()),
@@ -485,6 +494,10 @@ namespace Monitor::Windows
 							}
 							else
 							{
+								// Check for any standard output
+								// TODO: Look into using events or peeking
+								ReadAllAvailableStandardOutput();
+
 								// The process hasn't done anything for awhile.
 								// Continue waiting...
 								continue;
@@ -650,7 +663,7 @@ namespace Monitor::Windows
 		VOID DisconnectAndReconnect(ServerPipeInstance& pipe)
 		{
 			// Disconnect the old pipe instance
-				DebugTrace("DisconnectAndReconnect");
+			DebugTrace("DisconnectAndReconnect");
 			if (!DisconnectNamedPipe(pipe.PipeHandle.Get()))
 			{
 				throw std::runtime_error(
