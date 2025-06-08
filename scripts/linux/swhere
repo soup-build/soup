@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Stop on first error
+set -e
+
+SCRIPTS_DIR=$(dirname "$0")
+ROOT_DIR=$SCRIPTS_DIR/../..
+OUT_DIR=$ROOT_DIR/out
+
+eval $OUT_DIR/msbuild/bin/Swhere/Release/net9.0/linux-x64/publish/Swhere "$@"

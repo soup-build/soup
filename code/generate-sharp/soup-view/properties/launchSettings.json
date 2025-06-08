@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SoupView": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\code\\client\\cli\\Recipe.sml",
+      "workingDirectory": "..\\..\\..\\out\\run\\Soup\\",
+      "nativeDebugging": true
+    }
+  }
+}

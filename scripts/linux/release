@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Stop on first error
+set -e
+
+SCRIPTS_DIR=$(dirname "$0")
+ROOT_DIR=$SCRIPTS_DIR/../..
+OUT_DIR=$ROOT_DIR/out
+RUN_DIR=$OUT_DIR/run
+RELEASE_DIR=$OUT_DIR/release
+
+# Pack the release tarbal
+mkdir -p $RELEASE_DIR
+tar -a -cf $RELEASE_DIR/soup-build-0.42.1-linux-x64.tar.gz -C $RUN_DIR .

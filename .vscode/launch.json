@@ -6,14 +6,83 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "",
-      "program": "${workspaceFolder}/Source/out/msbuild/bin/Swhere/Debug/net8.0/Swhere.dll",
+      "program": "${workspaceFolder}/out/msbuild/bin/swhere/Debug/net9.0/linux-x64/Swhere.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "internalConsole"
     },
     {
+        "name": "Debug Soup View",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "",
+        "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
+        "args": [ "${workspaceFolder}/code/client/cli/Recipe.sml" ],
+        "cwd": "${workspaceFolder}/out/run",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+    },
+    {
+      "name": "Debug Soup (VS)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/run/Soup/Soup.exe",
+      "args": [
+        "build",
+        "samples/cpp/module-interface",
+        "-v:d"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Generate (VS)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/run/Soup/Soup.Generate.exe",
+      "args": [
+        "false",
+        "${workspaceFolder}/out/C++/Local/Samples.Cpp.ModuleInterface/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false
+    },
+    {
       "name": "Debug Soup",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/run/soup",
+      "args": [
+        "build",
+        "samples/c++/build-extension/executable"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true,
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Debug Soup Children",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/out/run/soup",
@@ -29,16 +98,64 @@
         "MIMode": "gdb"
       },
       "setupCommands": [
-          {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-          },
-          {
-              "description": "Set Disassembly Flavor to Intel",
-              "text": "-gdb-set disassembly-flavor intel",
-              "ignoreFailures": true
-          }
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        },
+        {
+          "description": "The new process is debugged after a fork. The parent process runs unimpeded.",
+          "text": "-gdb-set follow-fork-mode child",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Debug Soup Core Test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/bin/Test/TestHarness.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "(gdb) Attach",
+      "type": "cppdbg",
+      "request": "attach",
+      "program": "${workspaceFolder}/out/run/soup",
+      "processId": "${command:pickProcess}",
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
       ]
     }
   ]
