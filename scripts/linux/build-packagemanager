@@ -10,5 +10,5 @@ CODE_DIR=$SCRIPTS_DIR/../../code
 PACKAGE_MANAGER_DIR=$CODE_DIR/generate-sharp/package-manager
 
 # Build PackageManager
-echo dotnet publish $PACKAGE_MANAGER_DIR -c $FLAVOR -f net9.0 -r linux-x64 --self-contained 
-eval dotnet publish $PACKAGE_MANAGER_DIR -c $FLAVOR -f net9.0 -r linux-x64 --self-contained 
+echo dotnet publish $PACKAGE_MANAGER_DIR -c $FLAVOR -f net9.0 -r linux-x64 --self-contained
+eval dotnet publish $PACKAGE_MANAGER_DIR -c $FLAVOR -f net9.0 -r linux-x64 --self-contained
