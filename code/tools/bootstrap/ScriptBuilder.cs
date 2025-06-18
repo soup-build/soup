@@ -5,6 +5,8 @@
 using Opal;
 using Opal.System;
 using Path = Opal.Path;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Soup.Build.Discover;
 

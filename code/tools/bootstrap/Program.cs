@@ -5,6 +5,7 @@
 using Opal;
 using Opal.System;
 using Path = Opal.Path;
+using System.Threading.Tasks;
 
 namespace Soup.Build.Discover;
 
@@ -28,7 +29,7 @@ public static class Program
 			Path rootDirectory;
 			if (args.Length == 1)
 			{
-				rootDirectory = new Path(args[0]);
+				rootDirectory = Path.Parse(args[0]);
 			}
 			else
 			{
@@ -36,7 +37,7 @@ public static class Program
 				return -1;
 			}
 
-			var script = rootDirectory + new Path("build");
+			var script = rootDirectory + new Path("./build");
 			var builder = new ScriptBuilder(script);
 			await builder.BuildScriptAsync();
 
@@ -50,6 +51,6 @@ public static class Program
 
 	private static void PrintUsage()
 	{
-		Log.Info("soupbootstrap [path]");
+		Log.Info("bootstrap [path]");
 	}
 }
