@@ -6,11 +6,14 @@ using Opal;
 using Opal.System;
 using Path = Opal.Path;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Soup.Build.Utilities;
+using Soup.Tools;
 
 namespace Soup.Build.Bootstrap;
 
@@ -32,6 +35,8 @@ public class ScriptBuilder
 	{
 		var (recipe, operationGraph) = await LoadOperationGraphAsync(this.packageFolder, null);
 
+		var dependencies = LoadDependencyGraph();
+
 		using var file = LifetimeManager.Get<IFileSystem>().OpenWrite(this.scriptPath, true);
 
 		using var writer = new StreamWriter(file.GetOutStream());
@@ -51,6 +56,74 @@ public class ScriptBuilder
 			var arguments = string.Join(" ", operation.Command.Arguments);
 			await writer.WriteLineAsync($"(cd \"{operation.Command.WorkingDirectory}\" && \"{operation.Command.Executable}\" {arguments})");
 		}
+	}
+
+	private IList<PackageInfo> LoadDependencyGraph()
+	{
+		// Run in the soup install folder to make the tool think it is there.
+		var cacheCurrentDirectory = Directory.GetCurrentDirectory();
+		var fullPackagePath = Path.Parse(cacheCurrentDirectory) + this.packageFolder;
+		Directory.SetCurrentDirectory("C:/Program Files/SoupBuild/Soup/Soup/");
+		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath);
+		Directory.SetCurrentDirectory(cacheCurrentDirectory);
+
+		var currentGraphSet = GetCurrentGraphSet(packageProvider);
+
+		// Filter to only the current sub graph
+		var graph = packageProvider.PackageLookup
+			.Where(value => currentGraphSet.Contains(value.Key))
+			.Select(value => value.Value);
+
+		return graph.ToList();
+	}
+
+	private static HashSet<int> GetCurrentGraphSet(PackageProvider packageProvider)
+	{
+		var result = new HashSet<int>();
+
+		var activeNodes = new Stack<int>();
+		activeNodes.Push(packageProvider.RootPackageGraphId);
+
+		while (activeNodes.Count > 0)
+		{
+			var currentNodeId = activeNodes.Pop();
+			_ = result.Add(currentNodeId);
+
+			foreach (var child in GetChildren(packageProvider.GetPackageInfo(currentNodeId).Dependencies, packageProvider))
+			{
+				if (!result.Contains(child.Id))
+					activeNodes.Push(child.Id);
+			}
+		}
+
+		return result;
+	}
+
+	private static List<PackageInfo> GetChildren(
+		IDictionary<string, IList<PackageChildInfo>> dependencies,
+		PackageProvider packageProvider)
+	{
+		var result = new List<PackageInfo>();
+		foreach (var (dependencyType, children) in dependencies)
+		{
+			foreach (var child in children)
+			{
+				if (child.IsSubGraph)
+				{
+					var subGraph = packageProvider.GetPackageGraph(child.PackageGraphId ??
+						throw new InvalidOperationException("SubGraph child does not have package graph id"));
+
+					// TODO: result.Add(packageProvider.GetPackageInfo(subGraph.RootPackageId));
+				}
+				else
+				{
+					result.Add(packageProvider.GetPackageInfo(child.PackageId ??
+						throw new InvalidOperationException("Package child does not have package id")));
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private async Task<(Recipe Recipe, OperationGraph OperationGraph)> LoadOperationGraphAsync(

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<SoupConfigHash>OZlIVjblazFuKXg-raWUNoGEnG4</SoupConfigHash>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<SoupConfigHash>Oltq7cGwk0Rbgy1I-3mCMDDE5yM</SoupConfigHash>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(OS)'=='Windows_NT'">
+		<SoupToolsDll>SoupTools.dll</SoupToolsDll>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(OS)'=='Unix'">
+		<SoupToolsDll>SoupTools.so</SoupToolsDll>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="../../../out/C++/Local/SoupTools/1.0.0/$(SoupConfigHash)/bin/$(SoupToolsDll)" Link="$(SoupToolsDll)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../opal/Opal.csproj" />
+	</ItemGroup>
+</Project>

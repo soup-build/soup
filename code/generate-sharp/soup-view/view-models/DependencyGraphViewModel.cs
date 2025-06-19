@@ -4,6 +4,7 @@
 
 using GraphShape;
 using ReactiveUI;
+using Soup.Tools;
 using Soup.View.Views;
 using System;
 using System.Collections.Generic;

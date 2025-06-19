@@ -7,7 +7,7 @@ using System.Runtime.InteropServices.Marshalling;
 using System.Text.Json;
 using Path = Opal.Path;
 
-namespace Soup.View;
+namespace Soup.Tools;
 
 public static partial class SoupTools
 {

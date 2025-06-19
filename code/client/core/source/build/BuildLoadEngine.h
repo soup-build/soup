@@ -182,7 +182,7 @@ namespace Soup::Core
 				}
 				else
 				{
-					Log::Error("Missing or invalid package lock");
+					Log::Error("Missing or invalid package lock {}", packageLockPath.ToString());
 					Log::HighPriority("Run `restore` and try again");
 
 					// Nothing we can do, exit

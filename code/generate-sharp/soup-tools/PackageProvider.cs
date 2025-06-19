@@ -4,13 +4,13 @@
 
 using System;
 using System.Collections.Generic;
-using PackageChildrenMap = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Soup.View.PackageChildInfo>>;
+using PackageChildrenMap = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Soup.Tools.PackageChildInfo>>;
 using PackageGraphId = System.Int32;
-using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.View.PackageGraph>;
+using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageGraph>;
 using PackageId = System.Int32;
-using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.View.PackageInfo>;
+using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageInfo>;
 
-namespace Soup.View;
+namespace Soup.Tools;
 
 public class PackageChildInfo
 {

@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Soup.View;
+namespace Soup.Tools;
 
 public class LoadBuildGraph
 {
