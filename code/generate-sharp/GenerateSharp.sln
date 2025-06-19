@@ -31,7 +31,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BootstrapBuild", "bootstrap-build\BootstrapBuild.csproj", "{09A05351-1253-41EB-8646-17D7FB7F0DF2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrate", "migrate\Migrate.csproj", "{B597D766-7C98-45F1-BD02-E15193724484}"
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoupBootstrap", "SoupBootstrap\SoupBootstrap.csproj", "{FBD069C9-D7AF-4F31-87F6-54C74D25546E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,10 +86,6 @@ Global
 		{B597D766-7C98-45F1-BD02-E15193724484}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B597D766-7C98-45F1-BD02-E15193724484}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B597D766-7C98-45F1-BD02-E15193724484}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBD069C9-D7AF-4F31-87F6-54C74D25546E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBD069C9-D7AF-4F31-87F6-54C74D25546E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBD069C9-D7AF-4F31-87F6-54C74D25546E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBD069C9-D7AF-4F31-87F6-54C74D25546E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

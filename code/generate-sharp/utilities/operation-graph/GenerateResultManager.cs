@@ -60,6 +60,8 @@ public static class GenerateResultManager
 				var operation = operationReference.Value;
 				UpdateFileIds(operation.DeclaredInput, activeFileIdMap);
 				UpdateFileIds(operation.DeclaredOutput, activeFileIdMap);
+				UpdateFileIds(operation.ReadAccess, activeFileIdMap);
+				UpdateFileIds(operation.WriteAccess, activeFileIdMap);
 			}
 
 			result = loadedResult;

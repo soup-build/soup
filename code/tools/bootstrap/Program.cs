@@ -7,7 +7,7 @@ using Opal.System;
 using Path = Opal.Path;
 using System.Threading.Tasks;
 
-namespace Soup.Build.Discover;
+namespace Soup.Build.Bootstrap;
 
 public static class Program
 {
@@ -37,8 +37,10 @@ public static class Program
 				return -1;
 			}
 
+			var packageFolder = rootDirectory;
 			var script = rootDirectory + new Path("./build");
-			var builder = new ScriptBuilder(script);
+			var builder = new ScriptBuilder(packageFolder, script);
+
 			await builder.BuildScriptAsync();
 
 			return 0;
