@@ -43,6 +43,14 @@ public class ScriptBuilder
 		await writer.WriteLineAsync();
 
 		await writer.WriteLineAsync($"# Build {recipe.Name}");
+
+		var walker = new OperationGraphWalker(operationGraph);
+		foreach (var operation in walker.WalkGraph())
+		{
+			await writer.WriteLineAsync($"echo \"{operation.Title}\"");
+			var arguments = string.Join(" ", operation.Command.Arguments);
+			await writer.WriteLineAsync($"(cd \"{operation.Command.WorkingDirectory}\" && \"{operation.Command.Executable}\" {arguments})");
+		}
 	}
 
 	private async Task<(Recipe Recipe, OperationGraph OperationGraph)> LoadOperationGraphAsync(
