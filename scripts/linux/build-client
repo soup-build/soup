@@ -14,8 +14,8 @@ CLIENT_CLI_DIR=$CODE_DIR/client/cli
 
 # Restore the client
 echo soup restore $CLIENT_CLI_DIR
-eval soup restore $CLIENT_CLI_DIR
+soup restore $CLIENT_CLI_DIR
 
 # Build the client
 echo soup build $CLIENT_CLI_DIR -flavor $FLAVOR
-eval soup build $CLIENT_CLI_DIR -flavor $FLAVOR
+soup build $CLIENT_CLI_DIR -flavor $FLAVOR
