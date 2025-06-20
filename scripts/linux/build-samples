@@ -13,74 +13,71 @@ SAMPLES_DIR=$ROOT_DIR/samples
 ########################################
 ## C Samples
 ########################################
-
 echo soup restore $SAMPLES_DIR/c/build-extension/executable/
-eval soup restore $SAMPLES_DIR/c/build-extension/executable/
+soup restore $SAMPLES_DIR/c/build-extension/executable/
 
 echo soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/c/console-application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/c/console-application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/c/console-application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/c/dynamic-library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/c/dynamic-library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/c/dynamic-library/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/c/static-library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/c/static-library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/c/static-library/application/ -flavor $FLAVOR
 
 echo SKIP: soup build $SAMPLES_DIR/c/windows-application/ -flavor $FLAVOR
 
 ########################################
 ## C# Samples
 ########################################
-
 echo soup restore $SAMPLES_DIR/csharp/build-extension/executable/
-eval soup restore $SAMPLES_DIR/csharp/build-extension/executable/
+soup restore $SAMPLES_DIR/csharp/build-extension/executable/
 
 echo soup build $SAMPLES_DIR/csharp/build-extension/executable/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/csharp/build-extension/executable/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/csharp/build-extension/executable/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/csharp/console-application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/csharp/console-application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/csharp/console-application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/csharp/library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/csharp/library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/csharp/library/application/ -flavor $FLAVOR
 
 ########################################
 ## C++ Samples
 ########################################
-
 echo soup restore $SAMPLES_DIR/cpp/build-extension/executable/
-eval soup restore $SAMPLES_DIR/cpp/build-extension/executable/
+soup restore $SAMPLES_DIR/cpp/build-extension/executable/
 
 echo soup build $SAMPLES_DIR/cpp/build-extension/executable/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/build-extension/executable/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/build-extension/executable/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/console-application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/console-application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/console-application/ -flavor $FLAVOR
 
 echo SKIP: soup build $SAMPLES_DIR/cpp/directx/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/module-dynamic-library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/module-dynamic-library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/module-dynamic-library/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
 
 echo soup restore $SAMPLES_DIR/cpp/parse-json/
-eval soup restore $SAMPLES_DIR/cpp/parse-json/
+soup restore $SAMPLES_DIR/cpp/parse-json/
 
 echo soup build $SAMPLES_DIR/cpp/parse-json/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/parse-json/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/parse-json/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
-eval soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
 
 echo SKIP: soup build $SAMPLES_DIR/cpp/windows-application/ -flavor $FLAVOR

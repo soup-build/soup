@@ -11,8 +11,8 @@ TOOLS_DIR=$CODE_DIR/client/tools
 
 # Restore tools
 echo soup restore $TOOLS_DIR
-eval soup restore $TOOLS_DIR
+soup restore $TOOLS_DIR
 
 # Build tools
 echo soup build $TOOLS_DIR -flavor $FLAVOR
-eval soup build $TOOLS_DIR -flavor $FLAVOR
+soup build $TOOLS_DIR -flavor $FLAVOR
