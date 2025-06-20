@@ -26,12 +26,12 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|CSharp': { Version: 'C:/Users/mwasp/dev/repos/soup-csharp/Source/Extension/' }
+			'Soup|CSharp': { Version: 0.15.3 }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|CSharp': { Version: 'C:/Users/mwasp/dev/repos/soup-csharp/Source/Extension/' }
+			'Soup|CSharp': { Version: 0.15.3 }
 			'Soup|CSharp.Nuget': { Version: 0.5.3 }
 		}
 	}
