@@ -33,8 +33,6 @@ public class ScriptBuilder
 
 	public async Task BuildScriptAsync()
 	{
-		var (recipe, operationGraph) = await LoadOperationGraphAsync(this.packageFolder, null);
-
 		var dependencies = LoadDependencyGraph();
 
 		using var file = LifetimeManager.Get<IFileSystem>().OpenWrite(this.scriptPath, true);
@@ -45,17 +43,32 @@ public class ScriptBuilder
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync("# Stop on first error");
 		await writer.WriteLineAsync("set - e");
-		await writer.WriteLineAsync();
 
-		await writer.WriteLineAsync($"# Build {recipe.Name}");
+		foreach (var package in dependencies)
+		{
+			await WritePackageBuildOperationsAsync(writer, package);
+		}
+	}
+
+	private async Task WritePackageBuildOperationsAsync(StreamWriter writer, PackageInfo package)
+	{
+		var operationGraph = await LoadOperationGraphAsync(new Path(package.PackageRoot), package.Owner);
+
+		await writer.WriteLineAsync();
+		await writer.WriteLineAsync($"# Build {package.Name}");
 
 		var walker = new OperationGraphWalker(operationGraph);
 		foreach (var operation in walker.WalkGraph())
 		{
 			await writer.WriteLineAsync($"echo \"{operation.Title}\"");
-			var arguments = string.Join(" ", operation.Command.Arguments);
+			var arguments = string.Join(" ", operation.Command.Arguments.Select(EscapeString));
 			await writer.WriteLineAsync($"(cd \"{operation.Command.WorkingDirectory}\" && \"{operation.Command.Executable}\" {arguments})");
 		}
+	}
+
+	private static string EscapeString(string value)
+	{
+		return value.Replace("\n", "\\n").Replace("\r", "\\r");
 	}
 
 	private IList<PackageInfo> LoadDependencyGraph()
@@ -126,16 +139,9 @@ public class ScriptBuilder
 		return result;
 	}
 
-	private async Task<(Recipe Recipe, OperationGraph OperationGraph)> LoadOperationGraphAsync(
+	private async Task<OperationGraph> LoadOperationGraphAsync(
 		Path packageFolder, string? owner)
 	{
-		var recipeFile = packageFolder + BuildConstants.RecipeFileName;
-		var (loadRecipeResult, recipe) = await RecipeExtensions.TryLoadRecipeFromFileAsync(recipeFile);
-		if (!loadRecipeResult)
-		{
-			throw new InvalidOperationException($"Failed to load Recipe file: {packageFolder}");
-		}
-
 		var targetPath = await GetTargetPathAsync(packageFolder, owner);
 
 		var soupTargetDirectory = targetPath + new Path("./.soup/");
@@ -157,11 +163,11 @@ public class ScriptBuilder
 				throw new InvalidOperationException($"Failed to load generate phase 2 result: {generatePhase2ResultFile}");
 			}
 
-			return (recipe, generatePhase2Result);
+			return generatePhase2Result;
 		}
 		else
 		{
-			return (recipe, generatePhase1Result.EvaluateGraph);
+			return generatePhase1Result.EvaluateGraph;
 		}
 	}
 
