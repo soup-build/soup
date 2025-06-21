@@ -26,20 +26,17 @@ public static class Program
 
 			LifetimeManager.RegisterSingleton<IProcessManager, RuntimeProcessManager>();
 
-			Path rootDirectory;
-			if (args.Length == 1)
-			{
-				rootDirectory = Path.Parse(args[0]);
-			}
-			else
+			if (args.Length != 2)
 			{
 				PrintUsage();
 				return -1;
 			}
 
+			var rootDirectory = Path.Parse(args[0]);
+			var scriptFile = Path.Parse(args[1]);
+
 			var packageFolder = rootDirectory;
-			var script = rootDirectory + new Path("./build");
-			var builder = new ScriptBuilder(packageFolder, script);
+			var builder = new ScriptBuilder(packageFolder, scriptFile);
 
 			await builder.BuildScriptAsync();
 

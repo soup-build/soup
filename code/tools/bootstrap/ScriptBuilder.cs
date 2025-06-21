@@ -42,7 +42,7 @@ public class ScriptBuilder
 		await writer.WriteLineAsync("#!/bin/bash");
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync("# Stop on first error");
-		await writer.WriteLineAsync("set - e");
+		await writer.WriteLineAsync("set -e");
 
 		foreach (var package in dependencies)
 		{
@@ -61,8 +61,29 @@ public class ScriptBuilder
 		foreach (var operation in walker.WalkGraph())
 		{
 			await writer.WriteLineAsync($"echo \"{operation.Title}\"");
-			var arguments = string.Join(" ", operation.Command.Arguments.Select(EscapeString));
-			await writer.WriteLineAsync($"(cd \"{operation.Command.WorkingDirectory}\" && \"{operation.Command.Executable}\" {arguments})");
+
+			var command = operation.Command.Executable.ToString();
+			var arguments = operation.Command.Arguments;
+			if (command.EndsWith("/mkdir.exe"))
+			{
+				command = "mkdir";
+				arguments = arguments.Prepend("-p").ToList();
+			}
+			else if (command.EndsWith("/copy.exe"))
+			{
+				command = "cp";
+			}
+			else if (command.EndsWith("/writefile.exe"))
+			{
+				command = "echo";
+				var echoArguments = new List<string>(arguments.Skip(1));
+				echoArguments.Add(">");
+				echoArguments.Add(arguments[0]);
+				arguments = echoArguments;
+			}
+
+			var argumentsString = string.Join(" ", arguments.Select(EscapeString));
+			await writer.WriteLineAsync($"(cd \"{operation.Command.WorkingDirectory}\" && \"{command}\" {argumentsString})");
 		}
 	}
 
@@ -73,10 +94,24 @@ public class ScriptBuilder
 
 	private IList<PackageInfo> LoadDependencyGraph()
 	{
+		string soupRoot;
+		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+		{
+			soupRoot = "C:/Program Files/SoupBuild/Soup/Soup/";
+		}
+		else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+		{
+			soupRoot = "/home/mwasp/dev/repos/soup/out/run/";
+		}
+		else
+		{
+			throw new NotSupportedException("Unknown OS Platform");
+		}
+
 		// Run in the soup install folder to make the tool think it is there.
 		var cacheCurrentDirectory = Directory.GetCurrentDirectory();
 		var fullPackagePath = Path.Parse(cacheCurrentDirectory) + this.packageFolder;
-		Directory.SetCurrentDirectory("C:/Program Files/SoupBuild/Soup/Soup/");
+		Directory.SetCurrentDirectory(soupRoot);
 		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath);
 		Directory.SetCurrentDirectory(cacheCurrentDirectory);
 
