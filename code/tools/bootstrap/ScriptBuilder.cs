@@ -33,7 +33,7 @@ public class ScriptBuilder
 
 	public async Task BuildScriptAsync()
 	{
-		var dependencies = LoadDependencyGraph();
+		var dependencyGraph = LoadDependencyGraph();
 
 		using var file = LifetimeManager.Get<IFileSystem>().OpenWrite(this.scriptPath, true);
 
@@ -44,7 +44,8 @@ public class ScriptBuilder
 		await writer.WriteLineAsync("# Stop on first error");
 		await writer.WriteLineAsync("set -e");
 
-		foreach (var package in dependencies)
+		var walker = new PackageGraphWalker(dependencyGraph);
+		foreach (var package in walker.WalkGraph())
 		{
 			await WritePackageBuildOperationsAsync(writer, package);
 		}
@@ -92,7 +93,7 @@ public class ScriptBuilder
 		return value.Replace("\n", "\\n").Replace("\r", "\\r");
 	}
 
-	private IList<PackageInfo> LoadDependencyGraph()
+	private PackageProvider LoadDependencyGraph()
 	{
 		string soupRoot;
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -115,63 +116,7 @@ public class ScriptBuilder
 		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath);
 		Directory.SetCurrentDirectory(cacheCurrentDirectory);
 
-		var currentGraphSet = GetCurrentGraphSet(packageProvider);
-
-		// Filter to only the current sub graph
-		var graph = packageProvider.PackageLookup
-			.Where(value => currentGraphSet.Contains(value.Key))
-			.Select(value => value.Value);
-
-		return graph.ToList();
-	}
-
-	private static HashSet<int> GetCurrentGraphSet(PackageProvider packageProvider)
-	{
-		var result = new HashSet<int>();
-
-		var activeNodes = new Stack<int>();
-		activeNodes.Push(packageProvider.RootPackageGraphId);
-
-		while (activeNodes.Count > 0)
-		{
-			var currentNodeId = activeNodes.Pop();
-			_ = result.Add(currentNodeId);
-
-			foreach (var child in GetChildren(packageProvider.GetPackageInfo(currentNodeId).Dependencies, packageProvider))
-			{
-				if (!result.Contains(child.Id))
-					activeNodes.Push(child.Id);
-			}
-		}
-
-		return result;
-	}
-
-	private static List<PackageInfo> GetChildren(
-		IDictionary<string, IList<PackageChildInfo>> dependencies,
-		PackageProvider packageProvider)
-	{
-		var result = new List<PackageInfo>();
-		foreach (var (dependencyType, children) in dependencies)
-		{
-			foreach (var child in children)
-			{
-				if (child.IsSubGraph)
-				{
-					var subGraph = packageProvider.GetPackageGraph(child.PackageGraphId ??
-						throw new InvalidOperationException("SubGraph child does not have package graph id"));
-
-					// TODO: result.Add(packageProvider.GetPackageInfo(subGraph.RootPackageId));
-				}
-				else
-				{
-					result.Add(packageProvider.GetPackageInfo(child.PackageId ??
-						throw new InvalidOperationException("Package child does not have package id")));
-				}
-			}
-		}
-
-		return result;
+		return packageProvider;
 	}
 
 	private async Task<OperationGraph> LoadOperationGraphAsync(
