@@ -30,9 +30,47 @@ public class OperationGraphWalker
 
 	public IEnumerable<OperationInfo> WalkGraph()
 	{
-		foreach (var operation in this.operationGraph.Operations)
+		return WalkSubGraph(this.operationGraph.RootOperationIds);
+	}
+
+	public IEnumerable<OperationInfo> WalkSubGraph(IList<OperationId> operations)
+	{
+		var result = new List<OperationInfo>();
+		foreach (var operationId in operations)
 		{
-			yield return operation.Value;
+			// Check if the operation was already a child from a different path
+			// Only return the operation when all of its dependencies have completed
+			var operationInfo = this.operationGraph.GetOperationInfo(operationId);
+			var remainingCount = -1;
+			if (remainingDependencyCounts.TryGetValue(operationId, out var currentRemainingCount))
+			{
+				remainingCount = --currentRemainingCount;
+				remainingDependencyCounts[operationId] = remainingCount;
+			}
+			else
+			{
+				// Get the cached total count and store the active count in the lookup
+				remainingCount = (int)operationInfo.DependencyCount - 1;
+				remainingDependencyCounts.Add(operationId, remainingCount);
+			}
+
+			if (remainingCount == 0)
+			{
+				result.Add(operationInfo);
+
+				// Recursively build all of the operation children
+				result.AddRange(WalkSubGraph(operationInfo.Children));
+			}
+			else if (remainingCount < 0)
+			{
+				throw new InvalidOperationException("Remaining dependency count less than zero");
+			}
+			else
+			{
+				// This operation will be executed from a different path
+			}
 		}
+
+		return result;
 	}
 }
