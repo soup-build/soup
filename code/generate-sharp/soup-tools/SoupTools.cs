@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
@@ -41,11 +42,16 @@ public static partial class SoupTools
 			packageLookup.Add(package.Id, package);
 		}
 
+		var packageTargetDirectories = result.Graph.PackageTargetDirectories.ToDictionary(
+			key => key.Key,
+			value => (IDictionary<int, Path>)value.Value.ToDictionary(key => key.Key, value => new Path(value.Value)));
+
 		var provider = new PackageProvider()
 		{
 			RootPackageGraphId = result.Graph.RootPackageGraphId,
 			PackageGraphLookup = packageGraphLookup,
 			PackageLookup = packageLookup,
+			PackageTargetDirectories = packageTargetDirectories,
 		};
 
 		return provider;

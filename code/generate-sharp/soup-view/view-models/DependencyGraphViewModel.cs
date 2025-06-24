@@ -122,6 +122,7 @@ public class DependencyGraphViewModel : ContentPaneViewModel
 			string title = package.Name;
 			string toolTip = package.PackageRoot;
 			var packageFolder = new Path(package.PackageRoot);
+			var targetDirectory = packageProvider.PackageTargetDirectories[packageProvider.RootPackageGraphId][package.Id];
 
 			var node = new GraphNodeViewModel()
 			{
@@ -139,7 +140,8 @@ public class DependencyGraphViewModel : ContentPaneViewModel
 				new ProjectDetailsViewModel(
 					package.Name,
 					packageFolder,
-					package.Owner));
+					package.Owner,
+					targetDirectory));
 		}
 
 		return result;

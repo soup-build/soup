@@ -11,6 +11,7 @@ public class LoadBuildGraph
 	public int RootPackageGraphId { get; set; }
 	public IList<PackageGraph> PackageGraphs { get; init; } = [];
 	public IList<PackageInfo> Packages { get; init; } = [];
+	public IDictionary<int, IDictionary<int, string>> PackageTargetDirectories { get; init; } = new Dictionary<int, IDictionary<int, string>>();
 }
 
 public class LoadBuildGraphResult

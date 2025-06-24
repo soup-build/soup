@@ -9,6 +9,7 @@ using PackageGraphId = System.Int32;
 using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageGraph>;
 using PackageId = System.Int32;
 using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageInfo>;
+using PackageTargetDirectories = System.Collections.Generic.IDictionary<int, System.Collections.Generic.IDictionary<int, Opal.Path>>;
 
 namespace Soup.Tools;
 
@@ -45,6 +46,7 @@ public class PackageProvider
 	public PackageGraphId RootPackageGraphId { get; set; }
 	public PackageGraphLookupMap PackageGraphLookup { get; init; } = new Dictionary<int, PackageGraph>();
 	public PackageLookupMap PackageLookup { get; init; } = new Dictionary<int, PackageInfo>();
+	public PackageTargetDirectories PackageTargetDirectories { get; init; } = new Dictionary<int, IDictionary<int, Opal.Path>>();
 
 	public PackageGraph GetRootPackageGraph()
 	{

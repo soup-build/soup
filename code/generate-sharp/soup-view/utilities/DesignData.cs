@@ -17,7 +17,8 @@ public static class DesignData
 			SelectedProject = new ProjectDetailsViewModel(
 				"TestProject",
 				new Path("C:/Test/Project/Recipe.sml"),
-				"mwasplund"),
+				"mwasplund",
+				new Path("C:/Test/out/C++/Project/a29CJoijfoaijl;asdf/")),
 		};
 
 	public static TaskGraphViewModel ExampleTaskGraph { get; } =
