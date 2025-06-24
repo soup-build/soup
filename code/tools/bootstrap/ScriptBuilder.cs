@@ -56,6 +56,12 @@ public class ScriptBuilder
 		var operationGraph = await LoadOperationGraphAsync(new Path(package.PackageRoot), package.Owner);
 
 		await writer.WriteLineAsync();
+		await writer.WriteLineAsync($"# Setup {package.Name}");
+
+		await writer.WriteLineAsync($"echo mkdir -p \"{package.TargetDirectory}\"");
+		await writer.WriteLineAsync($"mkdir -p \"{package.TargetDirectory}\"");
+
+		await writer.WriteLineAsync();
 		await writer.WriteLineAsync($"# Build {package.Name}");
 
 		var walker = new OperationGraphWalker(operationGraph);

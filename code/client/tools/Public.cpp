@@ -77,10 +77,27 @@ json11::Json ConvertToJson(const PackageLookupMap& lookup)
 			{ "Owner", std::move(ownerValue) },
 			{ "IsPrebuilt", value.second.IsPrebuilt },
 			{ "PackageRoot", value.second.PackageRoot.ToString() },
-			{ "TargetDirectory", value.second.TargetDirectory.ToString() },
 			{ "Dependencies",  std::move(dependencies) },
 		});
 		result.push_back(std::move(jsonValue));
+	}
+
+	return result;
+}
+
+json11::Json ConvertToJson(const PackageTargetDirectories& packageGraphTargetDirectories)
+{
+	auto result = json11::Json::object();
+
+	for (const auto& [packageGraphId, packageTargetDirectories] : packageGraphTargetDirectories)
+	{
+		auto packageTargetDirectoriesResult = json11::Json::object();
+		for (const auto& [packageId, targetDirectory] : packageTargetDirectories)
+		{
+			packageTargetDirectoriesResult.emplace(std::to_string(packageId), targetDirectory.ToString());
+		}
+
+		result.emplace(std::to_string(packageGraphId), std::move(packageTargetDirectoriesResult));
 	}
 
 	return result;
@@ -92,6 +109,7 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 	{
 		// Setup the filter
 		auto defaultTypes =
+			static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
 			static_cast<uint32_t>(TraceEventFlag::Information) |
 			static_cast<uint32_t>(TraceEventFlag::HighPriority) |
 			static_cast<uint32_t>(TraceEventFlag::Warning) |
@@ -132,6 +150,7 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 
 		auto packageGraphs = ConvertToJson(packageProvider.GetPackageGraphLookup());
 		auto packages = ConvertToJson(packageProvider.GetPackageLookup());
+		auto packageTargetDirectories = ConvertToJson(packageProvider.GetPackageTargetDirectories());
 
 		json11::Json jsonGraphResult = json11::Json::object({
 			{ "RootPackageGraphId", packageProvider.GetRootPackageGraphId() },

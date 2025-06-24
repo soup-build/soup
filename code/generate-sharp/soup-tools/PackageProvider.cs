@@ -27,7 +27,6 @@ public class PackageInfo
 	public string Owner { get; set; } = string.Empty;
 	public bool IsPrebuilt { get; set; }
 	public string PackageRoot { get; set; } = string.Empty;
-	public string TargetDirectory { get; set; } = string.Empty;
 	public PackageChildrenMap Dependencies { get; init; } = new Dictionary<string, IList<PackageChildInfo>>();
 }
 
