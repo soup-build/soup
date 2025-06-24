@@ -154,8 +154,9 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 
 		json11::Json jsonGraphResult = json11::Json::object({
 			{ "RootPackageGraphId", packageProvider.GetRootPackageGraphId() },
-			{ "PackageGraphs", packageGraphs },
-			{ "Packages", packages },
+			{ "PackageGraphs", std::move(packageGraphs) },
+			{ "Packages", std::move(packages) },
+			{ "PackageTargetDirectories", std::move(packageTargetDirectories) },
 		});
 
 		json11::Json jsonResult = json11::Json::object({
