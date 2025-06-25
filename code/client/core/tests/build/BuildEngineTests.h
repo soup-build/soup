@@ -1229,7 +1229,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void Execute_NoDependencies_HasProxies()
+		void Execute_NoDependencies_HasPreprocessors()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -1909,7 +1909,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void Execute_NoDependencies_HasProxies_UpToDate()
+		void Execute_NoDependencies_HasPreprocessors_UpToDate()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();

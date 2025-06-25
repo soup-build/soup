@@ -8,8 +8,8 @@ TestState RunBuildEngineTests()
 	TestState state = { 0, 0 };
 	state += Soup::Test::RunTest(className, "Execute_NoDependencies", [&testClass]() { testClass->Execute_NoDependencies(); });
 	state += Soup::Test::RunTest(className, "Execute_NoDependencies_UpToDate", [&testClass]() { testClass->Execute_NoDependencies_UpToDate(); });
-	state += Soup::Test::RunTest(className, "Execute_NoDependencies_HasProxies", [&testClass]() { testClass->Execute_NoDependencies_HasProxies(); });
-	state += Soup::Test::RunTest(className, "Execute_NoDependencies_HasProxies_UpToDate", [&testClass]() { testClass->Execute_NoDependencies_HasProxies_UpToDate(); });
+	state += Soup::Test::RunTest(className, "Execute_NoDependencies_HasPreprocessors", [&testClass]() { testClass->Execute_NoDependencies_HasPreprocessors(); });
+	state += Soup::Test::RunTest(className, "Execute_NoDependencies_HasPreprocessors_UpToDate", [&testClass]() { testClass->Execute_NoDependencies_HasPreprocessors_UpToDate(); });
 
 	return state;
 }
