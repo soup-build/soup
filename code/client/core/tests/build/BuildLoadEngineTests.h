@@ -16,6 +16,7 @@ namespace Soup::Core::UnitTests
 			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>();
 			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>();
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -24,6 +25,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -53,6 +55,7 @@ namespace Soup::Core::UnitTests
 			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>();
 			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>();
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -61,6 +64,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -77,7 +81,7 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"DIAG: Load PackageLock: C:/WorkingDirectory/MyPackage/PackageLock.sml",
 					"INFO: PackageLock file does not exist",
-					"ERRO: Missing or invalid package lock",
+					"ERRO: Missing or invalid package lock C:/WorkingDirectory/MyPackage/PackageLock.sml",
 					"HIGH: Run `restore` and try again",
 				}),
 				testListener->GetMessages(),
@@ -192,6 +196,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{ "ArgumentValue", Value(true) },
@@ -206,6 +211,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -233,6 +239,8 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/TestTool/4.4.4/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -277,7 +285,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -301,7 +308,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestTool"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/TestTool/4.4.4/"),
-								Path("C:/BuiltIn/Packages/User1/TestTool/4.4.4/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -312,9 +318,29 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 2, "C:/BuiltIn/Packages/User1/TestTool/4.4.4/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -396,6 +422,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto arguments = RecipeBuildArguments();
 			auto targetBuildGlobalParameters = ValueTable(
 			{
@@ -411,6 +438,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -436,6 +464,8 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/PackageLock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -473,7 +503,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -491,9 +520,23 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+						2,
+							{
+								{ 2, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -643,6 +686,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{ "ArgumentValue", Value(true) },
@@ -657,6 +701,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -694,6 +739,24 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/Cpp/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -758,7 +821,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -782,7 +844,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -800,7 +861,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestTool"),
 								false,
 								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -818,7 +878,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -829,9 +888,41 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 5, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							5,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -953,6 +1044,7 @@ namespace Soup::Core::UnitTests
 						}
 					},
 				});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 				{
 					{ "ArgumentValue", Value(true) },
@@ -967,6 +1059,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -999,6 +1092,16 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -1008,110 +1111,133 @@ namespace Soup::Core::UnitTests
 				PackageProvider(
 					1,
 					PackageGraphLookupMap(
+					{
 						{
-							{
+							1,
+							PackageGraph(
 								1,
-								PackageGraph(
-									1,
-									1,
-									ValueTable(
+								1,
+								ValueTable(
+								{
 									{
-										{
-											"ArgumentValue",
-											Value(true),
-										},
-									}))
-							},
-							{
+										"ArgumentValue",
+										Value(true),
+									},
+								}))
+						},
+						{
+							2,
+							PackageGraph(
 								2,
-								PackageGraph(
-									2,
-									3,
-									ValueTable())
-							},
-							{
 								3,
-								PackageGraph(
-									3,
-									2,
-									ValueTable(
+								ValueTable())
+						},
+						{
+							3,
+							PackageGraph(
+								3,
+								2,
+								ValueTable(
+								{
 									{
-										{
-											"HostValue",
-											Value(true),
-										},
-									}))
-							},
-							{
+										"HostValue",
+										Value(true),
+									},
+								}))
+						},
+						{
+							4,
+							PackageGraph(
 								4,
-								PackageGraph(
-									4,
-									4,
-									ValueTable())
-							},
-						}),
+								4,
+								ValueTable())
+						},
+					}),
 					PackageLookupMap(
+					{
 						{
-							{
+							1,
+							PackageInfo(
 								1,
-								PackageInfo(
-									1,
-									PackageName(std::nullopt, "MyPackage"),
-									false,
-									Path("C:/WorkingDirectory/MyPackage/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
-									PackageChildrenMap({
+								PackageName(std::nullopt, "MyPackage"),
+								false,
+								Path("C:/WorkingDirectory/MyPackage/"),
+								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
 										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "TestBuild", SemanticVersion(3, 3, 3)), true, -1, 3),
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 4),
-											}
-										},
-									}))
-							},
-							{
+											PackageChildInfo(PackageReference("Wren", "User1", "TestBuild", SemanticVersion(3, 3, 3)), true, -1, 3),
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 4),
+										}
+									},
+								}))
+						},
+						{
+							2,
+							PackageInfo(
 								2,
-								PackageInfo(
-									2,
-									PackageName("User1", "TestBuild"),
-									false,
-									Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
-									PackageChildrenMap({
+								PackageName("User1", "TestBuild"),
+								false,
+								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
 										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Wren", SemanticVersion(2, 2, 2)), true, -1, 2),
-											}
-										},
-									}))
-							},
-							{
+											PackageChildInfo(PackageReference("Wren", "User1", "Wren", SemanticVersion(2, 2, 2)), true, -1, 2),
+										}
+									},
+								}))
+						},
+						{
+							3,
+							PackageInfo(
 								3,
-								PackageInfo(
-									3,
-									PackageName("User1", "Wren"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-									Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-							{
+								PackageName("User1", "Wren"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+						{
+							4,
+							PackageInfo(
 								4,
-								PackageInfo(
-									4,
-									PackageName("User1", "Cpp"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-						})),
+								PackageName("User1", "Cpp"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 3, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
+						},
+					})),
 				packageProvider,
 				"Verify package graph matches expected.");
 		}
@@ -1265,6 +1391,7 @@ namespace Soup::Core::UnitTests
 						}
 					},
 				});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 				{
 					{ "ArgumentValue", Value(true) },
@@ -1279,6 +1406,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -1317,6 +1445,24 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -1326,147 +1472,175 @@ namespace Soup::Core::UnitTests
 				PackageProvider(
 					1,
 					PackageGraphLookupMap(
+					{
 						{
-							{
+							1,
+							PackageGraph(
 								1,
-								PackageGraph(
-									1,
-									1,
-									ValueTable(
+								1,
+								ValueTable(
+								{
 									{
-										{
-											"ArgumentValue",
-											Value(true),
-										},
-									}))
-							},
-							{
+										"ArgumentValue",
+										Value(true),
+									},
+								}))
+						},
+						{
+							2,
+							PackageGraph(
 								2,
-								PackageGraph(
-									2,
-									4,
-									ValueTable())
-							},
-							{
-								3,
-								PackageGraph(
-									3,
-									3,
-									ValueTable(
-									{
-										{
-											"HostValue",
-											Value(true),
-										},
-									}))
-							},
-							{
 								4,
-								PackageGraph(
-									4,
-									5,
-									ValueTable())
-							},
-							{
-								5,
-								PackageGraph(
-									5,
-									2,
-									ValueTable(
+								ValueTable())
+						},
+						{
+							3,
+							PackageGraph(
+								3,
+								3,
+								ValueTable(
+								{
 									{
-										{
-											"HostValue",
-											Value(true),
-										},
-									}))
-							},
-						}),
+										"HostValue",
+										Value(true),
+									},
+								}))
+						},
+						{
+							4,
+							PackageGraph(
+								4,
+								5,
+								ValueTable())
+						},
+						{
+							5,
+							PackageGraph(
+								5,
+								2,
+								ValueTable(
+								{
+									{
+										"HostValue",
+										Value(true),
+									},
+								}))
+						},
+					}),
 					PackageLookupMap(
+					{
 						{
-							{
+							1,
+							PackageInfo(
 								1,
-								PackageInfo(
-									1,
-									PackageName(std::nullopt, "MyPackage"),
-									false,
-									Path("C:/WorkingDirectory/MyPackage/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
-									PackageChildrenMap({
+								PackageName(std::nullopt, "MyPackage"),
+								false,
+								Path("C:/WorkingDirectory/MyPackage/"),
+								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
 										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "TestBuild", SemanticVersion(3, 3, 3)), true, -1, 5),
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
-											}
-										},
+											PackageChildInfo(PackageReference("Wren", "User1", "TestBuild", SemanticVersion(3, 3, 3)), true, -1, 5),
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
+										}
+									},
+									{
+										"Tool",
 										{
-											"Tool",
-											{
-												PackageChildInfo(PackageReference("C++", "User1", "TestTool", SemanticVersion(3, 3, 3)), true, -1, 3),
-											}
-										},
-									}))
-							},
-							{
+											PackageChildInfo(PackageReference("C++", "User1", "TestTool", SemanticVersion(3, 3, 3)), true, -1, 3),
+										}
+									},
+								}))
+						},
+						{
+							2,
+							PackageInfo(
 								2,
-								PackageInfo(
-									2,
-									PackageName("User1", "TestBuild"),
-									false,
-									Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
-									PackageChildrenMap({
+								PackageName("User1", "TestBuild"),
+								false,
+								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
 										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Wren", SemanticVersion(2, 2, 2)), true, -1, 4),
-											}
-										},
-									}))
-							},
-							{
+											PackageChildInfo(PackageReference("Wren", "User1", "Wren", SemanticVersion(2, 2, 2)), true, -1, 4),
+										}
+									},
+								}))
+						},
+						{
+							3,
+							PackageInfo(
 								3,
-								PackageInfo(
-									3,
-									PackageName("User1", "TestTool"),
-									false,
-									Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/Recipe.sml")),
-									PackageChildrenMap({
+								PackageName("User1", "TestTool"),
+								false,
+								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
 										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
-											}
-										},
-									}))
-							},
-							{
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
+										}
+									},
+								}))
+						},
+						{
+							4,
+							PackageInfo(
 								4,
-								PackageInfo(
-									4,
-									PackageName("User1", "Cpp"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-							{
+								PackageName("User1", "Cpp"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+						{
+							5,
+							PackageInfo(
 								5,
-								PackageInfo(
-									5,
-									PackageName("User1", "Wren"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-									Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-						})),
+								PackageName("User1", "Wren"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 5, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							5,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+					})),
 				packageProvider,
 				"Verify package graph matches expected.");
 		}
@@ -1584,6 +1758,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{ "ArgumentValue", Value(true) },
@@ -1598,6 +1773,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -1630,6 +1806,10 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/TestBuild/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -1684,7 +1864,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -1703,7 +1882,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "TestBuild"),
 								false,
 								Path("C:/WorkingDirectory/TestBuild/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/TestBuild/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -1721,7 +1899,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -1732,9 +1909,35 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 3, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 2, "C:/WorkingDirectory/TestBuild/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -1837,6 +2040,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -1845,6 +2049,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -2005,6 +2210,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{ "ArgumentValue", Value(true) },
@@ -2019,6 +2225,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -2054,6 +2261,24 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -2114,7 +2339,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2133,7 +2357,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestBuild"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2157,7 +2380,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestBuild2"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2175,7 +2397,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -2186,9 +2407,36 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 5, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -2341,6 +2589,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{ "ArgumentValue", Value(true) },
@@ -2355,6 +2604,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -2393,6 +2643,24 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild2/4.4.4/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -2466,7 +2734,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2485,7 +2752,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestBuild"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2504,7 +2770,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestBuild2"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2522,7 +2787,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -2533,9 +2797,41 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							5,
+							{
+								{ 5, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -2691,6 +2987,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{ "ArgumentValue", Value(true) },
@@ -2705,6 +3002,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -2743,6 +3041,24 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -2816,7 +3132,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2841,7 +3156,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestBuild"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2859,7 +3173,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestTool"),
 								false,
 								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -2877,7 +3190,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -2888,9 +3200,41 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 5, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							5,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -3057,6 +3401,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{
@@ -3077,6 +3422,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -3118,6 +3464,32 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/Recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Cpp/1.1.2/PackageLock.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/Cpp/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -3197,7 +3569,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3216,7 +3587,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "TestBuild"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.4/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.4/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3234,7 +3604,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3252,7 +3621,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -3263,7 +3631,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Cpp"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3273,6 +3640,39 @@ namespace Soup::Core::UnitTests
 										}
 									},
 								}))
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							4,
+							{
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.4/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
+						},
+						{
+							5,
+							{
+								{ 5, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -3394,6 +3794,7 @@ namespace Soup::Core::UnitTests
 					}
 				},
 			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 			{
 				{
@@ -3414,6 +3815,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -3447,6 +3849,18 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/Recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Soup.CSharp/2.2.3/PackageLock.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/Wren/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -3494,7 +3908,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "MyPackage"),
 								false,
 								Path("C:/WorkingDirectory/MyPackage/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3518,7 +3931,6 @@ namespace Soup::Core::UnitTests
 								PackageName(std::nullopt, "Package1"),
 								false,
 								Path("C:/WorkingDirectory/Package1/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/Package1/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3536,7 +3948,6 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Soup.CSharp"),
 								false,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/"),
-								Path(),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/Recipe.sml")),
 								PackageChildrenMap({
 									{
@@ -3554,9 +3965,30 @@ namespace Soup::Core::UnitTests
 								PackageName("User1", "Wren"),
 								true,
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"),
 								nullptr,
 								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 2, "C:/WorkingDirectory/Package1/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+							}
 						},
 					})),
 				packageProvider,
@@ -3662,6 +4094,7 @@ namespace Soup::Core::UnitTests
 						}
 					},
 				});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 				{
 					{ "ArgumentValue", Value(true) },
@@ -3676,6 +4109,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -3708,6 +4142,32 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/Recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageA/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageB/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageB/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C++/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -3717,106 +4177,119 @@ namespace Soup::Core::UnitTests
 				PackageProvider(
 					1,
 					PackageGraphLookupMap(
+					{
 						{
-							{
+							1,
+							PackageGraph(
 								1,
-								PackageGraph(
-									1,
-									1,
-									ValueTable(
-									{
-										{ "ArgumentValue", Value(true) },
-									}))
-							},
-							{
-								2,
-								PackageGraph(
-									2,
-									4,
-									ValueTable())
-							},
-						}),
-					PackageLookupMap(
+								1,
+								ValueTable(
+								{
+									{ "ArgumentValue", Value(true) },
+								}))
+						},
 						{
-							{
-								1,
-								PackageInfo(
-									1,
-									PackageName(std::nullopt, "MyPackage"),
-									false,
-									Path("C:/WorkingDirectory/MyPackage/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
-									PackageChildrenMap({
-										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
-											}
-										},
-										{
-											"Runtime",
-											{
-												PackageChildInfo(PackageReference("C++", "User1", "PackageA", SemanticVersion(3, 3, 3)), false, 2, -1),
-												PackageChildInfo(PackageReference("C++", "User1", "PackageB", SemanticVersion(4, 4, 4)), false, 3, -1),
-											}
-										},
-									}))
-							},
-							{
+							2,
+							PackageGraph(
 								2,
-								PackageInfo(
-									2,
-									PackageName("User1", "PackageA"),
-									false,
-									Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/Recipe.sml")),
-									PackageChildrenMap({
-										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
-											}
-										},
-										{
-											"Runtime",
-											{
-												PackageChildInfo(PackageReference("C++", "User1", "PackageB", SemanticVersion(4, 4, 4)), false, 3, -1),
-											}
-										},
-									}))
-							},
-							{
-								3,
-								PackageInfo(
-									3,
-									PackageName("User1", "PackageB"),
-									false,
-									Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/Recipe.sml")),
-									PackageChildrenMap({
-										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
-											}
-										},
-									}))
-							},
-							{
 								4,
-								PackageInfo(
-									4,
-									PackageName("User1", "Cpp"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-						})),
+								ValueTable())
+						},
+					}),
+					PackageLookupMap(
+					{
+						{
+							1,
+							PackageInfo(
+								1,
+								PackageName(std::nullopt, "MyPackage"),
+								false,
+								Path("C:/WorkingDirectory/MyPackage/"),
+								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
+										{
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
+										}
+									},
+									{
+										"Runtime",
+										{
+											PackageChildInfo(PackageReference("C++", "User1", "PackageA", SemanticVersion(3, 3, 3)), false, 2, -1),
+											PackageChildInfo(PackageReference("C++", "User1", "PackageB", SemanticVersion(4, 4, 4)), false, 3, -1),
+										}
+									},
+								}))
+						},
+						{
+							2,
+							PackageInfo(
+								2,
+								PackageName("User1", "PackageA"),
+								false,
+								Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
+										{
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
+										}
+									},
+									{
+										"Runtime",
+										{
+											PackageChildInfo(PackageReference("C++", "User1", "PackageB", SemanticVersion(4, 4, 4)), false, 3, -1),
+										}
+									},
+								}))
+						},
+						{
+							3,
+							PackageInfo(
+								3,
+								PackageName("User1", "PackageB"),
+								false,
+								Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
+										{
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 2),
+										}
+									},
+								}))
+						},
+						{
+							4,
+							PackageInfo(
+								4,
+								PackageName("User1", "Cpp"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 2, "C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
+						},
+					})),
 				packageProvider,
 				"Verify package graph matches expected.");
 		}
@@ -3932,6 +4405,7 @@ namespace Soup::Core::UnitTests
 						}
 					},
 				});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
 				{
 					{
@@ -3952,6 +4426,7 @@ namespace Soup::Core::UnitTests
 				builtInPackageDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
 				userDataPath,
@@ -3981,6 +4456,16 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/Recipe.sml",
 					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Cpp/1.1.1/Recipe.sml",
+					"Exists: C:/WorkingDirectory/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C#/User1/Package1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C#/User1/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/C#/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/packages/RootRecipe.sml",
+					"Exists: C:/Users/Me/.soup/RootRecipe.sml",
+					"Exists: C:/Users/Me/RootRecipe.sml",
+					"Exists: C:/Users/RootRecipe.sml",
+					"Exists: C:/RootRecipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -3990,102 +4475,120 @@ namespace Soup::Core::UnitTests
 				PackageProvider(
 					1,
 					PackageGraphLookupMap(
+					{
 						{
-							{
+							1,
+							PackageGraph(
 								1,
-								PackageGraph(
-									1,
-									1,
-									ValueTable(
+								1,
+								ValueTable(
+								{
 									{
-										{
-											"ArgumentValue",
-											Value(true),
-										},
-									}))
-							},
-							{
-								2,
-								PackageGraph(
-									2,
-									3,
-									ValueTable())
-							},
-							{
-								3,
-								PackageGraph(
-									3,
-									4,
-									ValueTable())
-							},
-						}),
-					PackageLookupMap(
+										"ArgumentValue",
+										Value(true),
+									},
+								}))
+						},
 						{
-							{
-								1,
-								PackageInfo(
-									1,
-									PackageName(std::nullopt, "MyPackage"),
-									false,
-									Path("C:/WorkingDirectory/MyPackage/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
-									PackageChildrenMap({
-										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 3),
-											}
-										},
-										{
-											"Other",
-											{
-												PackageChildInfo(PackageReference("C#", "User1", "Package1", SemanticVersion(4, 4, 4)), false, 2, -1),
-											}
-										},
-									}))
-							},
-							{
+							2,
+							PackageGraph(
 								2,
-								PackageInfo(
-									2,
-									PackageName("User1", "Package1"),
-									false,
-									Path("C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/"),
-									Path(),
-									&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/Recipe.sml")),
-									PackageChildrenMap({
-										{
-											"Build",
-											{
-												PackageChildInfo(PackageReference("Wren", "User1", "Soup.CSharp", SemanticVersion(3, 3, 3)), true, -1, 2),
-											}
-										},
-									}))
-							},
-							{
 								3,
-								PackageInfo(
-									3,
-									PackageName("User1", "Soup.CSharp"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/"),
-									Path("C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-							{
+								ValueTable())
+						},
+						{
+							3,
+							PackageGraph(
+								3,
 								4,
-								PackageInfo(
-									4,
-									PackageName("User1", "Cpp"),
-									true,
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
-									Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"),
-									nullptr,
-									PackageChildrenMap())
-							},
-						})),
+								ValueTable())
+						},
+					}),
+					PackageLookupMap(
+					{
+						{
+							1,
+							PackageInfo(
+								1,
+								PackageName(std::nullopt, "MyPackage"),
+								false,
+								Path("C:/WorkingDirectory/MyPackage/"),
+								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
+										{
+											PackageChildInfo(PackageReference("Wren", "User1", "Cpp", SemanticVersion(1, 1, 1)), true, -1, 3),
+										}
+									},
+									{
+										"Other",
+										{
+											PackageChildInfo(PackageReference("C#", "User1", "Package1", SemanticVersion(4, 4, 4)), false, 2, -1),
+										}
+									},
+								}))
+						},
+						{
+							2,
+							PackageInfo(
+								2,
+								PackageName("User1", "Package1"),
+								false,
+								Path("C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/Recipe.sml")),
+								PackageChildrenMap({
+									{
+										"Build",
+										{
+											PackageChildInfo(PackageReference("Wren", "User1", "Soup.CSharp", SemanticVersion(3, 3, 3)), true, -1, 2),
+										}
+									},
+								}))
+						},
+						{
+							3,
+							PackageInfo(
+								3,
+								PackageName("User1", "Soup.CSharp"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+						{
+							4,
+							PackageInfo(
+								4,
+								PackageName("User1", "Cpp"),
+								true,
+								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
+								nullptr,
+								PackageChildrenMap())
+						},
+					}),
+					PackageTargetDirectories(
+					{
+						{
+							1,
+							{
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 2, "C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+							}
+						},
+						{
+							2,
+							{
+								{ 3, "C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/out/"},
+							}
+						},
+						{
+							3,
+							{
+								{ 4, "C:/BuiltIn/Packages/User1/Cpp/1.1.1/out/"},
+							}
+						},
+					})),
 				packageProvider,
 				"Verify package graph matches expected.");
 		}

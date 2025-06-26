@@ -276,7 +276,8 @@ export namespace Soup::Core
 		{
 			return _rootPackageGraphId == rhs._rootPackageGraphId &&
 				_packageGraphLookup == rhs._packageGraphLookup &&
-				_packageLookup == rhs._packageLookup;
+				_packageLookup == rhs._packageLookup &&
+				_packageTargetDirectories == rhs._packageTargetDirectories;
 		}
 
 		/// <summary>
