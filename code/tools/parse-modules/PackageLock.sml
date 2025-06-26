@@ -4,7 +4,7 @@ Closures: {
 		'C++': {
 			'parse.modules': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|parse.modules': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|Opal': { Version: 0.12.0, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|Opal': { Version: 0.12.1, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 5.5.0, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
