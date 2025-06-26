@@ -40,7 +40,7 @@ public class PackageGraphWalker
 		var visitedSet = new HashSet<int>();
 		var activeNodes = new Stack<int>();
 
-		activeNodes.Push(this.dependencyGraph.RootPackageGraphId);
+		activeNodes.Push(this.dependencyGraph.GetRootPackageGraph().RootPackageId);
 
 		var result = new List<PackageInfo>();
 
