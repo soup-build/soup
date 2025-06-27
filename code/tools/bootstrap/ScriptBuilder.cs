@@ -54,7 +54,7 @@ public class ScriptBuilder
 
 	private async Task WritePackageBuildOperationsAsync(StreamWriter writer, PackageInfo package, Path targetDirectory)
 	{
-		var operationGraph = await LoadOperationGraphAsync(new Path(package.PackageRoot), package.Owner);
+		var operationGraph = LoadOperationGraph(targetDirectory);
 
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync($"# Setup {package.Name}");
@@ -130,12 +130,10 @@ public class ScriptBuilder
 		return packageProvider;
 	}
 
-	private async Task<OperationGraph> LoadOperationGraphAsync(
-		Path packageFolder, string? owner)
+	private OperationGraph LoadOperationGraph(
+		Path targetDirectory)
 	{
-		var targetPath = await GetTargetPathAsync(packageFolder, owner);
-
-		var soupTargetDirectory = targetPath + new Path("./.soup/");
+		var soupTargetDirectory = targetDirectory + new Path("./.soup/");
 
 		var generatePhase1ResultFile = soupTargetDirectory + BuildConstants.GeneratePhase1ResultFileName;
 		if (!GenerateResultManager.TryLoadState(
@@ -160,45 +158,5 @@ public class ScriptBuilder
 		{
 			return generatePhase1Result.EvaluateGraph;
 		}
-	}
-
-	private async Task<Path> GetTargetPathAsync(Path packageDirectory, string? owner)
-	{
-		string soupExe;
-		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-		{
-			soupExe = "C:/Program Files/SoupBuild/Soup/Soup/Soup.exe";
-		}
-		else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-		{
-			soupExe = "soup";
-		}
-		else
-		{
-			throw new NotSupportedException("Unknown OS Platform");
-		}
-
-		var optionalOwnerFlag = owner is null ? string.Empty : $" -owner {owner}";
-		var processInfo = new ProcessStartInfo(soupExe, $"target {packageDirectory}{optionalOwnerFlag}")
-		{
-			RedirectStandardOutput = true,
-			CreateNoWindow = true,
-		};
-		using var process = new Process()
-		{
-			StartInfo = processInfo,
-		};
-
-		_ = process.Start();
-
-		await process.WaitForExitAsync();
-
-		if (process.ExitCode != 0)
-		{
-			throw new InvalidOperationException($"Soup process exited with error: {process.ExitCode}");
-		}
-
-		var output = await process.StandardOutput.ReadToEndAsync();
-		return new Path(output);
 	}
 }
