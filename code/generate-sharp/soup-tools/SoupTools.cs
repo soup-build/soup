@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text.Json;
+using Soup.Build.Utilities;
 using Path = Opal.Path;
 
 namespace Soup.Tools;
@@ -15,11 +16,16 @@ public static partial class SoupTools
 	[LibraryImport("SoupTools", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(AnsiStringMarshaller))]
 	[UnmanagedCallConv(CallConvs = new Type[] { typeof(CallConvCdecl) })]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.UserDirectories)]
-	private static partial string LoadBuildGraph(string workingDirectory);
+	private static partial string LoadBuildGraph(string workingDirectory, [In] byte[] globalParametersBuffer, int globalParametersLength);
 
-	public static PackageProvider LoadBuildGraph(Path workingDirectory)
+	public static PackageProvider LoadBuildGraph(Path workingDirectory, ValueTable globalParameters)
 	{
-		var loadResult = LoadBuildGraph(workingDirectory.ToString());
+		using var memoryStream = new System.IO.MemoryStream();
+		using var writer = new System.IO.BinaryWriter(memoryStream);
+
+		ValueTableWriter.Serialize(globalParameters, writer);
+
+		var loadResult = LoadBuildGraph(workingDirectory.ToString(), memoryStream.GetBuffer(), memoryStream.GetBuffer().Length);
 
 		var result = JsonSerializer.Deserialize(loadResult, LoadBuildGraphResultContext.Default.LoadBuildGraphResult) ??
 			throw new InvalidOperationException("Failed to deserialize the result");

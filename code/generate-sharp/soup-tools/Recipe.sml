@@ -9,6 +9,7 @@ Dependencies: {
 	]
 	Runtime: [
 		'../opal/'
+		'../utilities/'
 	]
 	RuntimeReference: [
 		'../../client/tools/'

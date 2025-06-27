@@ -119,8 +119,10 @@ public class ScriptBuilder
 		// Run in the soup install folder to make the tool think it is there.
 		var cacheCurrentDirectory = Directory.GetCurrentDirectory();
 		var fullPackagePath = Path.Parse(cacheCurrentDirectory) + this.packageFolder;
+		var globalParameters = new ValueTable();
+		globalParameters.Add("Flavor", new Value("Release"));
 		Directory.SetCurrentDirectory(soupRoot);
-		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath);
+		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath, globalParameters);
 		Directory.SetCurrentDirectory(cacheCurrentDirectory);
 
 		return packageProvider;

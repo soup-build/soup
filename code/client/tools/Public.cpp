@@ -3,6 +3,7 @@
 #include <format>
 #include <memory>
 #include <string>
+#include <spanstream>
 
 #ifdef _WIN32
 #include <combaseapi.h>
@@ -103,7 +104,52 @@ json11::Json ConvertToJson(const PackageTargetDirectories& packageGraphTargetDir
 	return result;
 }
 
-std::string LoadBuildGraphContent(const Path& workingDirectory)
+Value JsonToValue(const json11::Json& json);
+
+ValueList JsonToValueList(const json11::Json::array& json)
+{
+	auto result = ValueList();
+	for (const auto& value : json)
+	{
+		result.push_back(JsonToValue(value));
+	}
+
+	return result;
+}
+
+ValueTable JsonToValueTable(const json11::Json::object& json)
+{
+	auto result = ValueTable();
+	for (const auto& [key, value] : json)
+	{
+		result.emplace(key, JsonToValue(value));
+	}
+
+	return result;
+}
+
+Value JsonToValue(const json11::Json& json)
+{
+	switch (json.type())
+	{
+		case json11::Json::NUL:
+			throw std::runtime_error("Null is not supported as value");
+		case json11::Json::NUMBER:
+			return Value(json.number_value());
+		case json11::Json::BOOL:
+			return Value(json.bool_value());
+		case json11::Json::STRING:
+			return Value(json.string_value());
+		case json11::Json::ARRAY:
+			return Value(JsonToValueList(json.array_items()));
+		case json11::Json::OBJECT:
+			return Value(JsonToValueTable(json.object_items()));
+		default:
+			throw std::runtime_error("Unknown json type");
+	}
+}
+
+std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::istream& globalParametersStream)
 {
 	try
 	{
@@ -130,7 +176,8 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 		System::ISystem::Register(std::make_shared<System::STLSystem>());
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
-		auto globalParameters = ValueTable();
+		auto workingDirectory = Path(workingDirectoryString);
+		auto globalParameters = ValueTableReader::Deserialize(globalParametersStream);
 
 		// Find the built in folder root
 		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
@@ -187,10 +234,15 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 
 extern "C"
 {
-	SOUP_TOOLS_API const char* LoadBuildGraph(const char* workingDirectory)
+	SOUP_TOOLS_API const char* LoadBuildGraph(
+		const char* workingDirectory,
+		const char* globalParametersBuffer,
+		size_t globalParametersLength)
 	{
-		auto workingDirectoryPath = Path(workingDirectory);
-		auto value = LoadBuildGraphContent(workingDirectoryPath);
+		auto globalParameters = std::ispanstream(
+			std::span<char>(const_cast<char*>(globalParametersBuffer), globalParametersLength));
+
+		auto value = LoadBuildGraphContent(workingDirectory, globalParameters);
 
 		auto result = (char*)CoTaskMemAlloc(value.size() + 1);
 		value.copy(result, value.size());

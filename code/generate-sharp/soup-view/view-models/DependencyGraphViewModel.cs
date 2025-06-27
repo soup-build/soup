@@ -4,6 +4,7 @@
 
 using GraphShape;
 using ReactiveUI;
+using Soup.Build.Utilities;
 using Soup.Tools;
 using Soup.View.Views;
 using System;
@@ -56,7 +57,8 @@ public class DependencyGraphViewModel : ContentPaneViewModel
 			this.projectDetailsLookup.Clear();
 
 			var workingDirectory = recipeFilePath.GetParent();
-			var packageProvider = SoupTools.LoadBuildGraph(workingDirectory);
+			var globalParameters = new ValueTable();
+			var packageProvider = SoupTools.LoadBuildGraph(workingDirectory, globalParameters);
 
 			var activeGraph = BuildGraph(packageProvider);
 			return activeGraph;
