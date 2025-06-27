@@ -16,7 +16,7 @@ public static partial class SoupTools
 	[LibraryImport("SoupTools", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(AnsiStringMarshaller))]
 	[UnmanagedCallConv(CallConvs = new Type[] { typeof(CallConvCdecl) })]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.UserDirectories)]
-	private static partial string LoadBuildGraph(string workingDirectory, [In] byte[] globalParametersBuffer, int globalParametersLength);
+	private static partial string LoadBuildGraph(string workingDirectory, [In] byte[] globalParametersBuffer, long globalParametersLength);
 
 	public static PackageProvider LoadBuildGraph(Path workingDirectory, ValueTable globalParameters)
 	{
@@ -25,7 +25,7 @@ public static partial class SoupTools
 
 		ValueTableWriter.Serialize(globalParameters, writer);
 
-		var loadResult = LoadBuildGraph(workingDirectory.ToString(), memoryStream.GetBuffer(), memoryStream.GetBuffer().Length);
+		var loadResult = LoadBuildGraph(workingDirectory.ToString(), memoryStream.GetBuffer(), memoryStream.Length);
 
 		var result = JsonSerializer.Deserialize(loadResult, LoadBuildGraphResultContext.Default.LoadBuildGraphResult) ??
 			throw new InvalidOperationException("Failed to deserialize the result");
