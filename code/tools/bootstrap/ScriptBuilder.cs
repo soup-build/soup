@@ -47,19 +47,20 @@ public class ScriptBuilder
 		var walker = new PackageGraphWalker(dependencyGraph);
 		foreach (var package in walker.WalkGraph())
 		{
-			await WritePackageBuildOperationsAsync(writer, package);
+			var targetDirectory = dependencyGraph.GetPackageTargetDirectory(dependencyGraph.RootPackageGraphId, package.Id);
+			await WritePackageBuildOperationsAsync(writer, package, targetDirectory);
 		}
 	}
 
-	private async Task WritePackageBuildOperationsAsync(StreamWriter writer, PackageInfo package)
+	private async Task WritePackageBuildOperationsAsync(StreamWriter writer, PackageInfo package, Path targetDirectory)
 	{
 		var operationGraph = await LoadOperationGraphAsync(new Path(package.PackageRoot), package.Owner);
 
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync($"# Setup {package.Name}");
 
-		await writer.WriteLineAsync($"echo mkdir -p \"{package.TargetDirectory}\"");
-		await writer.WriteLineAsync($"mkdir -p \"{package.TargetDirectory}\"");
+		await writer.WriteLineAsync($"echo mkdir -p \"{targetDirectory}\"");
+		await writer.WriteLineAsync($"mkdir -p \"{targetDirectory}\"");
 
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync($"# Build {package.Name}");

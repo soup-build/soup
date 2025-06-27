@@ -78,4 +78,24 @@ public class PackageProvider
 			throw new InvalidOperationException($"packageId [{packageId}] not found in lookup");
 		}
 	}
+
+	public Opal.Path GetPackageTargetDirectory(PackageGraphId packageGraphId, PackageId packageId)
+	{
+		// The PackageInfo must already be loaded
+		if (this.PackageTargetDirectories.TryGetValue(packageGraphId, out var packageTargetDirectorySet))
+		{
+			if (packageTargetDirectorySet.TryGetValue(packageId, out var result))
+			{
+				return result;
+			}
+			else
+			{
+				throw new InvalidOperationException($"packageId [{packageId}] not found in package target directories");
+			}
+		}
+		else
+		{
+			throw new InvalidOperationException($"packageGraphId [{packageGraphId}] not found in package target directories");
+		}
+	}
 }
