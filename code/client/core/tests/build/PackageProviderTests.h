@@ -13,24 +13,25 @@ namespace Soup::Core::UnitTests
 		void Initialize()
 		{
 			auto packageGraphLookup = PackageGraphLookupMap(
-				{
-					{ 1, PackageGraph(1, 1, ValueTable()) },
-				});
+			{
+				{ 1, PackageGraph(1, 1, ValueTable()) },
+			});
 			auto packageRecipe = Recipe();
 			auto packageLookup = PackageLookupMap(
+			{
 				{
-					{
+					1,
+					PackageInfo(
 						1,
-						PackageInfo(
-							1,
-							PackageName("User1", "Package1"),
-							false,
-							Path(),
-							Path(),
-							&packageRecipe,
-							PackageChildrenMap()) },
-				});
-			auto uut = PackageProvider(1, packageGraphLookup, packageLookup);
+						PackageName("User1", "Package1"),
+						false,
+						Path(),
+						&packageRecipe,
+						PackageChildrenMap())
+				},
+			});
+			auto packageTargetDirectories = PackageTargetDirectories();
+			auto uut = PackageProvider(1, packageGraphLookup, packageLookup, packageTargetDirectories);
 
 			Assert::AreEqual(
 				1,

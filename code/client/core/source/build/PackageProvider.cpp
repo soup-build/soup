@@ -83,14 +83,12 @@ export namespace Soup::Core
 			PackageName name,
 			bool isPrebuilt,
 			Path packageRoot,
-			Path targetDirectory,
 			const Recipe* recipe,
 			PackageChildrenMap dependencies) :
 			Id(id),
 			Name(std::move(name)),
 			IsPrebuilt(isPrebuilt),
 			PackageRoot(std::move(packageRoot)),
-			TargetDirectory(std::move(targetDirectory)),
 			Recipe(recipe),
 			Dependencies(std::move(dependencies))
 		{
@@ -100,7 +98,6 @@ export namespace Soup::Core
 		PackageName Name;
 		bool IsPrebuilt;
 		Path PackageRoot;
-		Path TargetDirectory;
 		const ::Soup::Core::Recipe* Recipe;
 		PackageChildrenMap Dependencies;
 
@@ -113,7 +110,6 @@ export namespace Soup::Core
 				Name == rhs.Name &&
 				IsPrebuilt == rhs.IsPrebuilt &&
 				PackageRoot == rhs.PackageRoot &&
-				TargetDirectory == rhs.TargetDirectory &&
 				Recipe == rhs.Recipe &&
 				Dependencies == rhs.Dependencies;
 		}
@@ -168,12 +164,14 @@ export namespace Soup::Core
 	/// </summary>
 	using PackageGraphLookupMap = std::map<PackageGraphId, PackageGraph>;
 	using PackageLookupMap = std::map<PackageId, PackageInfo>;
+	using PackageTargetDirectories = std::map<PackageGraphId, std::map<PackageId, Path>>;
 	class PackageProvider
 	{
 	private:
 		PackageGraphId _rootPackageGraphId;
 		PackageGraphLookupMap _packageGraphLookup;
 		PackageLookupMap _packageLookup;
+		PackageTargetDirectories _packageTargetDirectories;
 
 	public:
 		/// <summary>
@@ -182,10 +180,12 @@ export namespace Soup::Core
 		PackageProvider(
 			PackageGraphId rootPackageGraphId,
 			PackageGraphLookupMap packageGraphLookup,
-			PackageLookupMap packageLookup) :
+			PackageLookupMap packageLookup,
+			PackageTargetDirectories packageTargetDirectories) :
 			_rootPackageGraphId(rootPackageGraphId),
 			_packageGraphLookup(std::move(packageGraphLookup)),
-			_packageLookup(std::move(packageLookup))
+			_packageLookup(std::move(packageLookup)),
+			_packageTargetDirectories(std::move(packageTargetDirectories))
 		{
 		}
 
@@ -202,6 +202,11 @@ export namespace Soup::Core
 		const PackageLookupMap& GetPackageLookup()
 		{
 			return _packageLookup;
+		}
+
+		const PackageTargetDirectories& GetPackageTargetDirectories()
+		{
+			return _packageTargetDirectories;
 		}
 
 		const PackageGraph& GetRootPackageGraph()
@@ -239,6 +244,31 @@ export namespace Soup::Core
 			}
 		}
 
+
+		const Path& GetTargetDirectory(PackageGraphId packageGraphId, PackageId packageId)
+		{
+			// The PackageGraph must already be loaded
+			auto findPackageGraphTargetDirectory = _packageTargetDirectories.find(packageGraphId);
+			if (findPackageGraphTargetDirectory != _packageTargetDirectories.end())
+			{
+				auto findPackageTargetDirectory = findPackageGraphTargetDirectory->second.find(packageId);
+				if (findPackageTargetDirectory != findPackageGraphTargetDirectory->second.end())
+				{
+					return findPackageTargetDirectory->second;
+				}
+				else
+				{
+					throw std::runtime_error(
+						std::format("packageId [{}] not found in lookup", packageId));
+				}
+			}
+			else
+			{
+				throw std::runtime_error(
+					std::format("PackageGraphId [{}] not found in lookup", packageGraphId));
+			}
+		}
+
 		/// <summary>
 		/// Equality operator
 		/// </summary>
@@ -246,7 +276,8 @@ export namespace Soup::Core
 		{
 			return _rootPackageGraphId == rhs._rootPackageGraphId &&
 				_packageGraphLookup == rhs._packageGraphLookup &&
-				_packageLookup == rhs._packageLookup;
+				_packageLookup == rhs._packageLookup &&
+				_packageTargetDirectories == rhs._packageTargetDirectories;
 		}
 
 		/// <summary>

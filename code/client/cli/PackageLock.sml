@@ -21,18 +21,18 @@ Closures: {
 			'parse.modules': { Version: '../../tools/parse-modules/', Build: 'Build0', Tool: 'Tool0' }
 		}
 		Wren: {
-			'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build2', Tool: 'Tool0' }
+			'Soup|Build.Utils': { Version: 0.8.0, Build: 'Build2', Tool: 'Tool0' }
 			'Soup|Wren': { Version: 0.4.3, Build: 'Build2', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.3 }
+			'Soup|Cpp': { Version: 0.15.4 }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.3 }
+			'Soup|Cpp': { Version: 0.15.4 }
 			'mwasplund|Soup.Test.Cpp': { Version: 0.14.0 }
 		}
 	}

@@ -15,4 +15,4 @@ rm -r -f $ROOT_DIR/out/msbuild/bin/SoupView/$FLAVOR/net9.0/linux-x64/publish/
 
 # Build SWhere tool
 echo dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64 --self-contained
-eval dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64 --self-contained
+dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64 --self-contained

@@ -35,6 +35,9 @@ namespace Soup::Core
 		const std::map<std::string, KnownLanguage>& _knownLanguageLookup;
 		const std::map<std::string, std::map<PackageName, SemanticVersion>>& _builtInPackageLookup;
 
+		// Location Manager
+		RecipeBuildLocationManager& _locationManager;
+
 		// Arguments
 		const ValueTable& _targetBuildGlobalParameters;
 
@@ -64,6 +67,7 @@ namespace Soup::Core
 			const Path& builtInPackageDirectory,
 			const std::map<std::string, KnownLanguage>& knownLanguageLookup,
 			const std::map<std::string, std::map<PackageName, SemanticVersion>>& builtInPackageLookup,
+			RecipeBuildLocationManager& locationManager,
 			const ValueTable& targetBuildGlobalParameters,
 			const ValueTable& hostBuildGlobalParameters,
 			Path userDataPath,
@@ -71,6 +75,7 @@ namespace Soup::Core
 			_builtInPackageDirectory(builtInPackageDirectory),
 			_knownLanguageLookup(knownLanguageLookup),
 			_builtInPackageLookup(builtInPackageLookup),
+			_locationManager(locationManager),
 			_targetBuildGlobalParameters(targetBuildGlobalParameters),
 			_hostBuildGlobalParameters(hostBuildGlobalParameters),
 			_userDataPath(std::move(userDataPath)),
@@ -141,10 +146,83 @@ namespace Soup::Core
 			for (auto& toolDependency : toolDependencyProjects)
 				Log::Warning("Top Level Tool Dependency discarded: {}", toolDependency.OriginalReference.ToString());
 
-			return PackageProvider(rootGraphId, std::move(_packageGraphLookup), std::move(_packageLookup));
+			auto packageTargetDirectories = LoadTargetDirectories();
+
+			return PackageProvider(
+				rootGraphId,
+				std::move(_packageGraphLookup),
+				std::move(_packageLookup),
+				std::move(packageTargetDirectories));
 		}
 
 	private:
+		PackageTargetDirectories LoadTargetDirectories()
+		{
+			auto result = PackageTargetDirectories();
+
+			for (const auto& [_, graph] : _packageGraphLookup)
+			{
+				auto packageTargetDirectories = std::map<PackageId, Path>();
+				LoadTargetDirectories(
+					packageTargetDirectories,
+					graph.GlobalParameters,
+					graph.RootPackageId);
+
+				result.emplace(graph.Id, std::move(packageTargetDirectories));
+			}
+
+			return result;
+		}
+		
+		void LoadTargetDirectories(
+			std::map<PackageId, Path>& targetDirectories,
+			const ValueTable& globalParameters,
+			const PackageId packageId)
+		{
+			auto findPackageInfo = _packageLookup.find(packageId);
+			if (findPackageInfo != _packageLookup.end())
+			{
+				const auto& packageInfo = findPackageInfo->second;
+				Path targetDirectory;
+				if (packageInfo.IsPrebuilt)
+				{
+					// The target directory is under the root
+					targetDirectory = packageInfo.PackageRoot + _builtInPackageOutPath;
+				}
+				else
+				{
+					targetDirectory = _locationManager.GetOutputDirectory(
+						packageInfo.Name,
+						packageInfo.PackageRoot,
+						*packageInfo.Recipe,
+						globalParameters,
+						_recipeCache);
+				}
+
+				targetDirectories.emplace(packageInfo.Id, std::move(targetDirectory));
+
+				for (const auto& [dependencyType, dependencies] : packageInfo.Dependencies)
+				{
+					for (const auto& dependency : dependencies)
+					{
+						if (!dependency.IsSubGraph)
+						{
+							LoadTargetDirectories(
+								targetDirectories,
+								globalParameters,
+								dependency.PackageId);
+						}
+					}
+				}
+			}
+			else
+			{
+				throw std::runtime_error(
+					std::format("packageId [{}] not found in lookup", packageId));
+			}
+			
+		}
+
 		const PackageLockState& LoadPackageLock(const Path& projectRoot)
 		{
 			auto packageLockPath = projectRoot + BuildConstants::PackageLockFileName();
@@ -182,7 +260,7 @@ namespace Soup::Core
 				}
 				else
 				{
-					Log::Error("Missing or invalid package lock");
+					Log::Error("Missing or invalid package lock {}", packageLockPath.ToString());
 					Log::HighPriority("Run `restore` and try again");
 
 					// Nothing we can do, exit
@@ -504,7 +582,6 @@ namespace Soup::Core
 					packageIdentifier.GetPackageName(),
 					false,
 					projectRoot,
-					Path(),
 					&recipe,
 					std::move(dependencyProjects)));
 		}
@@ -1234,9 +1311,6 @@ namespace Soup::Core
 					packageRoot,
 					std::make_pair(graphId, packageToolDependencies));
 
-				// The target directory is under the root
-				auto targetDirectory = packageRoot + _builtInPackageOutPath;
-
 				// Save the package info
 				auto packageName = PackageName(activeReference.GetOwner(), activeReference.GetName());
 				_packageLookup.emplace(
@@ -1246,7 +1320,6 @@ namespace Soup::Core
 						std::move(packageName),
 						true,
 						std::move(packageRoot),
-						std::move(targetDirectory),
 						nullptr,
 						{}));
 

@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "configurations": [
+  "configurations": [   
     {
       "name": "Debug Swhere",
       "type": "coreclr",
@@ -53,32 +53,30 @@
       "externalConsole": false
     },
     {
-      "name": "Debug Soup",
+      "name": "Debug Soup (GDB)",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/out/run/soup",
       "args": [
         "build",
-        "samples/c++/build-extension/executable"
+        "samples/cpp/build-extension/executable"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": true,
-      "linux": {
-        "MIMode": "gdb"
-      },
+      "externalConsole": false,
+      "MIMode": "gdb",
       "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          },
+          {
+              "description": "Set Disassembly Flavor to Intel",
+              "text": "-gdb-set disassembly-flavor intel",
+              "ignoreFailures": true
+          }
       ]
     },
     {

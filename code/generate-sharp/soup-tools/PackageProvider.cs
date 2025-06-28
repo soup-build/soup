@@ -4,13 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using PackageChildrenMap = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Soup.View.PackageChildInfo>>;
+using PackageChildrenMap = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Soup.Tools.PackageChildInfo>>;
 using PackageGraphId = System.Int32;
-using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.View.PackageGraph>;
+using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageGraph>;
 using PackageId = System.Int32;
-using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.View.PackageInfo>;
+using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageInfo>;
+using PackageTargetDirectories = System.Collections.Generic.IDictionary<int, System.Collections.Generic.IDictionary<int, Opal.Path>>;
 
-namespace Soup.View;
+namespace Soup.Tools;
 
 public class PackageChildInfo
 {
@@ -27,7 +28,6 @@ public class PackageInfo
 	public string Owner { get; set; } = string.Empty;
 	public bool IsPrebuilt { get; set; }
 	public string PackageRoot { get; set; } = string.Empty;
-	public string TargetDirectory { get; set; } = string.Empty;
 	public PackageChildrenMap Dependencies { get; init; } = new Dictionary<string, IList<PackageChildInfo>>();
 }
 
@@ -46,6 +46,7 @@ public class PackageProvider
 	public PackageGraphId RootPackageGraphId { get; set; }
 	public PackageGraphLookupMap PackageGraphLookup { get; init; } = new Dictionary<int, PackageGraph>();
 	public PackageLookupMap PackageLookup { get; init; } = new Dictionary<int, PackageInfo>();
+	public PackageTargetDirectories PackageTargetDirectories { get; init; } = new Dictionary<int, IDictionary<int, Opal.Path>>();
 
 	public PackageGraph GetRootPackageGraph()
 	{
@@ -75,6 +76,26 @@ public class PackageProvider
 		else
 		{
 			throw new InvalidOperationException($"packageId [{packageId}] not found in lookup");
+		}
+	}
+
+	public Opal.Path GetPackageTargetDirectory(PackageGraphId packageGraphId, PackageId packageId)
+	{
+		// The PackageInfo must already be loaded
+		if (this.PackageTargetDirectories.TryGetValue(packageGraphId, out var packageTargetDirectorySet))
+		{
+			if (packageTargetDirectorySet.TryGetValue(packageId, out var result))
+			{
+				return result;
+			}
+			else
+			{
+				throw new InvalidOperationException($"packageId [{packageId}] not found in package target directories");
+			}
+		}
+		else
+		{
+			throw new InvalidOperationException($"packageGraphId [{packageGraphId}] not found in package target directories");
 		}
 	}
 }

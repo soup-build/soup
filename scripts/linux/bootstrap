@@ -1,49 +1,28 @@
 #!/bin/bash
-echo "Bootstrap!"
+echo "Bootstrap Build"
 
 # Stop on first error
 set -e
 
+FLAVOR="Release"
 SCRIPTS_DIR=$(dirname "$0")
-REPO_DIR=$SCRIPTS_DIR/../..
-SOURCE_DIR=$REPO_DIR/Source
 
-SOUP_DIR=$REPO_DIR/out/run/
-SOUP=$SOUP_DIR/soup
-GENERATE=$SOUP_DIR/generate
+# Build Client
+echo $SCRIPTS_DIR/bootstrap-client
+$SCRIPTS_DIR/bootstrap-client
 
-SOUP_PACKAGES_DIR=/home/mwasplund/.soup/packages
+# Build SWhere tool
+echo $SCRIPTS_DIR/build-swhere $FLAVOR
+$SCRIPTS_DIR/build-swhere $FLAVOR
 
-BOOTSTRAP='dotnet run --project $SOURCE_DIR/GenerateSharp/BootstrapBuild/'
+# Build PackageManager
+echo $SCRIPTS_DIR/build-packagemanager $FLAVOR
+$SCRIPTS_DIR/build-packagemanager $FLAVOR
 
-# sudo apt install build-essentials
-# sudo apt install clang
-# sudo apt install dotnet-sdk-8.0
+# Build Tools
+echo $SCRIPTS_DIR/bootstrap-tools
+$SCRIPTS_DIR/bootstrap-tools
 
-eval $SOUP restore $SOURCE_DIR/client/cli/
-
-eval $GENERATE $SOUP_PACKAGES_DIR/Wren/mwasplund/Soup.Build.Utils/0.7.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Wren/mwasplund/Soup.Build.Utils/0.7.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-
-eval $GENERATE $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler/0.11.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler/0.11.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-
-eval $GENERATE $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler.Clang/0.3.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler.Clang/0.3.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-
-eval $GENERATE $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler.GCC/0.4.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler.GCC/0.4.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-
-eval $GENERATE $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler.MSVC/0.10.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Wren/Soup/Cpp.Compiler.MSVC/0.10.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-
-eval $GENERATE $SOUP_PACKAGES_DIR/Wren/Soup/Cpp/0.12.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Wren/Soup/Cpp/0.12.0/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/
-
-eval $SOUP build $SOUP_PACKAGES_DIR/Wren/Soup/Cpp/0.12.0/ -force -flavor Release
-
-eval $SOUP build $SOUP_PACKAGES_DIR/Cpp/mwasplund/Opal/0.11.0/ -skipEvaluate -v:d
-eval $GENERATE $SOUP_PACKAGES_DIR/Cpp/mwasplund/Opal/0.11.0/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/
-eval $BOOTSTRAP $SOUP_PACKAGES_DIR/Cpp/mwasplund/Opal/0.11.0/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/
-
-echo "Finished"
+# Build View
+echo $SCRIPTS_DIR/build-view $FLAVOR
+$SCRIPTS_DIR/build-view $FLAVOR

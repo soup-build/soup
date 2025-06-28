@@ -16,7 +16,7 @@ CONFIG_HASH=OZlIVjblazFuKXg-raWUNoGEnG4
 
 OWNER=mwasplund
 
-SOUP_VERSION="0.42.1"
+SOUP_VERSION="0.42.2"
 COPY_VERSION="1.1.0"
 MKDIR_VERSION="1.1.0"
 PARSE_MODULES_VERSION="1.1.0"
@@ -51,4 +51,4 @@ cp -p -R $MSBUILD_DIR/bin/SoupView/Debug/net9.0/linux-x64/publish/ $RUN_DIR/View
 
 cp -p -R $MSBUILD_DIR/bin/Swhere/Debug/net9.0/linux-x64/publish/Swhere $RUN_DIR/swhere
 
-eval $RUN_DIR/soup "$@"
+$RUN_DIR/soup "$@"

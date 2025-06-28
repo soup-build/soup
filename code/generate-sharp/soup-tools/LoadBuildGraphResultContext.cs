@@ -4,7 +4,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Soup.View;
+namespace Soup.Tools;
 
 [JsonSourceGenerationOptions(
 	WriteIndented = false,

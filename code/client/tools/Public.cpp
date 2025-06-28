@@ -3,6 +3,7 @@
 #include <format>
 #include <memory>
 #include <string>
+#include <spanstream>
 
 #ifdef _WIN32
 #include <combaseapi.h>
@@ -77,7 +78,6 @@ json11::Json ConvertToJson(const PackageLookupMap& lookup)
 			{ "Owner", std::move(ownerValue) },
 			{ "IsPrebuilt", value.second.IsPrebuilt },
 			{ "PackageRoot", value.second.PackageRoot.ToString() },
-			{ "TargetDirectory", value.second.TargetDirectory.ToString() },
 			{ "Dependencies",  std::move(dependencies) },
 		});
 		result.push_back(std::move(jsonValue));
@@ -86,12 +86,76 @@ json11::Json ConvertToJson(const PackageLookupMap& lookup)
 	return result;
 }
 
-std::string LoadBuildGraphContent(const Path& workingDirectory)
+json11::Json ConvertToJson(const PackageTargetDirectories& packageGraphTargetDirectories)
+{
+	auto result = json11::Json::object();
+
+	for (const auto& [packageGraphId, packageTargetDirectories] : packageGraphTargetDirectories)
+	{
+		auto packageTargetDirectoriesResult = json11::Json::object();
+		for (const auto& [packageId, targetDirectory] : packageTargetDirectories)
+		{
+			packageTargetDirectoriesResult.emplace(std::to_string(packageId), targetDirectory.ToString());
+		}
+
+		result.emplace(std::to_string(packageGraphId), std::move(packageTargetDirectoriesResult));
+	}
+
+	return result;
+}
+
+Value JsonToValue(const json11::Json& json);
+
+ValueList JsonToValueList(const json11::Json::array& json)
+{
+	auto result = ValueList();
+	for (const auto& value : json)
+	{
+		result.push_back(JsonToValue(value));
+	}
+
+	return result;
+}
+
+ValueTable JsonToValueTable(const json11::Json::object& json)
+{
+	auto result = ValueTable();
+	for (const auto& [key, value] : json)
+	{
+		result.emplace(key, JsonToValue(value));
+	}
+
+	return result;
+}
+
+Value JsonToValue(const json11::Json& json)
+{
+	switch (json.type())
+	{
+		case json11::Json::NUL:
+			throw std::runtime_error("Null is not supported as value");
+		case json11::Json::NUMBER:
+			return Value(json.number_value());
+		case json11::Json::BOOL:
+			return Value(json.bool_value());
+		case json11::Json::STRING:
+			return Value(json.string_value());
+		case json11::Json::ARRAY:
+			return Value(JsonToValueList(json.array_items()));
+		case json11::Json::OBJECT:
+			return Value(JsonToValueTable(json.object_items()));
+		default:
+			throw std::runtime_error("Unknown json type");
+	}
+}
+
+std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::istream& globalParametersStream)
 {
 	try
 	{
 		// Setup the filter
 		auto defaultTypes =
+			static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
 			static_cast<uint32_t>(TraceEventFlag::Information) |
 			static_cast<uint32_t>(TraceEventFlag::HighPriority) |
 			static_cast<uint32_t>(TraceEventFlag::Warning) |
@@ -112,7 +176,8 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 		System::ISystem::Register(std::make_shared<System::STLSystem>());
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
-		auto globalParameters = ValueTable();
+		auto workingDirectory = Path(workingDirectoryString);
+		auto globalParameters = ValueTableReader::Deserialize(globalParametersStream);
 
 		// Find the built in folder root
 		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
@@ -132,11 +197,13 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 
 		auto packageGraphs = ConvertToJson(packageProvider.GetPackageGraphLookup());
 		auto packages = ConvertToJson(packageProvider.GetPackageLookup());
+		auto packageTargetDirectories = ConvertToJson(packageProvider.GetPackageTargetDirectories());
 
 		json11::Json jsonGraphResult = json11::Json::object({
 			{ "RootPackageGraphId", packageProvider.GetRootPackageGraphId() },
-			{ "PackageGraphs", packageGraphs },
-			{ "Packages", packages },
+			{ "PackageGraphs", std::move(packageGraphs) },
+			{ "Packages", std::move(packages) },
+			{ "PackageTargetDirectories", std::move(packageTargetDirectories) },
 		});
 
 		json11::Json jsonResult = json11::Json::object({
@@ -167,10 +234,15 @@ std::string LoadBuildGraphContent(const Path& workingDirectory)
 
 extern "C"
 {
-	SOUP_TOOLS_API const char* LoadBuildGraph(const char* workingDirectory)
+	SOUP_TOOLS_API const char* LoadBuildGraph(
+		const char* workingDirectory,
+		const char* globalParametersBuffer,
+		size_t globalParametersLength)
 	{
-		auto workingDirectoryPath = Path(workingDirectory);
-		auto value = LoadBuildGraphContent(workingDirectoryPath);
+		auto globalParameters = std::ispanstream(
+			std::span<char>(const_cast<char*>(globalParametersBuffer), globalParametersLength));
+
+		auto value = LoadBuildGraphContent(workingDirectory, globalParameters);
 
 		auto result = (char*)CoTaskMemAlloc(value.size() + 1);
 		value.copy(result, value.size());

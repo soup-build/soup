@@ -25,7 +25,6 @@ namespace Soup::Core
 		PackageProvider& _packageProvider;
 		IEvaluateEngine& _evaluateEngine;
 		FileSystemState& _fileSystemState;
-		RecipeBuildLocationManager& _locationManager;
 
 		// Mapping from package id to the required information to be used with dependencies parameters
 		std::map<PackageId, RecipeBuildCacheState> _buildCache;
@@ -44,8 +43,7 @@ namespace Soup::Core
 			RecipeCache& recipeCache,
 			PackageProvider& packageProvider,
 			IEvaluateEngine& evaluateEngine,
-			FileSystemState& fileSystemState,
-			RecipeBuildLocationManager& locationManager) :
+			FileSystemState& fileSystemState) :
 			_arguments(arguments),
 			_userDataPath(std::move(userDataPath)),
 			_systemReadAccess(systemReadAccess),
@@ -53,7 +51,6 @@ namespace Soup::Core
 			_packageProvider(packageProvider),
 			_evaluateEngine(evaluateEngine),
 			_fileSystemState(fileSystemState),
-			_locationManager(locationManager),
 			_buildCache()
 		{
 		}
@@ -86,7 +83,9 @@ namespace Soup::Core
 		/// <summary>
 		/// Build the dependencies for the provided recipe recursively
 		/// </summary>
-		void BuildPackageAndDependencies(const PackageGraph& packageGraph, const PackageInfo& packageInfo)
+		void BuildPackageAndDependencies(
+			const PackageGraph& packageGraph,
+			const PackageInfo& packageInfo)
 		{
 			if (packageInfo.IsPrebuilt)
 			{
@@ -96,6 +95,11 @@ namespace Soup::Core
 				}
 				else
 				{
+					// Get the target directory
+					const auto& targetDirectory = _packageProvider.GetTargetDirectory(
+						packageGraph.Id,
+						packageInfo.Id);
+
 					// Cache the build state for upstream dependencies
 					Log::Diag("Package was prebuilt: {}", packageInfo.Name.ToString());
 					_buildCache.emplace(
@@ -103,8 +107,8 @@ namespace Soup::Core
 						RecipeBuildCacheState(
 							packageInfo.Name.ToString(),
 							Path(std::format("/(TARGET_{})/", packageInfo.Name.ToString())),
-							packageInfo.TargetDirectory,
-							packageInfo.TargetDirectory + Path("./.soup/"),
+							targetDirectory,
+							targetDirectory + Path("./.soup/"),
 							{},
 							{}));
 				}
@@ -135,8 +139,11 @@ namespace Soup::Core
 					}
 				}
 
+				// Get the target directory
+				const auto& targetDirectory = _packageProvider.GetTargetDirectory(packageGraph.Id, packageInfo.Id);
+
 				// Build the target recipe
-				CheckBuildPackage(packageGraph, packageInfo);
+				CheckBuildPackage(packageGraph.GlobalParameters, packageInfo, targetDirectory);
 			}
 		}
 
@@ -144,7 +151,10 @@ namespace Soup::Core
 		/// The core build that will either invoke the recipe builder directly
 		/// or load a previous state
 		/// </summary>
-		void CheckBuildPackage(const PackageGraph& packageGraph, const PackageInfo& packageInfo)
+		void CheckBuildPackage(
+			const ValueTable& globalParameters,
+			const PackageInfo& packageInfo,
+			const Path& targetDirectory)
 		{
 			// TODO: RAII for active id
 			try
@@ -160,7 +170,7 @@ namespace Soup::Core
 				else
 				{
 					// Run the required builds in process
-					RunBuild(packageGraph, packageInfo);
+					RunBuild(globalParameters, packageInfo, targetDirectory);
 				}
 
 				Log::SetActiveId(0);
@@ -175,7 +185,10 @@ namespace Soup::Core
 		/// <summary>
 		/// Setup and run the individual components of the Generate and Evaluate phases for a given package
 		/// </summary>
-		void RunBuild(const PackageGraph& packageGraph, const PackageInfo& packageInfo)
+		void RunBuild(
+			const ValueTable& globalParameters,
+			const PackageInfo& packageInfo,
+			const Path& targetDirectory)
 		{
 			Log::Info("Build '{}'", packageInfo.Name.ToString());
 
@@ -184,24 +197,18 @@ namespace Soup::Core
 				std::format("/(PACKAGE_{})/", packageInfo.Name.ToString()));
 			auto macroTargetDirectory = Path(
 				std::format("/(TARGET_{})/", packageInfo.Name.ToString()));
-			auto realTargetDirectory = _locationManager.GetOutputDirectory(
-				packageInfo.Name,
-				packageInfo.PackageRoot,
-				*packageInfo.Recipe,
-				packageGraph.GlobalParameters,
-				_recipeCache);
-			auto soupTargetDirectory = realTargetDirectory + BuildConstants::SoupTargetDirectory();
+			auto soupTargetDirectory = targetDirectory + BuildConstants::SoupTargetDirectory();
 
 			// Build up the set of directories and macros that grant access to the generate/evaluate phases
 			auto packageAccessSet = GenerateAccessSet(
 				packageInfo,
 				macroPackageDirectory,
 				macroTargetDirectory,
-				realTargetDirectory);
+				targetDirectory);
 
 			// Preload target
 			// TODO: Ideally this should be done in the preload step, but easier here with the graph id
-			_fileSystemState.PreloadDirectory(realTargetDirectory, false);
+			_fileSystemState.PreloadDirectory(targetDirectory, false);
 
 			//////////////////////////////////////////////
 			// GENERATE
@@ -215,9 +222,9 @@ namespace Soup::Core
 					packageInfo,
 					macroPackageDirectory,
 					macroTargetDirectory,
-					realTargetDirectory,
+					targetDirectory,
 					soupTargetDirectory,
-					packageGraph.GlobalParameters,
+					globalParameters,
 					packageAccessSet);
 			}
 
@@ -230,7 +237,7 @@ namespace Soup::Core
 					evaluateGraph,
 					evaluateResults,
 					evaluateResultsFile,
-					realTargetDirectory);
+					targetDirectory);
 			}
 
 			// Cache the build state for upstream dependencies
@@ -239,7 +246,7 @@ namespace Soup::Core
 				RecipeBuildCacheState(
 					packageInfo.Name.ToString(),
 					std::move(macroTargetDirectory),
-					std::move(realTargetDirectory),
+					targetDirectory,
 					std::move(soupTargetDirectory),
 					std::move(packageAccessSet.EvaluateRecursiveReadDirectories),
 					std::move(packageAccessSet.EvaluateRecursiveMacros)));

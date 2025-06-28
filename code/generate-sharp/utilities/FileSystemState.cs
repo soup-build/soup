@@ -11,6 +11,11 @@ namespace Soup.Build.Utilities;
 public record FileId(uint Value)
 {
 	public static FileId Invalid => new FileId(uint.MaxValue);
+
+	public override string ToString()
+	{
+		return $"{this.Value}";
+	}
 }
 
 /// <summary>

@@ -100,10 +100,12 @@ namespace Soup::Core
 			// Generate the package build graph
 			auto knownLanguages = GetKnownLanguages();
 			auto builtInPackages = GetBuiltInPackages();
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto loadEngine = BuildLoadEngine(
 				builtInDirectory,
 				knownLanguages,
 				builtInPackages,
+				locationManager,
 				targetGlobalParameters,
 				hostGlobalParameters,
 				userDataPath,
@@ -153,10 +155,6 @@ namespace Soup::Core
 		{
 			auto startTime = std::chrono::high_resolution_clock::now();
 
-			// Initialize shared location manager
-			auto knownLanguages = GetKnownLanguages();
-			auto locationManager = RecipeBuildLocationManager(knownLanguages);
-
 			// Load the system specific state
 			auto systemReadAccess = LoadHostSystemAccess();
 
@@ -179,8 +177,7 @@ namespace Soup::Core
 				recipeCache,
 				packageProvider,
 				evaluateEngine,
-				fileSystemState,
-				locationManager);
+				fileSystemState);
 			buildRunner.Execute();
 
 			auto endTime = std::chrono::high_resolution_clock::now();
