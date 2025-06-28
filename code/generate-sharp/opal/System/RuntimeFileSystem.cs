@@ -31,7 +31,8 @@ public class RuntimeFileSystem : IFileSystem
 
 	public Path GetCurrentDirectory()
 	{
-		throw new NotImplementedException();
+		var currentDirectory = global::System.IO.Directory.GetCurrentDirectory();
+		return Path.Parse($"{currentDirectory}\\");
 	}
 
 	public bool Exists(Path path)

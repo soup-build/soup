@@ -44,23 +44,38 @@ public class ScriptBuilder
 		await writer.WriteLineAsync("# Stop on first error");
 		await writer.WriteLineAsync("set -e");
 
+		await writer.WriteLineAsync();
+		await writer.WriteLineAsync("SCRIPTS_DIR=$(dirname \"$0\")");
+		await writer.WriteLineAsync("ROOT_DIR=$SCRIPTS_DIR/../..");
+		await writer.WriteLineAsync("USER_ROOT=/home/$USER");
+
+		var knownPathManager = new KnownPathManager([
+			(LifetimeManager.Get<IFileSystem>().GetCurrentDirectory().ToString(), "$ROOT_DIR/"),
+			(LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory().ToString(), "$USER_ROOT/"),
+		]);
+
 		var walker = new PackageGraphWalker(dependencyGraph);
 		foreach (var package in walker.WalkGraph())
 		{
 			var targetDirectory = dependencyGraph.GetPackageTargetDirectory(dependencyGraph.RootPackageGraphId, package.Id);
-			await WritePackageBuildOperationsAsync(writer, package, targetDirectory);
+			await WritePackageBuildOperationsAsync(writer, knownPathManager, package, targetDirectory);
 		}
 	}
 
-	private async Task WritePackageBuildOperationsAsync(StreamWriter writer, PackageInfo package, Path targetDirectory)
+	private async Task WritePackageBuildOperationsAsync(
+		StreamWriter writer,
+		KnownPathManager knownPathManager,
+		PackageInfo package,
+		Path targetDirectory)
 	{
 		var operationGraph = LoadOperationGraph(targetDirectory);
 
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync($"# Setup {package.Name}");
 
-		await writer.WriteLineAsync($"echo mkdir -p \"{targetDirectory}\"");
-		await writer.WriteLineAsync($"mkdir -p \"{targetDirectory}\"");
+		var resolveTargetDirectory = knownPathManager.ResolvePath(targetDirectory);
+		await writer.WriteLineAsync($"echo mkdir -p \"{resolveTargetDirectory}\"");
+		await writer.WriteLineAsync($"mkdir -p \"{resolveTargetDirectory}\"");
 
 		await writer.WriteLineAsync();
 		await writer.WriteLineAsync($"# Build {package.Name}");
@@ -70,8 +85,8 @@ public class ScriptBuilder
 		{
 			await writer.WriteLineAsync($"echo \"{operation.Title}\"");
 
-			var command = operation.Command.Executable.ToString();
-			var arguments = operation.Command.Arguments;
+			var command = knownPathManager.ResolvePath(operation.Command.Executable);
+			var arguments = knownPathManager.ResolveValues(operation.Command.Arguments);
 			if (command.EndsWith("/mkdir.exe"))
 			{
 				command = "mkdir";
@@ -91,7 +106,8 @@ public class ScriptBuilder
 			}
 
 			var argumentsString = string.Join(" ", arguments.Select(EscapeString));
-			await writer.WriteLineAsync($"(cd \"{operation.Command.WorkingDirectory}\" && \"{command}\" {argumentsString})");
+			var resolvedWorkingDirectory = knownPathManager.ResolvePath(operation.Command.WorkingDirectory);
+			await writer.WriteLineAsync($"(cd \"{resolvedWorkingDirectory}\" && \"{command}\" {argumentsString})");
 		}
 	}
 
