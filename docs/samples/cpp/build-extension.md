@@ -3,7 +3,7 @@ This is a console application that has a custom build extension that alters the 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension)
 
-## Tool/Recipe.sml
+## Tool/recipe.sml
 The Recipe file that defines the executable "Samples.Cpp.SimpleBuildExtension.Tool" that will be run as part of the build.
 ```sml
 Name: 'Samples.SimpleBuildExtension.Tool'
@@ -12,7 +12,7 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## Tool/PackageLock.sml
+## Tool/package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -49,7 +49,7 @@ int main()
 }
 ```
 
-## Extension/Recipe.sml
+## Extension/recipe.sml
 The Recipe file that defines the build extension dynamic library "Samples.Cpp.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.Cpp.BuildExtension.Extension'
@@ -68,7 +68,7 @@ Dependencies: {
 }
 ```
 
-## Extension/PackageLock.sml
+## Extension/package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```sml
 Version: 5
@@ -171,7 +171,7 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## Executable/Recipe.sml
+## Executable/recipe.sml
 The Recipe file that defines the executable "Samples.Cpp.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.SimpleBuildExtension.Executable'
@@ -185,7 +185,7 @@ Dependencies: {
 }
 ```
 
-## Executable/PackageLock.sml
+## Executable/package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5

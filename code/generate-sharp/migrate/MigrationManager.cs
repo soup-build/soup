@@ -68,7 +68,7 @@ public static class MigrationManager
 	private static async Task BuildRecipeAsync(Path target, CSProjParser parser)
 	{
 		var projectName = target.FileStem;
-		var targetRecipe = target.GetParent() + new Path("./Recipe.sml");
+		var targetRecipe = target.GetParent() + new Path("./recipe.sml");
 
 		var recipe = new Recipe(projectName, new LanguageReference("C#", new SemanticVersion(0)))
 		{

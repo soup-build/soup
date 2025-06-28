@@ -3,7 +3,7 @@ This is a windows application that demonstrates creating a GUI windows applicati
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/windows-application)
 
-## Recipe.sml
+## recipe.sml
 The Recipe file that defines the sample application.
 ```
 Name: 'Samples.Cpp.WindowsApplication'
@@ -13,7 +13,7 @@ Version: 1.0.0
 Resources: 'WindowsProject.rc'
 ```
 
-## PackageLock.sml
+## package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```sml
 Version: 5

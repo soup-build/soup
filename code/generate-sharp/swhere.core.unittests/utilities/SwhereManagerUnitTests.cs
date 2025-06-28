@@ -81,7 +81,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 				"WARN: Local User Config file does not exist",
 				"INFO: No existing local user config.",
 				"HIGH: Discover DotNet",
@@ -203,7 +203,7 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -244,7 +244,7 @@ public class SwhereManagerUnitTests
 				"GetChildDirectories: C:/Program Files (x86)/Windows Kits/10/include/",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -279,7 +279,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();
@@ -488,7 +488,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-			"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+			"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 			"WARN: Local User Config file does not exist",
 			"INFO: No existing local user config.",
 			"HIGH: Discover DotNet",
@@ -610,7 +610,7 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -651,7 +651,7 @@ public class SwhereManagerUnitTests
 				"GetChildDirectories: D:/MyCustom/Windows Kits/10/include/",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -686,7 +686,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();
@@ -884,7 +884,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 				"WARN: Local User Config file does not exist",
 				"INFO: No existing local user config.",
 				"HIGH: Discover DotNet",
@@ -1005,7 +1005,7 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -1045,7 +1045,7 @@ public class SwhereManagerUnitTests
 				"OpenRead: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build/Microsoft.VCToolsVersion.default.txt",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -1080,7 +1080,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();
@@ -1279,7 +1279,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 				"WARN: Local User Config file does not exist",
 				"INFO: No existing local user config.",
 				"HIGH: Discover DotNet",
@@ -1401,7 +1401,7 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -1442,7 +1442,7 @@ public class SwhereManagerUnitTests
 				"GetChildDirectories: C:/Program Files (x86)/Windows Kits/10/include/",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -1478,7 +1478,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();
@@ -1687,7 +1687,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 				"WARN: Local User Config file does not exist",
 				"INFO: No existing local user config.",
 				"HIGH: Discover DotNet",
@@ -1809,7 +1809,7 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -1850,7 +1850,7 @@ public class SwhereManagerUnitTests
 				"GetChildDirectories: C:/Program Files (x86)/Windows Kits/10/include/",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -1885,7 +1885,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();
@@ -2089,7 +2089,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 				"WARN: Local User Config file does not exist",
 				"INFO: No existing local user config.",
 				"HIGH: Discover DotNet",
@@ -2212,7 +2212,7 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -2253,7 +2253,7 @@ public class SwhereManagerUnitTests
 				"GetChildDirectories: C:/Program Files (x86)/Windows Kits/10/include/",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -2288,7 +2288,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();
@@ -2504,7 +2504,7 @@ public class SwhereManagerUnitTests
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(original));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/LocalUserConfig.sml"),
+			new Path("C:/Users/Me/.soup/local-user-config.sml"),
 			new MockFile(originalContent));
 
 		mockProcessManager.RegisterExecuteResult(
@@ -2548,7 +2548,7 @@ public class SwhereManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Local User Config: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"DIAG: Load Local User Config: C:/Users/Me/.soup/local-user-config.sml",
 				"HIGH: Discover DotNet",
 				"INFO: C:/Windows/System32/where.exe dotnet",
 				"HIGH: Using DotNet: C:/Program Files/dotnet/dotnet.exe",
@@ -2668,8 +2668,8 @@ public class SwhereManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/LocalUserConfig.sml",
-				"OpenRead: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"Exists: C:/Users/Me/.soup/local-user-config.sml",
+				"OpenRead: C:/Users/Me/.soup/local-user-config.sml",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/3.1.32/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.17/",
 				"Exists: C:/Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/6.0.14/",
@@ -2710,7 +2710,7 @@ public class SwhereManagerUnitTests
 				"GetChildDirectories: C:/Program Files (x86)/Windows Kits/10/include/",
 				"Exists: C:/Users/Me/.soup/",
 				"CreateDirectory: C:/Users/Me/.soup/",
-				"OpenWriteTruncate: C:/Users/Me/.soup/LocalUserConfig.sml",
+				"OpenWriteTruncate: C:/Users/Me/.soup/local-user-config.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -2745,7 +2745,7 @@ public class SwhereManagerUnitTests
 			mockProcessManager.Requests);
 
 		// Verify the contents of the local user config file
-		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/LocalUserConfig.sml"));
+		var localUserConfig = mockFileSystem.GetMockFile(new Path("C:/Users/Me/.soup/local-user-config.sml"));
 		_ = localUserConfig.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(localUserConfig.Content);
 		var localUserConfigContent = await reader.ReadToEndAsync();

@@ -16,7 +16,7 @@ public static class DesignData
 		{
 			SelectedProject = new ProjectDetailsViewModel(
 				"TestProject",
-				new Path("C:/Test/Project/Recipe.sml"),
+				new Path("C:/Test/Project/recipe.sml"),
 				"mwasplund",
 				new Path("C:/Test/out/C++/Project/a29CJoijfoaijl;asdf/")),
 		};

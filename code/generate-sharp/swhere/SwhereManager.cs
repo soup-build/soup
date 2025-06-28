@@ -19,7 +19,7 @@ public static class SwhereManager
 	{
 		// Load up the Local User Config
 		var localUserConfigPath = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
-			new Path("./.soup/LocalUserConfig.sml");
+			new Path("./.soup/local-user-config.sml");
 		var (loadConfigResult, userConfig) =
 			await LocalUserConfigExtensions.TryLoadLocalUserConfigFromFileAsync(localUserConfigPath);
 		if (!loadConfigResult)

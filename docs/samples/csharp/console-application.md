@@ -3,7 +3,7 @@ This is a console application with the minimal amount of code to get up and runn
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application)
 
-## Recipe.sml
+## recipe.sml
 The Recipe file that defines the static library "Samples.CSharp.ConsoleApplication".
 ```sml
 Name: 'Samples.CSharp.ConsoleApplication'
@@ -13,7 +13,7 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## PackageLock.sml
+## package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5

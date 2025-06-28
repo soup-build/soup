@@ -20,7 +20,7 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto directory = Path("./TestFiles/NoFile/Recipe.sml");
+			auto directory = Path("./TestFiles/NoFile/recipe.sml");
 			Recipe actual;
 			auto result = RecipeExtensions::TryLoadRecipeFromFile(directory, actual);
 
@@ -29,7 +29,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryOpenReadBinary: ./TestFiles/NoFile/Recipe.sml",
+					"TryOpenReadBinary: ./TestFiles/NoFile/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -37,7 +37,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Load Recipe: ./TestFiles/NoFile/Recipe.sml",
+					"DIAG: Load Recipe: ./TestFiles/NoFile/recipe.sml",
 					"INFO: Recipe file does not exist.",
 				}), 
 				testListener->GetMessages(),
@@ -55,10 +55,10 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 			fileSystem->CreateMockFile(
-				Path("./TestFiles/GarbageRecipe/Recipe.sml"),
+				Path("./TestFiles/GarbageRecipe/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream("garbage")));
 
-			auto directory = Path("./TestFiles/GarbageRecipe/Recipe.sml");
+			auto directory = Path("./TestFiles/GarbageRecipe/recipe.sml");
 			Recipe actual;
 			auto result = RecipeExtensions::TryLoadRecipeFromFile(directory, actual);
 
@@ -67,7 +67,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryOpenReadBinary: ./TestFiles/GarbageRecipe/Recipe.sml",
+					"TryOpenReadBinary: ./TestFiles/GarbageRecipe/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -75,8 +75,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Load Recipe: ./TestFiles/GarbageRecipe/Recipe.sml",
-					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at 1:7  ./TestFiles/GarbageRecipe/Recipe.sml",
+					"DIAG: Load Recipe: ./TestFiles/GarbageRecipe/recipe.sml",
+					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at 1:7  ./TestFiles/GarbageRecipe/recipe.sml",
 					"INFO: Failed to parse Recipe.",
 				}), 
 				testListener->GetMessages(),
@@ -94,13 +94,13 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 			fileSystem->CreateMockFile(
-				Path("./TestFiles/SimpleRecipe/Recipe.sml"),
+				Path("./TestFiles/SimpleRecipe/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'MyPackage'
 					Language: (C++@1)
 				)")));
 
-			auto directory = Path("./TestFiles/SimpleRecipe/Recipe.sml");
+			auto directory = Path("./TestFiles/SimpleRecipe/recipe.sml");
 			Recipe actual;
 			auto result = RecipeExtensions::TryLoadRecipeFromFile(directory, actual);
 
@@ -117,7 +117,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryOpenReadBinary: ./TestFiles/SimpleRecipe/Recipe.sml",
+					"TryOpenReadBinary: ./TestFiles/SimpleRecipe/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -125,7 +125,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Load Recipe: ./TestFiles/SimpleRecipe/Recipe.sml",
+					"DIAG: Load Recipe: ./TestFiles/SimpleRecipe/recipe.sml",
 				}), 
 				testListener->GetMessages(),
 				"Verify messages match expected.");
@@ -142,7 +142,7 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto directory = Path("./TestFiles/SimpleRecipe/Recipe.sml");
+			auto directory = Path("./TestFiles/SimpleRecipe/recipe.sml");
 			auto recipe = Recipe(RecipeTable(
 			{
 				{ "Name", "MyPackage" },
@@ -153,7 +153,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"OpenWrite: ./TestFiles/SimpleRecipe/Recipe.sml",
+					"OpenWrite: ./TestFiles/SimpleRecipe/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -170,7 +170,7 @@ namespace Soup::Core::UnitTests
 R"(Name: 'MyPackage'
 Language: (C++@1)
 )";
-			auto mockBuildFile = fileSystem->GetMockFile(Path("./TestFiles/SimpleRecipe/Recipe.sml"));
+			auto mockBuildFile = fileSystem->GetMockFile(Path("./TestFiles/SimpleRecipe/recipe.sml"));
 			Assert::AreEqual(expectedBuildFile, mockBuildFile->Content.str(), "Verify file contents.");
 		}
 	};

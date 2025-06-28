@@ -105,11 +105,11 @@ public class PackageManagerUnitTests
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(originalContent));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/packages/C++/OtherPackage/1.2.3/Recipe.sml"),
+			new Path("C:/Users/Me/.soup/packages/C++/OtherPackage/1.2.3/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package1'
@@ -144,7 +144,7 @@ public class PackageManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
 				"INFO: Adding reference to recipe",
@@ -155,10 +155,10 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"GetUserProfileDirectory",
-				"OpenWriteTruncate: C:/Root/MyPackage/Recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/recipe.sml",
 				"Exists: C:/Users/Me/.soup/packages/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
@@ -178,7 +178,7 @@ public class PackageManagerUnitTests
 			Times.Once());
 
 		// Verify the contents of the recipe file
-		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/Recipe.sml"));
+		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/recipe.sml"));
 		_ = recipeFile.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var recipeReader = new System.IO.StreamReader(recipeFile.Content);
 		var recipeContent = await recipeReader.ReadToEndAsync();
@@ -217,11 +217,11 @@ public class PackageManagerUnitTests
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(originalContent));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/packages/C++/OtherPackage/1.2.3/Recipe.sml"),
+			new Path("C:/Users/Me/.soup/packages/C++/OtherPackage/1.2.3/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package1'
@@ -279,7 +279,7 @@ public class PackageManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
 				"HIGH: Latest Version: 1.2.3",
@@ -291,10 +291,10 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"GetUserProfileDirectory",
-				"OpenWriteTruncate: C:/Root/MyPackage/Recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/recipe.sml",
 				"Exists: C:/Users/Me/.soup/packages/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
@@ -320,7 +320,7 @@ public class PackageManagerUnitTests
 			Times.Once());
 
 		// Verify the contents of the recipe file
-		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/Recipe.sml"));
+		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/recipe.sml"));
 		_ = recipeFile.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var recipeReader = new System.IO.StreamReader(recipeFile.Content);
 		var recipeContent = await recipeReader.ReadToEndAsync();
@@ -359,7 +359,7 @@ public class PackageManagerUnitTests
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(originalContent));
 
 		// Pretend that there is a zip file created
@@ -372,7 +372,7 @@ public class PackageManagerUnitTests
 			[
 				new DirectoryEntry()
 				{
-					Path = new Path("C:/Root/MyPackage/Recipe.sml"),
+					Path = new Path("C:/Root/MyPackage/recipe.sml"),
 					IsDirectory = false,
 				},
 			]);
@@ -430,7 +430,7 @@ public class PackageManagerUnitTests
 		Assert.Equal(
 			[
 				"INFO: Publish Project: C:/Root/MyPackage/",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Using Package Store: C:/Users/Me/.soup/packages/",
 				"INFO: Request Authentication Token",
 				"INFO: Publish package",
@@ -442,8 +442,8 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"GetUserProfileDirectory",
 				"Exists: C:/Users/Me/.soup/packages/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
@@ -459,7 +459,7 @@ public class PackageManagerUnitTests
 
 		// Verify zip requests
 		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip")), Times.Once());
-		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/MyPackage/Recipe.sml"), "Recipe.sml"), Times.Once());
+		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/MyPackage/recipe.sml"), "recipe.sml"), Times.Once());
 		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
 		mockZipManager.VerifyNoOtherCalls();
 

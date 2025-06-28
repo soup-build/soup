@@ -80,19 +80,25 @@ namespace Soup::Core
 
 		static const Path& LocalUserConfigFileName()
 		{
-			static const auto value = Path("./LocalUserConfig.sml");
+			static const auto value = Path("./local-user-config.sml");
 			return value;
 		}
 
 		static const Path& PackageLockFileName()
 		{
-			static const auto value = Path("./PackageLock.sml");
+			static const auto value = Path("./package-lock.sml");
 			return value;
 		}
 
 		static const Path& RecipeFileName()
 		{
-			static const auto value = Path("./Recipe.sml");
+			static const auto value = Path("./recipe.sml");
+			return value;
+		}
+
+		static const Path& RootRecipeFileName()
+		{
+			static const auto value = Path("./root-recipe.sml");
 			return value;
 		}
 

@@ -31,7 +31,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -109,11 +109,11 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -132,10 +132,10 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/MyPackage/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -177,7 +177,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		// Verify the contents of the package lock file
-		var packageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/PackageLock.sml"));
+		var packageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/package-lock.sml"));
 		_ = packageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(packageLock.Content);
 		var packageLockContent = await reader.ReadToEndAsync();
@@ -216,7 +216,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -283,11 +283,11 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
 				"ERRO: Unable to create closure: Something went horribly wrong!",
 			],
@@ -296,9 +296,9 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -380,7 +380,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -506,11 +506,11 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Root:Wren User1|Package1 -> [User1]Wren|Package1@1.2.3",
@@ -535,10 +535,10 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/MyPackage/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/",
 				"OpenWriteTruncate: C:/Staging/Package1.zip",
 				"CreateDirectory: C:/Staging/Wren_Package1_1.2.3/",
@@ -647,7 +647,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		// Verify the contents of the package lock file
-		var packageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/PackageLock.sml"));
+		var packageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/package-lock.sml"));
 		_ = packageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader = new System.IO.StreamReader(packageLock.Content);
 		var packageLockContent = await reader.ReadToEndAsync();
@@ -688,7 +688,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -702,7 +702,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml"),
+			new Path("C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package1'
@@ -711,7 +711,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml"),
+			new Path("C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Cpp'
@@ -878,11 +878,11 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:C++ MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
@@ -898,11 +898,11 @@ public class ClosureManagerUnitTests
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Closure Tool0",
 				"DIAG: Create Directory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren Soup|Cpp -> C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -916,11 +916,11 @@ public class ClosureManagerUnitTests
 				"INFO: Restore Packages for Closure Tool0",
 				"HIGH: Skip built in language version in build closure",
 				"DIAG: Create Directory: C:/LockStore/Wren/User1/Package1/1.2.3/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren User1|Package1 -> C:/PackageStore/Wren/User1/Package1/1.2.3/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -939,10 +939,10 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/MyPackage/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"OpenWriteTruncate: C:/Staging/Cpp.zip",
 				"CreateDirectory: C:/Staging/Wren_Cpp_5.0.0/",
@@ -959,16 +959,16 @@ public class ClosureManagerUnitTests
 				"Rename: [C:/Staging/Wren_Package1_1.2.3/] -> [C:/PackageStore/Wren/User1/Package1/1.2.3/]",
 				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
 				"CreateDirectory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
-				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
-				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
+				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
 				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"CreateDirectory: C:/LockStore/Wren/User1/Package1/1.2.3/",
-				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
-				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
+				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -1089,7 +1089,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		// Verify the contents of the package lock file
-		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/PackageLock.sml"));
+		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/package-lock.sml"));
 		_ = myPackageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var myPackageLockReader = new System.IO.StreamReader(myPackageLock.Content);
 		var myPackageLockContent = await myPackageLockReader.ReadToEndAsync();
@@ -1116,7 +1116,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedMyPackageLock, myPackageLockContent);
 
-		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml"));
+		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml"));
 		_ = package1Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerPackage1Lock = new System.IO.StreamReader(package1Lock.Content);
 		var package1LockContent = await readerPackage1Lock.ReadToEndAsync();
@@ -1142,7 +1142,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedPackage1Lock, package1LockContent);
 
-		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml"));
+		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml"));
 		_ = soupCppLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerSoupCppLock = new System.IO.StreamReader(soupCppLock.Content);
 		var soupCppLockContent = await readerSoupCppLock.ReadToEndAsync();
@@ -1181,7 +1181,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -1195,7 +1195,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml"),
+			new Path("C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package1'
@@ -1209,7 +1209,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/C++/User1/Package2/2.3.4/Recipe.sml"),
+			new Path("C:/PackageStore/C++/User1/Package2/2.3.4/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package2'
@@ -1218,7 +1218,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml"),
+			new Path("C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Cpp'
@@ -1500,11 +1500,11 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:C++ MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
@@ -1520,11 +1520,11 @@ public class ClosureManagerUnitTests
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Closure Tool0",
 				"DIAG: Create Directory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren Soup|Cpp -> C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -1538,11 +1538,11 @@ public class ClosureManagerUnitTests
 				"INFO: Restore Packages for Closure Tool0",
 				"HIGH: Skip built in language version in build closure",
 				"DIAG: Create Directory: C:/LockStore/Wren/User1/Package1/1.2.3/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren User1|Package1 -> C:/PackageStore/Wren/User1/Package1/1.2.3/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -1560,11 +1560,11 @@ public class ClosureManagerUnitTests
 				"HIGH: Downloading package",
 				"HIGH: Skip built in language version in build closure",
 				"DIAG: Create Directory: C:/LockStore/C++/User1/Package2/2.3.4/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/C++/User1/Package2/2.3.4/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/C++/User1/Package2/2.3.4/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/C++/User1/Package2/2.3.4/Recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/C++/User1/Package2/2.3.4/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:C++ User1|Package2 -> C:/PackageStore/C++/User1/Package2/2.3.4/",
 				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
@@ -1584,10 +1584,10 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/MyPackage/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"OpenWriteTruncate: C:/Staging/Cpp.zip",
 				"CreateDirectory: C:/Staging/Wren_Cpp_5.0.0/",
@@ -1604,16 +1604,16 @@ public class ClosureManagerUnitTests
 				"Rename: [C:/Staging/Wren_Package1_1.2.3/] -> [C:/PackageStore/Wren/User1/Package1/1.2.3/]",
 				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
 				"CreateDirectory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
-				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
-				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml",
+				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
 				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"CreateDirectory: C:/LockStore/Wren/User1/Package1/1.2.3/",
-				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
-				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/User1/Package1/1.2.3/Recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml",
+				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"Exists: C:/PackageStore/C++/User1/Package2/2.3.4/",
 				"OpenWriteTruncate: C:/Staging/Package2.zip",
 				"CreateDirectory: C:/Staging/C++_Package2_2.3.4/",
@@ -1623,10 +1623,10 @@ public class ClosureManagerUnitTests
 				"Rename: [C:/Staging/C++_Package2_2.3.4/] -> [C:/PackageStore/C++/User1/Package2/2.3.4/]",
 				"Exists: C:/LockStore/C++/User1/Package2/2.3.4/",
 				"CreateDirectory: C:/LockStore/C++/User1/Package2/2.3.4/",
-				"Exists: C:/LockStore/C++/User1/Package2/2.3.4/PackageLock.sml",
-				"Exists: C:/PackageStore/C++/User1/Package2/2.3.4/Recipe.sml",
-				"OpenRead: C:/PackageStore/C++/User1/Package2/2.3.4/Recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/C++/User1/Package2/2.3.4/PackageLock.sml",
+				"Exists: C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml",
+				"Exists: C:/PackageStore/C++/User1/Package2/2.3.4/recipe.sml",
+				"OpenRead: C:/PackageStore/C++/User1/Package2/2.3.4/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
 				"CreateDirectory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
@@ -1848,7 +1848,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		// Verify the contents of the package lock file
-		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/PackageLock.sml"));
+		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/package-lock.sml"));
 		_ = myPackageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerMyPackageLock = new System.IO.StreamReader(myPackageLock.Content);
 		var myPackageLockContent = await readerMyPackageLock.ReadToEndAsync();
@@ -1875,7 +1875,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedMyPackageLock, myPackageLockContent);
 
-		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/User1/Package1/1.2.3/PackageLock.sml"));
+		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml"));
 		_ = package1Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerPackage1Lock = new System.IO.StreamReader(package1Lock.Content);
 		var package1LockContent = await readerPackage1Lock.ReadToEndAsync();
@@ -1903,7 +1903,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedPackage1Lock, package1LockContent);
 
-		var package2Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/C++/User1/Package2/2.3.4/PackageLock.sml"));
+		var package2Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml"));
 		_ = package2Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerPackage2Lock = new System.IO.StreamReader(package2Lock.Content);
 		var package2LockContent = await readerPackage2Lock.ReadToEndAsync();
@@ -1929,7 +1929,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedPackage2Lock, package2LockContent);
 
-		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/Soup/Cpp/5.0.0/PackageLock.sml"));
+		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml"));
 		_ = soupCppLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerSoupCppLock = new System.IO.StreamReader(soupCppLock.Content);
 		var soupCppLockContent = await readerSoupCppLock.ReadToEndAsync();
@@ -1968,7 +1968,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -1982,7 +1982,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/Package1/Recipe.sml"),
+			new Path("C:/Root/Package1/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package1'
@@ -2119,12 +2119,12 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
-				"DIAG: Load Recipe: C:/Root/Package1/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package1/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -2139,11 +2139,11 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: Package1 -> ../Package1/",
 				"INFO: Restore Packages for Closure Tool0",
 				"HIGH: Skip built in language version in build closure",
-				"INFO: Ensure Package Lock Exists: C:/Root/Package1/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/Package1/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/Package1/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/Package1/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/Package1/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package1/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren Package1 -> C:/Root/Package1/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -2162,16 +2162,16 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
-				"Exists: C:/Root/Package1/Recipe.sml",
-				"OpenRead: C:/Root/Package1/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/Package1/PackageLock.sml",
-				"Exists: C:/Root/Package1/Recipe.sml",
-				"OpenRead: C:/Root/Package1/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/Package1/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"Exists: C:/Root/Package1/recipe.sml",
+				"OpenRead: C:/Root/Package1/recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/Package1/package-lock.sml",
+				"Exists: C:/Root/Package1/recipe.sml",
+				"OpenRead: C:/Root/Package1/recipe.sml",
+				"OpenWriteTruncate: C:/Root/Package1/package-lock.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -2268,7 +2268,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		// Verify the contents of the package lock file
-		var packageLock1 = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/PackageLock.sml"));
+		var packageLock1 = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/package-lock.sml"));
 		_ = packageLock1.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader1 = new System.IO.StreamReader(packageLock1.Content);
 		var packageLockContent1 = await reader1.ReadToEndAsync();
@@ -2295,7 +2295,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedPackageLock1, packageLockContent1);
 
-		var packageLock2 = mockFileSystem.GetMockFile(new Path("C:/Root/Package1/PackageLock.sml"));
+		var packageLock2 = mockFileSystem.GetMockFile(new Path("C:/Root/Package1/package-lock.sml"));
 		_ = packageLock2.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var reader2 = new System.IO.StreamReader(packageLock2.Content);
 		var packageLockContent2 = await reader2.ReadToEndAsync();
@@ -2334,7 +2334,7 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/Recipe.sml"),
+			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'MyPackage'
@@ -2348,7 +2348,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/Package1/Recipe.sml"),
+			new Path("C:/Root/Package1/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package1'
@@ -2362,7 +2362,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/Package2/Recipe.sml"),
+			new Path("C:/Root/Package2/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Package2'
@@ -2371,7 +2371,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/Soup/Cpp/5.0.0/Recipe.sml"),
+			new Path("C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Cpp'
@@ -2528,13 +2528,13 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/MyPackage/Recipe.sml",
-				"DIAG: Load Recipe: C:/Root/Package1/Recipe.sml",
-				"DIAG: Load Recipe: C:/Root/Package2/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package1/recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package2/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Package1 -> C:/Root/Package1/",
@@ -2548,12 +2548,12 @@ public class ClosureManagerUnitTests
 				"INFO: Restore Packages for Closure Tool0",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: Package2 -> ../Package2/",
-				"INFO: Ensure Package Lock Exists: C:/Root/Package1/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/Package1/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/Package1/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/Package1/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/Package1/Recipe.sml",
-				"DIAG: Load Recipe: C:/Root/Package2/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package1/recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package2/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren Package1 -> C:/Root/Package1/",
 				"INFO: Restore Packages for Closure Root",
@@ -2561,11 +2561,11 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: Package1 -> ./",
 				"INFO: Restore Packages for Closure Build0",
 				"INFO: Restore Packages for Closure Tool0",
-				"INFO: Ensure Package Lock Exists: C:/Root/Package2/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/Package2/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/Package2/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/Package2/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/Root/Package2/Recipe.sml",
+				"DIAG: Load Recipe: C:/Root/Package2/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:C++ Package2 -> C:/Root/Package2/",
 				"INFO: Restore Packages for Closure Root",
@@ -2579,24 +2579,24 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/MyPackage/Recipe.sml",
-				"OpenRead: C:/Root/MyPackage/Recipe.sml",
-				"Exists: C:/Root/Package1/Recipe.sml",
-				"OpenRead: C:/Root/Package1/Recipe.sml",
-				"Exists: C:/Root/Package2/Recipe.sml",
-				"OpenRead: C:/Root/Package2/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/MyPackage/PackageLock.sml",
-				"Exists: C:/Root/Package1/PackageLock.sml",
-				"Exists: C:/Root/Package1/Recipe.sml",
-				"OpenRead: C:/Root/Package1/Recipe.sml",
-				"Exists: C:/Root/Package2/Recipe.sml",
-				"OpenRead: C:/Root/Package2/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/Package1/PackageLock.sml",
-				"Exists: C:/Root/Package2/PackageLock.sml",
-				"Exists: C:/Root/Package2/Recipe.sml",
-				"OpenRead: C:/Root/Package2/Recipe.sml",
-				"OpenWriteTruncate: C:/Root/Package2/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"Exists: C:/Root/Package1/recipe.sml",
+				"OpenRead: C:/Root/Package1/recipe.sml",
+				"Exists: C:/Root/Package2/recipe.sml",
+				"OpenRead: C:/Root/Package2/recipe.sml",
+				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/Root/Package1/package-lock.sml",
+				"Exists: C:/Root/Package1/recipe.sml",
+				"OpenRead: C:/Root/Package1/recipe.sml",
+				"Exists: C:/Root/Package2/recipe.sml",
+				"OpenRead: C:/Root/Package2/recipe.sml",
+				"OpenWriteTruncate: C:/Root/Package1/package-lock.sml",
+				"Exists: C:/Root/Package2/package-lock.sml",
+				"Exists: C:/Root/Package2/recipe.sml",
+				"OpenRead: C:/Root/Package2/recipe.sml",
+				"OpenWriteTruncate: C:/Root/Package2/package-lock.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -2767,7 +2767,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		// Verify the contents of the package lock file
-		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/PackageLock.sml"));
+		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/package-lock.sml"));
 		_ = myPackageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var myPackageLockReader = new System.IO.StreamReader(myPackageLock.Content);
 		var myPackageLockContent = await myPackageLockReader.ReadToEndAsync();
@@ -2795,7 +2795,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedMyPackageLock, myPackageLockContent);
 
-		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/Root/Package1/PackageLock.sml"));
+		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/Root/Package1/package-lock.sml"));
 		_ = package1Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var package1LockReader = new System.IO.StreamReader(package1Lock.Content);
 		var packageLock1Content = await package1LockReader.ReadToEndAsync();
@@ -2819,7 +2819,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedPackage1Lock, packageLock1Content);
 
-		var package2Lock = mockFileSystem.GetMockFile(new Path("C:/Root/Package2/PackageLock.sml"));
+		var package2Lock = mockFileSystem.GetMockFile(new Path("C:/Root/Package2/package-lock.sml"));
 		_ = package2Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var package2LockReader = new System.IO.StreamReader(package2Lock.Content);
 		var packageLock2Content = await package2LockReader.ReadToEndAsync();
@@ -2880,11 +2880,11 @@ public class ClosureManagerUnitTests
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(original));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/PackageLock.sml"),
+			new Path("C:/Root/MyPackage/package-lock.sml"),
 			new MockFile(originalContent));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/Soup/Wren/4.5.5/Recipe.sml"),
+			new Path("C:/PackageStore/Wren/Soup/Wren/4.5.5/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'Wren'
@@ -2988,8 +2988,8 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Restore from package lock",
 				"INFO: Restore Packages for Closure Root",
 				"INFO: Restore Packages for Language Wren",
@@ -3004,11 +3004,11 @@ public class ClosureManagerUnitTests
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Closure Tool0",
 				"DIAG: Create Directory: C:/LockStore/Wren/Soup/Wren/4.5.5/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Wren/4.5.5/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Wren/4.5.5/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Wren/4.5.5/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Wren/4.5.5/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Wren/4.5.5/Recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Wren/4.5.5/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: Root:Wren Soup|Wren -> C:/PackageStore/Wren/Soup/Wren/4.5.5/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
@@ -3027,8 +3027,8 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"OpenRead: C:/Root/MyPackage/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"OpenRead: C:/Root/MyPackage/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.4/",
 				"OpenWriteTruncate: C:/Staging/Package1.zip",
 				"CreateDirectory: C:/Staging/Wren_Package1_1.2.4/",
@@ -3052,10 +3052,10 @@ public class ClosureManagerUnitTests
 				"Rename: [C:/Staging/Wren_Wren_4.5.5/] -> [C:/PackageStore/Wren/Soup/Wren/4.5.5/]",
 				"Exists: C:/LockStore/Wren/Soup/Wren/4.5.5/",
 				"CreateDirectory: C:/LockStore/Wren/Soup/Wren/4.5.5/",
-				"Exists: C:/LockStore/Wren/Soup/Wren/4.5.5/PackageLock.sml",
-				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.5/Recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/Soup/Wren/4.5.5/Recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Wren/4.5.5/PackageLock.sml",
+				"Exists: C:/LockStore/Wren/Soup/Wren/4.5.5/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.5/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/Soup/Wren/4.5.5/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Wren/4.5.5/package-lock.sml",
 			],
 			mockFileSystem.Requests);
 
@@ -3174,7 +3174,7 @@ public class ClosureManagerUnitTests
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(original));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/PackageLock.sml"),
+			new Path("C:/Root/MyPackage/package-lock.sml"),
 			new MockFile(originalContent));
 
 		// Mock out the http
@@ -3196,8 +3196,8 @@ public class ClosureManagerUnitTests
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/PackageLock.sml",
-				"DIAG: Load Package Lock: C:/Root/MyPackage/PackageLock.sml",
+				"INFO: Ensure Package Lock Exists: C:/Root/MyPackage/package-lock.sml",
+				"DIAG: Load Package Lock: C:/Root/MyPackage/package-lock.sml",
 				"INFO: Restore from package lock",
 				"INFO: Restore Packages for Closure Root",
 				"INFO: Restore Packages for Language Wren",
@@ -3218,8 +3218,8 @@ public class ClosureManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/PackageLock.sml",
-				"OpenRead: C:/Root/MyPackage/PackageLock.sml",
+				"Exists: C:/Root/MyPackage/package-lock.sml",
+				"OpenRead: C:/Root/MyPackage/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.4/",
 				"Exists: C:/PackageStore/Wren/User1/Package2/3.2.1/",
 			],

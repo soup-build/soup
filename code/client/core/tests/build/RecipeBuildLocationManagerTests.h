@@ -46,7 +46,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"Exists: C:/RootRecipe.sml",
+					"Exists: C:/root-recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -65,7 +65,7 @@ namespace Soup::Core::UnitTests
 
 			// Create a root recipe
 			fileSystem->CreateMockFile(
-				Path("C:/RootRecipe.sml"),
+				Path("C:/root-recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					OutputRoot: './BuildOut/'
 				)")));
@@ -103,8 +103,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"INFO: Found Root Recipe: 'C:/RootRecipe.sml'",
-					"DIAG: Load Root Recipe: C:/RootRecipe.sml",
+					"INFO: Found Root Recipe: 'C:/root-recipe.sml'",
+					"DIAG: Load Root Recipe: C:/root-recipe.sml",
 					"INFO: Override root output: C:/BuildOut/C++/Local/MyPackage/1.2.3/",
 				}),
 				testListener->GetMessages(),
@@ -113,9 +113,9 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"Exists: C:/RootRecipe.sml",
-					"Exists: C:/RootRecipe.sml",
-					"OpenReadBinary: C:/RootRecipe.sml",
+					"Exists: C:/root-recipe.sml",
+					"Exists: C:/root-recipe.sml",
+					"OpenReadBinary: C:/root-recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");

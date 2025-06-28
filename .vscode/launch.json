@@ -18,7 +18,7 @@
         "request": "launch",
         "preLaunchTask": "",
         "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
-        "args": [ "${workspaceFolder}/code/client/cli/Recipe.sml" ],
+        "args": [ "${workspaceFolder}/code/client/cli/recipe.sml" ],
         "cwd": "${workspaceFolder}/out/run",
         "stopAtEntry": false,
         "console": "internalConsole"

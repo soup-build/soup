@@ -12,7 +12,7 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void Deserialize_GarbageThrows()
 		{
-			auto recipeFile = Path("./Recipe.sml");
+			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream("garbage");
 			auto exception = Assert::Throws<std::runtime_error>([&recipeFile, &recipe]() {
 				auto actual = RecipeSML::Deserialize(recipeFile, recipe);
@@ -22,7 +22,7 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void Deserialize_Simple()
 		{
-			auto recipeFile = Path("./Recipe.sml");
+			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
 					Name: 'MyPackage'
@@ -42,7 +42,7 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void Deserialize_Comments()
 		{
-			auto recipeFile = Path("./Recipe.sml");
+			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
 					# This is an awesome project
@@ -63,7 +63,7 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void Deserialize_AllProperties()
 		{
-			auto recipeFile = Path("./Recipe.sml");
+			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
 					Name: 'MyPackage'
@@ -111,7 +111,7 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void Serialize_Simple()
 		{
-			auto recipeFile = Path("./Recipe.sml");
+			auto recipeFile = Path("./recipe.sml");
 			auto recipe = Recipe(RecipeTable(
 			{
 				{ "Name", "MyPackage" },
@@ -132,7 +132,7 @@ Language: (C++@1)
 		// [[Fact]]
 		void Serialize_AllProperties()
 		{
-			auto recipeFile = Path("./Recipe.sml");
+			auto recipeFile = Path("./recipe.sml");
 			auto recipe = Recipe(RecipeTable(
 			{
 				{ "Name", "MyPackage" },

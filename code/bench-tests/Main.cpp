@@ -129,7 +129,7 @@ int main()
 	}
 
 	{
-		auto recipeFile = Path("./Recipe.sml");
+		auto recipeFile = Path("./recipe.sml");
 		auto recipe = std::stringstream(
 			R"(
 				Name: 'MyPackage'
@@ -143,7 +143,7 @@ int main()
 	}
 
 	{
-		auto recipeFile = Path("./Recipe.sml");
+		auto recipeFile = Path("./recipe.sml");
 		auto recipe = std::stringstream(
 			R"(
 				Name: 'MyPackage'
@@ -196,7 +196,7 @@ int main()
 		fileSystem->CreateMockDirectory(
 			Path("C:/WorkingDirectory/MyPackage/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({
-				Path("./Recipe.sml"),
+				Path("./recipe.sml"),
 			})));
 
 		fileSystem->CreateMockDirectory(
@@ -214,13 +214,13 @@ int main()
 		fileSystem->CreateMockDirectory(
 			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({
-				Path("./Recipe.sml"),
+				Path("./recipe.sml"),
 			})));
 
 		fileSystem->CreateMockDirectory(
 			Path("C:/BuiltIn/Packages/Soup/Wren/0.4.1/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({
-				Path("./Recipe.sml"),
+				Path("./recipe.sml"),
 			})));
 
 		fileSystem->CreateMockDirectory(
@@ -237,21 +237,21 @@ int main()
 
 		// Create the Recipe to build
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/Recipe.sml"),
+			Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Name: 'MyPackage'
 				Language: (C++@0.8)
 			)")));
 
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/Recipe.sml"),
+			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Name: 'Cpp'
 				Language: (Wren@1)
 			)")));
 
 		fileSystem->CreateMockFile(
-			Path("C:/BuiltIn/Packages/Soup/Wren/0.4.1/Recipe.sml"),
+			Path("C:/BuiltIn/Packages/Soup/Wren/0.4.1/recipe.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Name: 'Wren'
 				Language: (Wren@1)
@@ -259,7 +259,7 @@ int main()
 
 		// Create the package lock
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/PackageLock.sml"),
+			Path("C:/WorkingDirectory/MyPackage/package-lock.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Version: 5
 				Closures: {
@@ -278,7 +278,7 @@ int main()
 			)")));
 
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/PackageLock.sml"),
+			Path("C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Version: 5
 				Closures: {
@@ -417,7 +417,7 @@ int main()
 					{
 						"FileSystem",
 						ValueList({
-							std::string("Recipe.sml"),
+							std::string("recipe.sml"),
 						})
 					},
 					{
@@ -543,7 +543,7 @@ int main()
 					{
 						"FileSystem",
 						ValueList({
-							std::string("Recipe.sml"),
+							std::string("recipe.sml"),
 						})
 					},
 					{ "Parameters", ValueTable() },

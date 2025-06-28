@@ -189,7 +189,7 @@ public class MainWindowViewModel : ViewModelBase
 				[
 					new FilePickerFileType("Recipe")
 					{
-						Patterns = ["Recipe.sml"],
+						Patterns = ["recipe.sml"],
 					},
 				]
 			});

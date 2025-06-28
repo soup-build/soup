@@ -48,7 +48,7 @@ namespace Soup::Core::UnitTests
 				0,
 				std::unordered_map<FileId, Path>({}),
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/WorkingDirectory/MyPackage/Recipe.sml"),
+					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
 				}),
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
 
@@ -81,7 +81,7 @@ namespace Soup::Core::UnitTests
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/Recipe.sml",
+					"C:/WorkingDirectory/MyPackage/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "MyPackage" },
@@ -113,7 +113,7 @@ namespace Soup::Core::UnitTests
 							PackageName(std::nullopt, "MyPackage"),
 							false,
 							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -263,7 +263,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -321,7 +321,7 @@ namespace Soup::Core::UnitTests
 				std::unordered_map<FileId, Path>({
 				}),
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/WorkingDirectory/MyPackage/Recipe.sml"),
+					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
 				}),
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
 				}));
@@ -365,7 +365,7 @@ namespace Soup::Core::UnitTests
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/Recipe.sml",
+					"C:/WorkingDirectory/MyPackage/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "MyPackage" },
@@ -397,7 +397,7 @@ namespace Soup::Core::UnitTests
 							PackageName(std::nullopt, "MyPackage"),
 							false,
 							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -576,7 +576,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -633,8 +633,8 @@ namespace Soup::Core::UnitTests
 				0,
 				{},
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/Recipe.sml"),
-					Path("C:/WorkingDirectory/MyPackage/Recipe.sml"),
+					Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/recipe.sml"),
+					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
 				}),
 				{});
 
@@ -683,7 +683,7 @@ namespace Soup::Core::UnitTests
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/Recipe.sml",
+					"C:/WorkingDirectory/MyPackage/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "MyPackage" },
@@ -699,7 +699,7 @@ namespace Soup::Core::UnitTests
 					}))
 				},
 				{
-					"C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/Recipe.sml",
+					"C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "TestBuild" },
@@ -742,7 +742,7 @@ namespace Soup::Core::UnitTests
 							PackageName(std::nullopt, "MyPackage"),
 							false,
 							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Build",
@@ -763,7 +763,7 @@ namespace Soup::Core::UnitTests
 							PackageName("User1", "TestBuild"),
 							false,
 							Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/"),
-							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -959,7 +959,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -1104,7 +1104,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -1161,9 +1161,9 @@ namespace Soup::Core::UnitTests
 				0,
 				{},
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/Recipe.sml"),
-					Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/Recipe.sml"),
-					Path("C:/WorkingDirectory/MyPackage/Recipe.sml"),
+					Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml"),
+					Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml"),
+					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
 				}),
 				{});
 
@@ -1226,7 +1226,7 @@ namespace Soup::Core::UnitTests
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/Recipe.sml",
+					"C:/WorkingDirectory/MyPackage/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "MyPackage" },
@@ -1242,7 +1242,7 @@ namespace Soup::Core::UnitTests
 					}))
 				},
 				{
-					"C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/Recipe.sml",
+					"C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "PackageA" },
@@ -1258,7 +1258,7 @@ namespace Soup::Core::UnitTests
 					}))
 				},
 				{
-					"C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/Recipe.sml",
+					"C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "PackageB" },
@@ -1291,7 +1291,7 @@ namespace Soup::Core::UnitTests
 							PackageName(std::nullopt, "MyPackage"),
 							false,
 							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Runtime",
@@ -1309,7 +1309,7 @@ namespace Soup::Core::UnitTests
 							PackageName("User1", "PackageA"),
 							false,
 							Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/"),
-							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Runtime",
@@ -1326,7 +1326,7 @@ namespace Soup::Core::UnitTests
 							PackageName("User1", "PackageB"),
 							false,
 							Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/"),
-							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -1605,7 +1605,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -1704,7 +1704,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -1872,7 +1872,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -1929,8 +1929,8 @@ namespace Soup::Core::UnitTests
 				0,
 				{},
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/Recipe.sml"),
-					Path("C:/WorkingDirectory/MyPackage/Recipe.sml"),
+					Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/recipe.sml"),
+					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
 				}),
 				{});
 
@@ -1944,7 +1944,7 @@ namespace Soup::Core::UnitTests
 
 			// Create the package lock
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/PackageLock.sml"),
+				Path("C:/WorkingDirectory/MyPackage/package-lock.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Version: 5
 					Closures: {
@@ -2007,7 +2007,7 @@ namespace Soup::Core::UnitTests
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/Recipe.sml",
+					"C:/WorkingDirectory/MyPackage/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "MyPackage" },
@@ -2023,7 +2023,7 @@ namespace Soup::Core::UnitTests
 					}))
 				},
 				{
-					"C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/Recipe.sml",
+					"C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/recipe.sml",
 					Recipe(RecipeTable(
 					{
 						{ "Name", "TestBuild" },
@@ -2066,7 +2066,7 @@ namespace Soup::Core::UnitTests
 							PackageName(std::nullopt, "MyPackage"),
 							false,
 							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Build",
@@ -2083,7 +2083,7 @@ namespace Soup::Core::UnitTests
 							PackageName("User1", "TestBuild"),
 							false,
 							Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/"),
-							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/Recipe.sml")),
+							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -2279,7 +2279,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{
@@ -2424,7 +2424,7 @@ namespace Soup::Core::UnitTests
 							{
 								"FileSystem",
 								ValueList({
-									std::string("Recipe.sml"),
+									std::string("recipe.sml"),
 								})
 							},
 							{

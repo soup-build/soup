@@ -3,7 +3,7 @@ This is a console application that has a single static library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/static-library)
 
-## Library/Recipe.sml
+## Library/recipe.sml
 The Recipe file that defines the static library "Samples.C.StaticLibrary.Library".
 ```sml
 Name: 'Samples.C.StaticLibrary.Library'
@@ -40,7 +40,7 @@ const char* GetName()
 }
 ```
 
-## Application/Recipe.sml
+## Application/recipe.sml
 The Recipe file that defines the executable "Samples.C.StaticLibrary.Application".
 ```sml
 Name: 'Samples.C.StaticLibrary.Application'
@@ -52,7 +52,7 @@ Dependencies: {
 }
 ```
 
-## Application/PackageLock.sml
+## Application/package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project and the dependency static library.
 ```sml
 Version: 5

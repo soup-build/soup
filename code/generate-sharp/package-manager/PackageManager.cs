@@ -318,7 +318,7 @@ public class PackageManager
 	{
 		var ignoreFileList = new string[]
 		{
-				"PackageLock.sml",
+				"package-lock.sml",
 		};
 		var ignoreFolderList = new string[]
 		{

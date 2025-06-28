@@ -31,11 +31,11 @@ public static class BuildConstants
 
 	public static Path GenerateSharedStateFileName => new Path("./generate-shared-state.bvt");
 
-	public static Path LocalUserConfigFileName => new Path("./LocalUserConfig.sml");
+	public static Path LocalUserConfigFileName => new Path("./local-user-config.sml");
 
-	public static Path PackageLockFileName => new Path("./PackageLock.sml");
+	public static Path PackageLockFileName => new Path("./package-lock.sml");
 
-	public static Path RecipeFileName => new Path("./Recipe.sml");
+	public static Path RecipeFileName => new Path("./recipe.sml");
 
 	public static Path SoupLocalStoreDirectory => new Path("./.soup/");
 
