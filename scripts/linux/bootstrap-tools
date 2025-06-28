@@ -5,7 +5,7 @@ set -e
 
 SCRIPTS_DIR=$(dirname "$0")
 ROOT_DIR=$SCRIPTS_DIR/../..
-USER_ROOT=~$USER
+USER_ROOT=/home/$USER
 
 # Setup json11
 echo mkdir -p "$USER_ROOT/.soup/packages/C++/mwasplund/json11/1.1.4/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
