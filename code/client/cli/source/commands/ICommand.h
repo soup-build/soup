@@ -1,4 +1,4 @@
-// <copyright file="ICommand.h" company="Soup">
+// <copyright file="icommand.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

@@ -1,4 +1,4 @@
-﻿// <copyright file="Main.cpp" company="Soup">
+﻿// <copyright file="main.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -22,7 +22,7 @@ import Soup.Core;
 
 using namespace Opal;
 
-#include "Program.h"
+#include "program.h"
 
 int main(int argc, char** argv)
 {

@@ -3,16 +3,16 @@
 // </copyright>
 
 #pragma once
-#include "ArgumentsParser.h"
-#include "BuildCommand.h"
-#include "InitializeCommand.h"
-#include "InstallCommand.h"
-#include "PublishCommand.h"
-#include "RestoreCommand.h"
-#include "RunCommand.h"
-#include "TargetCommand.h"
-#include "VersionCommand.h"
-#include "ViewCommand.h"
+#include "arguments-parser.h"
+#include "build-command.h"
+#include "initialize-command.h"
+#include "install-command.h"
+#include "publish-command.h"
+#include "restore-command.h"
+#include "run-command.h"
+#include "target-command.h"
+#include "version-command.h"
+#include "view-command.h"
 
 namespace Soup::Client
 {

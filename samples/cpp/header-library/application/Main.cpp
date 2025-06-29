@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Library.h>
+#include <library.h>
 
 using namespace Samples::Cpp::HeaderLibrary::Library;
 

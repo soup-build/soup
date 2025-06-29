@@ -8,5 +8,5 @@ PlatformLibraries: [
 	'DXGI.lib'
 ]
 RuntimeDependencies: [
-	'Shaders.hlsl'
+	'shaders.hlsl'
 ]

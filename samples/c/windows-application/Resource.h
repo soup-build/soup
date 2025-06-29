@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by WindowsProject.rc
+// Used by windows-project.rc
 
 #define IDS_APP_TITLE			103
 
