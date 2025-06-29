@@ -4,7 +4,7 @@ SET ScriptsDir=%~dp0
 SET RootDir=%ScriptsDir%..\..
 SET OutDir=%RootDir%\out
 
-SET SOUP_VERSION=0.42.2
+SET SOUP_VERSION=0.42.3
 
 SET SIGN_COMMAND=signtool sign /n "Open Source Developer, Matthew Asplund" /t http://time.certum.pl /fd sha1 /v
 
