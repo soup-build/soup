@@ -1,4 +1,4 @@
-﻿// <copyright file="SequenceMap.cpp" company="Soup">
+﻿// <copyright file="sequence-map.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

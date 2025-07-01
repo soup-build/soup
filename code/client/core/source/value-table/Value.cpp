@@ -1,4 +1,4 @@
-// <copyright file="Value.cpp" company="Soup">
+// <copyright file="value.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

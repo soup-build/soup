@@ -1,4 +1,4 @@
-﻿// <copyright file="RecipeCache.cpp" company="Soup">
+﻿// <copyright file="recipe-cache.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

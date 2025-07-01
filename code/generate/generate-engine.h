@@ -1,10 +1,10 @@
-// <copyright file="GenerateEngine.h" company="Soup">
+// <copyright file="generate-engine.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
 #pragma once
-#include "ExtensionManager.h"
-#include "GenerateState.h"
+#include "extension-manager.h"
+#include "generate-state.h"
 
 namespace Soup::Core::Generate
 {

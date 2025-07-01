@@ -1,4 +1,4 @@
-﻿// <copyright file="LanguageReference.cpp" company="Soup">
+﻿// <copyright file="language-reference.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

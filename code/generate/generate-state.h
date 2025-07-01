@@ -1,9 +1,9 @@
-// <copyright file="GenerateState.h" company="Soup">
+// <copyright file="generate-state.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
 #pragma once
-#include "OperationGraphGenerator.h"
+#include "operation-graph-generator.h"
 
 namespace Soup::Core::Generate
 {

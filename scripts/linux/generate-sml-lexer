@@ -11,5 +11,5 @@ CODE_DIR=$ROOT_DIR/code
 CLIENT_CODE_DIR=$CODE_DIR/client/core/source
 REFLEX=~/dev/repos/RE-flex/bin/reflex
 
-echo $REFLEX $CLIENT_CODE_DIR/sml/SMLParser.l -o $CLIENT_CODE_DIR/sml/SMLParser.cpp
-$REFLEX $CLIENT_CODE_DIR/sml/SMLParser.l -o $CLIENT_CODE_DIR/sml/SMLParser.cpp
+echo $REFLEX $CLIENT_CODE_DIR/sml/sml-parser.l -o $CLIENT_CODE_DIR/sml/sml-parser.cpp
+$REFLEX $CLIENT_CODE_DIR/sml/sml-parser.l -o $CLIENT_CODE_DIR/sml/sml-parser.cpp

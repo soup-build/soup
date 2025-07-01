@@ -1,4 +1,4 @@
-﻿// <copyright file="ValueTableReader.cpp" company="Soup">
+﻿// <copyright file="value-table-reader.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

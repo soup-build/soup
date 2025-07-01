@@ -1,10 +1,10 @@
-﻿// <copyright file="ExtensionManager.h" company="Soup">
+﻿// <copyright file="extension-manager.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
 #pragma once
-#include "ExtensionTaskDetails.h"
-#include "GenerateHost.h"
+#include "extension-task-details.h"
+#include "generate-host.h"
 
 namespace Soup::Core::Generate
 {

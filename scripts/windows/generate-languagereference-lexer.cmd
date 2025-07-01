@@ -7,6 +7,6 @@ SET ClientCoreDir=code\client\core\source
 SET REFLEX=%UserProfile%\source\repos\RE-flex\bin\win64\reflex.exe
 
 pushd %RootDir%
-echo %REFLEX% %ClientCoreDir%\recipe\LanguageReferenceParser.l -o %ClientCoreDir%\recipe\LanguageReferenceParser.cpp
-call %REFLEX% %ClientCoreDir%\recipe\LanguageReferenceParser.l -o %ClientCoreDir%\recipe\LanguageReferenceParser.cpp
+echo %REFLEX% %ClientCoreDir%\recipe\language-reference-parser.l -o %ClientCoreDir%\recipe\language-reference-parser.cpp
+call %REFLEX% %ClientCoreDir%\recipe\language-reference-parser.l -o %ClientCoreDir%\recipe\language-reference-parser.cpp
 popd

@@ -1,4 +1,4 @@
-﻿// <copyright file="PackageName.cpp" company="Soup">
+﻿// <copyright file="package-name.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

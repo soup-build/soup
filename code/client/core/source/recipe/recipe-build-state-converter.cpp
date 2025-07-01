@@ -1,4 +1,4 @@
-﻿// <copyright file="RecipeBuildStateConverter.cpp" company="Soup">
+﻿// <copyright file="recipe-build-state-converter.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

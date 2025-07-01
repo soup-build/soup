@@ -1,4 +1,4 @@
-﻿// <copyright file="ExtensionTaskDetails.h" company="Soup">
+﻿// <copyright file="extension-task-details.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

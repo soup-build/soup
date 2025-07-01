@@ -1,4 +1,4 @@
-// <copyright file="WrenValueTable.cpp" company="Soup">
+// <copyright file="wren-value-table.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

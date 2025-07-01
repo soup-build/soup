@@ -1,4 +1,4 @@
-﻿// <copyright file="ValueTableManager.cpp" company="Soup">
+﻿// <copyright file="value-table-manager.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

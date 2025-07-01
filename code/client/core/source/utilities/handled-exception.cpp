@@ -1,4 +1,4 @@
-﻿// <copyright file="HandledException.h" company="Soup">
+﻿// <copyright file="handled-exception.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

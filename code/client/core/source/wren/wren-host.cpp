@@ -1,4 +1,4 @@
-// <copyright file="WrenHost.cpp" company="Soup">
+// <copyright file="wren-host.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

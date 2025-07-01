@@ -1,7 +1,11 @@
+// <copyright file="generate-host.h" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
 #pragma once
 
-#include "ExtensionTaskDetails.h"
-#include "GenerateState.h"
+#include "extension-task-details.h"
+#include "generate-state.h"
 
 namespace Soup::Core::Generate
 {

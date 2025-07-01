@@ -1,4 +1,4 @@
-﻿// <copyright file="OperationGraphGenerator.h" company="Soup">
+﻿// <copyright file="operation-graph-generator.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
