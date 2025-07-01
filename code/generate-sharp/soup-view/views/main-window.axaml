@@ -10,7 +10,7 @@
 	x:CompileBindings="True"
 	x:DataType="vm:MainWindowViewModel"
 	x:Class="Soup.View.MainWindow"
-	Icon="/assets/Soup.ico"
+	Icon="/assets/soup.ico"
 	Title="Soup View"
 	d:DataContext="{x:Static vm:DesignData.ExampleMainWindow}">
 	<Grid RowDefinitions="Auto,*">

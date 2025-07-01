@@ -7,7 +7,7 @@
 		<v:GraphViewer />
 	</Design.PreviewWith>
 
-	<StyleInclude Source="/Views/GraphViewerItem.axaml"/>
+	<StyleInclude Source="/views/graph-viewer-item.axaml"/>
 
 	<Style Selector="Path.graphViewerPath">
 		<Setter Property="Stroke" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
