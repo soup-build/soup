@@ -1,4 +1,4 @@
-﻿// <copyright file="iauthentication-manager.cs" company="Soup">
+﻿// <copyright file="i-authentication-manager.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

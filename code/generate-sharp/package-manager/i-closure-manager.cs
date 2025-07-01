@@ -1,4 +1,4 @@
-﻿// <copyright file="iclosure-manager.cs" company="Soup">
+﻿// <copyright file="i-closure-manager.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

@@ -19,12 +19,12 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.4 }
+			'Soup|Cpp': { Version: 'C:/Users/mwasp/dev/repos/soup-cpp/code/extension/' }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.15.4 }
+			'Soup|Cpp': { Version: 'C:/Users/mwasp/dev/repos/soup-cpp/code/extension/' }
 			'mwasplund|Soup.Test.Cpp': { Version: 0.14.0 }
 		}
 	}
@@ -35,9 +35,9 @@ Closures: {
 	}
 	Tool0: {
 		'C++': {
-			'mwasplund|copy': { Version: 1.1.0 }
-			'mwasplund|mkdir': { Version: 1.1.0 }
-			'mwasplund|parse.modules': { Version: 1.1.0 }
+			'mwasplund|copy': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/copy/' }
+			'mwasplund|mkdir': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/mkdir/' }
+			'mwasplund|parse.modules': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/parse-modules/' }
 		}
 	}
 }
