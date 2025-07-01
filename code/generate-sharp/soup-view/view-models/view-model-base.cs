@@ -1,0 +1,31 @@
+// <copyright file="view-model-base.cs" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
+using ReactiveUI;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+namespace Soup.View.ViewModels;
+
+public class ViewModelBase : ReactiveObject
+{
+	public bool CheckRaiseAndSetIfChanged<TRet>(
+		ref TRet backingField,
+		TRet newValue,
+		[CallerMemberName] string? propertyName = null)
+	{
+		ArgumentNullException.ThrowIfNull(propertyName);
+
+		if (EqualityComparer<TRet>.Default.Equals(backingField, newValue))
+		{
+			return false;
+		}
+
+		this.RaisePropertyChanging(propertyName);
+		backingField = newValue;
+		this.RaisePropertyChanged(propertyName);
+		return true;
+	}
+}

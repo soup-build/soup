@@ -2,13 +2,6 @@ Name: 'Soup.PackageManager'
 Language: 'C#|0'
 Version: 1.0.0
 Type: 'Executable'
-Source: [
-	'AuthenticationManager.cs'
-	'CompressionZipArchive.cs'
-	'CompressionZipManager.cs'
-	'Program.cs'
-	'TokenCache.cs'
-]
 Dependencies: {
 	Build: [
 		'Soup|CSharp.Nuget@0'

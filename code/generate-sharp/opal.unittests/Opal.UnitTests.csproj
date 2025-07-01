@@ -16,6 +16,6 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\opal\Opal.csproj" />
+		<ProjectReference Include="..\opal\opal.csproj" />
 	</ItemGroup>
 </Project>

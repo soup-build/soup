@@ -1,4 +1,4 @@
-﻿// <copyright file="Path.cs" company="Soup">
+﻿// <copyright file="path.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

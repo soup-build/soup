@@ -13,7 +13,7 @@
 		<PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\api.client\Soup.Build.Api.Client.csproj" />
-		<ProjectReference Include="..\utilities\Soup.Utilities.csproj" />
+		<ProjectReference Include="..\api.client\soup.build.api.client.csproj" />
+		<ProjectReference Include="..\utilities\soup.utilities.csproj" />
 	</ItemGroup>
 </Project>
