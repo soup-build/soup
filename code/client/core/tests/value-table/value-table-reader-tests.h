@@ -1,4 +1,4 @@
-// <copyright file="ValueTableReaderTests.h" company="Soup">
+// <copyright file="value-table-reader-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

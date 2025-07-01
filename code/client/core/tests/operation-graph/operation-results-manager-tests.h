@@ -1,4 +1,4 @@
-// <copyright file="OperationResultsManagerTests.h" company="Soup">
+// <copyright file="operation-results-manager-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

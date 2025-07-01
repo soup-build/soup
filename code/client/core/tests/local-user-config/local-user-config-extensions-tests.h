@@ -1,4 +1,4 @@
-// <copyright file="LocalUserConfigExtensionsTests.h" company="Soup">
+// <copyright file="local-user-config-extensions-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

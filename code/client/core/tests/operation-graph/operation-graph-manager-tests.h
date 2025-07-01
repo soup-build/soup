@@ -1,4 +1,4 @@
-// <copyright file="OperationGraphManagerTests.h" company="Soup">
+// <copyright file="operation-graph-manager-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

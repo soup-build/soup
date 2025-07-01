@@ -3,7 +3,7 @@
 // </copyright>
 
 #pragma once
-#include "icommand.h"
+#include "i-command.h"
 #include "version-options.h"
 
 namespace Soup::Client

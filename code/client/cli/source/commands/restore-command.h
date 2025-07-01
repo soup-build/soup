@@ -3,7 +3,7 @@
 // </copyright>
 
 #pragma once
-#include "icommand.h"
+#include "i-command.h"
 #include "restore-options.h"
 
 namespace Soup::Client

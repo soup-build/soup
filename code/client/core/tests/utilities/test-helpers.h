@@ -1,4 +1,4 @@
-// <copyright file="TestHelpers.h" company="Soup">
+// <copyright file="test-helpers.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

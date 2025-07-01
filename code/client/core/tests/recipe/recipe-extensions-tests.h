@@ -1,4 +1,4 @@
-// <copyright file="ValueTableManagerTests.h" company="Soup">
+// <copyright file="recipe-extensions-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -6,11 +6,11 @@
 
 namespace Soup::Core::UnitTests
 {
-	class ValueTableManagerTests
+	class RecipeExtensionsTests
 	{
 	public:
 		// [[Fact]]
-		void TryLoadFromFile_MissingFile()
+		void TryLoadRecipeFromFile_MissingFile()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -20,16 +20,16 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto directory = Path("./TestFiles/NoFile/.soup/ValueTable.bin");
-			auto actual = ValueTable();
-			auto result = ValueTableManager::TryLoadState(directory, actual);
+			auto directory = Path("./TestFiles/NoFile/recipe.sml");
+			Recipe actual;
+			auto result = RecipeExtensions::TryLoadRecipeFromFile(directory, actual);
 
 			Assert::IsFalse(result, "Verify result is false.");
 
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryOpenReadBinary: ./TestFiles/NoFile/.soup/ValueTable.bin",
+					"TryOpenReadBinary: ./TestFiles/NoFile/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -37,14 +37,15 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"INFO: Value Table file does not exist",
-				}),
+					"DIAG: Load Recipe: ./TestFiles/NoFile/recipe.sml",
+					"INFO: Recipe file does not exist.",
+				}), 
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
-
+		
 		// [[Fact]]
-		void TryLoadFromFile_GarbageFile()
+		void TryLoadRecipeFromFile_GarbageFile()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -54,19 +55,19 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 			fileSystem->CreateMockFile(
-				Path("./TestFiles/GarbageValueTable/.soup/ValueTable.bin"),
+				Path("./TestFiles/GarbageRecipe/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream("garbage")));
 
-			auto directory = Path("./TestFiles/GarbageValueTable/.soup/ValueTable.bin");
-			auto actual = ValueTable();
-			auto result = ValueTableManager::TryLoadState(directory, actual);
+			auto directory = Path("./TestFiles/GarbageRecipe/recipe.sml");
+			Recipe actual;
+			auto result = RecipeExtensions::TryLoadRecipeFromFile(directory, actual);
 
 			Assert::IsFalse(result, "Verify result is false.");
 
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryOpenReadBinary: ./TestFiles/GarbageValueTable/.soup/ValueTable.bin",
+					"TryOpenReadBinary: ./TestFiles/GarbageRecipe/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -74,14 +75,16 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"ERRO: Invalid Value Table file header",
-				}),
+					"DIAG: Load Recipe: ./TestFiles/GarbageRecipe/recipe.sml",
+					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at 1:7  ./TestFiles/GarbageRecipe/recipe.sml",
+					"INFO: Failed to parse Recipe.",
+				}), 
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
 
 		// [[Fact]]
-		void TryLoadFromFile_SimpleFile()
+		void TryLoadRecipeFromFile_SimpleFile()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -90,50 +93,46 @@ namespace Soup::Core::UnitTests
 			// Register the test file system
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
-
-			auto binaryFileContent = std::vector<char>(
-			{
-				'B', 'V', 'T', '\0', 0x02, 0x00, 0x00, 0x00,
-				'T', 'B', 'L', '\0', 0x01, 0x00, 0x00, 0x00,
-				0x09, 0x00, 0x00, 0x00, 'T', 'e', 's', 't', 'V', 'a', 'l', 'u', 'e',
-				0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			});
 			fileSystem->CreateMockFile(
-				Path("./TestFiles/SimpleValueTable/.soup/ValueTable.bin"),
-				std::make_shared<MockFile>(std::stringstream(std::string(binaryFileContent.data(), binaryFileContent.size()))));
+				Path("./TestFiles/SimpleRecipe/recipe.sml"),
+				std::make_shared<MockFile>(std::stringstream(R"(
+					Name: 'MyPackage'
+					Language: (C++@1)
+				)")));
 
-			auto directory = Path("./TestFiles/SimpleValueTable/.soup/ValueTable.bin");
-			auto actual = ValueTable();
-			auto result = ValueTableManager::TryLoadState(directory, actual);
+			auto directory = Path("./TestFiles/SimpleRecipe/recipe.sml");
+			Recipe actual;
+			auto result = RecipeExtensions::TryLoadRecipeFromFile(directory, actual);
 
-			Assert::IsTrue(result, "Verify result is true.");
+			Assert::IsTrue(result, "Verify result is false.");
 
-			// Verify value table matches expected
-			Assert::AreEqual(
-				ValueTable(
-				{
-					{ "TestValue", Value(false) },
-				}),
-				actual,
-				"Verify value table match expected.");
+			auto expected = Recipe(RecipeTable(
+			{
+				{ "Name", "MyPackage" },
+				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
+			}));
+
+			Assert::AreEqual(expected, actual, "Verify matches expected.");
 
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryOpenReadBinary: ./TestFiles/SimpleValueTable/.soup/ValueTable.bin",
+					"TryOpenReadBinary: ./TestFiles/SimpleRecipe/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
 
 			// Verify expected logs
 			Assert::AreEqual(
-				std::vector<std::string>({}),
+				std::vector<std::string>({
+					"DIAG: Load Recipe: ./TestFiles/SimpleRecipe/recipe.sml",
+				}), 
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
 
 		// [[Fact]]
-		void SaveState()
+		void SaveToFile_SimpleFile()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -143,40 +142,36 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto valueTableFile = Path("./TestFiles/.soup/ValueTable.bin");
-			auto valueTable = ValueTable(
+			auto directory = Path("./TestFiles/SimpleRecipe/recipe.sml");
+			auto recipe = Recipe(RecipeTable(
 			{
-				{ "TestValue", Value(false) },
-			});
-			ValueTableManager::SaveState(valueTableFile, valueTable);
+				{ "Name", "MyPackage" },
+				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
+			}));
+			RecipeExtensions::SaveToFile(directory, recipe);
 
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"OpenWriteBinary: ./TestFiles/.soup/ValueTable.bin",
+					"OpenWrite: ./TestFiles/SimpleRecipe/recipe.sml",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
 
 			// Verify expected logs
 			Assert::AreEqual(
-				std::vector<std::string>({}),
+				std::vector<std::string>({
+				}), 
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 
-			// Verify the file content
-			auto binaryFileContent = std::vector<char>(
-			{
-				'B', 'V', 'T', '\0', 0x02, 0x00, 0x00, 0x00,
-				'T', 'B', 'L', '\0', 0x01, 0x00, 0x00, 0x00,
-				0x09, 0x00, 0x00, 0x00, 'T', 'e', 's', 't', 'V', 'a', 'l', 'u', 'e',
-				0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			});
-			auto mockFile = fileSystem->GetMockFile(Path("./TestFiles/.soup/ValueTable.bin"));
-			Assert::AreEqual(
-				std::string(binaryFileContent.data(), binaryFileContent.size()),
-				mockFile->Content.str(),
-				"Verify file content match expected.");
+			// Verify the contents of the build file
+			std::string expectedBuildFile = 
+R"(Name: 'MyPackage'
+Language: (C++@1)
+)";
+			auto mockBuildFile = fileSystem->GetMockFile(Path("./TestFiles/SimpleRecipe/recipe.sml"));
+			Assert::AreEqual(expectedBuildFile, mockBuildFile->Content.str(), "Verify file contents.");
 		}
 	};
 }

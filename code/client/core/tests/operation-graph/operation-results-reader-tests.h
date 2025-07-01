@@ -1,4 +1,4 @@
-// <copyright file="OperationResultsReaderTests.h" company="Soup">
+// <copyright file="operation-results-reader-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

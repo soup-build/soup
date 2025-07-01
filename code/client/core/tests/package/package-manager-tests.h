@@ -1,4 +1,4 @@
-// <copyright file="PackageManagerTests.h" company="Soup">
+// <copyright file="package-manager-tests.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
