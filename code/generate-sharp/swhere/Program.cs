@@ -1,4 +1,4 @@
-﻿// <copyright file="Program.cs" company="Soup">
+﻿// <copyright file="program.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
