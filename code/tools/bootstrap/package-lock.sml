@@ -53,15 +53,15 @@ Closures: {
 	}
 	Tool0: {
 		'C++': {
-			'mwasplund|copy': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/copy/' }
-			'mwasplund|mkdir': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/mkdir/' }
+			'mwasplund|copy': { Version: 1.1.0 }
+			'mwasplund|mkdir': { Version: 1.1.0 }
 		}
 	}
 	Tool1: {
 		'C++': {
-			'mwasplund|copy': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/copy/' }
-			'mwasplund|mkdir': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/mkdir/' }
-			'mwasplund|parse.modules': { Version: 'C:/Users/mwasp/dev/repos/soup/code/tools/parse-modules/' }
+			'mwasplund|copy': { Version: 1.1.0 }
+			'mwasplund|mkdir': { Version: 1.1.0 }
+			'mwasplund|parse.modules': { Version: 1.1.0 }
 		}
 	}
 }

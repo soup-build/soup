@@ -30,7 +30,7 @@
       "program": "${workspaceFolder}/out/run/Soup/Soup.exe",
       "args": [
         "build",
-        "samples/cpp/module-interface",
+        "samples/cpp/console-application",
         "-v:d"
       ],
       "stopAtEntry": false,
