@@ -21,7 +21,7 @@ import Soup.Core;
 
 using namespace Opal;
 
-#include "GenerateEngine.h"
+#include "generate-engine.h"
 
 int main(int argc, char** argv)
 {
