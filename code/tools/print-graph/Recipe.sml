@@ -1,4 +1,4 @@
-Name: 'printgraph'
+Name: 'print-graph'
 Language: 'C++|0'
 Version: 1.0.0
 Type: 'Executable'

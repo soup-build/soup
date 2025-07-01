@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Functions/Overrides/FileApi.h"
-#include "Functions/Overrides/ProcessApi.h"
+#include "functions/overrides/file-api.h"
+#include "functions/overrides/process-api.h"
 
-#include "ConnectionManager.h"
-#include "AttachDetours.h"
+#include "connection-manager.h"
+#include "attach-detours.h"
 
 namespace Monitor::Linux
 {

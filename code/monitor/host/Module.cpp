@@ -35,7 +35,7 @@ module;
 #include <elf.h>
 
 #include <seccomp.h>
-#include "linux/Environment.h"
+#include "linux/environment.h"
 
 #endif
 
@@ -70,13 +70,13 @@ using namespace Opal;
 
 #define MONITOR_IMPLEMENTATION
 
-#include "mock/MockMonitorProcessManager.h"
-#include "ScopedMonitorProcessManagerRegister.h"
+#include "mock/mock-monitor-process-manager.h"
+#include "scoped-monitor-process-manager-register.h"
 
 #if defined(_WIN32)
-#include "Windows/WindowsMonitorProcessManager.h"
-#include "Windows/WindowsSystemLoggerMonitor.h"
-#include "Windows/WindowsSystemMonitorFork.h"
+#include "windows/windows-monitor-process-manager.h"
+#include "windows/windows-system-logger-monitor.h"
+#include "windows/windows-system-monitor-fork.h"
 #elif defined(__linux__)
-#include "linux/LinuxMonitorProcessManager.h"
+#include "linux/linux-monitor-process-manager.h"
 #endif

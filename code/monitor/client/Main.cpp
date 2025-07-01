@@ -43,14 +43,14 @@ import Monitor.Shared;
 
 import Detours;
 
-#include "Windows/ConnectionManager.h"
-#include "MessageSender.h"
-#include "Windows/DllMain.h"
+#include "windows/connection-manager.h"
+#include "message-sender.h"
+#include "windows/dll-main.h"
 
 #elif defined(__linux__)
 
-#include "Linux/ConnectionManager.h"
-#include "MessageSender.h"
-#include "Linux/Startup.h"
+#include "linux/connection-manager.h"
+#include "message-sender.h"
+#include "linux/startup.h"
 
 #endif

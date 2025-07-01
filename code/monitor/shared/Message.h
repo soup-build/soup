@@ -1,5 +1,5 @@
 #pragma once
-#include "MessageType.h"
+#include "message-type.h"
 
 namespace Monitor
 {

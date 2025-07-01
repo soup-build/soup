@@ -1,4 +1,4 @@
-// <copyright file="Main.cpp" company="Soup">
+// <copyright file="main.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -20,7 +20,7 @@ using namespace Opal;
 
 #include <wren/wren.hpp>
 
-#include "GenerateTestHost.h"
+#include "generate-test-host.h"
 
 int main(int argc, char** argv)
 {

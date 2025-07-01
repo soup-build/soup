@@ -1,4 +1,4 @@
-﻿// <copyright file="Environment.h" company="Soup">
+﻿// <copyright file="environment.h" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
