@@ -21,7 +21,7 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="../opal/Opal.csproj" />
-		<ProjectReference Include="../utilities/Soup.Utilities.csproj" />
+		<ProjectReference Include="../opal/opal.csproj" />
+		<ProjectReference Include="../utilities/soup.utilities.csproj" />
 	</ItemGroup>
 </Project>

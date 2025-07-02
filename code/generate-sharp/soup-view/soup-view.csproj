@@ -30,6 +30,6 @@
 	<ItemGroup>
 		<ProjectReference Include="../opal/opal.csproj" />
 		<ProjectReference Include="../utilities/soup.utilities.csproj" />
-		<ProjectReference Include="../soup-tools/Soup.tools.csproj" />
+		<ProjectReference Include="../soup-tools/soup.tools.csproj" />
 	</ItemGroup>
 </Project>

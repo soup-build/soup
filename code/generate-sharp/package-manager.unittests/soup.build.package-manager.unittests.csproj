@@ -16,6 +16,6 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\package-manager\Soup.Build.PackageManager.csproj" />
+		<ProjectReference Include="..\package-manager\soup.build.package-manager.csproj" />
 	</ItemGroup>
 </Project>
