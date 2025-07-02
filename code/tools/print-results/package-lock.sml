@@ -19,12 +19,12 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 'C:/Users/mwasp/dev/repos/soup-cpp/code/extension/' }
+			'Soup|Cpp': { Version: 0.16.0 }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|Cpp': { Version: 'C:/Users/mwasp/dev/repos/soup-cpp/code/extension/' }
+			'Soup|Cpp': { Version: 0.16.0 }
 			'mwasplund|Soup.Test.Cpp': { Version: 0.14.0 }
 		}
 	}
