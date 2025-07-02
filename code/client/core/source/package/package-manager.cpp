@@ -95,9 +95,9 @@ namespace Soup::Core
 			auto moduleFolder = moduleName.GetParent();
 			auto packageManagerFolder = moduleFolder + Path("./PackageManager/");
 			#if defined(_WIN32)
-			auto executable = packageManagerFolder + Path("./Soup.Build.PackageManager.exe");
+			auto executable = packageManagerFolder + Path("./soup.build.package-manager.exe");
 			#elif defined(__linux__)
-			auto executable = packageManagerFolder + Path("./Soup.Build.PackageManager");
+			auto executable = packageManagerFolder + Path("./soup.build.package-manager");
 			#else
 			#error "Unknown platform"
 			#endif

@@ -35,10 +35,10 @@ robocopy %OutDir%\C++\Local\parse.modules\%PARSE_MODULES_VERSION%\%ConfigHash%\ 
 robocopy %GlobalPackagesDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\ recipe.sml /NJH /NJS /NDL > NUL
 robocopy %GlobalOutDir%\Wren\Soup\Wren\%SOUP_WREN_VERSION%\%ConfigHash%\ %RunDir%\Soup\BuiltIn\Soup\Wren\%SOUP_WREN_VERSION%\out\ /MIR /NJH /NJS /NDL > NUL
 
-robocopy %MSBuildDir%\bin\Soup.Build.PackageManager\Debug\net9.0\win-x64\publish\ %RunDir%\Soup\PackageManager\ /MIR /NJH /NJS /NDL > NUL
+robocopy %MSBuildDir%\bin\soup.build.package-manager\Debug\net9.0\win-x64\publish\ %RunDir%\Soup\PackageManager\ /MIR /NJH /NJS /NDL > NUL
 
-robocopy %MSBuildDir%\bin\SoupView\Debug\net9.0\win-x64\publish\ %RunDir%\Soup\View\ /MIR /NJH /NJS /NDL > NUL
+robocopy %MSBuildDir%\bin\soup-view\Debug\net9.0\win-x64\publish\ %RunDir%\Soup\View\ /MIR /NJH /NJS /NDL > NUL
 
-robocopy %MSBuildDir%\bin\Swhere\Debug\net9.0\win-x64\publish\ %RunDir%\ swhere.exe /NJH /NJS /NDL > NUL
+robocopy %MSBuildDir%\bin\swhere\Debug\net9.0\win-x64\publish\ %RunDir%\ swhere.exe /NJH /NJS /NDL > NUL
 
 %RunDir%\Soup.cmd %*
