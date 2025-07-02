@@ -1,4 +1,4 @@
-﻿// <copyright file="PackageClient.cs" company="Soup">
+﻿// <copyright file="package-client.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
