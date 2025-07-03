@@ -25,7 +25,7 @@ Closures: {
   Root: {
     'C++': {
       'Samples.Cpp.ParseJson': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'mwasplund|json11': { Version: 1.1.4, Build: 'Build0', Tool: 'Tool0' }
+      'mwasplund|json11': { Version: 1.1.5, Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {

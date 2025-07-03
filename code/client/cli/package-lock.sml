@@ -13,9 +13,9 @@ Closures: {
 			'Soup.Generate': { Version: '../../generate/', Build: 'Build0', Tool: 'Tool0' }
 			copy: { Version: '../../tools/copy/', Build: 'Build0', Tool: 'Tool0' }
 			mkdir: { Version: '../../tools/mkdir/', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|CryptoPP': { Version: 1.2.5, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|Detours': { Version: 4.0.13, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|Opal': { Version: 0.12.1, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|CryptoPP': { Version: 1.2.6, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|Detours': { Version: 4.0.14, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|Opal': { Version: 0.12.2, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.5.0, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 5.5.0, Build: 'Build0', Tool: 'Tool0' }
 			'parse.modules': { Version: '../../tools/parse-modules/', Build: 'Build0', Tool: 'Tool0' }

@@ -8,6 +8,6 @@ Defines: [
 Dependencies: {
 	Runtime: [
 		'mwasplund|Opal@0'
-		'mwasplund|reflex@1'
+		'mwasplund|reflex@5'
 	]
 }

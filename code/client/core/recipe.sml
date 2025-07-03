@@ -75,7 +75,7 @@ Dependencies: {
 	]
 	Runtime: [
 		'mwasplund|Opal@0'
-		'mwasplund|reflex@1'
+		'mwasplund|reflex@5'
 		'../../monitor/host/'
 		'[C]mwasplund|wren@1'
 		'mwasplund|CryptoPP@1'
