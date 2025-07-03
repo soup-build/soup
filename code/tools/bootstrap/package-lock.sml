@@ -19,7 +19,7 @@ Closures: {
 			'mwasplund|CryptoPP': { Version: 1.2.5, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|Detours': { Version: 4.0.13, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|Opal': { Version: 0.12.1, Build: 'Build2', Tool: 'Tool1' }
-			'mwasplund|Soup.Test.Assert': { Version: 0.4.3, Build: 'Build2', Tool: 'Tool1' }
+			'mwasplund|Soup.Test.Assert': { Version: 0.5.0, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|json11': { Version: 1.1.4, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|reflex': { Version: 5.5.0, Build: 'Build2', Tool: 'Tool1' }
 		}
@@ -43,7 +43,7 @@ Closures: {
 	Build3: {
 		Wren: {
 			'Soup|Cpp': { Version: 0.16.0 }
-			'mwasplund|Soup.Test.Cpp': { Version: 0.14.0 }
+			'mwasplund|Soup.Test.Cpp': { Version: 0.15.0 }
 		}
 	}
 	Build4: {
