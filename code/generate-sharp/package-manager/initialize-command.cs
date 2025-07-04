@@ -54,7 +54,7 @@ public class InitializeCommand
 			Type = CppTypeExecutable,
 			Version = new SemanticVersion(1, 0, 0)
 		};
-		recipe.AddSource("Main.cpp");
+		recipe.AddSource("main.cpp");
 
 		UpdateDefaultValues(recipe);
 
@@ -70,7 +70,7 @@ int main()
 	return 0;
 }";
 
-		var mainFilePath = workingDirectory + new Path("./Main.cpp");
+		var mainFilePath = workingDirectory + new Path("./main.cpp");
 		using var mainFile = LifetimeManager.Get<IFileSystem>().OpenWrite(mainFilePath, false);
 		using var mainFileWriter = new System.IO.StreamWriter(mainFile.GetOutStream(), null, -1, true);
 
