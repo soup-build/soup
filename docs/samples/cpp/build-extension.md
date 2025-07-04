@@ -29,9 +29,9 @@ Closures: {
   }
   Tool0: {
     'C++': {
-      'mwasplund|copy': { Version: 1.1.0 }
-      'mwasplund|mkdir': { Version: 1.1.0 }
-      'mwasplund|parse.modules': { Version: 1.1.0 }
+      'mwasplund|copy': { Version: 1.2.0 }
+      'mwasplund|mkdir': { Version: 1.2.0 }
+      'mwasplund|parse.modules': { Version: 1.2.0 }
     }
   }
 }
@@ -86,8 +86,8 @@ Closures: {
   }
   Tool0: {
     'C++': {
-      'mwasplund|copy': { Version: 1.1.0 }
-      'mwasplund|mkdir': { Version: 1.1.0 }
+      'mwasplund|copy': { Version: 1.2.0 }
+      'mwasplund|mkdir': { Version: 1.2.0 }
     }
   }
 }
@@ -204,9 +204,9 @@ Closures: {
   Tool0: {
     'C++': {
       'Samples.SimpleBuildExtension.Tool': { Version: '../tool/' }
-      'mwasplund|copy': { Version: 1.1.0 }
-      'mwasplund|mkdir': { Version: 1.1.0 }
-      'mwasplund|parse.modules': { Version: 1.1.0 }
+      'mwasplund|copy': { Version: 1.2.0 }
+      'mwasplund|mkdir': { Version: 1.2.0 }
+      'mwasplund|parse.modules': { Version: 1.2.0 }
     }
   }
 }
