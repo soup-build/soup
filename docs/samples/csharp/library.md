@@ -55,7 +55,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|CSharp': { Version: 0.15.3 }
+      'Soup|CSharp': { Version: 0.16.0 }
     }
   }
   Tool0: {
