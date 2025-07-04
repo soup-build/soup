@@ -1,10 +1,10 @@
-﻿// <copyright file="CustomBuildTask.wren" company="Soup">
+﻿// <copyright file="custom-build-task.wren" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./ListExtensions" for ListExtensions
-import "Soup|Build.Utils:./MapExtensions" for MapExtensions
+import "Soup|Build.Utils:./list-extensions" for ListExtensions
+import "Soup|Build.Utils:./map-extensions" for MapExtensions
 
 class CustomBuildTask is SoupTask {
 	/// <summary>

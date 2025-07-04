@@ -9,7 +9,7 @@ PublicHeaders: [
 	{
 		Root: 'public/'
 		Files: [
-			'Library.h'
+			'library.h'
 		]
 	}
 ]
