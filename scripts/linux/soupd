@@ -20,7 +20,7 @@ SOUP_VERSION="0.42.3"
 COPY_VERSION="1.1.0"
 MKDIR_VERSION="1.1.0"
 PARSE_MODULES_VERSION="1.1.0"
-SOUP_WREN_VERSION="0.4.3"
+SOUP_WREN_VERSION="0.5.0"
 
 # Cleanup previous runs
 rm -rf $RUN_DIR
@@ -45,10 +45,10 @@ mkdir -p $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION
 cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml
 cp -p -R $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/out/$CONFIG_HASH/ $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/
 
-cp -p -R $MSBUILD_DIR/bin/Soup.Build.PackageManager/Debug/net9.0/linux-x64/publish/ $RUN_DIR/PackageManager
+cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Debug/net9.0/linux-x64/publish/ $RUN_DIR/PackageManager
 
-cp -p -R $MSBUILD_DIR/bin/SoupView/Debug/net9.0/linux-x64/publish/ $RUN_DIR/View
+cp -p -R $MSBUILD_DIR/bin/soup-view/Debug/net9.0/linux-x64/publish/ $RUN_DIR/View
 
-cp -p -R $MSBUILD_DIR/bin/Swhere/Debug/net9.0/linux-x64/publish/Swhere $RUN_DIR/swhere
+cp -p -R $MSBUILD_DIR/bin/swhere/Debug/net9.0/linux-x64/publish/swhere $RUN_DIR/swhere
 
 $RUN_DIR/soup "$@"
