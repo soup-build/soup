@@ -30,7 +30,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe restore-packages C:/TestLocation",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/Soup.Build.PackageManager restore-packages C:/TestLocation",
+						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager restore-packages C:/TestLocation",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -42,7 +42,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe restore-packages C:/TestLocation",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/Soup.Build.PackageManager restore-packages C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager restore-packages C:/TestLocation",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -73,7 +73,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe initialize-package C:/TestLocation",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/Soup.Build.PackageManager initialize-package C:/TestLocation",
+						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager initialize-package C:/TestLocation",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -85,7 +85,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe initialize-package C:/TestLocation",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/Soup.Build.PackageManager initialize-package C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager initialize-package C:/TestLocation",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -117,7 +117,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage@2.2.2",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/Soup.Build.PackageManager install-package C:/TestLocation TheirPackage@2.2.2",
+						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage@2.2.2",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -129,7 +129,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage@2.2.2",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/Soup.Build.PackageManager install-package C:/TestLocation TheirPackage@2.2.2",
+						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage@2.2.2",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -161,7 +161,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/Soup.Build.PackageManager install-package C:/TestLocation TheirPackage",
+						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -173,7 +173,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/Soup.Build.PackageManager install-package C:/TestLocation TheirPackage",
+						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -204,7 +204,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe publish-package C:/TestLocation",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/Soup.Build.PackageManager publish-package C:/TestLocation",
+						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager publish-package C:/TestLocation",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -216,7 +216,7 @@ namespace Soup::Core::UnitTests
 					#ifdef _WIN32
 						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe publish-package C:/TestLocation",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/Soup.Build.PackageManager publish-package C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager publish-package C:/TestLocation",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
