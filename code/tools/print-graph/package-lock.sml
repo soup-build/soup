@@ -14,7 +14,7 @@ Closures: {
 			'mwasplund|Opal': { Version: 0.12.3, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.5.0, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|reflex': { Version: 5.5.1, Build: 'Build0', Tool: 'Tool0' }
-			printgraph: { Version: './', Build: 'Build0', Tool: 'Tool0' }
+			'print.graph': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
