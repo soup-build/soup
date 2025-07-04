@@ -8,7 +8,7 @@ Closures: {
 	Build0: {
 		Wren: {
 			'Samples.C.BuildExtension.Extension': { Version: '../extension/' }
-			'Soup|C': { Version: 0.4.1 }
+			'Soup|C': { Version: 0.5.0 }
 		}
 	}
 	Tool0: {

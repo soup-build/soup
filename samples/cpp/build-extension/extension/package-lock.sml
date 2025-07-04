@@ -3,7 +3,7 @@ Closures: {
 	Root: {
 		Wren: {
 			'Samples.Cpp.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build0', Tool: 'Tool0' }
+			'Soup|Build.Utils': { Version: 0.9.0, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
