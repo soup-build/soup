@@ -3,7 +3,7 @@ This is the smallest amount of code to get a console application building using 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/console-application)
 
-## Recipe.sml
+## recipe.sml
 The Recipe file that sets the name, type, version and the single source file.
 ```sml
 Name: 'Samples.Cpp.ConsoleApplication'
@@ -12,7 +12,7 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## PackageLock.sml
+## package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```sml
 Version: 5
@@ -24,7 +24,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.15.4 }
+      'Soup|Cpp': { Version: 0.16.0 }
     }
   }
   Tool0: {

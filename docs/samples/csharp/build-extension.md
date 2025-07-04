@@ -3,7 +3,7 @@ This is a console application that has a custom build extension that alters the 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension)
 
-## Extension/Recipe.sml
+## Extension/recipe.sml
 The Recipe file that defines the build extension dynamic library "Samples.CSharp.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.CSharp.BuildExtension.Extension'
@@ -19,7 +19,7 @@ Dependencies: {
 }
 ```
 
-## Extension/PackageLock.sml
+## Extension/package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -27,12 +27,12 @@ Closures: {
   Root: {
     Wren: {
       'Samples.CSharp.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'Soup|Build.Utils': { Version: 0.7.0, Build: 'Build0', Tool: 'Tool0' }
+      'Soup|Build.Utils': { Version: 0.9.0, Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|Wren': { Version: 0.4.3 }
+      'Soup|Wren': { Version: 0.5.0 }
     }
   }
   Tool0: {
@@ -90,7 +90,7 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## Executable/Recipe.sml
+## Executable/recipe.sml
 The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.CSharp.BuildExtension.Executable'
@@ -103,7 +103,7 @@ Dependencies: {
 }
 ```
 
-## Executable/PackageLock.sml
+## Executable/package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -116,7 +116,7 @@ Closures: {
   Build0: {
     Wren: {
       'Samples.CSharp.BuildExtension.Extension': { Version: '../extension/' }
-      'Soup|CSharp': { Version: 0.15.3 }
+      'Soup|CSharp': { Version: 0.16.0 }
     }
   }
   Tool0: {

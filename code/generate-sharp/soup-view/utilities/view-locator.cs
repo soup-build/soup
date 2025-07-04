@@ -1,0 +1,32 @@
+﻿// <copyright file="view-locator.cs" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Soup.View.ViewModels;
+using Soup.View.Views;
+using System;
+
+namespace Soup.View;
+
+public class ViewLocator : IDataTemplate
+{
+	public Control Build(object? param)
+	{
+		return param switch
+		{
+			DependencyGraphViewModel => new DependencyGraphView(),
+			PreprocessorTaskGraphViewModel => new PreprocessorTaskGraphView(),
+			PreprocessorOperationGraphViewModel => new PreprocessorOperationGraphView(),
+			OperationGraphViewModel => new OperationGraphView(),
+			TaskGraphViewModel => new TaskGraphView(),
+			_ => throw new InvalidOperationException("Failed to get the view type"),
+		};
+	}
+
+	public bool Match(object? data)
+	{
+		return data is ViewModelBase;
+	}
+}

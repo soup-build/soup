@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<PublishTrimmed>false</PublishTrimmed>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="assets/soup.ico" />
+		<AvaloniaResource Include="assets/soup.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.3.0" />
+		<PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.1.1" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.0" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.0" />
+		<PackageReference Include="GraphShape" Version="1.2.1" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
+		<PackageReference Include="System.Text.Json" Version="9.0.5" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../opal/opal.csproj" />
+		<ProjectReference Include="../utilities/soup.utilities.csproj" />
+		<ProjectReference Include="../soup-tools/soup.tools.csproj" />
+	</ItemGroup>
+</Project>

@@ -7,6 +7,6 @@ SET ClientCoreDir=code\client\core\source
 SET REFLEX=%UserProfile%\source\repos\RE-flex\bin\win64\reflex.exe
 
 pushd %RootDir%
-echo %REFLEX% %ClientCoreDir%\sml\SMLParser.l -o %ClientCoreDir%\sml\SMLParser.cpp
-call %REFLEX% %ClientCoreDir%\sml\SMLParser.l -o %ClientCoreDir%\sml\SMLParser.cpp
+echo %REFLEX% %ClientCoreDir%\sml\sml-parser.l -o %ClientCoreDir%\sml\sml-parser.cpp
+call %REFLEX% %ClientCoreDir%\sml\sml-parser.l -o %ClientCoreDir%\sml\sml-parser.cpp
 popd

@@ -7,7 +7,7 @@ public static class Script
 {
 	public static void Main()
 	{
-		var soupVersion = new Version(0, 42, 1);
+		var soupVersion = new Version(0, 42, 3);
 
 		var soupOutFolder = "../../../out";
 		var soupReleaseFolder = $"{soupOutFolder}/release";
@@ -26,9 +26,9 @@ public static class Script
 		{
 			Platform = Platform.x64,
 			GUID = new Guid("2CF2A792-A266-416D-ACF9-B81781DC2B76"),
-			BackgroundImage = @"Images\DialogBackground.bmp",
-			BannerImage = @"Images\DialogBanner.bmp",
-			LicenceFile = @"License.rtf",
+			BackgroundImage = @"images\dialog-background.bmp",
+			BannerImage = @"images\dialog-banner.bmp",
+			LicenceFile = @"license.rtf",
 			OutDir = soupReleaseFolder,
 			OutFileName = $"soup-build-{soupVersion}-windows-x64",
 

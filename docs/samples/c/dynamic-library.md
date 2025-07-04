@@ -3,7 +3,7 @@ This is a console application that has a single dynamic library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library)
 
-## Library/Recipe.sml
+## Library/recipe.sml
 The Recipe file that defines the static library "Samples.C.DynamicLibrary.Library".
 ```sml
 Name: 'Samples.C.DynamicLibrary.Library'
@@ -43,7 +43,7 @@ const char* GetName()
 }
 ```
 
-## Application/Recipe.sml
+## Application/recipe.sml
 The Recipe file that defines the executable "Samples.C.DynamicLibrary.Application".
 ```sml
 Name: 'Samples.C.DynamicLibrary.Application'
@@ -55,7 +55,7 @@ Dependencies: {
 }
 ```
 
-## Application/PackageLock.sml
+## Application/package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project and the dynamic library dependency.
 ```sml
 Version: 5
@@ -68,7 +68,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|C': { Version: 0.4.1 }
+      'Soup|C': { Version: 0.5.0 }
     }
   }
   Tool0: {

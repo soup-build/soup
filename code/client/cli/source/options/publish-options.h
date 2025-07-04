@@ -1,0 +1,23 @@
+﻿// <copyright file="publish-options.h" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
+#pragma once
+#include "shared-options.h"
+
+namespace Soup::Client
+{
+	/// <summary>
+	/// Publish Command Options
+	/// </summary>
+	// TODO: [Verb("publish")]
+	class PublishOptions : public SharedOptions
+	{
+	public:
+		/// <summary>
+		/// Gets or sets the path to publish
+		/// </summary>
+		// [[Args::Option("path", Index = 0, HelpText = "Path to the package to publish.")]]
+		std::string Path;
+	};
+}

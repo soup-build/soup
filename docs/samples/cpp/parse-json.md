@@ -3,7 +3,7 @@ A console application that reads in a json file using the an external module and
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json)
 
-## Recipe.sml
+## recipe.sml
 The Recipe file that sets the standard name, type, version, as well as the single external dependency of the [json11](https://github.com/dropbox/json11) project.
 ```sml
 Name: 'Samples.Cpp.ParseJson'
@@ -17,7 +17,7 @@ Dependencies: {
 }
 ```
 
-## PackageLock.sml
+## package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```
 Version: 5
@@ -25,12 +25,12 @@ Closures: {
   Root: {
     'C++': {
       'Samples.Cpp.ParseJson': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'mwasplund|json11': { Version: 1.1.4, Build: 'Build0', Tool: 'Tool0' }
+      'mwasplund|json11': { Version: 1.1.5, Build: 'Build0', Tool: 'Tool0' }
     }
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.15.4 }
+      'Soup|Cpp': { Version: 0.16.0 }
     }
   }
   Tool0: {

@@ -18,7 +18,7 @@
         "request": "launch",
         "preLaunchTask": "",
         "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
-        "args": [ "${workspaceFolder}/code/client/cli/Recipe.sml" ],
+        "args": [ "${workspaceFolder}/code/client/cli/recipe.sml" ],
         "cwd": "${workspaceFolder}/out/run",
         "stopAtEntry": false,
         "console": "internalConsole"
@@ -30,7 +30,7 @@
       "program": "${workspaceFolder}/out/run/Soup/Soup.exe",
       "args": [
         "build",
-        "samples/cpp/module-interface",
+        "samples/cpp/console-application",
         "-v:d"
       ],
       "stopAtEntry": false,
@@ -60,6 +60,34 @@
       "args": [
         "build",
         "samples/cpp/build-extension/executable"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          },
+          {
+              "description": "Set Disassembly Flavor to Intel",
+              "text": "-gdb-set disassembly-flavor intel",
+              "ignoreFailures": true
+          }
+      ]
+    },
+    
+    {
+      "name": "Debug Generate (GDB)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/run/generate",
+      "args": [
+        "false",
+        "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

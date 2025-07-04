@@ -3,7 +3,7 @@ A console application that uses a single module interface file used inside the s
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface)
 
-## Recipe.sml
+## recipe.sml
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
 Name: 'Samples.Cpp.ModuleInterface'
@@ -12,7 +12,7 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## Executable/PackageLock.sml
+## Executable/package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -24,7 +24,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.15.4 }
+      'Soup|Cpp': { Version: 0.16.0 }
     }
   }
   Tool0: {

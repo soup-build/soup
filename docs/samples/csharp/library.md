@@ -3,7 +3,7 @@ This is a console application with the minimal amount of code to get up and runn
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application)
 
-## library/Recipe.sml
+## library/recipe.sml
 The Recipe file that defines the static library "Samples.CSharp.Library.Library".
 ```sml
 Name: 'Samples.CSharp.Library.Library'
@@ -27,7 +27,7 @@ namespace Samples.CSharp.Library
 }
 ```
 
-## application/Recipe.sml
+## application/recipe.sml
 The Recipe file that defines the static library "Samples.CSharp.Library.ConsoleApplication".
 ```sml
 Name: 'Samples.CSharp.Library.ConsoleApplication'
@@ -42,7 +42,7 @@ Dependencies: {
 }
 ```
 
-## application/PackageLock.sml
+## application/package-lock.sml
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -55,7 +55,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|CSharp': { Version: 0.15.3 }
+      'Soup|CSharp': { Version: 0.16.0 }
     }
   }
   Tool0: {

@@ -27,7 +27,7 @@ jobs:
 
     # Restore Nuget
     - name: DotNet Restore
-      run: dotnet restore ./soup/code/generate-sharp/GenerateSharp.sln
+      run: dotnet restore ./soup/code/generate-sharp/generate-sharp.sln
 
     # Build Soup
     - name: Soup Where
@@ -47,7 +47,7 @@ jobs:
     # - name: Soup Build SWhere
     #   run: soup build ./soup/code/generate-sharp/swhere/ -flavor ${{matrix.config}}
     # - name: Soup Restore PackageManager
-    #   run: soup restore ./soup/code/GenerateSharp/package-manager/
+    #   run: soup restore ./soup/code/generate-sharp/package-manager/
     # - name: Soup Build PackageManager
     #   run: soup build ./soup/code/generate-sharp/package-manager/ -flavor ${{matrix.config}}
     - name: Soup Restore Tools
@@ -57,9 +57,9 @@ jobs:
 
     # Build DotNet
     - name: DotNet Build
-      run: dotnet build -c ${{matrix.config}} --no-restore ./soup/code/generate-sharp/GenerateSharp.sln
+      run: dotnet build -c ${{matrix.config}} --no-restore ./soup/code/generate-sharp/generate-sharp.sln
     - name: DotNet Test
-      run: dotnet test -c ${{matrix.config}} --no-build --verbosity normal ./soup/code/generate-sharp/GenerateSharp.sln
+      run: dotnet test -c ${{matrix.config}} --no-build --verbosity normal ./soup/code/generate-sharp/generate-sharp.sln
 
     # Build Tools
     - name: Soup Restore PrintGraph

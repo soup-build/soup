@@ -1,4 +1,4 @@
-// <copyright file="ValueList.cs" company="Soup">
+// <copyright file="value.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

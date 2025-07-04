@@ -16,7 +16,7 @@ CONFIG_HASH=OZlIVjblazFuKXg-raWUNoGEnG4
 
 OWNER=mwasplund
 
-SOUP_VERSION="0.42.2"
+SOUP_VERSION="0.42.3"
 COPY_VERSION="1.1.0"
 MKDIR_VERSION="1.1.0"
 PARSE_MODULES_VERSION="1.1.0"
@@ -30,19 +30,19 @@ cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.exe $RUN_DIR/s
 cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.Generate.exe $RUN_DIR/generate
 
 mkdir -p $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION
-cp -p $CODE_DIR/tools/copy/Recipe.sml $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/Recipe.sml
+cp -p $CODE_DIR/tools/copy/recipe.sml $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/recipe.sml
 cp -p -R $OUT_DIR/C++/Local/copy/$COPY_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/out/
 
 mkdir -p $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION
-cp -p $CODE_DIR/tools/mkdir/Recipe.sml $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/Recipe.sml
+cp -p $CODE_DIR/tools/mkdir/recipe.sml $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/recipe.sml
 cp -p -R $OUT_DIR/C++/Local/mkdir/$MKDIR_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/out/
 
 mkdir -p $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION
-cp -p $CODE_DIR/tools/parse-modules/Recipe.sml $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION/Recipe.sml
+cp -p $CODE_DIR/tools/parse-modules/recipe.sml $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION/recipe.sml
 cp -p -R $OUT_DIR/C++/Local/parse.modules/$PARSE_MODULES_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION/out/
 
 mkdir -p $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION
-cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/Recipe.sml $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/Recipe.sml
+cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml
 cp -p -R $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/out/$CONFIG_HASH/ $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/
 
 cp -p -R $MSBUILD_DIR/bin/Soup.Build.PackageManager/Debug/net9.0/linux-x64/publish/ $RUN_DIR/PackageManager

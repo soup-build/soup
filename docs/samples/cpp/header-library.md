@@ -3,7 +3,7 @@ This is a console application that has a single header library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library)
 
-## Library/Recipe.sml
+## Library/recipe.sml
 The Recipe file that defines the header library "Samples.Cpp.HeaderLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Library'
@@ -37,7 +37,7 @@ namespace Samples::Cpp::HeaderLibrary::Library
 }
 ```
 
-## Application/Recipe.sml
+## Application/recipe.sml
 The Recipe file that defines the executable "Samples.Cpp.HeaderLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Application'
@@ -51,7 +51,7 @@ Dependencies: {
 }
 ```
 
-## Application/PackageLock.sml
+## Application/package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project and the dynamic library dependency.
 ```sml
 Version: 5
@@ -64,7 +64,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.15.4 }
+      'Soup|Cpp': { Version: 0.16.0 }
     }
   }
   Tool0: {

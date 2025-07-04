@@ -3,17 +3,17 @@ This is a windows application that demonstrates creating a GUI windows applicati
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/windows-application)
 
-## Recipe.sml
+## recipe.sml
 The Recipe file that defines the sample application.
 ```
 Name: 'Samples.Cpp.WindowsApplication'
 Language: 'C++|0'
 Type: 'Windows'
 Version: 1.0.0
-Resources: 'WindowsProject.rc'
+Resources: 'windows-project.rc'
 ```
 
-## PackageLock.sml
+## package-lock.sml
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```sml
 Version: 5
@@ -25,7 +25,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.15.4 }
+      'Soup|Cpp': { Version: 0.16.0 }
     }
   }
   Tool0: {
