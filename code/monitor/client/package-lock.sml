@@ -5,7 +5,7 @@ Closures: {
 			'Monitor.Client': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 			'Monitor.Shared': { Version: '../shared/', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Detours': { Version: 4.0.14, Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|Opal': { Version: 0.12.2, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|Opal': { Version: 0.12.3, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {

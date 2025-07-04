@@ -4,7 +4,7 @@ Closures: {
 		'C++': {
 			mkdir: { Version: './', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|mkdir': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'mwasplund|Opal': { Version: 0.12.2, Build: 'Build0', Tool: 'Tool0' }
+			'mwasplund|Opal': { Version: 0.12.3, Build: 'Build0', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
