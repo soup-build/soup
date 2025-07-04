@@ -59,7 +59,7 @@
       "program": "${workspaceFolder}/out/run/soup",
       "args": [
         "build",
-        "samples/cpp/build-extension/executable"
+        "samples/cpp/console-application"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

@@ -49,15 +49,15 @@ namespace Soup::Core
 					{
 						{
 							PackageName("mwasplund", "copy"),
-							SemanticVersion(1, 1, 0)
+							SemanticVersion(1, 2, 0)
 						},
 						{
 							PackageName("mwasplund", "mkdir"),
-							SemanticVersion(1, 1, 0)
+							SemanticVersion(1, 2, 0)
 						},
 						{
 							PackageName("mwasplund", "parse.modules"),
-							SemanticVersion(1, 1, 0)
+							SemanticVersion(1, 2, 0)
 						},
 					}
 				},
