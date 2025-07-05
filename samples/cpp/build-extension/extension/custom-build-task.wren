@@ -3,10 +3,10 @@
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./Path" for Path
-import "Soup|Build.Utils:./ListExtensions" for ListExtensions
-import "Soup|Build.Utils:./MapExtensions" for MapExtensions
-import "Soup|Build.Utils:./SharedOperations" for SharedOperations
+import "Soup|Build.Utils:./path" for Path
+import "Soup|Build.Utils:./list-extensions" for ListExtensions
+import "Soup|Build.Utils:./map-extensions" for MapExtensions
+import "Soup|Build.Utils:./shared-operations" for SharedOperations
 
 class CustomBuildTask is SoupTask {
 	/// <summary>
@@ -51,7 +51,7 @@ class CustomBuildTask is SoupTask {
 	/// </summary>
 	static CreateCustomToolOperation(workingDirectory) {
 		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExectable("Samples.SimpleBuildExtension.Tool")
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("Samples.SimpleBuildExtension.Tool")
 
 		var title = "Run Custom Tool"
 
