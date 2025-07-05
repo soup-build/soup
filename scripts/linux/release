@@ -11,4 +11,4 @@ RELEASE_DIR=$OUT_DIR/release
 
 # Pack the release tarbal
 mkdir -p $RELEASE_DIR
-tar -a -cf $RELEASE_DIR/soup-build-0.42.3-linux-x64.tar.gz -C $RUN_DIR .
+tar -a -cf $RELEASE_DIR/soup-build-0.42.4-linux-x64.tar.gz -C $RUN_DIR .
