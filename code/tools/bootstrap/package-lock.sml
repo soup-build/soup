@@ -3,7 +3,7 @@ Closures: {
 	Root: {
 		C: {
 			'mwasplund|libseccomp': { Version: 2.6.0, Build: 'Build4', Tool: 'Tool0' }
-			'mwasplund|wren': { Version: 1.1.0, Build: 'Build4', Tool: 'Tool0' }
+			'mwasplund|wren': { Version: 1.2.0, Build: 'Build4', Tool: 'Tool0' }
 		}
 		'C#': {
 			Opal: { Version: '../../generate-sharp/opal/', Build: 'Build0', Tool: 'Tool0' }

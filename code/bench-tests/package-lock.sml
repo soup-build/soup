@@ -2,7 +2,7 @@ Version: 5
 Closures: {
 	Root: {
 		C: {
-			'mwasplund|wren': { Version: 1.1.0, Build: 'Build2', Tool: 'Tool0' }
+			'mwasplund|wren': { Version: 1.2.0, Build: 'Build2', Tool: 'Tool0' }
 		}
 		'C++': {
 			'Monitor.Host': { Version: '../monitor/host/', Build: 'Build0', Tool: 'Tool0' }
