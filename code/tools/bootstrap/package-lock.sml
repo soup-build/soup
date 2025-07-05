@@ -2,7 +2,7 @@ Version: 5
 Closures: {
 	Root: {
 		C: {
-			'mwasplund|libseccomp': { Version: 2.5.8, Build: 'Build4', Tool: 'Tool0' }
+			'mwasplund|libseccomp': { Version: 2.6.0, Build: 'Build4', Tool: 'Tool0' }
 			'mwasplund|wren': { Version: 1.1.0, Build: 'Build4', Tool: 'Tool0' }
 		}
 		'C#': {
