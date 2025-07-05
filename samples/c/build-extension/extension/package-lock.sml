@@ -8,13 +8,13 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|Wren': { Version: 0.5.0 }
+			'Soup|Wren': { Version: 0.5.1 }
 		}
 	}
 	Tool0: {
 		'C++': {
-			'mwasplund|copy': { Version: 1.1.0 }
-			'mwasplund|mkdir': { Version: 1.1.0 }
+			'mwasplund|copy': { Version: 1.2.0 }
+			'mwasplund|mkdir': { Version: 1.2.0 }
 		}
 	}
 }
