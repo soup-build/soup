@@ -66,7 +66,7 @@ namespace Soup::Core
 					{
 						{
 							PackageName("Soup", "Wren"),
-							SemanticVersion(0, 5, 0)
+							SemanticVersion(0, 5, 1)
 						},
 					}
 				},
