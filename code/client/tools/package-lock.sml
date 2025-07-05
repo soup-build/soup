@@ -2,8 +2,8 @@ Version: 5
 Closures: {
 	Root: {
 		C: {
-			'mwasplund|libseccomp': { Version: 2.5.8, Build: 'Build2', Tool: 'Tool0' }
-			'mwasplund|wren': { Version: 1.1.0, Build: 'Build2', Tool: 'Tool0' }
+			'mwasplund|libseccomp': { Version: 2.6.0, Build: 'Build2', Tool: 'Tool0' }
+			'mwasplund|wren': { Version: 1.2.0, Build: 'Build2', Tool: 'Tool0' }
 		}
 		'C++': {
 			'Monitor.Host': { Version: '../../monitor/host/', Build: 'Build0', Tool: 'Tool0' }
