@@ -10,9 +10,9 @@ Name: 'Samples.C.BuildExtension.Extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
-	Runtime: [
-		'Soup|Build.Utils@0'
-	]
+  Runtime: [
+    'Soup|Build.Utils@0'
+  ]
 }
 ```
 
@@ -21,23 +21,23 @@ The package lock that was generated to capture the unique dependencies required 
 ```sml
 Version: 5
 Closures: {
-	Root: {
-		Wren: {
-			'Samples.C.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'Soup|Build.Utils': { Version: 0.9.0, Build: 'Build0', Tool: 'Tool0' }
-		}
-	}
-	Build0: {
-		Wren: {
-			'Soup|Wren': { Version: 0.5.3 }
-		}
-	}
-	Tool0: {
-		'C++': {
-			'mwasplund|copy': { Version: 1.2.0 }
-			'mwasplund|mkdir': { Version: 1.2.0 }
-		}
-	}
+  Root: {
+    Wren: {
+      'Samples.C.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+      'Soup|Build.Utils': { Version: 0.9.0, Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Soup|Wren': { Version: 0.5.3 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.2.0 }
+      'mwasplund|mkdir': { Version: 1.2.0 }
+    }
+  }
 }
 ```
 
@@ -53,37 +53,37 @@ import "Soup|Build.Utils:./list-extensions" for ListExtensions
 import "Soup|Build.Utils:./map-extensions" for MapExtensions
 
 class CustomBuildTask is SoupTask {
-	/// <summary>
-	/// Get the run before list
-	/// </summary>
-	static runBefore { [
-		"BuildTask"
-	] }
+  /// <summary>
+  /// Get the run before list
+  /// </summary>
+  static runBefore { [
+    "BuildTask"
+  ] }
 
-	/// <summary>
-	/// Get the run after list
-	/// </summary>
-	static runAfter { [] }
+  /// <summary>
+  /// Get the run after list
+  /// </summary>
+  static runAfter { [] }
 
-	/// <summary>
-	/// Core Evaluate
-	/// </summary>
-	static evaluate() {
-		Soup.info("Running Before Build!")
+  /// <summary>
+  /// Core Evaluate
+  /// </summary>
+  static evaluate() {
+    Soup.info("Running Before Build!")
 
-		// Get the build table
-		var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
+    // Get the build table
+    var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
 
-		// As a sample of what a build extension can do we set a new
-		// preprocessor definition to influence the build
-		var preprocessorDefinitions = [
-			"SPECIAL_BUILD",
-		]
-		
-		ListExtensions.Append(
-			MapExtensions.EnsureList(buildTable, "PreprocessorDefinitions"),
-			preprocessorDefinitions)
-	}
+    // As a sample of what a build extension can do we set a new
+    // preprocessor definition to influence the build
+    var preprocessorDefinitions = [
+      "SPECIAL_BUILD",
+    ]
+    
+    ListExtensions.Append(
+      MapExtensions.EnsureList(buildTable, "PreprocessorDefinitions"),
+      preprocessorDefinitions)
+  }
 }
 ```
 
@@ -106,23 +106,23 @@ The package lock that was generated to capture the unique build dependencies req
 ```sml
 Version: 5
 Closures: {
-	Root: {
-		C: {
-			'Samples.C.SimpleBuildExtension.Executable': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-		}
-	}
-	Build0: {
-		Wren: {
-			'Samples.C.BuildExtension.Extension': { Version: '../extension/' }
-			'Soup|C': { Version: 0.5.0 }
-		}
-	}
-	Tool0: {
-		'C++': {
-			'mwasplund|copy': { Version: 1.2.0 }
-			'mwasplund|mkdir': { Version: 1.2.0 }
-		}
-	}
+  Root: {
+    C: {
+      'Samples.C.SimpleBuildExtension.Executable': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+    }
+  }
+  Build0: {
+    Wren: {
+      'Samples.C.BuildExtension.Extension': { Version: '../extension/' }
+      'Soup|C': { Version: 0.5.0 }
+    }
+  }
+  Tool0: {
+    'C++': {
+      'mwasplund|copy': { Version: 1.2.0 }
+      'mwasplund|mkdir': { Version: 1.2.0 }
+    }
+  }
 }
 ```
 
