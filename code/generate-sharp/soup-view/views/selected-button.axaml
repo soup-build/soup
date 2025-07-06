@@ -1,16 +1,16 @@
 <Styles
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:v="using:Soup.View.Views">
+	xmlns:views="using:Soup.View.Views">
 	<Design.PreviewWith>
-		<v:SelectedButton Content="Some Test Content" IsSelected="True"/>
+		<views:SelectedButton Content="Some Test Content" IsSelected="True"/>
 	</Design.PreviewWith>
 
-	<Style Selector="v|SelectedButton:selected">
+	<Style Selector="views|SelectedButton:selected">
 		<Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAccentBrush}" />
 	</Style>
 
-	<Style Selector="v|SelectedButton">
+	<Style Selector="views|SelectedButton">
 		<!-- Set Defaults -->
 		<Setter Property="Template">
 			<ControlTemplate>
