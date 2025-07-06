@@ -3,19 +3,16 @@ This is a console application that has a custom build extension that alters the 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/build-extension)
 
-## Extension/recipe.sml
+## extension/recipe.sml
 The Recipe file that defines the build extension dynamic library "Samples.C.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.C.BuildExtension.Extension'
 Language: 'Wren|0'
 Version: 1.0.0
-Source: [
-  'CustomBuildTask.wren'
-]
 Dependencies: {
-  Runtime: [
-    'Soup|Build.Utils@0'
-  ]
+	Runtime: [
+		'Soup|Build.Utils@0'
+	]
 }
 ```
 
@@ -32,7 +29,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Wren': { Version: 0.5.1 }
+      'Soup|Wren': { Version: 0.5.2 }
     }
   }
   Tool0: {
