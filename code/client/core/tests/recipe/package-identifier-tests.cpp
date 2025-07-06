@@ -1,12 +1,33 @@
-// <copyright file="package-identifier-tests.h" company="Soup">
+// <copyright file="package-identifier-tests.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <format>
+#include <map>
+#include <memory>
+#include <optional>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
+
+export module Soup.Core.Tests:PackageIdentifierTests;
+
+import Monitor.Host;
+import Opal;
+import Soup.Core;
+import Soup.Test.Assert;
+
+using namespace Opal;
+using namespace Opal::System;
+using namespace Soup::Test;
 
 namespace Soup::Core::UnitTests
 {
-	class PackageIdentifierTests
+	export class PackageIdentifierTests
 	{
 	public:
 		// [[Fact]]

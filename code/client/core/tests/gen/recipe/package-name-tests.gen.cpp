@@ -1,8 +1,14 @@
-#pragma once
-#include "recipe/package-name-tests.h"
+module;
 
-TestState RunPackageNameTests() 
- {
+#include <memory>
+#include <optional>
+
+export module Soup.Core.Tests:RunPackageNameTests;
+
+import :PackageNameTests;
+
+export TestState RunPackageNameTests() 
+{
 	auto className = "PackageNameTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::PackageNameTests>();
 	TestState state = { 0, 0 };

@@ -1,8 +1,14 @@
-#pragma once
-#include "recipe/package-identifier-tests.h"
+module;
 
-TestState RunPackageIdentifierTests() 
- {
+#include <memory>
+#include <optional>
+
+export module Soup.Core.Tests:RunPackageIdentifierTests;
+
+import :PackageIdentifierTests;
+
+export TestState RunPackageIdentifierTests() 
+{
 	auto className = "PackageIdentifierTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::PackageIdentifierTests>();
 	TestState state = { 0, 0 };

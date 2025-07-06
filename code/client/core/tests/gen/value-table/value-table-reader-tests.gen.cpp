@@ -1,7 +1,12 @@
-#pragma once
-#include "value-table/value-table-reader-tests.h"
+module;
 
-TestState RunValueTableReaderTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunValueTableReaderTests;
+
+import :ValueTableReaderTests;
+
+export TestState RunValueTableReaderTests() 
 {
 	auto className = "ValueTableReaderTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::ValueTableReaderTests>();

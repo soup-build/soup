@@ -1,8 +1,13 @@
-#pragma once
-#include "recipe/recipe-extensions-tests.h"
+module;
 
-TestState RunRecipeExtensionsTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunRecipeExtensionsTests;
+
+import :RecipeExtensionsTests;
+
+export TestState RunRecipeExtensionsTests() 
+{
 	auto className = "RecipeExtensionsTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::RecipeExtensionsTests>();
 	TestState state = { 0, 0 };

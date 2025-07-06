@@ -22,19 +22,6 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-#include "package/package-manager-tests.gen.h"
-
-#include "recipe/package-identifier-tests.gen.h"
-#include "recipe/package-name-tests.gen.h"
-#include "recipe/package-reference-tests.gen.h"
-#include "recipe/recipe-extensions-tests.gen.h"
-#include "recipe/recipe-tests.gen.h"
-#include "recipe/recipe-sml-tests.gen.h"
-
-#include "value-table/value-table-manager-tests.gen.h"
-#include "value-table/value-table-reader-tests.gen.h"
-#include "value-table/value-table-writer-tests.gen.h"
-
 int main()
 {
 	std::cout << "Running Tests..." << std::endl;

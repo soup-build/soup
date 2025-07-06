@@ -1,7 +1,12 @@
-#pragma once
-#include "package/package-manager-tests.h"
+module;
 
-TestState RunPackageManagerTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunPackageManagerTests;
+
+import :PackageManagerTests;
+
+export TestState RunPackageManagerTests() 
 {
 	auto className = "PackageManagerTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::PackageManagerTests>();

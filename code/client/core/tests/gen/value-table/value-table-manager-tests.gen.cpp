@@ -1,8 +1,13 @@
-#pragma once
-#include "value-table/value-table-manager-tests.h"
+module;
 
-TestState RunValueTableManagerTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunValueTableManagerTests;
+
+import :ValueTableManagerTests;
+
+export TestState RunValueTableManagerTests() 
+{
 	auto className = "ValueTableManagerTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::ValueTableManagerTests>();
 	TestState state = { 0, 0 };

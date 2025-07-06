@@ -1,8 +1,14 @@
-#pragma once
-#include "recipe/package-reference-tests.h"
+module;
 
-TestState RunPackageReferenceTests() 
- {
+#include <memory>
+#include <optional>
+
+export module Soup.Core.Tests:RunPackageReferenceTests;
+
+import :PackageReferenceTests;
+
+export TestState RunPackageReferenceTests() 
+{
 	auto className = "PackageReferenceTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::PackageReferenceTests>();
 	TestState state = { 0, 0 };

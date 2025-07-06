@@ -1,8 +1,13 @@
-#pragma once
-#include "recipe/recipe-sml-tests.h"
+module;
 
-TestState RunRecipeSMLTests()
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunRecipeSMLTests;
+
+import :RecipeSMLTests;
+
+export TestState RunRecipeSMLTests()
+{
 	auto className = "RecipeSMLTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::RecipeSMLTests>();
 	TestState state = { 0, 0 };
