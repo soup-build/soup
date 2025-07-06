@@ -22,7 +22,17 @@
 					HorizontalScrollBarVisibility="Visible"
 					VerticalScrollBarVisibility="Visible"
 					x:Name="Scroller">
-					<Canvas x:Name="RootCanvas" />
+					<paz:ZoomBorder
+						Name="ZoomBorder"
+						Stretch="None"
+						ZoomSpeed="1.2"
+						PanButton="Left"
+						MaxZoomX="100"
+						MaxZoomY="100"
+						MinZoomX="0.1"
+						MinZoomY="0.1" >
+						<Canvas x:Name="RootCanvas" />
+					</paz:ZoomBorder>
 				</ScrollViewer>
 			</ControlTemplate>
 		</Setter>
