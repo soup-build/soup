@@ -19,7 +19,7 @@ PublicHeaders: [
 ]
 ```
 
-## [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/library/library.h)
+## [library/library.h](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/library/library.h)
 The header file.
 ```cpp
 #include <string>
