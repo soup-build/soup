@@ -22,16 +22,6 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-#include "utilities/test-helpers.h"
-
-#include "build/build-evaluate-engine-tests.gen.h"
-#include "build/build-history-checker-tests.gen.h"
-#include "build/build-load-engine-tests.gen.h"
-#include "build/build-runner-tests.gen.h"
-#include "build/file-system-state-tests.gen.h"
-#include "build/package-provider-tests.gen.h"
-#include "build/recipe-build-location-manager-tests.gen.h"
-
 #include "local-user-config/local-user-config-extensions-tests.gen.h"
 #include "local-user-config/local-user-config-tests.gen.h"
 

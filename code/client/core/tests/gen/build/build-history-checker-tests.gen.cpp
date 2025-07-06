@@ -1,7 +1,12 @@
-#pragma once
-#include "build/build-history-checker-tests.h"
+module;
 
-TestState RunBuildHistoryCheckerTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunBuildHistoryCheckerTests;
+
+import :BuildHistoryCheckerTests;
+
+export TestState RunBuildHistoryCheckerTests() 
 {
 	auto className = "BuildHistoryCheckerTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildHistoryCheckerTests>();

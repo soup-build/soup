@@ -1,7 +1,12 @@
-#pragma once
-#include "build/build-load-engine-tests.h"
+module;
 
-TestState RunBuildLoadEngineTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunBuildLoadEngineTests;
+
+import :BuildLoadEngineTests;
+
+export TestState RunBuildLoadEngineTests() 
 {
 	auto className = "BuildLoadEngineTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildLoadEngineTests>();

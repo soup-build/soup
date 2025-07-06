@@ -1,15 +1,38 @@
-﻿// <copyright file="mock-evaluate-engine.h" company="Soup">
+﻿// <copyright file="mock-evaluate-engine.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <chrono>
+#include <format>
+#include <map>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
+
+export module Soup.Core.Tests:MockEvaluateEngine;
+
+import Monitor.Host;
+import Opal;
+import Soup.Core;
+import Soup.Test.Assert;
+
+using namespace Opal;
+using namespace Opal::System;
+using namespace Soup::Test;
+using namespace std::chrono;
+using namespace std::chrono_literals;
 
 namespace Soup::Core
 {
 	/// <summary>
 	/// The mock build evaluation engine
 	/// </summary>
-	class MockEvaluateEngine : public IEvaluateEngine
+	export class MockEvaluateEngine : public IEvaluateEngine
 	{
 	private:
 		std::atomic<int> m_uniqueId;

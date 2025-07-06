@@ -1,12 +1,35 @@
-// <copyright file="package-provider-tests.h" company="Soup">
+// <copyright file="package-provider-tests.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <chrono>
+#include <format>
+#include <map>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
+
+export module Soup.Core.Tests:PackageProviderTests;
+
+import Monitor.Host;
+import Opal;
+import Soup.Core;
+import Soup.Test.Assert;
+
+using namespace Opal;
+using namespace Opal::System;
+using namespace Soup::Test;
+using namespace std::chrono;
+using namespace std::chrono_literals;
 
 namespace Soup::Core::UnitTests
 {
-	class PackageProviderTests
+	export class PackageProviderTests
 	{
 	public:
 		// [[Fact]]

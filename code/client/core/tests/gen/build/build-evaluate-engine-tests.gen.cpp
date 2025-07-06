@@ -1,8 +1,13 @@
-#pragma once
-#include "build/build-evaluate-engine-tests.h"
+module;
 
-TestState RunBuildEvaluateEngineTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunBuildEvaluateEngineTests;
+
+import :BuildEvaluateEngineTests;
+
+export TestState RunBuildEvaluateEngineTests() 
+{
 	auto className = "BuildEvaluateEngineTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildEvaluateEngineTests>();
 	TestState state = { 0, 0 };

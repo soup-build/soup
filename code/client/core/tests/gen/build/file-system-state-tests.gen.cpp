@@ -1,8 +1,13 @@
-#pragma once
-#include "build/file-system-state-tests.h"
+module;
 
-TestState RunFileSystemStateTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunFileSystemStateTests;
+
+import :FileSystemStateTests;
+
+export TestState RunFileSystemStateTests() 
+{
 	auto className = "FileSystemStateTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::FileSystemStateTests>();
 	TestState state = { 0, 0 };

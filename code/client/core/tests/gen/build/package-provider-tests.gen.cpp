@@ -1,7 +1,12 @@
-#pragma once
-#include "build/package-provider-tests.h"
+module;
 
-TestState RunPackageProviderTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunPackageProviderTests;
+
+import :PackageProviderTests;
+
+export TestState RunPackageProviderTests() 
 {
 	auto className = "PackageProviderTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::PackageProviderTests>();

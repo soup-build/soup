@@ -87,9 +87,25 @@ Dependencies: {
 Tests: {
 	Source: [
 		'tests/build/build-engine-tests.cpp'
+		'tests/build/build-evaluate-engine-tests.cpp'
+		'tests/build/build-history-checker-tests.cpp'
+		'tests/build/build-load-engine-tests.cpp'
+		'tests/build/build-runner-tests.cpp'
+		'tests/build/file-system-state-tests.cpp'
+		'tests/build/mock-evaluate-engine.cpp'
+		'tests/build/package-provider-tests.cpp'
+		'tests/build/recipe-build-location-manager-tests.cpp'
 		'tests/gen/build/build-engine-tests.gen.cpp'
+		'tests/gen/build/build-evaluate-engine-tests.gen.cpp'
+		'tests/gen/build/build-history-checker-tests.gen.cpp'
+		'tests/gen/build/build-load-engine-tests.gen.cpp'
+		'tests/gen/build/build-runner-tests.gen.cpp'
+		'tests/gen/build/file-system-state-tests.gen.cpp'
+		'tests/gen/build/package-provider-tests.gen.cpp'
+		'tests/gen/build/recipe-build-location-manager-tests.gen.cpp'
 		'tests/gen/main.cpp'
 		'tests/gen/module.cpp'
+		'tests/utilities/test-helpers.cpp'
 	]
 	IncludePaths: [
 		'tests/'

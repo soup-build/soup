@@ -1,8 +1,13 @@
-#pragma once
-#include "build/recipe-build-location-manager-tests.h"
+module;
 
-TestState RunRecipeBuildLocationManagerTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunRecipeBuildLocationManagerTests;
+
+import :RecipeBuildLocationManagerTests;
+
+export TestState RunRecipeBuildLocationManagerTests() 
+{
 	auto className = "RecipeBuildLocationManagerTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::RecipeBuildLocationManagerTests>();
 	TestState state = { 0, 0 };

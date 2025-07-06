@@ -1,13 +1,38 @@
-// <copyright file="build-runner-tests.h" company="Soup">
+// <copyright file="build-runner-tests.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-#include "mock-evaluate-engine.h"
+module;
+
+#include <chrono>
+#include <format>
+#include <map>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
+
+export module Soup.Core.Tests:BuildRunnerTests;
+
+import :MockEvaluateEngine;
+import :TestHelpers;
+
+import Monitor.Host;
+import Opal;
+import Soup.Core;
+import Soup.Test.Assert;
+
+using namespace Opal;
+using namespace Opal::System;
+using namespace Soup::Test;
+using namespace std::chrono;
+using namespace std::chrono_literals;
 
 namespace Soup::Core::UnitTests
 {
-	class BuildRunnerTests
+	export class BuildRunnerTests
 	{
 	public:
 		// [[Fact]]

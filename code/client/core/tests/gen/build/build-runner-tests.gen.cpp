@@ -1,8 +1,13 @@
-#pragma once
-#include "build/build-runner-tests.h"
+module;
 
-TestState RunBuildRunnerTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunBuildRunnerTests;
+
+import :BuildRunnerTests;
+
+export TestState RunBuildRunnerTests() 
+{
 	auto className = "BuildRunnerTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildRunnerTests>();
 	TestState state = { 0, 0 };

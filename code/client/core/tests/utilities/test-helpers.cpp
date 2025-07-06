@@ -1,14 +1,23 @@
-// <copyright file="test-helpers.h" company="Soup">
+// <copyright file="test-helpers.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
-using namespace std::chrono;
-using namespace std::chrono_literals;
+module;
+
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+export module Soup.Core.Tests:TestHelpers;
+
+import Opal;
+import Soup.Core;
+
+using namespace Opal;
 
 namespace Soup::Core::UnitTests
 {
-	class TestHelpers
+	export class TestHelpers
 	{
 	public:
 		static std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>> BuildDirectoryLookup(
