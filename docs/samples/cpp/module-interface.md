@@ -3,7 +3,7 @@ A console application that uses a single module interface file used inside the s
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface)
 
-## recipe.sml
+## [recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/recipe.sml)
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
 Name: 'Samples.Cpp.ModuleInterface'
@@ -12,7 +12,7 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## Executable/package-lock.sml
+## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/executable/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -37,7 +37,7 @@ Closures: {
 }
 ```
 
-## Module.cpp
+## [helper.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/helper.cpp)
 A module interface file that exports a single sample class.
 ```cpp
 module;
@@ -57,7 +57,7 @@ public:
 };
 ```
 
-## Main.cpp
+## [main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the previous file.
 ```cpp
 #include <iostream>
@@ -71,7 +71,7 @@ int main()
 }
 ```
 
-## .gitignore
+## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/.gitignore)
 A simple git ignore file to exclude all Soup build output.
 ```
 out/

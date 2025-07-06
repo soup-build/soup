@@ -3,7 +3,7 @@ A console application that reads in a json file using the an external module and
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json)
 
-## recipe.sml
+## [recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/recipe.sml)
 The Recipe file that sets the standard name, type, version, as well as the single external dependency of the [json11](https://github.com/dropbox/json11) project.
 ```sml
 Name: 'Samples.Cpp.ParseJson'
@@ -17,7 +17,7 @@ Dependencies: {
 }
 ```
 
-## package-lock.sml
+## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```
 Version: 5
@@ -43,7 +43,7 @@ Closures: {
 }
 ```
 
-## Message.json
+## [message.json](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/message.json)
 A json file containing a single property containing a message for the application to print.
 ```json
 {
@@ -51,7 +51,7 @@ A json file containing a single property containing a message for the applicatio
 }
 ```
 
-## Main.cpp
+## [main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/main.cpp)
 A simple main method that reads the contents of a single json file, parses the json content and prints a single message from a known property.
 ```cpp
 #include <fstream>
@@ -64,7 +64,7 @@ import json11;
 int main()
 {
   // Read in the contents of the json file
-  auto jsonFile = std::ifstream("./Message.json");
+  auto jsonFile = std::ifstream("./message.json");
   auto jsonContent = std::string(
     std::istreambuf_iterator<char>(jsonFile),
     std::istreambuf_iterator<char>());
@@ -80,7 +80,7 @@ int main()
 }
 ```
 
-## .gitignore
+## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/.gitignore)
 A simple git ignore file to exclude all Soup build output.
 ```
 out/

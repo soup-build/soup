@@ -3,7 +3,7 @@ This is a console application that has a single header library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library)
 
-## Library/recipe.sml
+## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/library/recipe.sml)
 The Recipe file that defines the header library "Samples.Cpp.HeaderLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Library'
@@ -19,7 +19,7 @@ PublicHeaders: [
 ]
 ```
 
-## Library/Library.h
+## [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/library/library.h)
 The header file.
 ```cpp
 #include <string>
@@ -37,7 +37,7 @@ namespace Samples::Cpp::HeaderLibrary::Library
 }
 ```
 
-## Application/recipe.sml
+## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/application/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.HeaderLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Application'
@@ -51,7 +51,7 @@ Dependencies: {
 }
 ```
 
-## Application/package-lock.sml
+## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dynamic library dependency.
 ```sml
 Version: 5
@@ -77,11 +77,11 @@ Closures: {
 }
 ```
 
-## Application/Main.cpp
+## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the header from the library.
 ```cpp
 #include <iostream>
-#include <Library.h>
+#include <library.h>
 
 using namespace Samples::Cpp::HeaderLibrary::Library;
 
@@ -92,7 +92,7 @@ int main()
 }
 ```
 
-## .gitignore
+## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.
 ```
 out/

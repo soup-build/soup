@@ -3,7 +3,7 @@ This is a console application that has a single static library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library)
 
-## Library/recipe.sml
+## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/library/recipe.sml)
 The Recipe file that defines the static library "Samples.Cpp.StaticLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.StaticLibrary.Library'
@@ -12,7 +12,7 @@ Version: 1.0.0
 Type: 'StaticLibrary'
 ```
 
-## Library/Module.cpp
+## [library/library.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/library/library.cpp)
 A module interface file that exports a single sample class.
 ```cpp
 module;
@@ -36,7 +36,7 @@ export namespace Samples::Cpp::StaticLibrary::Library
 }
 ```
 
-## Application/recipe.sml
+## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.StaticLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.StaticLibrary.Application'
@@ -50,7 +50,7 @@ Dependencies: {
 }
 ```
 
-## Application/package-lock.sml
+## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dependency static library.
 ```sml
 Version: 5
@@ -76,7 +76,7 @@ Closures: {
 }
 ```
 
-## MyApplication/Main.cpp
+## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
 ```cpp
 #include <iostream>
@@ -91,7 +91,7 @@ int main()
 }
 ```
 
-## .gitignore
+## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.
 ```
 out/

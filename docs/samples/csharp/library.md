@@ -3,7 +3,7 @@ This is a console application with the minimal amount of code to get up and runn
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application)
 
-## library/recipe.sml
+## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/library/recipe.sml)
 The Recipe file that defines the static library "Samples.CSharp.Library.Library".
 ```sml
 Name: 'Samples.CSharp.Library.Library'
@@ -12,7 +12,7 @@ TargetFramework: 'net9.0'
 Version: 1.0.0
 ```
 
-## library/Helper.cs
+## [library/helper.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/library/helper.cs)
 A C# file that implements the helper function.
 ```C#
 namespace Samples.CSharp.Library
@@ -27,7 +27,7 @@ namespace Samples.CSharp.Library
 }
 ```
 
-## application/recipe.sml
+## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/application/recipe.sml)
 The Recipe file that defines the static library "Samples.CSharp.Library.ConsoleApplication".
 ```sml
 Name: 'Samples.CSharp.Library.ConsoleApplication'
@@ -42,7 +42,7 @@ Dependencies: {
 }
 ```
 
-## application/package-lock.sml
+## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 ```sml
 Version: 5
@@ -67,7 +67,7 @@ Closures: {
 }
 ```
 
-## Program.cs
+## [program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/program.cs)
 A C# Program file that implements the main method.
 ```C#
 using System;
@@ -84,7 +84,7 @@ namespace Samples.CSharp.Library.Application
 }
 ```
 
-## .gitignore
+## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/.gitignore)
 A simple git ignore file to exclude all Soup build output.
 ```
 out/

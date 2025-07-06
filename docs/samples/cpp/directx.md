@@ -3,7 +3,7 @@ This is a desktop application that demonstrates creating a complex graphics wind
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/directx)
 
-## recipe.sml
+## [recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/directx/recipe.sml)
 The Recipe file that defines the directX sample application. Note the special module partition hierarchy that explicitly sets the references for partition units. The application also copies over the shader files that will be compiled at runtime.
 ```sml
 Name: 'Samples.Cpp.DirectX'
@@ -20,7 +20,7 @@ RuntimeDependencies: [
 ]
 ```
 
-## package-lock.sml
+## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/directx/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
 ```sml
 Version: 5
