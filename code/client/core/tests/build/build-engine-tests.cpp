@@ -1,12 +1,35 @@
-// <copyright file="build-engine-tests.h" company="Soup">
+// <copyright file="build-engine-tests.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <chrono>
+#include <format>
+#include <map>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
+
+export module Soup.Core.Tests:BuildEngineTests;
+
+import Monitor.Host;
+import Opal;
+import Soup.Core;
+import Soup.Test.Assert;
+
+using namespace Opal;
+using namespace Opal::System;
+using namespace Soup::Test;
+using namespace std::chrono;
+using namespace std::chrono_literals;
 
 namespace Soup::Core::UnitTests
 {
-	class BuildEngineTests
+	export class BuildEngineTests
 	{
 	public:
 		// [[Fact]]
@@ -96,7 +119,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.3 }
+								'Soup|Wren': { Version: 0.5.1 }
 							}
 						}
 						Tool0: {}
@@ -750,7 +773,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.3 }
+								'Soup|Wren': { Version: 0.5.1 }
 							}
 						}
 						Tool0: {}
@@ -1315,7 +1338,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.3 }
+								'Soup|Wren': { Version: 0.5.1 }
 							}
 						}
 						Tool0: {}
@@ -2025,7 +2048,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.3 }
+								'Soup|Wren': { Version: 0.5.1 }
 							}
 						}
 						Tool0: {}

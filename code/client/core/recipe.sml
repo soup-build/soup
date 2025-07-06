@@ -86,7 +86,10 @@ Dependencies: {
 }
 Tests: {
 	Source: [
+		'tests/build/build-engine-tests.cpp'
+		'tests/gen/build/build-engine-tests.gen.cpp'
 		'tests/gen/main.cpp'
+		'tests/gen/module.cpp'
 	]
 	IncludePaths: [
 		'tests/'

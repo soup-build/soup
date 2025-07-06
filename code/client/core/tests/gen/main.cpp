@@ -15,6 +15,7 @@
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.Core.Tests;
 import Soup.Test.Assert;
 
 using namespace Opal;
@@ -23,7 +24,6 @@ using namespace Soup::Test;
 
 #include "utilities/test-helpers.h"
 
-#include "build/build-engine-tests.gen.h"
 #include "build/build-evaluate-engine-tests.gen.h"
 #include "build/build-history-checker-tests.gen.h"
 #include "build/build-load-engine-tests.gen.h"
