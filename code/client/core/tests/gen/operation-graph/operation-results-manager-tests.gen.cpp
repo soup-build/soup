@@ -1,8 +1,13 @@
-#pragma once
-#include "operation-graph/operation-results-manager-tests.h"
+module;
 
-TestState RunOperationResultsManagerTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunOperationResultsManagerTests;
+
+import :OperationResultsManagerTests;
+
+export TestState RunOperationResultsManagerTests() 
+{
 	auto className = "OperationResultsManagerTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::OperationResultsManagerTests>();
 	TestState state = { 0, 0 };

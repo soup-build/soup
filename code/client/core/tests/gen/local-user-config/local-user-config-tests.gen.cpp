@@ -1,7 +1,12 @@
-#pragma once
-#include "local-user-config/local-user-config-tests.h"
+module;
 
-TestState RunLocalUserConfigTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunLocalUserConfigTests;
+
+import :LocalUserConfigTests;
+
+export TestState RunLocalUserConfigTests() 
 {
 	auto className = "LocalUserConfigTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::LocalUserConfigTests>();

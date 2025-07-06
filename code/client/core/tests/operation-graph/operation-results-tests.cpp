@@ -1,12 +1,33 @@
-// <copyright file="operation-results-tests.h" company="Soup">
+// <copyright file="operation-results-tests.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <chrono>
+#include <format>
+#include <map>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
+
+export module Soup.Core.Tests:OperationResultsTests;
+
+import Monitor.Host;
+import Opal;
+import Soup.Core;
+import Soup.Test.Assert;
+
+using namespace Opal;
+using namespace Opal::System;
+using namespace Soup::Test;
 
 namespace Soup::Core::UnitTests
 {
-	class OperationResultsTests
+	export class OperationResultsTests
 	{
 	public:
 		// [[Fact]]

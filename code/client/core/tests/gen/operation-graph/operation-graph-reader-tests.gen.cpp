@@ -1,7 +1,12 @@
-#pragma once
-#include "operation-graph/operation-graph-reader-tests.h"
+module;
 
-TestState RunOperationGraphReaderTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunOperationGraphReaderTests;
+
+import :OperationGraphReaderTests;
+
+export TestState RunOperationGraphReaderTests() 
 {
 	auto className = "OperationGraphReaderTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::OperationGraphReaderTests>();

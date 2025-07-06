@@ -22,18 +22,6 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-#include "local-user-config/local-user-config-extensions-tests.gen.h"
-#include "local-user-config/local-user-config-tests.gen.h"
-
-#include "operation-graph/operation-graph-tests.gen.h"
-#include "operation-graph/operation-graph-manager-tests.gen.h"
-#include "operation-graph/operation-graph-reader-tests.gen.h"
-#include "operation-graph/operation-graph-writer-tests.gen.h"
-#include "operation-graph/operation-results-tests.gen.h"
-#include "operation-graph/operation-results-manager-tests.gen.h"
-#include "operation-graph/operation-results-reader-tests.gen.h"
-#include "operation-graph/operation-results-writer-tests.gen.h"
-
 #include "package/package-manager-tests.gen.h"
 
 #include "recipe/package-identifier-tests.gen.h"

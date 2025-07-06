@@ -1,8 +1,13 @@
-#pragma once
-#include "operation-graph/operation-graph-tests.h"
+module;
 
-TestState RunOperationGraphTests() 
- {
+#include <memory>
+
+export module Soup.Core.Tests:RunOperationGraphTests;
+
+import :OperationGraphTests;
+
+export TestState RunOperationGraphTests() 
+{
 	auto className = "OperationGraphTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::OperationGraphTests>();
 	TestState state = { 0, 0 };

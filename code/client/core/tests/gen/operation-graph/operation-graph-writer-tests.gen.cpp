@@ -1,7 +1,12 @@
-#pragma once
-#include "operation-graph/operation-graph-writer-tests.h"
+module;
 
-TestState RunOperationGraphWriterTests() 
+#include <memory>
+
+export module Soup.Core.Tests:RunOperationGraphWriterTests;
+
+import :OperationGraphWriterTests;
+
+export TestState RunOperationGraphWriterTests() 
 {
 	auto className = "OperationGraphWriterTests";
 	auto testClass = std::make_shared<Soup::Core::UnitTests::OperationGraphWriterTests>();
