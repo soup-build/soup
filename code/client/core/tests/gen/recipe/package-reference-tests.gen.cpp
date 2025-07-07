@@ -6,6 +6,7 @@ module;
 export module Soup.Core.Tests:RunPackageReferenceTests;
 
 import :PackageReferenceTests;
+import Opal;
 import Soup.Test.Assert;
 
 export TestState RunPackageReferenceTests() 
