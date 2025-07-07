@@ -1,16 +1,16 @@
 <Styles
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:v="using:Soup.View.Views">
+	xmlns:views="using:Soup.View.Views">
 	<Design.PreviewWith>
-		<v:GraphViewerItem Title="Some Test Content"/>
+		<views:GraphViewerItem Title="Some Test Content"/>
 	</Design.PreviewWith>
 
-	<Style Selector="v|GraphViewerItem:selected > Button">
+	<Style Selector="views|GraphViewerItem:selected > Button">
 		<Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAccentBrush}" />
 	</Style>
 
-	<Style Selector="v|GraphViewerItem">
+	<Style Selector="views|GraphViewerItem">
 		<!-- Set Defaults -->
 		<Setter Property="Template">
 			<ControlTemplate>

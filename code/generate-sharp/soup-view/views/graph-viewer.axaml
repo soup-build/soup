@@ -1,10 +1,10 @@
 <Styles
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:v="using:Soup.View.Views"
+	xmlns:views="using:Soup.View.Views"
 	xmlns:paz="using:Avalonia.Controls.PanAndZoom">
 	<Design.PreviewWith>
-		<v:GraphViewer />
+		<views:GraphViewer />
 	</Design.PreviewWith>
 
 	<StyleInclude Source="/views/graph-viewer-item.axaml"/>
@@ -14,7 +14,7 @@
 		<Setter Property="StrokeThickness" Value="2" />
 	</Style>
 
-	<Style Selector="v|GraphViewer">
+	<Style Selector="views|GraphViewer">
 		<!-- Set Defaults -->
 		<Setter Property="Template">
 			<ControlTemplate>
@@ -22,7 +22,17 @@
 					HorizontalScrollBarVisibility="Visible"
 					VerticalScrollBarVisibility="Visible"
 					x:Name="Scroller">
-					<Canvas x:Name="RootCanvas" />
+					<paz:ZoomBorder
+						Name="ZoomBorder"
+						Stretch="None"
+						ZoomSpeed="1.2"
+						PanButton="Left"
+						MaxZoomX="100"
+						MaxZoomY="100"
+						MinZoomX="0.1"
+						MinZoomY="0.1" >
+						<Canvas x:Name="RootCanvas" />
+					</paz:ZoomBorder>
 				</ScrollViewer>
 			</ControlTemplate>
 		</Setter>

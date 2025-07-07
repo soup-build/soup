@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:i="https://github.com/projektanker/icons.avalonia"
 	xmlns:vm="using:Soup.View.ViewModels"
-	xmlns:v="using:Soup.View.Views"
+	xmlns:views="using:Soup.View.Views"
 	mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 	x:CompileBindings="True"
 	x:DataType="vm:MainWindowViewModel"
@@ -54,24 +54,24 @@
 						<Setter Property="Margin" Value="0" />
 					</Style>
 				</StackPanel.Styles>
-				<v:SelectedButton
+				<views:SelectedButton
 					Content="{Binding SelectedPackageName}"
 					Command="{Binding SelectRootCommand}"
 					IsSelected="{Binding IsRootSelected}"/>
 				<Label Content="/" />
-				<v:SelectedButton
+				<views:SelectedButton
 					Content="Preprocessor Tasks"
 					Command="{Binding SelectPreprocessorTasksCommand}"
 					IsSelected="{Binding IsPreprocessorTasksSelected}" />
-				<v:SelectedButton
+				<views:SelectedButton
 					Content="Preprocessor Operations"
 					Command="{Binding SelectPreprocessorOperationsCommand}"
 					IsSelected="{Binding IsPreprocessorOperationsSelected}" />
-				<v:SelectedButton
+				<views:SelectedButton
 					Content="Tasks"
 					Command="{Binding SelectTasksCommand}"
 					IsSelected="{Binding IsTasksSelected}" />
-				<v:SelectedButton
+				<views:SelectedButton
 					Content="Operations"
 					Command="{Binding SelectOperationsCommand}"
 					IsSelected="{Binding IsOperationsSelected}" />
@@ -80,6 +80,5 @@
 		<ContentControl
 			Grid.Row="1"
 			Content="{Binding Content}" />
-		
 	</Grid>
 </Window>

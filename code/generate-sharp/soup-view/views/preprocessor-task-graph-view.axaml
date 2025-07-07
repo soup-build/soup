@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:vm="using:Soup.View.ViewModels"
-	xmlns:v="using:Soup.View.Views"
+	xmlns:views="using:Soup.View.Views"
 	mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 	x:Class="Soup.View.Views.PreprocessorTaskGraphView"
 	x:CompileBindings="True"
@@ -16,7 +16,7 @@
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition Width="*" MinWidth="150" />
 		</Grid.ColumnDefinitions>
-		<v:GraphViewer
+		<views:GraphViewer
 			Graph="{Binding Graph}"
 			SelectedNode="{Binding SelectedNode, Mode=TwoWay}" />
 		<GridSplitter
