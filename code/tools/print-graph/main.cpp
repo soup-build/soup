@@ -141,7 +141,7 @@ int main(int argc, char** argv)
 	{
 		Opal::System::IFileSystem::Register(std::make_shared<Opal::System::STLFileSystem>());
 
-		auto operationGraphFile = Opal::Path(argv[1]);
+		auto operationGraphFile = Opal::Path::Parse(argv[1]);
 		LoadAndPrintGraph(operationGraphFile);
 	}
 	catch(const std::exception& e)

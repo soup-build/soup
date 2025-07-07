@@ -15,47 +15,12 @@
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.Core.Tests;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
-
-#include "utilities/test-helpers.h"
-
-#include "build/build-engine-tests.gen.h"
-#include "build/build-evaluate-engine-tests.gen.h"
-#include "build/build-history-checker-tests.gen.h"
-#include "build/build-load-engine-tests.gen.h"
-#include "build/build-runner-tests.gen.h"
-#include "build/file-system-state-tests.gen.h"
-#include "build/package-provider-tests.gen.h"
-#include "build/recipe-build-location-manager-tests.gen.h"
-
-#include "local-user-config/local-user-config-extensions-tests.gen.h"
-#include "local-user-config/local-user-config-tests.gen.h"
-
-#include "operation-graph/operation-graph-tests.gen.h"
-#include "operation-graph/operation-graph-manager-tests.gen.h"
-#include "operation-graph/operation-graph-reader-tests.gen.h"
-#include "operation-graph/operation-graph-writer-tests.gen.h"
-#include "operation-graph/operation-results-tests.gen.h"
-#include "operation-graph/operation-results-manager-tests.gen.h"
-#include "operation-graph/operation-results-reader-tests.gen.h"
-#include "operation-graph/operation-results-writer-tests.gen.h"
-
-#include "package/package-manager-tests.gen.h"
-
-#include "recipe/package-identifier-tests.gen.h"
-#include "recipe/package-name-tests.gen.h"
-#include "recipe/package-reference-tests.gen.h"
-#include "recipe/recipe-extensions-tests.gen.h"
-#include "recipe/recipe-tests.gen.h"
-#include "recipe/recipe-sml-tests.gen.h"
-
-#include "value-table/value-table-manager-tests.gen.h"
-#include "value-table/value-table-reader-tests.gen.h"
-#include "value-table/value-table-writer-tests.gen.h"
 
 int main()
 {

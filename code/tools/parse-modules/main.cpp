@@ -22,7 +22,7 @@ std::vector<std::string> Parse(const Path& file)
 	// Use the c api file so the input auto detects the format and converts to utf8 if necessary
 	auto stream = std::fopen(file.ToString().c_str(), "r");
 	if (stream == nullptr)
-		throw new std::runtime_error("Faild to open file");
+		throw std::runtime_error("Faild to open file");
 
 	auto input = reflex::Input(stream);
 	auto parser = Soup::ParseModules::ModuleParser(input);
