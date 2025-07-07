@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunValueTableReaderTests;
 
 import :ValueTableReaderTests;
+import Soup.Test.Assert;
 
 export TestState RunValueTableReaderTests() 
 {

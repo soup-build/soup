@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunLocalUserConfigTests;
 
 import :LocalUserConfigTests;
+import Soup.Test.Assert;
 
 export TestState RunLocalUserConfigTests() 
 {

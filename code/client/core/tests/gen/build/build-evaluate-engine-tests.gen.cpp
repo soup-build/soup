@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunBuildEvaluateEngineTests;
 
 import :BuildEvaluateEngineTests;
+import Soup.Test.Assert;
 
 export TestState RunBuildEvaluateEngineTests() 
 {

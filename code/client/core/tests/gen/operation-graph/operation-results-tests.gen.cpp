@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunOperationResultsTests;
 
 import :OperationResultsTests;
+import Soup.Test.Assert;
 
 export TestState RunOperationResultsTests() 
 {

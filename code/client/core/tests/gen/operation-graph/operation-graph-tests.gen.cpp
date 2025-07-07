@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunOperationGraphTests;
 
 import :OperationGraphTests;
+import Soup.Test.Assert;
 
 export TestState RunOperationGraphTests() 
 {

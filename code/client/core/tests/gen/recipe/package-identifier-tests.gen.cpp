@@ -6,6 +6,7 @@ module;
 export module Soup.Core.Tests:RunPackageIdentifierTests;
 
 import :PackageIdentifierTests;
+import Soup.Test.Assert;
 
 export TestState RunPackageIdentifierTests() 
 {

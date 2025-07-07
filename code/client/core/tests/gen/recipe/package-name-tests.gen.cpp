@@ -6,6 +6,7 @@ module;
 export module Soup.Core.Tests:RunPackageNameTests;
 
 import :PackageNameTests;
+import Soup.Test.Assert;
 
 export TestState RunPackageNameTests() 
 {

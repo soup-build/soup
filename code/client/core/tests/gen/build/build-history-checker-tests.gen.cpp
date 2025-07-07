@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunBuildHistoryCheckerTests;
 
 import :BuildHistoryCheckerTests;
+import Soup.Test.Assert;
 
 export TestState RunBuildHistoryCheckerTests() 
 {

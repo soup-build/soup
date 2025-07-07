@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunFileSystemStateTests;
 
 import :FileSystemStateTests;
+import Soup.Test.Assert;
 
 export TestState RunFileSystemStateTests() 
 {

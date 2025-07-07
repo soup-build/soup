@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunPackageManagerTests;
 
 import :PackageManagerTests;
+import Soup.Test.Assert;
 
 export TestState RunPackageManagerTests() 
 {

@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunRecipeBuildLocationManagerTests;
 
 import :RecipeBuildLocationManagerTests;
+import Soup.Test.Assert;
 
 export TestState RunRecipeBuildLocationManagerTests() 
 {

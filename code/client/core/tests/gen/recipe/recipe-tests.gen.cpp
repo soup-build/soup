@@ -5,6 +5,7 @@ module;
 export module Soup.Core.Tests:RunRecipeTests;
 
 import :RecipeTests;
+import Soup.Test.Assert;
 
 export TestState RunRecipeTests() 
 {
