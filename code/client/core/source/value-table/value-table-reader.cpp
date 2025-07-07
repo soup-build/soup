@@ -201,7 +201,7 @@ namespace Soup::Core
 		static void Read(char* data, size_t size, size_t& offset, char* buffer, size_t count)
 		{
 			if (offset + count > size)
-				throw new std::runtime_error("Tried to read past end of data");
+				throw std::runtime_error("Tried to read past end of data");
 			memcpy(buffer, data + offset, count);
 			offset += count;
 		}

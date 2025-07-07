@@ -140,7 +140,7 @@ namespace Soup::Core
 			}
 			else
 			{
-				throw new std::runtime_error("Missing key");
+				throw std::runtime_error("Missing key");
 			}
 		}
 
