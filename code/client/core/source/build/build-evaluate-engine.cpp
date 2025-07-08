@@ -1,8 +1,34 @@
-﻿// <copyright file="build-evaluate-engine.h" company="Soup">
+﻿// <copyright file="build-evaluate-engine.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <algorithm>
+#include <format>
+#include <map>
+#include <memory>
+#include <set>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+export module Soup.Core:BuildEvaluateEngine;
+
+import :BuildFailedException;
+import :BuildHistoryChecker;
+import :FileSystemState;
+import :IEvaluateEngine;
+import :OperationInfo;
+import :OperationGraph;
+import :OperationResult;
+import :OperationResults;
+import :SystemAccessTracker;
+import Monitor.Host;
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {

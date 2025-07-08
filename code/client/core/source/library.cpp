@@ -55,8 +55,12 @@ import Opal;
 
 // Build
 export import :BuildConstants;
+export import :BuildEngine;
+export import :BuildEvaluateEngine;
 export import :BuildFailedException;
 export import :BuildHistoryChecker;
+export import :BuildLoadEngine;
+export import :BuildRunner;
 export import :DependencyTargetSet;
 export import :FileSystemState;
 export import :IEvaluateEngine;
@@ -128,7 +132,3 @@ export import :ValueTableWriter;
 export import :WrenHelpers;
 export import :WrenHost;
 export import :WrenValueTable;
-
-using namespace Opal;
-
-#include "build/build-engine.h"

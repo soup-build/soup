@@ -1,8 +1,39 @@
-﻿// <copyright file="build-runner.h" company="Soup">
+﻿// <copyright file="build-runner.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <format>
+#include <map>
+#include <string>
+#include <vector>
+
+export module Soup.Core:BuildRunner;
+
+import :BuildConstants;
+import :BuildFailedException;
+import :CommandInfo;
+import :DependencyTargetSet;
+import :FileSystemState;
+import :GenerateResult;
+import :GenerateResultManager;
+import :IEvaluateEngine;
+import :OperationGraph;
+import :OperationGraphManager;
+import :OperationInfo;
+import :OperationResult;
+import :OperationResults;
+import :OperationResultsManager;
+import :PackageProvider;
+import :RecipeBuildArguments;
+import :RecipeBuildCacheState;
+import :RecipeCache;
+import :Value;
+import :ValueTableManager;
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
