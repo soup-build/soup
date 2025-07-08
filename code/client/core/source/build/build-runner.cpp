@@ -6,6 +6,7 @@ module;
 
 #include <format>
 #include <map>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -432,7 +433,7 @@ namespace Soup::Core
 					soupTargetDirectory);
 
 				// TODO: Only run gen if needed?
-				#ifdef WIN32
+				#ifdef _WIN32
 				(ranPreprocessors);
 				#endif
 
