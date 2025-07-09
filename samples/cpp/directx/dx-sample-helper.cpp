@@ -34,14 +34,14 @@ export inline void GetAssetsPath(_Out_writes_(pathSize) WCHAR* path, UINT pathSi
 {
 	if (path == nullptr)
 	{
-		throw std::exception();
+		throw std::runtime_error("Missing path");
 	}
 
 	DWORD size = GetModuleFileNameW(nullptr, path, pathSize);
 	if (size == 0 || size == pathSize)
 	{
 		// Method failed or path was truncated.
-		throw std::exception();
+		throw std::runtime_error("Failed to get file name");
 	}
 
 	WCHAR* lastSlash = wcsrchr(path, L'\\');
