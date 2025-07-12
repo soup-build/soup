@@ -63,8 +63,9 @@ public static class Program
 				Log.Warning("Root Recipe file does not exist");
 				using var file = LifetimeManager.Get<IFileSystem>().OpenWrite(rootRecipePath, true);
 				using var writer = new System.IO.StreamWriter(file.GetOutStream());
-				writer.WriteLine("OutputRoot: './out/'");
+				await writer.WriteLineAsync("OutputRoot: './out/'");
 			}
+
 			return 0;
 		}
 		catch (HandledException)

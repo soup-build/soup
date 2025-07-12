@@ -24,7 +24,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.16.0 }
+      'Soup|Cpp': { Version: 0.16.1 }
     }
   }
   Tool0: {
@@ -78,7 +78,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Wren': { Version: 0.5.3 }
+      'Soup|Wren': { Version: 0.5.4 }
     }
   }
   Tool0: {
@@ -195,7 +195,7 @@ Closures: {
   Build0: {
     Wren: {
       'Samples.Cpp.BuildExtension.Extension': { Version: '../extension/' }
-      'Soup|Cpp': { Version: 0.16.0 }
+      'Soup|Cpp': { Version: 0.16.1 }
     }
   }
   Tool0: {

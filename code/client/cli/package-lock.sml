@@ -22,23 +22,23 @@ Closures: {
 		}
 		Wren: {
 			'Soup|Build.Utils': { Version: 0.9.0, Build: 'Build2', Tool: 'Tool0' }
-			'Soup|Wren': { Version: 0.5.3, Build: 'Build2', Tool: 'Tool0' }
+			'Soup|Wren': { Version: 0.5.1, Build: 'Build2', Tool: 'Tool0' }
 		}
 	}
 	Build0: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.16.0 }
+			'Soup|Cpp': { Version: 0.16.1 }
 		}
 	}
 	Build1: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.16.0 }
-			'mwasplund|Soup.Test.Cpp': { Version: 0.15.1 }
+			'Soup|Cpp': { Version: 0.16.1 }
+			'mwasplund|Soup.Test.Cpp': { Version: 0.15.2 }
 		}
 	}
 	Build2: {
 		Wren: {
-			'Soup|Wren': { Version: 0.5.3 }
+			'Soup|Wren': { Version: 0.5.4 }
 		}
 	}
 	Build3: {
