@@ -4,6 +4,7 @@
 
 using Opal;
 using Opal.System;
+using Soup.Build.Utilities;
 using System;
 using System.Threading.Tasks;
 
@@ -53,6 +54,17 @@ public static class Program
 				throw new NotSupportedException("Unknown OS Platform");
 			}
 
+			// Create Root Recipe if missing
+			var rootRecipePath = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
+				new Path($"./.soup/{BuildConstants.RootRecipeFileName}");
+			Log.Diag("Check Root Recipe: " + rootRecipePath.ToString());
+			if (!LifetimeManager.Get<IFileSystem>().Exists(rootRecipePath))
+			{
+				Log.Warning("Root Recipe file does not exist");
+				using var file = LifetimeManager.Get<IFileSystem>().OpenWrite(rootRecipePath, true);
+				using var writer = new System.IO.StreamWriter(file.GetOutStream());
+				writer.WriteLine("OutputRoot: './out/'");
+			}
 			return 0;
 		}
 		catch (HandledException)
