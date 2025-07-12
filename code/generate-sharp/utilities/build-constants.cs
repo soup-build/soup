@@ -37,6 +37,8 @@ public static class BuildConstants
 
 	public static Path RecipeFileName => new Path("./recipe.sml");
 
+	public static Path RootRecipeFileName => new Path("./root-recipe.sml");
+
 	public static Path SoupLocalStoreDirectory => new Path("./.soup/");
 
 	public static Path SoupTargetDirectory => new Path("./.soup/");

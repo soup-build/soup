@@ -44,6 +44,18 @@ public static class SwhereManager
 
 		// Save the result
 		await LocalUserConfigExtensions.SaveToFileAsync(localUserConfigPath, userConfig);
+
+		// Create Root Recipe if missing
+		var rootRecipePath = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
+			new Path($"./.soup/{BuildConstants.RootRecipeFileName}");
+		Log.Info("Check Root Recipe: " + rootRecipePath.ToString());
+		if (!LifetimeManager.Get<IFileSystem>().Exists(rootRecipePath))
+		{
+			Log.Info("Create Root Recipe");
+			using var file = LifetimeManager.Get<IFileSystem>().OpenWrite(rootRecipePath, true);
+			using var writer = new System.IO.StreamWriter(file.GetOutStream());
+			await writer.WriteLineAsync("OutputRoot: './out/'");
+		}
 	}
 
 	private static async Task DiscoverSharedPlatformAsync(OSPlatform platform, LocalUserConfig userConfig)
