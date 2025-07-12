@@ -20,7 +20,7 @@ SOUP_VERSION="0.42.5"
 COPY_VERSION="1.2.0"
 MKDIR_VERSION="1.2.0"
 PARSE_MODULES_VERSION="1.2.0"
-SOUP_WREN_VERSION="0.5.1"
+SOUP_WREN_VERSION="0.5.4"
 
 # Cleanup previous runs
 rm -rf $RUN_DIR
@@ -43,7 +43,7 @@ cp -p -R $OUT_DIR/C++/Local/parse.modules/$PARSE_MODULES_VERSION/$CONFIG_HASH/ $
 
 mkdir -p $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION
 cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml
-cp -p -R $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/out/$CONFIG_HASH/ $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/
+cp -p -R $GLOBAL_OUT_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/
 
 cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Release/net9.0/linux-x64/publish/ $RUN_DIR/PackageManager
 
