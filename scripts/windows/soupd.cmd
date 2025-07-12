@@ -13,11 +13,11 @@ SET ConfigHash=OZlIVjblazFuKXg-raWUNoGEnG4
 
 SET PKG_OWNER=mwasplund
 
-SET SOUP_VERSION=0.42.5
+SET SOUP_VERSION=0.42.6
 SET COPY_VERSION=1.2.0
 SET MKDIR_VERSION=1.2.0
 SET PARSE_MODULES_VERSION=1.2.0
-SET SOUP_WREN_VERSION=0.5.1
+SET SOUP_WREN_VERSION=0.5.4
 
 REM - Use a copy of the final binary in case we are re-building itself
 robocopy %ScriptsDir%\Install\ %RunDir%\ /MIR /NJH /NJS /NDL > NUL

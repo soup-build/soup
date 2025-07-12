@@ -22,7 +22,7 @@ Closures: {
 		}
 		Wren: {
 			'Soup|Build.Utils': { Version: 0.9.0, Build: 'Build2', Tool: 'Tool0' }
-			'Soup|Wren': { Version: 0.5.1, Build: 'Build2', Tool: 'Tool0' }
+			'Soup|Wren': { Version: 0.5.4, Build: 'Build2', Tool: 'Tool0' }
 		}
 	}
 	Build0: {

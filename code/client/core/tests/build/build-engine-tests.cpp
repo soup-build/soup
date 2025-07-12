@@ -60,7 +60,7 @@ namespace Soup::Core::UnitTests
 				})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({
 					Path("./recipe.sml"),
 				})));
@@ -81,7 +81,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -119,7 +119,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.1 }
+								'Soup|Wren': { Version: 0.5.4 }
 							}
 						}
 						Tool0: {}
@@ -202,7 +202,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"DIAG: 0>Package was prebuilt: Soup|Wren",
 					"DIAG: 2>Running Build: [Wren]Soup|Cpp",
 					"INFO: 2>Build 'Soup|Cpp'",
@@ -229,7 +229,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 2>C:/Windows/",
 					"DIAG: 2>C:/Program Files/dotnet/",
-					"DIAG: 2>C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/",
+					"DIAG: 2>C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/",
 					"DIAG: 2>Allowed Write Access:",
@@ -303,7 +303,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/root-recipe.sml",
@@ -316,7 +316,7 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.1/",
+					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.4/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-phase1.bgr",
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/",
@@ -526,7 +526,7 @@ namespace Soup::Core::UnitTests
 										"Soup|Wren",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/.soup/") },
 										})
 									},
 								})
@@ -560,7 +560,7 @@ namespace Soup::Core::UnitTests
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/") },
+							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/") },
 						})
 					},
 					{
@@ -599,7 +599,7 @@ namespace Soup::Core::UnitTests
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("[Wren]Soup|Wren@0.5.1") },
+															{ "Reference", std::string("[Wren]Soup|Wren@0.5.4") },
 															{ "TargetDirectory", std::string("/(TARGET_Soup|Wren)/") },
 														})
 													},
@@ -702,7 +702,7 @@ namespace Soup::Core::UnitTests
 				})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({
 					Path("./recipe.sml"),
 				})));
@@ -735,7 +735,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -773,7 +773,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.1 }
+								'Soup|Wren': { Version: 0.5.4 }
 							}
 						}
 						Tool0: {}
@@ -819,7 +819,7 @@ namespace Soup::Core::UnitTests
 									"Soup|Wren",
 									ValueTable(
 									{
-										{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/.soup/") },
+										{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/.soup/") },
 									})
 								},
 							})
@@ -853,7 +853,7 @@ namespace Soup::Core::UnitTests
 					"GenerateMacros",
 					ValueTable(
 					{
-						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/") },
+						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/") },
 					})
 				},
 				{
@@ -892,7 +892,7 @@ namespace Soup::Core::UnitTests
 													"Context",
 													ValueTable(
 													{
-														{ "Reference", std::string("[Wren]Soup|Wren@0.5.1") },
+														{ "Reference", std::string("[Wren]Soup|Wren@0.5.4") },
 														{ "TargetDirectory", std::string("/(TARGET_Soup|Wren)/") },
 													})
 												},
@@ -1143,7 +1143,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"DIAG: 0>Package was prebuilt: Soup|Wren",
 					"DIAG: 2>Running Build: [Wren]Soup|Cpp",
 					"INFO: 2>Build 'Soup|Cpp'",
@@ -1203,7 +1203,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/root-recipe.sml",
@@ -1216,7 +1216,7 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.1/",
+					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.4/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-phase1.bgr",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/evaluate-phase1.bor",
@@ -1279,7 +1279,7 @@ namespace Soup::Core::UnitTests
 				})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({
 					Path("./recipe.sml"),
 				})));
@@ -1300,7 +1300,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -1338,7 +1338,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.1 }
+								'Soup|Wren': { Version: 0.5.4 }
 							}
 						}
 						Tool0: {}
@@ -1436,7 +1436,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"DIAG: 0>Package was prebuilt: Soup|Wren",
 					"DIAG: 2>Running Build: [Wren]Soup|Cpp",
 					"INFO: 2>Build 'Soup|Cpp'",
@@ -1463,7 +1463,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 2>C:/Windows/",
 					"DIAG: 2>C:/Program Files/dotnet/",
-					"DIAG: 2>C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/",
+					"DIAG: 2>C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/",
 					"DIAG: 2>Allowed Write Access:",
@@ -1565,7 +1565,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/root-recipe.sml",
@@ -1578,7 +1578,7 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.1/",
+					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.4/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-phase1.bgr",
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/",
@@ -1801,7 +1801,7 @@ namespace Soup::Core::UnitTests
 										"Soup|Wren",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/.soup/") },
 										})
 									},
 								})
@@ -1835,7 +1835,7 @@ namespace Soup::Core::UnitTests
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/") },
+							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/") },
 						})
 					},
 					{
@@ -1874,7 +1874,7 @@ namespace Soup::Core::UnitTests
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("[Wren]Soup|Wren@0.5.1") },
+															{ "Reference", std::string("[Wren]Soup|Wren@0.5.4") },
 															{ "TargetDirectory", std::string("/(TARGET_Soup|Wren)/") },
 														})
 													},
@@ -1977,7 +1977,7 @@ namespace Soup::Core::UnitTests
 				})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({
 					Path("./recipe.sml"),
 				})));
@@ -2010,7 +2010,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml"),
+				Path("C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -2048,7 +2048,7 @@ namespace Soup::Core::UnitTests
 						}
 						Build0: {
 							Wren: {
-								'Soup|Wren': { Version: 0.5.1 }
+								'Soup|Wren': { Version: 0.5.4 }
 							}
 						}
 						Tool0: {}
@@ -2094,7 +2094,7 @@ namespace Soup::Core::UnitTests
 									"Soup|Wren",
 									ValueTable(
 									{
-										{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/.soup/") },
+										{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/.soup/") },
 									})
 								},
 							})
@@ -2128,7 +2128,7 @@ namespace Soup::Core::UnitTests
 					"GenerateMacros",
 					ValueTable(
 					{
-						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.1/out/") },
+						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.5.4/out/") },
 					})
 				},
 				{
@@ -2167,7 +2167,7 @@ namespace Soup::Core::UnitTests
 													"Context",
 													ValueTable(
 													{
-														{ "Reference", std::string("[Wren]Soup|Wren@0.5.1") },
+														{ "Reference", std::string("[Wren]Soup|Wren@0.5.4") },
 														{ "TargetDirectory", std::string("/(TARGET_Soup|Wren)/") },
 													})
 												},
@@ -2425,7 +2425,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"DIAG: Load Recipe: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"DIAG: 0>Package was prebuilt: Soup|Wren",
 					"DIAG: 2>Running Build: [Wren]Soup|Cpp",
 					"INFO: 2>Build 'Soup|Cpp'",
@@ -2500,7 +2500,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.1/recipe.sml",
+					"TryOpenReadBinary: C:/BuiltIn/Packages/Soup/Wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/root-recipe.sml",
@@ -2513,7 +2513,7 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.1/",
+					"TryGetDirectoryFilesLastWriteTime: C:/BuiltIn/Packages/Soup/Wren/0.5.4/",
 					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-phase1.bgr",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/evaluate-phase1.bor",
