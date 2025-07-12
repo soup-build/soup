@@ -21,7 +21,7 @@ Closures: {
 			'mwasplund|Opal': { Version: 0.12.4, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|Soup.Test.Assert': { Version: 0.5.0, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|json11': { Version: 1.1.5, Build: 'Build2', Tool: 'Tool1' }
-			'mwasplund|reflex': { Version: 5.5.1, Build: 'Build2', Tool: 'Tool1' }
+			'mwasplund|reflex': { Version: 5.5.2, Build: 'Build2', Tool: 'Tool1' }
 		}
 	}
 	Build0: {
@@ -37,13 +37,13 @@ Closures: {
 	}
 	Build2: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.16.0 }
+			'Soup|Cpp': { Version: 0.16.1 }
 		}
 	}
 	Build3: {
 		Wren: {
-			'Soup|Cpp': { Version: 0.16.0 }
-			'mwasplund|Soup.Test.Cpp': { Version: 0.15.1 }
+			'Soup|Cpp': { Version: 0.16.1 }
+			'mwasplund|Soup.Test.Cpp': { Version: 0.15.2 }
 		}
 	}
 	Build4: {

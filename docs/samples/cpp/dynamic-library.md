@@ -90,7 +90,7 @@ Closures: {
   }
   Build0: {
     Wren: {
-      'Soup|Cpp': { Version: 0.16.0 }
+      'Soup|Cpp': { Version: 0.16.1 }
     }
   }
   Tool0: {
