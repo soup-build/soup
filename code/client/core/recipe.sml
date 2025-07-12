@@ -11,8 +11,12 @@ IncludePaths: [
 Source: [
 	'source/library.cpp'
 	'source/build/build-constants.cpp'
+	'source/build/build-engine.cpp'
+	'source/build/build-evaluate-engine.cpp'
 	'source/build/build-failed-exception.cpp'
 	'source/build/build-history-checker.cpp'
+	'source/build/build-load-engine.cpp'
+	'source/build/build-runner.cpp'
 	'source/build/dependency-target-set.cpp'
 	'source/build/file-system-state.cpp'
 	'source/build/ievaluate-engine.cpp'

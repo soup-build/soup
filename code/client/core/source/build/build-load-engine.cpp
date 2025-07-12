@@ -1,8 +1,36 @@
-﻿// <copyright file="build-load-engine.h" company="Soup">
+﻿// <copyright file="build-load-engine.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-#pragma once
+module;
+
+#include <format>
+#include <map>
+#include <optional>
+#include <set>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+export module Soup.Core:BuildLoadEngine;
+
+import :BuildConstants;
+import :KnownLanguage;
+import :HandledException;
+import :PackageIdentifier;
+import :PackageLock;
+import :PackageLockExtensions;
+import :PackageName;
+import :PackageProvider;
+import :PackageReference;
+import :Recipe;
+import :RecipeCache;
+import :RecipeBuildLocationManager;
+import :Value;
+import Opal;
+
+using namespace Opal;
 
 namespace Soup::Core
 {
