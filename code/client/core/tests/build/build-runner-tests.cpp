@@ -15,14 +15,13 @@ module;
 #include <unordered_map>
 #include <vector>
 
-export module Soup.Core.Tests:BuildRunnerTests;
+export module Soup.Core:BuildRunnerTests;
 
 import :MockEvaluateEngine;
 import :TestHelpers;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

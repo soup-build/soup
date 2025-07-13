@@ -3,7 +3,7 @@ module;
 #include <memory>
 #include <optional>
 
-export module Soup.Core.Tests:RunPackageIdentifierTests;
+export module Soup.Core:RunPackageIdentifierTests;
 
 import :PackageIdentifierTests;
 import Soup.Test.Assert;

@@ -14,11 +14,10 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:OperationResultsWriterTests;
+export module Soup.Core:OperationResultsWriterTests;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

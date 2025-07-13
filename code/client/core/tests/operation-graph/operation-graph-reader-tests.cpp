@@ -13,11 +13,10 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:OperationGraphReaderTests;
+export module Soup.Core:OperationGraphReaderTests;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

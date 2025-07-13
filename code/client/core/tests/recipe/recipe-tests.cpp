@@ -13,11 +13,10 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:RecipeTests;
+export module Soup.Core:RecipeTests;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

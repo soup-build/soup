@@ -3,7 +3,7 @@ module;
 #include <memory>
 #include <optional>
 
-export module Soup.Core.Tests:RunPackageReferenceTests;
+export module Soup.Core:RunPackageReferenceTests;
 
 import :PackageReferenceTests;
 import Opal;

@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunBuildLoadEngineTests;
+export module Soup.Core:RunBuildLoadEngineTests;
 
 import :BuildLoadEngineTests;
 import Soup.Test.Assert;
