@@ -13,6 +13,8 @@ module;
 
 export module Soup.Core:LocalUserConfigTests;
 
+import :LocalUserConfig;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

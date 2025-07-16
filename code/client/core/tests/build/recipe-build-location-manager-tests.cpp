@@ -16,6 +16,14 @@ module;
 
 export module Soup.Core:RecipeBuildLocationManagerTests;
 
+import :KnownLanguage;
+import :PackageName;
+import :Recipe;
+import :RecipeBuildLocationManager;
+import :RecipeCache;
+import :RecipeValue;
+import :Value;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

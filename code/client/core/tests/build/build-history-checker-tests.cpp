@@ -17,6 +17,9 @@ module;
 
 export module Soup.Core:BuildHistoryCheckerTests;
 
+import :BuildHistoryChecker;
+import :FileSystemState;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

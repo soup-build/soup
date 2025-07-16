@@ -16,6 +16,11 @@ module;
 
 export module Soup.Core:PackageProviderTests;
 
+import :PackageName;
+import :PackageProvider;
+import :Recipe;
+import :Value;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

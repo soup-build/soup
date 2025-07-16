@@ -15,6 +15,9 @@ module;
 
 export module Soup.Core:ValueTableManagerTests;
 
+import :Value;
+import :ValueTableManager;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

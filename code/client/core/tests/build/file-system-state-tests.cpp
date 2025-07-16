@@ -17,6 +17,8 @@ module;
 
 export module Soup.Core:FileSystemStateTests;
 
+import :FileSystemState;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

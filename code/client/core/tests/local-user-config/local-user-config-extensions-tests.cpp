@@ -15,6 +15,9 @@ module;
 
 export module Soup.Core:LocalUserConfigExtensionsTests;
 
+import :LocalUserConfig;
+import :LocalUserConfigExtensions;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

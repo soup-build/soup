@@ -16,6 +16,17 @@ module;
 
 export module Soup.Core:BuildLoadEngineTests;
 
+import :BuildLoadEngine;
+import :HandledException;
+import :KnownLanguage;
+import :PackageName;
+import :PackageProvider;
+import :PackageReference;
+import :RecipeBuildArguments;
+import :RecipeBuildLocationManager;
+import :RecipeCache;
+import :Value;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;
