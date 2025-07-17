@@ -15,11 +15,18 @@ module;
 #include <unordered_map>
 #include <vector>
 
-export module Soup.Core.Tests:BuildEvaluateEngineTests;
+export module Soup.Core:BuildEvaluateEngineTests;
+
+import :BuildEvaluateEngine;
+import :CommandInfo;
+import :FileSystemState;
+import :OperationGraph;
+import :OperationInfo;
+import :OperationResult;
+import :OperationResults;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;
