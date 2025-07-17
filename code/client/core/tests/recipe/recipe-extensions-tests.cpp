@@ -15,6 +15,11 @@ module;
 
 export module Soup.Core:RecipeExtensionsTests;
 
+import :LanguageReference;
+import :Recipe;
+import :RecipeExtensions;
+import :RecipeValue;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

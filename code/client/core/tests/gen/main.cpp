@@ -15,7 +15,6 @@
 import Monitor.Host;
 import Opal;
 import Soup.Core;
-import Soup.Core.Tests;
 import Soup.Test.Assert;
 
 using namespace Opal;

@@ -16,6 +16,12 @@ module;
 
 export module Soup.Core:RecipeSMLTests;
 
+import :LanguageReference;
+import :PackageReference;
+import :Recipe;
+import :RecipeSML;
+import :RecipeValue;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

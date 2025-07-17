@@ -16,6 +16,11 @@ module;
 
 export module Soup.Core:OperationResultsReaderTests;
 
+import :FileSystemState;
+import :OperationInfo;
+import :OperationResult;
+import :OperationResultsReader;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

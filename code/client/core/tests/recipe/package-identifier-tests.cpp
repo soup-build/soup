@@ -16,6 +16,9 @@ module;
 
 export module Soup.Core:PackageIdentifierTests;
 
+import :PackageIdentifier;
+import :PackageReference;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;

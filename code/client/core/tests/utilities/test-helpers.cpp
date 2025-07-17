@@ -10,6 +10,8 @@ module;
 
 export module Soup.Core:TestHelpers;
 
+import :FileSystemState;
+
 import Opal;
 
 using namespace Opal;

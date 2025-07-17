@@ -15,6 +15,10 @@ module;
 
 export module Soup.Core:OperationGraphTests;
 
+import :CommandInfo;
+import :OperationGraph;
+import :OperationInfo;
+
 import Monitor.Host;
 import Opal;
 import Soup.Test.Assert;
