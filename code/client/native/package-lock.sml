@@ -9,7 +9,7 @@ Closures: {
 			'Monitor.Host': { Version: '../../monitor/host/', Build: 'Build0', Tool: 'Tool0' }
 			'Monitor.Shared': { Version: '../../monitor/shared/', Build: 'Build0', Tool: 'Tool0' }
 			'Soup.Core': { Version: '../core/', Build: 'Build1', Tool: 'Tool0' }
-			SoupTools: { Version: './', Build: 'Build0', Tool: 'Tool0' }
+			'Soup.Native': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|CryptoPP': { Version: 1.2.7, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Detours': { Version: 4.0.14, Build: 'Build0', Tool: 'Tool0' }
 			'mwasplund|Opal': { Version: 0.12.4, Build: 'Build0', Tool: 'Tool0' }

@@ -10,13 +10,13 @@
 		<SoupConfigHash>Oltq7cGwk0Rbgy1I-3mCMDDE5yM</SoupConfigHash>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(OS)'=='Windows_NT'">
-		<SoupToolsDll>SoupTools.dll</SoupToolsDll>
+		<SoupNativeDll>Soup.Native.dll</SoupNativeDll>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(OS)'=='Unix'">
-		<SoupToolsDll>SoupTools.so</SoupToolsDll>
+		<SoupNativeDll>Soup.Native.so</SoupNativeDll>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="../../../out/C++/Local/SoupTools/1.0.0/$(SoupConfigHash)/bin/$(SoupToolsDll)" Link="$(SoupToolsDll)">
+		<None Include="../../../out/C++/Local/Soup.Native/1.0.0/$(SoupConfigHash)/bin/$(SoupNativeDll)" Link="$(SoupNativeDll)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

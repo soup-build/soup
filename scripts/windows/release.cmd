@@ -13,7 +13,7 @@ SET SOUP_VERSION=0.42.6
 REM - Build MSI Installer
 echo msbuild %InstallerDir% -p:Configuration=Release
 msbuild %InstallerDir% -p:Configuration=Release
-if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 REM - Generate zip release
 tar -a -cf %ReleaseDir%/soup-build-%SOUP_VERSION%-windows-x64.zip -C %RunDir% *

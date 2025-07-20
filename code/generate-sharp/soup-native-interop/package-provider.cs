@@ -4,14 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using PackageChildrenMap = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Soup.Tools.PackageChildInfo>>;
+using PackageChildrenMap = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<Soup.Native.PackageChildInfo>>;
 using PackageGraphId = System.Int32;
-using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageGraph>;
+using PackageGraphLookupMap = System.Collections.Generic.IDictionary<int, Soup.Native.PackageGraph>;
 using PackageId = System.Int32;
-using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.Tools.PackageInfo>;
+using PackageLookupMap = System.Collections.Generic.IDictionary<int, Soup.Native.PackageInfo>;
 using PackageTargetDirectories = System.Collections.Generic.IDictionary<int, System.Collections.Generic.IDictionary<int, Opal.Path>>;
 
-namespace Soup.Tools;
+namespace Soup.Native;
 
 public class PackageChildInfo
 {
