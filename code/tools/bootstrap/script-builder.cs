@@ -13,7 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Soup.Build.Utilities;
-using Soup.Tools;
+using Soup.Native;
 
 namespace Soup.Build.Bootstrap;
 

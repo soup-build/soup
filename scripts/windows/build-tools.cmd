@@ -5,15 +5,6 @@ SET ScriptsDir=%~dp0
 SET RootDir=%ScriptsDir%..\..
 SET CodeDir=%RootDir%\code
 
-REM - Client Tools
-echo soup restore %CodeDir%/client/tools
-soup restore %CodeDir%/client/tools
-if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
-
-echo soup build %CodeDir%/client/tools -flavor %Flavor%
-soup build %CodeDir%/client/tools -flavor %Flavor%
-if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
-
 REM - Bootstrap
 echo soup restore %CodeDir%/tools/bootstrap
 soup restore %CodeDir%/tools/bootstrap

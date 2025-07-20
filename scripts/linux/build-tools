@@ -9,13 +9,6 @@ SCRIPTS_DIR=$(dirname "$0")
 CODE_DIR=$SCRIPTS_DIR/../../code
 TOOLS_DIR=
 
-# Client Tools
-echo soup restore $CODE_DIR/client/tools
-soup restore $CODE_DIR/client/tools
-
-echo soup build $CODE_DIR/client/tools -flavor $FLAVOR
-soup build $CODE_DIR/client/tools -flavor $FLAVOR
-
 # Bootstrap
 echo soup restore $CODE_DIR/tools/bootstrap
 soup restore $CODE_DIR/tools/bootstrap

@@ -1,4 +1,4 @@
-Name: 'Soup.Tools'
+Name: 'Soup.Native'
 Language: 'C#|0'
 Version: 1.0.0
 TargetFramework: 'net9.0'
@@ -12,6 +12,6 @@ Dependencies: {
 		'../utilities/'
 	]
 	RuntimeReference: [
-		'../../client/tools/'
+		'../../client/native/'
 	]
 }

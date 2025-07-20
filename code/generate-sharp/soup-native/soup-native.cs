@@ -12,7 +12,7 @@ using System.Text.Json;
 using Soup.Build.Utilities;
 using Path = Opal.Path;
 
-namespace Soup.Tools;
+namespace Soup.Native;
 
 public static partial class SoupTools
 {
