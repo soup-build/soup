@@ -58,7 +58,7 @@ public class DependencyGraphViewModel : ContentPaneViewModel
 
 			var workingDirectory = recipeFilePath.GetParent();
 			var globalParameters = new ValueTable();
-			var packageProvider = SoupTools.LoadBuildGraph(workingDirectory, globalParameters);
+			var packageProvider = SoupNative.LoadBuildGraph(workingDirectory, globalParameters);
 
 			var activeGraph = BuildGraph(packageProvider);
 			return activeGraph;

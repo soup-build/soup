@@ -12,4 +12,4 @@ rmdir /S /Q %RootDir%\out\msbuild\bin\soup-view\%Flavor%\net9.0\win-x64\publish\
 REM - Publish SWhere tool
 echo dotnet publish %SWhereDir% -c %Flavor% -f net9.0 -r win-x64
 dotnet publish %SWhereDir% -c %Flavor% -f net9.0 -r win-x64
-if %ERRORLEVEL% NEQ  0 exit /B %ERRORLEVEL%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%

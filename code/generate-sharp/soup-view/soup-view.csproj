@@ -31,6 +31,6 @@
 	<ItemGroup>
 		<ProjectReference Include="../opal/opal.csproj" />
 		<ProjectReference Include="../utilities/soup.utilities.csproj" />
-		<ProjectReference Include="../soup-native/soup.native.csproj" />
+		<ProjectReference Include="../soup-native/soup.native.interop.csproj" />
 	</ItemGroup>
 </Project>

@@ -14,9 +14,9 @@ using Path = Opal.Path;
 
 namespace Soup.Native;
 
-public static partial class SoupTools
+public static partial class SoupNative
 {
-	[LibraryImport("SoupTools", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(AnsiStringMarshaller))]
+	[LibraryImport("Soup.Native", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(AnsiStringMarshaller))]
 	[UnmanagedCallConv(CallConvs = new Type[] { typeof(CallConvCdecl) })]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.UserDirectories)]
 	private static partial string LoadBuildGraph(string workingDirectory, [In] byte[] globalParametersBuffer, long globalParametersLength);

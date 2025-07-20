@@ -1,4 +1,4 @@
-Name: 'Soup.Native'
+Name: 'Soup.Native.Interop'
 Language: 'C#|0'
 Version: 1.0.0
 TargetFramework: 'net9.0'

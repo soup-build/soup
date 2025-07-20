@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Build SoupTools!"
+echo "Build Soup Tools!"
 
 # Stop on first error
 set -e
@@ -7,53 +7,53 @@ set -e
 FLAVOR="$1"
 SCRIPTS_DIR=$(dirname "$0")
 CODE_DIR=$SCRIPTS_DIR/../../code
-TOOLS_DIR=
+TOOLS_DIR=$CODE_DIR/tools
 
 # Bootstrap
-echo soup restore $CODE_DIR/tools/bootstrap
-soup restore $CODE_DIR/tools/bootstrap
+echo soup restore /bootstrap
+soup restore $TOOLS_DIR/bootstrap
 
-echo soup build $CODE_DIR/tools/bootstrap -flavor $FLAVOR
-soup build $CODE_DIR/tools/bootstrap -flavor $FLAVOR
+echo soup build $TOOLS_DIR/bootstrap -flavor $FLAVOR
+soup build $TOOLS_DIR/bootstrap -flavor $FLAVOR
 
 # Copy
-echo soup restore $CODE_DIR/tools/copy
-soup restore $CODE_DIR/tools/copy
+echo soup restore $TOOLS_DIR/copy
+soup restore $TOOLS_DIR/copy
 
-echo soup build $CODE_DIR/tools/copy -flavor $FLAVOR
-soup build $CODE_DIR/tools/copy -flavor $FLAVOR
+echo soup build $TOOLS_DIR/copy -flavor $FLAVOR
+soup build $TOOLS_DIR/copy -flavor $FLAVOR
 
 # Mkdir
-echo soup restore $CODE_DIR/tools/mkdir
-soup restore $CODE_DIR/tools/mkdir
+echo soup restore $TOOLS_DIR/mkdir
+soup restore $TOOLS_DIR/mkdir
 
-echo soup build $CODE_DIR/tools/mkdir -flavor $FLAVOR
-soup build $CODE_DIR/tools/mkdir -flavor $FLAVOR
+echo soup build $TOOLS_DIR/mkdir -flavor $FLAVOR
+soup build $TOOLS_DIR/mkdir -flavor $FLAVOR
 
 # Parse Modules
-echo soup restore $CODE_DIR/tools/parse-modules
-soup restore $CODE_DIR/tools/parse-modules
+echo soup restore $TOOLS_DIR/parse-modules
+soup restore $TOOLS_DIR/parse-modules
 
-echo soup build $CODE_DIR/tools/parse-modules -flavor $FLAVOR
-soup build $CODE_DIR/tools/parse-modules -flavor $FLAVOR
+echo soup build $TOOLS_DIR/parse-modules -flavor $FLAVOR
+soup build $TOOLS_DIR/parse-modules -flavor $FLAVOR
 
 # Print Graph
-echo soup restore $CODE_DIR/tools/print-graph
-soup restore $CODE_DIR/tools/print-graph
+echo soup restore $TOOLS_DIR/print-graph
+soup restore $TOOLS_DIR/print-graph
 
-echo soup build $CODE_DIR/tools/print-graph -flavor $FLAVOR
-soup build $CODE_DIR/tools/print-graph -flavor $FLAVOR
+echo soup build $TOOLS_DIR/print-graph -flavor $FLAVOR
+soup build $TOOLS_DIR/print-graph -flavor $FLAVOR
 
 # Print Results
-echo soup restore $CODE_DIR/tools/print-results
-soup restore $CODE_DIR/tools/print-results
+echo soup restore $TOOLS_DIR/print-results
+soup restore $TOOLS_DIR/print-results
 
-echo soup build $CODE_DIR/tools/print-results -flavor $FLAVOR
-soup build $CODE_DIR/tools/print-results -flavor $FLAVOR
+echo soup build $TOOLS_DIR/print-results -flavor $FLAVOR
+soup build $TOOLS_DIR/print-results -flavor $FLAVOR
 
 # Print ValueTable
-echo soup restore $CODE_DIR/tools/print-valuetable
-soup restore $CODE_DIR/tools/print-valuetable
+echo soup restore $TOOLS_DIR/print-valuetable
+soup restore $TOOLS_DIR/print-valuetable
 
-echo soup build $CODE_DIR/tools/print-valuetable -flavor $FLAVOR
-soup build $CODE_DIR/tools/print-valuetable -flavor $FLAVOR
+echo soup build $TOOLS_DIR/print-valuetable -flavor $FLAVOR
+soup build $TOOLS_DIR/print-valuetable -flavor $FLAVOR

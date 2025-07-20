@@ -140,7 +140,7 @@ public class ScriptBuilder
 			{ "Flavor", new Value("Release") }
 		};
 		Directory.SetCurrentDirectory(soupRoot);
-		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath, globalParameters);
+		var packageProvider = SoupNative.LoadBuildGraph(fullPackagePath, globalParameters);
 		Directory.SetCurrentDirectory(cacheCurrentDirectory);
 
 		return packageProvider;

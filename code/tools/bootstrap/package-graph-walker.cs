@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Soup.Build.Utilities;
-using Soup.Nitive;
+using Soup.Native;
 
 namespace Soup.Build.Bootstrap;
 

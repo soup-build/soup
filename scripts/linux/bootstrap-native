@@ -635,11 +635,11 @@ echo "./bin/Test/TestHarness.exe"
 echo "Run Tests"
 (cd "$ROOT_DIR/out/C++/Local/Soup.Core/0.1.1/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "$ROOT_DIR/out/C++/Local/Soup.Core/0.1.1/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/bin/Test/TestHarness.exe" )
 
-# Setup SoupTools
+# Setup Soup.Native
 echo mkdir -p "$ROOT_DIR/out/C++/Local/SoupTools/1.0.0/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
 mkdir -p "$ROOT_DIR/out/C++/Local/SoupTools/1.0.0/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
 
-# Build SoupTools
+# Build Soup.Native
 echo "MakeDir [./obj/]"
 (cd "$ROOT_DIR/out/C++/Local/SoupTools/1.0.0/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "mkdir" -p ./obj/)
 echo "WriteFile [./obj/SharedCompileArguments.rsp]"

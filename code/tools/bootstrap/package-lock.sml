@@ -8,7 +8,7 @@ Closures: {
 		'C#': {
 			Opal: { Version: '../../generate-sharp/opal/', Build: 'Build0', Tool: 'Tool0' }
 			'Soup.Bootstrap': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'Soup.Native': { Version: '../../generate-sharp/soup-native/', Build: 'Build1', Tool: 'Tool0' }
+			'Soup.Native.Interop': { Version: '../../generate-sharp/soup-native-interop/', Build: 'Build1', Tool: 'Tool0' }
 			'Soup.Utilities': { Version: '../../generate-sharp/utilities/', Build: 'Build1', Tool: 'Tool0' }
 		}
 		'C++': {
