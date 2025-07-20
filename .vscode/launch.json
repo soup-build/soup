@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "configurations": [   
+  "configurations": [
     {
       "name": "Debug Swhere",
       "type": "coreclr",
@@ -13,15 +13,17 @@
       "console": "internalConsole"
     },
     {
-        "name": "Debug Soup View",
-        "type": "coreclr",
-        "request": "launch",
-        "preLaunchTask": "",
-        "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
-        "args": [ "${workspaceFolder}/code/client/cli/recipe.sml" ],
-        "cwd": "${workspaceFolder}/out/run",
-        "stopAtEntry": false,
-        "console": "internalConsole"
+      "name": "Debug Soup View",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "",
+      "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
+      "args": [
+        "${workspaceFolder}/code/client/cli/recipe.sml"
+      ],
+      "cwd": "${workspaceFolder}/out/run",
+      "stopAtEntry": false,
+      "console": "internalConsole"
     },
     {
       "name": "Debug Soup (VS)",
@@ -67,19 +69,18 @@
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
-          {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-          },
-          {
-              "description": "Set Disassembly Flavor to Intel",
-              "text": "-gdb-set disassembly-flavor intel",
-              "ignoreFailures": true
-          }
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
       ]
     },
-    
     {
       "name": "Debug Generate (GDB)",
       "type": "cppdbg",
@@ -95,16 +96,16 @@
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
-          {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-          },
-          {
-              "description": "Set Disassembly Flavor to Intel",
-              "text": "-gdb-set disassembly-flavor intel",
-              "ignoreFailures": true
-          }
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
       ]
     },
     {

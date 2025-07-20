@@ -8,14 +8,14 @@ Closures: {
 		'C#': {
 			Opal: { Version: '../../generate-sharp/opal/', Build: 'Build0', Tool: 'Tool0' }
 			'Soup.Bootstrap': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-			'Soup.Tools': { Version: '../../generate-sharp/soup-tools/', Build: 'Build1', Tool: 'Tool0' }
+			'Soup.Native.Interop': { Version: '../../generate-sharp/soup-native-interop/', Build: 'Build1', Tool: 'Tool0' }
 			'Soup.Utilities': { Version: '../../generate-sharp/utilities/', Build: 'Build1', Tool: 'Tool0' }
 		}
 		'C++': {
 			'Monitor.Host': { Version: '../../monitor/host/', Build: 'Build2', Tool: 'Tool1' }
 			'Monitor.Shared': { Version: '../../monitor/shared/', Build: 'Build2', Tool: 'Tool1' }
 			'Soup.Core': { Version: '../../client/core/', Build: 'Build3', Tool: 'Tool1' }
-			SoupTools: { Version: '../../client/tools/', Build: 'Build2', Tool: 'Tool1' }
+			'Soup.Native': { Version: '../../client/native/', Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|CryptoPP': { Version: 1.2.7, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|Detours': { Version: 4.0.14, Build: 'Build2', Tool: 'Tool1' }
 			'mwasplund|Opal': { Version: 0.12.4, Build: 'Build2', Tool: 'Tool1' }

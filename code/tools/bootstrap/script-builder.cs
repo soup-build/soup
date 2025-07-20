@@ -13,7 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Soup.Build.Utilities;
-using Soup.Tools;
+using Soup.Native;
 
 namespace Soup.Build.Bootstrap;
 
@@ -140,7 +140,7 @@ public class ScriptBuilder
 			{ "Flavor", new Value("Release") }
 		};
 		Directory.SetCurrentDirectory(soupRoot);
-		var packageProvider = SoupTools.LoadBuildGraph(fullPackagePath, globalParameters);
+		var packageProvider = SoupNative.LoadBuildGraph(fullPackagePath, globalParameters);
 		Directory.SetCurrentDirectory(cacheCurrentDirectory);
 
 		return packageProvider;

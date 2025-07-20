@@ -51,9 +51,9 @@ jobs:
     # - name: Soup Build PackageManager
     #   run: soup build ./soup/code/generate-sharp/package-manager/ -flavor ${{matrix.config}}
     - name: Soup Restore Tools
-      run: soup restore ./soup/code/client/tools/
+      run: soup restore ./soup/code/client/native/
     - name: Soup Build Tools
-      run: soup build ./soup/code/client/tools/ -flavor ${{matrix.config}}
+      run: soup build ./soup/code/client/native/ -flavor ${{matrix.config}}
 
     # Build DotNet
     - name: DotNet Build

@@ -12,10 +12,14 @@ CODE_DIR=$ROOT_DIR/code
 OUTPUT_DIR=$ROOT_DIR/out
 CLIENT_CLI_DIR=$CODE_DIR/client/cli
 
-# Restore the client
+# Restore client cli
 echo soup restore $CLIENT_CLI_DIR
 soup restore $CLIENT_CLI_DIR
 
-# Build the client
+# Build client cli
 echo soup build $CLIENT_CLI_DIR -flavor $FLAVOR
 soup build $CLIENT_CLI_DIR -flavor $FLAVOR
+
+# Build client native
+echo soup build $CODE_DIR/client/native -flavor $FLAVOR
+soup build $CODE_DIR/client/native -flavor $FLAVOR
