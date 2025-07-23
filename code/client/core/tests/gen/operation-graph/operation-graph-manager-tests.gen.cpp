@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunOperationGraphManagerTests;
+export module Soup.Core:RunOperationGraphManagerTests;
 
 import :OperationGraphManagerTests;
 import Soup.Test.Assert;
