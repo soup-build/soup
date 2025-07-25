@@ -37,23 +37,9 @@ soup restore $TOOLS_DIR/parse-modules
 echo soup build $TOOLS_DIR/parse-modules -flavor $FLAVOR
 soup build $TOOLS_DIR/parse-modules -flavor $FLAVOR
 
-# Print Graph
-echo soup restore $TOOLS_DIR/print-graph
-soup restore $TOOLS_DIR/print-graph
+# Print
+echo soup restore $TOOLS_DIR/print
+soup restore $TOOLS_DIR/print
 
-echo soup build $TOOLS_DIR/print-graph -flavor $FLAVOR
-soup build $TOOLS_DIR/print-graph -flavor $FLAVOR
-
-# Print Results
-echo soup restore $TOOLS_DIR/print-results
-soup restore $TOOLS_DIR/print-results
-
-echo soup build $TOOLS_DIR/print-results -flavor $FLAVOR
-soup build $TOOLS_DIR/print-results -flavor $FLAVOR
-
-# Print ValueTable
-echo soup restore $TOOLS_DIR/print-valuetable
-soup restore $TOOLS_DIR/print-valuetable
-
-echo soup build $TOOLS_DIR/print-valuetable -flavor $FLAVOR
-soup build $TOOLS_DIR/print-valuetable -flavor $FLAVOR
+echo soup build $TOOLS_DIR/print -flavor $FLAVOR
+soup build $TOOLS_DIR/print -flavor $FLAVOR
