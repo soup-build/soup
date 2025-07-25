@@ -111,6 +111,27 @@ namespace PrintGraph
 		PrintGraph("", graph.GetRootOperationIds(), graph, emptySet);
 	}
 
+	export void LoadAndPrintGenerateResult(const Opal::Path& generateResultFile)
+	{
+		if (!Opal::System::IFileSystem::Current().Exists(generateResultFile))
+		{
+			throw std::runtime_error("Generate result file does not exist");
+		}
+
+		// Open the file to read from
+		auto file = Opal::System::IFileSystem::Current().OpenRead(generateResultFile, true);
+
+		// Read the contents of the build state file
+		auto fileSystemState = Soup::Core::FileSystemState();
+		auto generateResult = Soup::Core::GenerateResultReader::Deserialize(file->GetInStream(), fileSystemState);
+
+		PrintFiles(fileSystemState);
+		PrintOperations(generateResult.GetGraph());
+		PrintGraph(generateResult.GetGraph());
+
+		std::cout << "IsPreprocessor: " << (generateResult.IsPreprocessor() ? "true" : "false") << std::endl;
+	}
+
 	export void LoadAndPrintOperationGraph(const Opal::Path& operationGraphFile)
 	{
 		if (!Opal::System::IFileSystem::Current().Exists(operationGraphFile))

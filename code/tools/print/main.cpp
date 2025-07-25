@@ -29,7 +29,11 @@ int main(int argc, char** argv)
 
 		auto file = Opal::Path::Parse(argv[1]);
 
-		if (file.GetFileExtension() == ".bog")
+		if (file.GetFileExtension() == ".bgr")
+		{
+			PrintGraph::LoadAndPrintGenerateResult(file);
+		}
+		else if (file.GetFileExtension() == ".bog")
 		{
 			PrintGraph::LoadAndPrintOperationGraph(file);
 		}
