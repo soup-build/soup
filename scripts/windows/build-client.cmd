@@ -37,6 +37,11 @@ copy "%MonitorClientOutputX64Directory%\bin\Monitor.Client.dll" "%ClientCLIOutpu
 echo copy "%MonitorClientOutputX86Directory%\bin\Monitor.Client.dll" "%ClientCLIOutputDirectory%\bin\Monitor.Client.32.dll"
 copy "%MonitorClientOutputX86Directory%\bin\Monitor.Client.dll" "%ClientCLIOutputDirectory%\bin\Monitor.Client.32.dll"
 
+REM - Restore client native
+echo soup restore %CodeDir%\client\native
+call soup restore %CodeDir%\client\native
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
 REM - Build client native
 echo soup build %CodeDir%\client\native -flavor %Flavor%
 call soup build %CodeDir%\client\native -flavor %Flavor%

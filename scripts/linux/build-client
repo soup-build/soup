@@ -20,6 +20,10 @@ soup restore $CLIENT_CLI_DIR
 echo soup build $CLIENT_CLI_DIR -flavor $FLAVOR
 soup build $CLIENT_CLI_DIR -flavor $FLAVOR
 
+# Restore client native
+echo soup restore $CODE_DIR/client/native
+soup restore $CODE_DIR/client/native
+
 # Build client native
 echo soup build $CODE_DIR/client/native -flavor $FLAVOR
 soup build $CODE_DIR/client/native -flavor $FLAVOR

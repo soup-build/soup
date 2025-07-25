@@ -11,5 +11,5 @@ CODE_DIR=$ROOT_DIR/code
 PARSE_MODULES_DIR=$CODE_DIR/parse-modules
 REFLEX=~/dev/repos/RE-flex/bin/reflex
 
-echo $REFLEX $PARSE_MODULES_DIR/parser/ModuleParser.l -o $PARSE_MODULES_DIR/parser/ModuleParser.cpp
-$REFLEX $PARSE_MODULES_DIR/parser/ModuleParser.l -o $PARSE_MODULES_DIR/parser/ModuleParser.cpp
+echo $REFLEX $PARSE_MODULES_DIR/parser/module-parser.l -o $PARSE_MODULES_DIR/parser/module-parser.cpp
+$REFLEX $PARSE_MODULES_DIR/parser/module-parser.l -o $PARSE_MODULES_DIR/parser/module-parser.cpp
