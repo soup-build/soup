@@ -42,29 +42,11 @@ echo soup build %ToolsDir%\parse-modules -flavor %Flavor%
 call soup build %ToolsDir%\parse-modules -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-REM - Print Graph
-echo soup restore %ToolsDir%\print-graph
-call soup restore %ToolsDir%\print-graph
+REM - Print
+echo soup restore %ToolsDir%\print
+call soup restore %ToolsDir%\print
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-echo soup build %ToolsDir%\print-graph -flavor %Flavor%
-call soup build %ToolsDir%\print-graph -flavor %Flavor%
-if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
-
-REM - Print Results
-echo soup restore %ToolsDir%\print-results
-call soup restore %ToolsDir%\print-results
-if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
-
-echo soup build %ToolsDir%\print-results -flavor %Flavor%
-call soup build %ToolsDir%\print-results -flavor %Flavor%
-if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
-
-REM - Print ValueTable
-echo soup restore %ToolsDir%\print-valuetable
-call soup restore %ToolsDir%\print-valuetable
-if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
-
-echo soup build %ToolsDir%\print-valuetable -flavor %Flavor%
-call soup build %ToolsDir%\print-valuetable -flavor %Flavor%
+echo soup build %ToolsDir%\print -flavor %Flavor%
+call soup build %ToolsDir%\print -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%

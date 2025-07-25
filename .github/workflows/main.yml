@@ -62,18 +62,10 @@ jobs:
       run: dotnet test -c ${{matrix.config}} --no-build --verbosity normal ./soup/code/generate-sharp/generate-sharp.sln
 
     # Build Tools
-    - name: Soup Restore PrintGraph
-      run: soup restore ./soup/code/tools/print-graph/
-    - name: Soup Build PrintGraph
-      run: soup build ./soup/code/tools/print-graph/ -flavor ${{matrix.config}}
-    - name: Soup Restore PrintResults
-      run: soup restore ./soup/code/tools/print-results/
-    - name: Soup Build PrintResults
-      run: soup build ./soup/code/tools/print-results/ -flavor ${{matrix.config}}
-    - name: Soup Restore PrintValueTable
-      run: soup restore ./soup/code/tools/print-valuetable/
-    - name: Soup Build PrintValueTable
-      run: soup build ./soup/code/tools/print-valuetable/ -flavor ${{matrix.config}}
+    - name: Soup Restore Print
+      run: soup restore ./soup/code/tools/print/
+    - name: Soup Build Print
+      run: soup build ./soup/code/tools/print/ -flavor ${{matrix.config}}
     - name: Soup Restore Migrate
       run: soup restore ./soup/code/generate-sharp/migrate/
     - name: Soup Build Migrate
