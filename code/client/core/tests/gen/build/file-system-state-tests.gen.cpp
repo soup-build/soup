@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunFileSystemStateTests;
+export module Soup.Core:RunFileSystemStateTests;
 
 import :FileSystemStateTests;
 import Soup.Test.Assert;

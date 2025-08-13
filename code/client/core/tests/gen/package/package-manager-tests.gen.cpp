@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunPackageManagerTests;
+export module Soup.Core:RunPackageManagerTests;
 
 import :PackageManagerTests;
 import Soup.Test.Assert;

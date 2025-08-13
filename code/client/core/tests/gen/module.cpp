@@ -1,5 +1,5 @@
 
-export module Soup.Core.Tests;
+export module Soup.Core;
 
 // build
 export import :BuildEngineTests;
