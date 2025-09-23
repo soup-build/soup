@@ -27,8 +27,8 @@ using Microsoft::WRL::ComPtr;
 export class D3D12HelloTriangle : public DXSample
 {
 public:
-	D3D12HelloTriangle(UINT width, UINT height, std::wstring name) :
-		DXSample(width, height, name),
+	D3D12HelloTriangle(UINT width, UINT height, std::string name) :
+		DXSample(width, height, std::move(name)),
 		m_frameIndex(0),
 		m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
 		m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height)),

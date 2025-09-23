@@ -14,10 +14,10 @@ using namespace Microsoft::WRL;
 export class DXSample
 {
 public:
-	DXSample(UINT width, UINT height, std::wstring name) :
+	DXSample(UINT width, UINT height, std::string name) :
 		m_width(width),
 		m_height(height),
-		m_title(name),
+		m_title(std::move(name)),
 		m_useWarpDevice(false)
 	{
 		WCHAR assetsPath[512];
@@ -43,7 +43,7 @@ public:
 	// Accessors
 	UINT GetWidth() const { return m_width; }
 	UINT GetHeight() const { return m_height; }
-	LPCWSTR GetTitle() const { return m_title.c_str(); }
+	LPCSTR GetTitle() const { return m_title.c_str(); }
 
 	// Helper function for parsing any supplied command line args.
 	void ParseCommandLineArgs(_In_reads_(argc) WCHAR* argv[], int argc)
@@ -54,7 +54,7 @@ public:
 				_wcsnicmp(argv[i], L"/warp", wcslen(argv[i])) == 0)
 			{
 				m_useWarpDevice = true;
-				m_title = m_title + L" (WARP)";
+				m_title = m_title + " (WARP)";
 			}
 		}
 	}
@@ -147,5 +147,5 @@ private:
 	std::wstring m_assetsPath;
 
 	// Window title.
-	std::wstring m_title;
+	std::string m_title;
 };
