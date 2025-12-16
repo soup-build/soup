@@ -6,6 +6,7 @@
 		<SelfContained>true</SelfContained>
 		<PublishReadyToRun>false</PublishReadyToRun>
 		<PublishTrimmed>false</PublishTrimmed>
+		<AssemblyName>package-manager</AssemblyName>
 	</PropertyGroup>
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />

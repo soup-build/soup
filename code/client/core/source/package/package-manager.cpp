@@ -97,7 +97,7 @@ namespace Soup::Core
 			auto packageManagerFolder = moduleFolder + Path("./package-manager/");
 			auto executable = packageManagerFolder + Path("./soup.build.package-manager.exe");
 			#elif defined(__linux__)
-			auto packageManagerFolder = moduleFolder + Path("../lib/package-manager/");
+			auto packageManagerFolder = moduleFolder + Path("../lib/soup/package-manager/");
 			auto executable = packageManagerFolder + Path("./package-manager");
 			#else
 			#error "Unknown platform"
