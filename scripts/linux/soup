@@ -8,6 +8,8 @@ ROOT_DIR=$SCRIPTS_DIR/../..
 OUT_DIR=$ROOT_DIR/out
 MSBUILD_DIR=$OUT_DIR/msbuild
 RUN_DIR=$OUT_DIR/run
+BIN_DIR=$RUN_DIR/bin
+LIB_DIR=$RUN_DIR/lib/soup
 CODE_DIR=$ROOT_DIR/code
 GLOBAL_PACKAGES_DIR=~/.soup/packages
 GLOBAL_OUT_DIR=~/.soup/out
@@ -25,30 +27,32 @@ SOUP_WREN_VERSION="0.5.4"
 # Cleanup previous runs
 rm -rf $RUN_DIR
 mkdir -p $RUN_DIR
+mkdir -p $BIN_DIR
+mkdir -p $LIB_DIR
 
-cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.exe $RUN_DIR/soup
-cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.Generate.exe $RUN_DIR/generate
+cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.exe $BIN_DIR/soup
+cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.Generate.exe $LIB_DIR/generate
 
-mkdir -p $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION
-cp -p $CODE_DIR/tools/copy/recipe.sml $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/recipe.sml
-cp -p -R $OUT_DIR/C++/Local/copy/$COPY_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/copy/$COPY_VERSION/out/
+mkdir -p $LIB_DIR/built-in/$OWNER/copy/$COPY_VERSION
+cp -p $CODE_DIR/tools/copy/recipe.sml $LIB_DIR/built-in/$OWNER/copy/$COPY_VERSION/recipe.sml
+cp -p -R $OUT_DIR/C++/Local/copy/$COPY_VERSION/$CONFIG_HASH/ $LIB_DIR/built-in/$OWNER/copy/$COPY_VERSION/out/
 
-mkdir -p $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION
-cp -p $CODE_DIR/tools/mkdir/recipe.sml $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/recipe.sml
-cp -p -R $OUT_DIR/C++/Local/mkdir/$MKDIR_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/mkdir/$MKDIR_VERSION/out/
+mkdir -p $LIB_DIR/built-in/$OWNER/mkdir/$MKDIR_VERSION
+cp -p $CODE_DIR/tools/mkdir/recipe.sml $LIB_DIR/built-in/$OWNER/mkdir/$MKDIR_VERSION/recipe.sml
+cp -p -R $OUT_DIR/C++/Local/mkdir/$MKDIR_VERSION/$CONFIG_HASH/ $LIB_DIR/built-in/$OWNER/mkdir/$MKDIR_VERSION/out/
 
-mkdir -p $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION
-cp -p $CODE_DIR/tools/parse-modules/recipe.sml $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION/recipe.sml
-cp -p -R $OUT_DIR/C++/Local/parse.modules/$PARSE_MODULES_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/$OWNER/parse.modules/$PARSE_MODULES_VERSION/out/
+mkdir -p $LIB_DIR/built-in/$OWNER/parse.modules/$PARSE_MODULES_VERSION
+cp -p $CODE_DIR/tools/parse-modules/recipe.sml $LIB_DIR/built-in/$OWNER/parse.modules/$PARSE_MODULES_VERSION/recipe.sml
+cp -p -R $OUT_DIR/C++/Local/parse.modules/$PARSE_MODULES_VERSION/$CONFIG_HASH/ $LIB_DIR/built-in/$OWNER/parse.modules/$PARSE_MODULES_VERSION/out/
 
-mkdir -p $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION
-cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml
-cp -p -R $GLOBAL_OUT_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/$CONFIG_HASH/ $RUN_DIR/BuiltIn/Soup/Wren/$SOUP_WREN_VERSION/out/
+mkdir -p $LIB_DIR/built-in/Soup/Wren/$SOUP_WREN_VERSION
+cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml $LIB_DIR/built-in/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml
+cp -p -R $GLOBAL_OUT_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/$CONFIG_HASH/ $LIB_DIR/built-in/Soup/Wren/$SOUP_WREN_VERSION/out/
 
-cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Release/net9.0/linux-x64/publish/ $RUN_DIR/PackageManager
+cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Release/net9.0/linux-x64/publish/ $LIB_DIR/package-manager
 
-cp -p -R $MSBUILD_DIR/bin/soup-view/Release/net9.0/linux-x64/publish/ $RUN_DIR/View
+cp -p -R $MSBUILD_DIR/bin/soup-view/Release/net9.0/linux-x64/publish/ $LIB_DIR/view
 
-cp -p -R $MSBUILD_DIR/bin/swhere/Release/net9.0/linux-x64/publish/swhere $RUN_DIR/swhere
+cp -p -R $MSBUILD_DIR/bin/swhere/Release/net9.0/linux-x64/publish/swhere $BIN_DIR/swhere
 
-$RUN_DIR/soup "$@"
+$BIN_DIR/soup "$@"
