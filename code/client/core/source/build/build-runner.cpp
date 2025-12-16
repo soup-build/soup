@@ -580,11 +580,13 @@ namespace Soup::Core
 
 			// Add the single root operation to perform the generate
 			auto moduleName = System::IProcessManager::Current().GetCurrentProcessFileName();
-			auto generateFolder = moduleName.GetParent();
+			auto moduleFolder = moduleName.GetParent();
 
 			#if defined(_WIN32)
+			auto generateFolder = moduleFolder;
 			auto generateExecutable = generateFolder + Path("./Soup.Generate.exe");
 			#elif defined(__linux__)
+			auto generateFolder = moduleFolder + Path("../lib/soup/");
 			auto generateExecutable = generateFolder + Path("./generate");
 			#else
 			#error "Unknown platform"
