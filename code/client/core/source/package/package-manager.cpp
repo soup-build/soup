@@ -95,7 +95,7 @@ namespace Soup::Core
 			auto moduleFolder = moduleName.GetParent();
 			#if defined(_WIN32)
 			auto packageManagerFolder = moduleFolder + Path("./package-manager/");
-			auto executable = packageManagerFolder + Path("./soup.build.package-manager.exe");
+			auto executable = packageManagerFolder + Path("./package-manager.exe");
 			#elif defined(__linux__)
 			auto packageManagerFolder = moduleFolder + Path("../lib/soup/package-manager/");
 			auto executable = packageManagerFolder + Path("./package-manager");
