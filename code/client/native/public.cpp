@@ -183,9 +183,9 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::
 		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 		
 		#if defined(_WIN32)
-		auto builtInPackageDirectory = processDirectory + Path("./built-in/");
+		auto builtInPackageDirectory = rootDirectory + Path("./built-in/");
 		#elif defined(__linux__)
-		auto builtInPackageDirectory = processDirectory + Path("../lib/soup/built-in/");
+		auto builtInPackageDirectory = rootDirectory + Path("../lib/soup/built-in/");
 		#else
 		#error "Unknown platform"
 		#endif
