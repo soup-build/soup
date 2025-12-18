@@ -57,10 +57,11 @@ namespace Soup::Client
 
 			auto moduleName = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto moduleFolder = moduleName.GetParent();
-			auto soupViewFolder = moduleFolder + Path("./View/");
 			#if defined(_WIN32)
+			auto soupViewFolder = moduleFolder + Path("./view/");
 			auto executable = soupViewFolder + Path("./soup-view.exe");
 			#elif defined(__linux__)
+			auto soupViewFolder = moduleFolder + Path("../lib/soup/view/");
 			auto executable = soupViewFolder + Path("./soup-view");
 			#else
 			#error "Unknown platform"

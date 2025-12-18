@@ -8,7 +8,29 @@ ROOT_DIR=$SCRIPTS_DIR/../..
 OUT_DIR=$ROOT_DIR/out
 RUN_DIR=$OUT_DIR/run
 RELEASE_DIR=$OUT_DIR/release
+VERSION=$($RUN_DIR/bin/soup "version")
 
-# Pack the release tarbal
+# Cleanup previous runs
+rm -rf $RELEASE_DIR
 mkdir -p $RELEASE_DIR
-tar -a -cf $RELEASE_DIR/soup-build-0.42.6-linux-x64.tar.gz -C $RUN_DIR .
+
+echo "Pack the release tarbal"
+tar -a -cf $RELEASE_DIR/soup-build-$VERSION-linux-x64.tar.gz -C $RUN_DIR .
+
+echo "Create the debian package"
+DEB_DIR=$RELEASE_DIR/soup-build_$VERSION-1_amd64
+mkdir -p $DEB_DIR/DEBIAN
+
+cp -p -R $RUN_DIR/bin/ $DEB_DIR
+cp -p -R $RUN_DIR/lib/ $DEB_DIR
+
+echo "Package: soup-build
+Version: $VERSION
+Maintainer: Matthew Asplund <mwasplund@gmail.com>
+Depends: libc6
+Architecture: amd64
+Homepage: https://www.soupbuild.com
+Description: Soup Build System" \
+> $DEB_DIR/DEBIAN/control
+
+dpkg --build $DEB_DIR

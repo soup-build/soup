@@ -48,9 +48,9 @@ namespace Soup::Core::UnitTests
 					"INFO: RestorePackages",
 					"INFO: Running PackageManager",
 					#ifdef _WIN32
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe restore-packages C:/TestLocation",
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe restore-packages C:/TestLocation",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager restore-packages C:/TestLocation",
+						"DIAG:   C:/lib/soup/package-manager/package-manager restore-packages C:/TestLocation",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -60,9 +60,9 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"GetCurrentProcessFileName",
 					#ifdef _WIN32
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe restore-packages C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe restore-packages C:/TestLocation",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager restore-packages C:/TestLocation",
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager restore-packages C:/TestLocation",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -91,9 +91,9 @@ namespace Soup::Core::UnitTests
 					"INFO: InitializePackage",
 					"INFO: Running PackageManager",
 					#ifdef _WIN32
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe initialize-package C:/TestLocation",
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe initialize-package C:/TestLocation",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager initialize-package C:/TestLocation",
+						"DIAG:   C:/lib/soup/package-manager/package-manager initialize-package C:/TestLocation",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -103,9 +103,9 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"GetCurrentProcessFileName",
 					#ifdef _WIN32
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe initialize-package C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe initialize-package C:/TestLocation",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager initialize-package C:/TestLocation",
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager initialize-package C:/TestLocation",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -135,9 +135,9 @@ namespace Soup::Core::UnitTests
 					"INFO: InstallPackageReference",
 					"INFO: Running PackageManager",
 					#ifdef _WIN32
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage@2.2.2",
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe install-package C:/TestLocation TheirPackage@2.2.2",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage@2.2.2",
+						"DIAG:   C:/lib/soup/package-manager/package-manager install-package C:/TestLocation TheirPackage@2.2.2",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -147,9 +147,9 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"GetCurrentProcessFileName",
 					#ifdef _WIN32
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage@2.2.2",
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe install-package C:/TestLocation TheirPackage@2.2.2",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage@2.2.2",
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager install-package C:/TestLocation TheirPackage@2.2.2",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -179,9 +179,9 @@ namespace Soup::Core::UnitTests
 					"INFO: InstallPackageReference",
 					"INFO: Running PackageManager",
 					#ifdef _WIN32
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage",
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe install-package C:/TestLocation TheirPackage",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage",
+						"DIAG:   C:/lib/soup/package-manager/package-manager install-package C:/TestLocation TheirPackage",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -191,9 +191,9 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"GetCurrentProcessFileName",
 					#ifdef _WIN32
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe install-package C:/TestLocation TheirPackage",
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe install-package C:/TestLocation TheirPackage",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager install-package C:/TestLocation TheirPackage",
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager install-package C:/TestLocation TheirPackage",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",
@@ -222,9 +222,9 @@ namespace Soup::Core::UnitTests
 					"INFO: PublishPackage",
 					"INFO: Running PackageManager",
 					#ifdef _WIN32
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager.exe publish-package C:/TestLocation",
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe publish-package C:/TestLocation",
 					#else
-						"DIAG:   C:/testlocation/PackageManager/soup.build.package-manager publish-package C:/TestLocation",
+						"DIAG:   C:/lib/soup/package-manager/package-manager publish-package C:/TestLocation",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -234,9 +234,9 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"GetCurrentProcessFileName",
 					#ifdef _WIN32
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager.exe publish-package C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe publish-package C:/TestLocation",
 					#else
-						"CreateProcess: 1 0 [C:/testlocation/PackageManager/] C:/testlocation/PackageManager/soup.build.package-manager publish-package C:/TestLocation",
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager publish-package C:/TestLocation",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",

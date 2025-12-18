@@ -181,7 +181,7 @@ public class SemanticVersion : IEquatable<SemanticVersion>
 	public override int GetHashCode()
 	{
 		var value = this.Major * 0x100000;
-		value += this.Minor * 0x1000 ?? 0;
+		value += (this.Minor * 0x1000) ?? 0;
 		value += this.Patch ?? 0;
 		return value;
 	}

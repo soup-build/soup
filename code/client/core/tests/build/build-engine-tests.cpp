@@ -138,7 +138,7 @@ namespace Soup::Core::UnitTests
 
 			// Emulate generate phase
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+				std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] {0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
 				{
 					auto myPackageGenerateResult = GenerateResult(
@@ -155,7 +155,7 @@ namespace Soup::Core::UnitTests
 				});
 
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] C:/testlocation/{0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+				std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
 				{
 					auto soupCppGenerateResult = GenerateResult(
@@ -223,9 +223,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Operation has no successful previous invocation",
 					"HIGH: 2>Generate Core: [Wren]Soup|Cpp",
-					std::format("DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] C:/testlocation/{0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/", GetGenerateExeName()),
+					std::format("DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/", GetGenerateExePath()),
 					"DIAG: 2>Allowed Read Access:",
-					"DIAG: 2>C:/testlocation/",
+					std::format("DIAG: 2>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 2>C:/Windows/",
 					"DIAG: 2>C:/Program Files/dotnet/",
@@ -262,9 +262,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]MyPackage",
-					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExeName()),
+					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/MyPackage/] {0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExePath()),
 					"DIAG: 1>Allowed Read Access:",
-					"DIAG: 1>C:/testlocation/",
+					std::format("DIAG: 1>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 1>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 1>C:/Windows/",
 					"DIAG: 1>C:/Program Files/dotnet/",
@@ -354,13 +354,13 @@ namespace Soup::Core::UnitTests
 
 			Assert::AreEqual(
 				std::vector<std::string>({
-					std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] C:/testlocation/{0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+					std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 					"ProcessStart: 1",
 					"WaitForExit: 1",
 					"GetStandardOutput: 1",
 					"GetStandardError: 1",
 					"GetExitCode: 1",
-					std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+					std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] {0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 					"ProcessStart: 2",
 					"WaitForExit: 2",
 					"GetStandardOutput: 2",
@@ -672,7 +672,7 @@ namespace Soup::Core::UnitTests
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
 			fileSystem->CreateMockFile(
-				Path(std::format("C:/testlocation/{0}", GetGenerateExeName())),
+				Path(GetGenerateExePath()),
 				std::make_shared<MockFile>(
 					std::chrono::clock_cast<std::chrono::file_clock>(
 						std::chrono::sys_days{January/9/2024} + 11h + 3min + 4s)));
@@ -1223,7 +1223,7 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-input.bvt",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-phase1.bor",
-					std::format("TryGetLastWriteTime: C:/testlocation/{0}", GetGenerateExeName()),
+					std::format("TryGetLastWriteTime: {0}", GetGenerateExePath()),
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/temp/",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
@@ -1357,7 +1357,7 @@ namespace Soup::Core::UnitTests
 
 			// Emulate generate phase
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+				std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] {0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
 				{
 					auto myPackageGenerateResult = GenerateResult(
@@ -1374,7 +1374,7 @@ namespace Soup::Core::UnitTests
 				});
 
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 3 [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} false C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+				std::format("CreateMonitorProcess: 3 [C:/WorkingDirectory/MyPackage/] {0} false C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
 				{
 					auto myPackageOperationGraph = OperationGraph(
@@ -1389,7 +1389,7 @@ namespace Soup::Core::UnitTests
 				});
 
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] C:/testlocation/{0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+				std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
 				{
 					auto soupCppGenerateResult = GenerateResult(
@@ -1457,9 +1457,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Operation has no successful previous invocation",
 					"HIGH: 2>Generate Core: [Wren]Soup|Cpp",
-					std::format("DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] C:/testlocation/{0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/", GetGenerateExeName()),
+					std::format("DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/", GetGenerateExePath()),
 					"DIAG: 2>Allowed Read Access:",
-					"DIAG: 2>C:/testlocation/",
+					std::format("DIAG: 2>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 2>C:/Windows/",
 					"DIAG: 2>C:/Program Files/dotnet/",
@@ -1496,9 +1496,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]MyPackage",
-					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExeName()),
+					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/MyPackage/] {0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExePath()),
 					"DIAG: 1>Allowed Read Access:",
-					"DIAG: 1>C:/testlocation/",
+					std::format("DIAG: 1>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 1>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 1>C:/Windows/",
 					"DIAG: 1>C:/Program Files/dotnet/",
@@ -1524,9 +1524,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]MyPackage",
-					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} false C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExeName()),
+					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/MyPackage/] {0} false C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExePath()),
 					"DIAG: 1>Allowed Read Access:",
-					"DIAG: 1>C:/testlocation/",
+					std::format("DIAG: 1>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 1>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 1>C:/Windows/",
 					"DIAG: 1>C:/Program Files/dotnet/",
@@ -1623,19 +1623,19 @@ namespace Soup::Core::UnitTests
 
 			Assert::AreEqual(
 				std::vector<std::string>({
-					std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] C:/testlocation/{0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+					std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 					"ProcessStart: 1",
 					"WaitForExit: 1",
 					"GetStandardOutput: 1",
 					"GetStandardError: 1",
 					"GetExitCode: 1",
-					std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+					std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/MyPackage/] {0} true C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 					"ProcessStart: 2",
 					"WaitForExit: 2",
 					"GetStandardOutput: 2",
 					"GetStandardError: 2",
 					"GetExitCode: 2",
-					std::format("CreateMonitorProcess: 3 [C:/WorkingDirectory/MyPackage/] C:/testlocation/{0} false C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExeName()),
+					std::format("CreateMonitorProcess: 3 [C:/WorkingDirectory/MyPackage/] {0} false C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
 					"ProcessStart: 3",
 					"WaitForExit: 3",
 					"GetStandardOutput: 3",
@@ -1947,7 +1947,7 @@ namespace Soup::Core::UnitTests
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
 			fileSystem->CreateMockFile(
-				Path(std::format("C:/testlocation/{0}", GetGenerateExeName())),
+				Path(GetGenerateExePath()),
 				std::make_shared<MockFile>(
 					std::chrono::clock_cast<std::chrono::file_clock>(
 						std::chrono::sys_days{January/9/2024} + 11h + 3min + 4s)));
@@ -2520,7 +2520,7 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-input.bvt",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/generate-phase1.bor",
-					std::format("TryGetLastWriteTime: C:/testlocation/{0}", GetGenerateExeName()),
+					std::format("TryGetLastWriteTime: {0}", GetGenerateExePath()),
 					"Exists: C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/temp/",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
@@ -2554,12 +2554,21 @@ namespace Soup::Core::UnitTests
 		}
 
 	private:
-		std::string_view GetGenerateExeName()
+		std::string_view GetRuntimeLibraryPath()
 		{
 			#ifdef _WIN32
-				return "Soup.Generate.exe";
+				return "C:/testlocation/";
 			#else
-				return "generate";
+				return "C:/lib/soup/";
+			#endif
+		}
+
+		std::string_view GetGenerateExePath()
+		{
+			#ifdef _WIN32
+				return "C:/testlocation/Soup.Generate.exe";
+			#else
+				return "C:/lib/soup/generate";
 			#endif
 		}
 	};
