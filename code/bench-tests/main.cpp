@@ -12,7 +12,7 @@ using namespace Soup::Core;
 int main()
 {
 	{
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("PackageReference Parse Name Only", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("PackageReference Parse Name Only", [&]
 		{
 			auto actual = PackageReference::Parse("Package1");
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -20,7 +20,7 @@ int main()
 	}
 
 	{
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("PackageReference Parse Language, User, Name and Version", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("PackageReference Parse Language, User, Name and Version", [&]
 		{
 			auto actual = PackageReference::Parse("[C#]User1|Package1@1.2.3");
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -35,7 +35,7 @@ int main()
 		});
 		auto content = std::stringstream(std::string(reinterpret_cast<char*>(binaryFileContent.data()), binaryFileContent.size()));
 
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("ValueTableReader Deserialize Empty", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("ValueTableReader Deserialize Empty", [&]
 		{
 			auto actual = ValueTableReader::Deserialize(content);
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -58,7 +58,7 @@ int main()
 		});
 		auto content = std::stringstream(std::string(reinterpret_cast<char*>(binaryFileContent.data()), binaryFileContent.size()));
 
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("ValueTableReader Deserialize Complex", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("ValueTableReader Deserialize Complex", [&]
 		{
 			auto actual = Soup::Core::ValueTableReader::Deserialize(content);
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -75,7 +75,7 @@ int main()
 		});
 		auto content = std::stringstream(std::string(binaryFileContent.data(), binaryFileContent.size()));
 
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("OperationResultsReader Deserialize Empty", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("OperationResultsReader Deserialize Empty", [&]
 		{
 			auto actual = OperationResultsReader::Deserialize(content, fileSystemState);
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -121,7 +121,7 @@ int main()
 		});
 		auto content = std::stringstream(std::string((char*)binaryFileContent.data(), binaryFileContent.size()));
 
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("OperationResultsReader Deserialize Complex", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("OperationResultsReader Deserialize Complex", [&]
 		{
 			auto actual = OperationResultsReader::Deserialize(content, fileSystemState);
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -135,7 +135,7 @@ int main()
 				Name: 'MyPackage'
 				Language: (C++@1)
 			)");
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("RecipeSML Deserialize Simple", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("RecipeSML Deserialize Simple", [&]
 		{
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 			ankerl::nanobench::doNotOptimizeAway(actual);
@@ -169,7 +169,7 @@ int main()
 					Test: []
 				}
 			)");
-		ankerl::nanobench::Bench().minEpochIterations(10000).run("RecipeSML Deserialize Complex", [&]
+		ankerl::nanobench::Bench().minEpochIterations(20000).run("RecipeSML Deserialize Complex", [&]
 		{
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 			ankerl::nanobench::doNotOptimizeAway(actual);

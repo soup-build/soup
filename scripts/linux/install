@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Stop on first error
+set -e
+
+SCRIPTS_DIR=$(dirname "$0")
+ROOT_DIR=$SCRIPTS_DIR/../..
+OUT_DIR=$ROOT_DIR/out
+RUN_DIR=$OUT_DIR/run
+RELEASE_DIR=$OUT_DIR/release
+VERSION=$($RUN_DIR/bin/soup "version")
+
+sudo apt install -f $RELEASE_DIR/soup-build_$VERSION-1_amd64.deb

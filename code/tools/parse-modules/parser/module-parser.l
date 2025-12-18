@@ -16,9 +16,6 @@ enum class SimplifiedCppToken : int
 {
     EndOfFile = 0,
     Identifier,
-    NumberSign,
-    LessThan,
-    GreaterThan,
     Period,
     Colon,
     Semicolon,
@@ -47,9 +44,6 @@ identifier           [A-Za-z_][A-Za-z_1-9]*
 "import"             return (int)SimplifiedCppToken::Import;
 "export"             return (int)SimplifiedCppToken::Export;
 "module"             return (int)SimplifiedCppToken::Module;
-"#"                  return (int)SimplifiedCppToken::NumberSign;
-"<"                  return (int)SimplifiedCppToken::LessThan;
-">"                  return (int)SimplifiedCppToken::GreaterThan;
 "."                  return (int)SimplifiedCppToken::Period;
 ":"                  return (int)SimplifiedCppToken::Colon;
 ";"                  return (int)SimplifiedCppToken::Semicolon;
@@ -88,19 +82,27 @@ public:
             // TODO: Parse global module fragment
 
             // Must have a module declaration
+            bool isExport;
             std::string moduleName;
-            if (!TryParseModuleDeclaration(moduleName))
+            if (!TryParseModuleDeclaration(isExport, moduleName))
                 throw std::runtime_error("TU with global module fragment must have a module declaration");
 
-            _result.push_back("module " + moduleName);
+            if (isExport)
+                _result.push_back("module-interface " + moduleName);
+            else
+                _result.push_back("module-implementation " + moduleName);
         }
         else
         {
             // Check for optional module declarationn
+            bool isExport;
             std::string moduleName;
-            if (TryParseModuleDeclaration(moduleName))
+            if (TryParseModuleDeclaration(isExport, moduleName))
             {
-                _result.push_back("module " + moduleName);
+                if (isExport)
+                    _result.push_back("module-interface " + moduleName);
+                else
+                    _result.push_back("module-implementation " + moduleName);
             }
         }
 
@@ -140,14 +142,15 @@ private:
         return false;
     }
 
-    bool TryParseModuleDeclaration(std::string& moduleName)
+    bool TryParseModuleDeclaration(bool& isExport, std::string& moduleName)
     {
         #ifdef SHOW_TOKENS
           std::cout << "TryParseModuleDeclaration" << std::endl;
         #endif
 
         // Check for optional first export token
-        if (_currentToken == SimplifiedCppToken::Export)
+        bool hasExport = _currentToken == SimplifiedCppToken::Export;
+        if (hasExport)
         {
             MoveNext();
         }
@@ -178,6 +181,7 @@ private:
 
         MoveNext();
 
+        isExport = hasExport;
         moduleName = std::move(result);
         return true;
     }
@@ -300,11 +304,19 @@ private:
     /// Lexer exceptions.
     virtual void lexer_error(const char* message = nullptr) override
     {
-        // TODO: Add check for allowed errors when in a module declaration
-        // For now, allow all errors
-        std::stringstream stream_message;
-        stream_message << (message != NULL ? message : "lexer error") << " at " << lineno() << ":" << columno();
-        throw EarlyExitException(stream_message.str());
+        // If jammed then treat it as the end of the file
+        if (message == std::string_view("scanner jammed"))
+        {
+            #ifdef SHOW_TOKENS
+            std::cout << "Scanner jammed" << '\n';
+            #endif
+        }
+        else
+        {
+            std::stringstream stream_message;
+            stream_message << (message != NULL ? message : "lexer error") << " at " << lineno() << ":" << columno();
+            throw EarlyExitException(stream_message.str());
+        }
     }
 
     SimplifiedCppToken PeekNext()

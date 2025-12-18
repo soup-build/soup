@@ -7,6 +7,6 @@ Dependencies: {
 	Runtime: [
 		'../../generate-sharp/utilities/'
 		'../../generate-sharp/opal/'
-		'../../generate-sharp/soup-tools/'
+		'../../generate-sharp/soup-native-interop/'
 	]
 }

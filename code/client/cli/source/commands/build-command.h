@@ -80,7 +80,14 @@ namespace Soup::Client
 			// Find the built in folder root
 			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto processDirectory = processFilename.GetParent();
-			auto builtInPackageDirectory = processDirectory + Path("./BuiltIn/");
+
+			#if defined(_WIN32)
+			auto builtInPackageDirectory = processDirectory + Path("./built-in/");
+			#elif defined(__linux__)
+			auto builtInPackageDirectory = processDirectory + Path("../lib/soup/built-in/");
+			#else
+			#error "Unknown platform"
+			#endif
 
 			// Load user config state
 			auto userDataPath = Core::BuildEngine::GetSoupUserDataPath();

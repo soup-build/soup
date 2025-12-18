@@ -1,0 +1,13 @@
+{
+	"name": "C++",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+    "features": {
+        "ghcr.io/devcontainers/features/dotnet:2": {
+            "version": "9.0",
+            "dotnetRuntimeVersions": "9.0", 
+            "aspNetCoreRuntimeVersions": "9.0"
+        }
+	}
+} 

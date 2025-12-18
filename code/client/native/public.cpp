@@ -181,7 +181,14 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::
 
 		// Find the built in folder root
 		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-		auto builtInPackageDirectory = rootDirectory + Path("./BuiltIn/");
+		
+		#if defined(_WIN32)
+		auto builtInPackageDirectory = rootDirectory + Path("./built-in/");
+		#elif defined(__linux__)
+		auto builtInPackageDirectory = rootDirectory + Path("../lib/soup/built-in/");
+		#else
+		#error "Unknown platform"
+		#endif
 
 		// Load user config state
 		auto userDataPath = BuildEngine::GetSoupUserDataPath();
