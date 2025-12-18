@@ -1,14 +1,13 @@
 # Benchmarks
-Current benchmark numbers on my old XPS 15 9500 with Win11
+Current benchmark numbers on my Lenovo Yoga 7 Intel Core Ultra 7 258V with Win11
 
 |               ns/op |                op/s |    err% |     total | benchmark
 |--------------------:|--------------------:|--------:|----------:|:----------
-|            4,954.59 |          201,833.06 |    1.0% |      0.59 | `PackageReference Parse Name Only`
-|            9,523.36 |          105,004.95 |    1.8% |      1.13 | `PackageReference Parse Language, User, Name and Version`
-|              166.71 |        5,998,483.17 |    2.0% |      0.02 | `ValueTableReader Deserialize Empty`
-|            5,329.59 |          187,631.65 |    1.5% |      0.64 | `ValueTableReader Deserialize Complex`
-|              354.82 |        2,818,341.50 |    1.2% |      0.04 | `OperationResultsReader Deserialize Empty`
-|            1,585.87 |          630,569.30 |    0.7% |      0.19 | `OperationResultsReader Deserialize Complex`
-|            3,224.06 |          310,168.03 |    1.1% |      0.40 | `RecipeSML Deserialize Simple`
-|           14,332.25 |           69,772.72 |    0.5% |      1.74 | `RecipeSML Deserialize Complex`
-|          349,772.30 |            2,859.00 |    1.1% |     12.51 | `BuildEngine Execute NoDependencies UpToDate`
+|            2,114.73 |          472,873.40 |    3.0% |      0.52 | `PackageReference Parse Name Only`
+|            3,377.58 |          296,069.79 |    1.2% |      0.81 | `PackageReference Parse Language, User, Name and Version`
+|               67.65 |       14,782,358.44 |    1.1% |      0.02 | `ValueTableReader Deserialize Empty`
+|            1,518.21 |          658,671.50 |    1.3% |      0.36 | `ValueTableReader Deserialize Complex`
+|              113.23 |        8,831,847.65 |    2.8% |      0.03 | `OperationResultsReader Deserialize Empty`
+|              702.65 |        1,423,178.43 |    1.8% |      0.17 | `OperationResultsReader Deserialize Complex`
+|            1,071.80 |          933,012.90 |    1.0% |      0.26 | `RecipeSML Deserialize Simple`
+|            6,152.02 |          162,548.28 |    1.0% |      1.48 | `RecipeSML Deserialize Complex`
