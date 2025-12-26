@@ -15,11 +15,12 @@ module;
 #include <unordered_map>
 #include <vector>
 
-export module Soup.Core.Tests:FileSystemStateTests;
+export module Soup.Core:FileSystemStateTests;
+
+import :FileSystemState;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

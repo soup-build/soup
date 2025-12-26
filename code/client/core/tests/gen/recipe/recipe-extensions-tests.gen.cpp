@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunRecipeExtensionsTests;
+export module Soup.Core:RunRecipeExtensionsTests;
 
 import :RecipeExtensionsTests;
 import Soup.Test.Assert;
