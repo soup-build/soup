@@ -30,6 +30,10 @@ dotnet_diagnostic.IDE0290.severity = none
 # Not a fan since it makes it harder to understand the type, use var instead
 dotnet_diagnostic.IDE0090.severity = none
 
+# IDE0031: Null check can be simplified
+# Too aggresive
+dotnet_diagnostic.IDE0031.severity = none
+
 # IDE0042: Deconstruct variable declaration
 # Not required
 dotnet_diagnostic.IDE0042.severity = none

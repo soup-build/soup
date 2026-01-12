@@ -23,7 +23,7 @@ public partial class TaskGraphView : UserControl
 		var dataContext = (ContentPaneViewModel?)this.DataContext;
 		if (dataContext is not null)
 		{
-			dataContext.NotificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this)!);
+			dataContext.NotificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this));
 		}
 	}
 }

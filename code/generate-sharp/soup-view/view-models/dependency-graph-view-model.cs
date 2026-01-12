@@ -17,33 +17,30 @@ namespace Soup.View.ViewModels;
 
 public class DependencyGraphViewModel : ContentPaneViewModel
 {
-	private GraphNodeViewModel? selectedNode;
-	private ProjectDetailsViewModel? selectedProject;
-	private IList<GraphNodeViewModel>? graph;
 	private readonly Dictionary<uint, ProjectDetailsViewModel> projectDetailsLookup = [];
 
 	public IList<GraphNodeViewModel>? Graph
 	{
-		get => this.graph;
-		private set => this.RaiseAndSetIfChanged(ref this.graph, value);
+		get;
+		private set => this.RaiseAndSetIfChanged(ref field, value);
 	}
 
 	public GraphNodeViewModel? SelectedNode
 	{
-		get => this.selectedNode;
+		get;
 		set
 		{
-			if (CheckRaiseAndSetIfChanged(ref this.selectedNode, value))
+			if (CheckRaiseAndSetIfChanged(ref field, value))
 			{
-				this.SelectedProject = this.selectedNode is not null ? this.projectDetailsLookup[this.selectedNode.Id] : null;
+				this.SelectedProject = field is not null ? this.projectDetailsLookup[field.Id] : null;
 			}
 		}
 	}
 
 	public ProjectDetailsViewModel? SelectedProject
 	{
-		get => this.selectedProject;
-		set => this.RaiseAndSetIfChanged(ref this.selectedProject, value);
+		get;
+		set => this.RaiseAndSetIfChanged(ref field, value);
 	}
 
 	public DependencyGraphViewModel()

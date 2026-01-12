@@ -26,7 +26,6 @@
 		<PackageReference Include="GraphShape" Version="1.2.1" />
 		<PackageReference Include="PanAndZoom" Version="11.3.0.1" />
 		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
-		<PackageReference Include="System.Text.Json" Version="9.0.6" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../opal/opal.csproj" />
