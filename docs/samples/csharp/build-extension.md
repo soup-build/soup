@@ -92,7 +92,7 @@ The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Execu
 ```sml
 Name: 'Samples.CSharp.BuildExtension.Executable'
 Language: 'C#|0'
-TargetFramework: 'net9.0'
+TargetFramework: 'net10.0'
 Type: 'Executable'
 Version: 1.0.0
 Dependencies: {
@@ -115,7 +115,7 @@ Closures: {
   Build0: {
     Wren: {
       'Samples.CSharp.BuildExtension.Extension': { Version: '../extension/' }
-      'Soup|CSharp': { Version: 0.16.0 }
+      'Soup|CSharp': { Version: 0.17.0 }
     }
   }
   Tool0: {

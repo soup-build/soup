@@ -49,10 +49,10 @@ mkdir -p $LIB_DIR/built-in/Soup/Wren/$SOUP_WREN_VERSION
 cp -p $GLOBAL_PACKAGES_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml $LIB_DIR/built-in/Soup/Wren/$SOUP_WREN_VERSION/recipe.sml
 cp -p -R $GLOBAL_OUT_DIR/Wren/Soup/Wren/$SOUP_WREN_VERSION/$CONFIG_HASH/ $LIB_DIR/built-in/Soup/Wren/$SOUP_WREN_VERSION/out/
 
-cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Release/net9.0/linux-x64/publish/ $LIB_DIR/package-manager
+cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Release/net10.0/linux-x64/publish/ $LIB_DIR/package-manager
 
-cp -p -R $MSBUILD_DIR/bin/soup-view/Release/net9.0/linux-x64/publish/ $LIB_DIR/view
+cp -p -R $MSBUILD_DIR/bin/soup-view/Release/net10.0/linux-x64/publish/ $LIB_DIR/view
 
-cp -p -R $MSBUILD_DIR/bin/swhere/Release/net9.0/linux-x64/publish/swhere $BIN_DIR/swhere
+cp -p -R $MSBUILD_DIR/bin/swhere/Release/net10.0/linux-x64/publish/swhere $BIN_DIR/swhere
 
 $BIN_DIR/soup "$@"

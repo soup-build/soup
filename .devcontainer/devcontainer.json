@@ -3,11 +3,12 @@
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
+    // "mounts": [
+    //     "source=/home/mwasplund/repos/soup-csharp,target=/workspaces/soup-csharp,type=bind"
+    // ],
     "features": {
         "ghcr.io/devcontainers/features/dotnet:2": {
-            "version": "9.0",
-            "dotnetRuntimeVersions": "9.0", 
-            "aspNetCoreRuntimeVersions": "9.0"
+            "version": "10.0"
         }
 	}
 } 
