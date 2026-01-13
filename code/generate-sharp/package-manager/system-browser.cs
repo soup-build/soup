@@ -2,7 +2,7 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright
 
-using IdentityModel.OidcClient.Browser;
+using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
