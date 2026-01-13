@@ -1,5 +1,5 @@
 Name: 'Soup'
-Version: 0.42.7
+Version: 0.42.8
 Language: 'C++|0'
 Type: 'Executable'
 Source: [

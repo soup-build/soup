@@ -8,7 +8,7 @@ SET RunDir=%OutDir%/run
 SET CodeDir=%RootDir%/code
 SET InstallerDir=%CodeDir%/installer/soup-installer
 
-SET SOUP_VERSION=0.42.7
+SET SOUP_VERSION=0.42.8
 
 REM - Build MSI Installer
 echo msbuild %InstallerDir% -p:Configuration=Release
