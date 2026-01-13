@@ -22,9 +22,15 @@
 		<GridSplitter
 			Grid.Column="1"
 			Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
-		<TreeDataGrid
+		<TreeView
 			Grid.Column="2"
 			DataContext="{Binding SelectedProject}"
-			Source="{Binding Properties}" />
+			ItemsSource="{Binding Properties}">
+			<TreeView.ItemTemplate>
+				<TreeDataTemplate ItemsSource="{Binding Children}">
+					<TextBlock Text="{Binding Name}"/>
+				</TreeDataTemplate>
+			</TreeView.ItemTemplate>
+		</TreeView>
 	</Grid>
 </UserControl>
