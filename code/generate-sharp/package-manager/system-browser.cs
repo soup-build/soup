@@ -2,9 +2,8 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright
 
-using IdentityModel.OidcClient.Browser;
+using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Diagnostics;
@@ -105,7 +104,7 @@ public class LoopbackHttpListener : IDisposable
 	private const int DefaultTimeout = 60 * 5; // 5 mins (in seconds)
 
 	[SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Disposed in async task")]
-	private readonly IWebHost host;
+	private readonly WebApplication app;
 	private readonly TaskCompletionSource<string> source = new TaskCompletionSource<string>();
 
 	public Uri Url { get; }
@@ -118,12 +117,30 @@ public class LoopbackHttpListener : IDisposable
 
 		this.Url = new Uri($"http://127.0.0.1:{port}/{path}");
 
-		this.host = new WebHostBuilder()
-			.UseKestrel()
-			.UseUrls(this.Url.ToString())
-			.Configure(Configure)
-			.Build();
-		this.host.Start();
+		var builder = WebApplication.CreateBuilder();
+		this.app = builder.Build();
+
+		_ = this.app.MapGet("/", async (context) =>
+			{
+				await SetResultAsync(context.Request.QueryString.Value ?? string.Empty, context);
+			});
+
+		_ = this.app.MapPost("/", async (context) =>
+			{
+				if (context.Request.ContentType is not null &&
+					!context.Request.ContentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+				{
+					context.Response.StatusCode = 415;
+				}
+				else
+				{
+					using var sr = new StreamReader(context.Request.Body, Encoding.UTF8);
+					var body = await sr.ReadToEndAsync();
+					await SetResultAsync(body, context);
+				}
+			});
+
+		this.app.Run();
 	}
 
 	[SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Special case")]
@@ -132,36 +149,7 @@ public class LoopbackHttpListener : IDisposable
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(500);
-			this.host.Dispose();
-		});
-	}
-
-	private void Configure(IApplicationBuilder app)
-	{
-		app.Run(async ctx =>
-		{
-			if (ctx.Request.Method == "GET")
-			{
-				await SetResultAsync(ctx.Request.QueryString.Value ?? string.Empty, ctx);
-			}
-			else if (ctx.Request.Method == "POST")
-			{
-				if (ctx.Request.ContentType is not null &&
-					!ctx.Request.ContentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
-				{
-					ctx.Response.StatusCode = 415;
-				}
-				else
-				{
-					using var sr = new StreamReader(ctx.Request.Body, Encoding.UTF8);
-					var body = await sr.ReadToEndAsync();
-					await SetResultAsync(body, ctx);
-				}
-			}
-			else
-			{
-				ctx.Response.StatusCode = 405;
-			}
+			await this.app.DisposeAsync();
 		});
 	}
 

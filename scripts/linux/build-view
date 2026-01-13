@@ -11,7 +11,7 @@ CODE_DIR=$ROOT_DIR/code
 SWHERE_DIR=$CODE_DIR/generate-sharp/soup-view
 
 # Cleanup old publish to work around bug in publish
-rm -r -f $ROOT_DIR/out/msbuild/bin/soup-view/$FLAVOR/net9.0/linux-x64/publish/
+rm -r -f $ROOT_DIR/out/msbuild/bin/soup-view/$FLAVOR/net10.0/linux-x64/publish/
 
 # Build SWhere tool
 echo dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64 --self-contained

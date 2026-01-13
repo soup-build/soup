@@ -11,7 +11,7 @@ Closures: {
 	}
 	Build0: {
 		Wren: {
-			'Soup|CSharp': { Version: 0.16.0 }
+			'Soup|CSharp': { Version: 0.17.0 }
 			'Soup|CSharp.Nuget': { Version: 0.6.0 }
 		}
 	}

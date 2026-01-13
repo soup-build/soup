@@ -14,9 +14,6 @@ namespace Soup.View.ViewModels;
 public class OperationGraphViewModel : ContentPaneViewModel
 {
 	private readonly FileSystemState fileSystemState;
-	private GraphNodeViewModel? selectedNode;
-	private OperationDetailsViewModel? selectedOperation;
-	private IList<GraphNodeViewModel>? graph;
 	private readonly Dictionary<uint, OperationDetailsViewModel> operationDetailsLookup = [];
 
 	public OperationGraphViewModel(FileSystemState fileSystemState)
@@ -26,27 +23,27 @@ public class OperationGraphViewModel : ContentPaneViewModel
 
 	public IList<GraphNodeViewModel>? Graph
 	{
-		get => this.graph;
-		private set => this.RaiseAndSetIfChanged(ref this.graph, value);
+		get;
+		private set => this.RaiseAndSetIfChanged(ref field, value);
 	}
 
 	public GraphNodeViewModel? SelectedNode
 	{
-		get => this.selectedNode;
+		get;
 		set
 		{
-			if (CheckRaiseAndSetIfChanged(ref this.selectedNode, value))
+			if (CheckRaiseAndSetIfChanged(ref field, value))
 			{
-				this.SelectedOperation = this.selectedNode is not null ?
-					this.operationDetailsLookup[this.selectedNode.Id] : null;
+				this.SelectedOperation = field is not null ?
+					this.operationDetailsLookup[field.Id] : null;
 			}
 		}
 	}
 
 	public OperationDetailsViewModel? SelectedOperation
 	{
-		get => this.selectedOperation;
-		set => this.RaiseAndSetIfChanged(ref this.selectedOperation, value);
+		get;
+		set => this.RaiseAndSetIfChanged(ref field, value);
 	}
 
 	public void Load(

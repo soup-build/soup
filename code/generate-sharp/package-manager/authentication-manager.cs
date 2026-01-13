@@ -2,7 +2,7 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright
 
-using IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient;
 using System.Globalization;
 using System.Threading.Tasks;
 

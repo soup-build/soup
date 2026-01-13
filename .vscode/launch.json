@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "",
-      "program": "${workspaceFolder}/out/msbuild/bin/swhere/Debug/net9.0/linux-x64/swhere.dll",
+      "program": "${workspaceFolder}/out/msbuild/bin/swhere/Debug/net10.0/linux-x64/swhere.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
@@ -17,7 +17,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "",
-      "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
+      "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net10.0/linux-x64/SoupView.dll",
       "args": [
         "${workspaceFolder}/code/client/cli/recipe.sml"
       ],
