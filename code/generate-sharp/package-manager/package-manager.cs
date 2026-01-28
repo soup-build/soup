@@ -209,10 +209,7 @@ public class PackageManager
 
 			// Publish the archive
 			Log.Info("Publish package");
-			var packageClient = new Api.Client.PackagesClient(this.httpClient, accessToken)
-			{
-				BaseUrl = this.apiEndpoint,
-			};
+			var packageClient = new Api.Client.PackagesClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			// Check if the package exists
 			bool packageExists = false;
@@ -249,10 +246,7 @@ public class PackageManager
 					createPackageModel);
 			}
 
-			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, accessToken)
-			{
-				BaseUrl = this.apiEndpoint,
-			};
+			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			using (var readArchiveFile = LifetimeManager.Get<IFileSystem>().OpenRead(archivePath))
 			{
@@ -306,10 +300,7 @@ public class PackageManager
 		string ownerName,
 		string packageName)
 	{
-		var client = new Api.Client.PackagesClient(this.httpClient, null)
-		{
-			BaseUrl = this.apiEndpoint,
-		};
+		var client = new Api.Client.PackagesClient(this.httpClient, this.apiEndpoint, null);
 
 		return await client.GetPackageAsync(languageName, ownerName, packageName);
 	}

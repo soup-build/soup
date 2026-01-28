@@ -246,10 +246,7 @@ public class ClosureManager : IClosureManager
 		IList<Api.Client.PackagePublicReferenceModel> publicPackages)
 	{
 		// Publish the archive
-		var packageClient = new Api.Client.ClosureClient(this.httpClient, null)
-		{
-			BaseUrl = this.apiEndpoint,
-		};
+		var packageClient = new Api.Client.ClosureClient(this.httpClient, this.apiEndpoint, null);
 
 		// Pull out the root package
 		var rootPackage = localPackageLookup.Values.First(value => value.Id == rootPackageId);
@@ -796,10 +793,7 @@ public class ClosureManager : IClosureManager
 			Log.HighPriority("Downloading package");
 			var archivePath = stagingDirectory + new Path($"./{packageName}.zip");
 
-			var client = new Api.Client.PackageVersionsClient(this.httpClient, null)
-			{
-				BaseUrl = this.apiEndpoint,
-			};
+			var client = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, null);
 
 			try
 			{

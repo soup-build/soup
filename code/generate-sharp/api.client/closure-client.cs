@@ -22,13 +22,14 @@ public class ClosureClient
 	private readonly HttpClient httpClient;
 	private readonly string? bearerToken;
 
-	public ClosureClient(HttpClient httpClient, string? bearerToken)
+	public ClosureClient(HttpClient httpClient, Uri baseUrl, string? bearerToken)
 	{
 		this.httpClient = httpClient;
+		this.BaseUrl = baseUrl;
 		this.bearerToken = bearerToken;
 	}
 
-	public Uri BaseUrl { get; init; } = new Uri("https://api.soupbuild.com");
+	public Uri BaseUrl { get; init; }
 
 	/// <summary>
 	/// Generate a package closure.
