@@ -204,7 +204,8 @@ public class PackageManager
 
 			// Authenticate the user
 			Log.Info("Request Authentication Token");
-			var accessToken = await LifetimeManager.Get<IAuthenticationManager>().EnsureSignInAsync();
+			var forceRefresh = false;
+			var accessToken = await LifetimeManager.Get<IAuthenticationManager>().EnsureSignInAsync(forceRefresh);
 			var ownerName = "_";
 
 			// Publish the archive
