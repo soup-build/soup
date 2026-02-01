@@ -7,6 +7,7 @@
 #include "initialize-options.h"
 #include "install-options.h"
 #include "publish-options.h"
+#include "release-options.h"
 #include "restore-options.h"
 #include "run-options.h"
 #include "target-options.h"
@@ -121,6 +122,23 @@ namespace Soup::Client
 				Log::Diag("Parse publish");
 
 				auto options = std::make_unique<PublishOptions>();
+
+				// Check for required index argument
+				auto argument = std::string();
+				if (TryGetIndexArgument(unusedArgs, argument))
+				{
+					options->Path = std::move(argument);
+				}
+				
+				options->Verbosity = CheckVerbosity(unusedArgs);
+
+				result = std::move(options);
+			}
+			else if (commandType == "release")
+			{
+				Log::Diag("Parse release");
+
+				auto options = std::make_unique<ReleaseOptions>();
 
 				// Check for required index argument
 				auto argument = std::string();

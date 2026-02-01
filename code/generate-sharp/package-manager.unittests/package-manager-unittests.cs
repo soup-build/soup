@@ -454,7 +454,150 @@ public class PackageManagerUnitTests
 			mockFileSystem.Requests);
 
 		// Verify authentication requests
-		mockAuthenticationManager.Verify(auth => auth.EnsureSignInAsync(), Times.Once());
+		mockAuthenticationManager.Verify(auth => auth.EnsureSignInAsync(false), Times.Once());
+		mockAuthenticationManager.VerifyNoOtherCalls();
+
+		// Verify zip requests
+		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip")), Times.Once());
+		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/MyPackage/recipe.sml"), "recipe.sml"), Times.Once());
+		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
+		mockZipManager.VerifyNoOtherCalls();
+
+		// Verify http requests
+		mockMessageHandler.Verify(messageHandler =>
+			messageHandler.SendAsync(
+				HttpMethod.Get,
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage"),
+				"{Accept: [application/json]}",
+				null),
+			Times.Once());
+		mockMessageHandler.Verify(messageHandler =>
+			messageHandler.SendAsync(
+				HttpMethod.Put,
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
+				"",
+				"ZIP_FILE_CONTENT"),
+			Times.Once());
+
+		mockMessageHandler.VerifyNoOtherCalls();
+	}
+
+	[Fact]
+	public async Task PublishArtifactAsync()
+	{
+		// Register the test listener
+		var testListener = new TestTraceListener();
+		using var scopedTraceListener = new ScopedTraceListenerRegister(testListener);
+
+		// Setup the mock file system
+		var mockFileSystem = new MockFileSystem();
+		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
+
+		using var originalContent = new System.IO.MemoryStream();
+		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(
+			"""
+			Name: 'MyPackage'
+			Language: (C++@0.1)
+			Version: 1.0.0
+			"""));
+		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
+		mockFileSystem.CreateMockFile(
+			new Path("C:/Root/MyPackage/recipe.sml"),
+			new MockFile(originalContent));
+
+		// Pretend that there is a zip file created
+		mockFileSystem.CreateMockFile(
+			new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip"),
+			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("ZIP_FILE_CONTENT"))));
+
+		mockFileSystem.RegisterChildren(
+			new Path("C:/Root/MyPackage/"),
+			[
+				new DirectoryEntry()
+				{
+					Path = new Path("C:/Root/MyPackage/recipe.sml"),
+					IsDirectory = false,
+				},
+			]);
+
+		// Setup the mock authentication manager
+		var mockAuthenticationManager = new Mock<IAuthenticationManager>();
+		using var scopedAuthenticationManager = new ScopedSingleton<IAuthenticationManager>(mockAuthenticationManager.Object);
+
+		// Setup the mock zip manager
+		var mockZipManager = new Mock<IZipManager>();
+		using var scopedZipManager = new ScopedSingleton<IZipManager>(mockZipManager.Object);
+
+		// Create mock archive
+		var mockZipArchive = new Mock<IZipArchive>();
+		_ = mockZipManager.Setup(zip => zip.OpenCreate(It.IsAny<Path>())).Returns(mockZipArchive.Object);
+
+		// Mock out the http
+		var mockMessageHandler = new Mock<IHttpMessageHandler>();
+		using var shimHandler = new ShimHttpMessageHandler(mockMessageHandler.Object);
+		using var httpClient = new HttpClient(shimHandler);
+
+		// Mock out the closure manager
+		var mockClosureManager = new Mock<IClosureManager>(MockBehavior.Strict);
+
+		var uut = new PackageManager(
+			new Uri("https://test.api.soupbuild.com/"),
+			httpClient,
+			mockClosureManager.Object);
+
+		var getPackageResponse = JsonSerializer.Serialize(new Api.Client.PackageModel()
+		{
+			Name = "MyPackage",
+			Owner = "User1",
+			Latest = new Api.Client.SemanticVersion() { Major = 1, Minor = 2, Patch = 3, },
+		});
+		_ = mockMessageHandler
+			.Setup(messageHandler => messageHandler.SendAsync(
+				HttpMethod.Get,
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage"),
+				It.IsAny<string>(),
+				null))
+			.Returns(() => new HttpResponseMessage() { Content = new StringContent(getPackageResponse) });
+		_ = mockMessageHandler
+			.Setup(messageHandler => messageHandler.SendAsync(
+				HttpMethod.Put,
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0/artifacts"),
+				It.IsAny<string>(),
+				It.IsAny<string>()))
+			.Returns(() => new HttpResponseMessage(HttpStatusCode.Created));
+
+		var workingDirectory = new Path("C:/Root/MyPackage/");
+		await uut.PublishArtifactAsync(workingDirectory);
+
+		// Verify expected logs
+		Assert.Equal(
+			[
+				"INFO: Publish Project: C:/Root/MyPackage/",
+				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"INFO: Using Package Store: C:/Users/Me/.soup/packages/",
+				"INFO: Request Authentication Token",
+				"INFO: Publish package",
+				"INFO: Package published",
+				"INFO: Cleanup staging directory",
+			],
+			testListener.Messages);
+
+		// Verify expected file system requests
+		Assert.Equal(
+			[
+				"Exists: C:/Root/MyPackage/recipe.sml",
+				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"GetUserProfileDirectory",
+				"Exists: C:/Users/Me/.soup/packages/.staging/",
+				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
+				"GetChildren: C:/Root/MyPackage/",
+				"OpenRead: C:/Users/Me/.soup/packages/.staging/MyPackage.zip",
+				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
+			],
+			mockFileSystem.Requests);
+
+		// Verify authentication requests
+		mockAuthenticationManager.Verify(auth => auth.EnsureSignInAsync(false), Times.Once());
 		mockAuthenticationManager.VerifyNoOtherCalls();
 
 		// Verify zip requests

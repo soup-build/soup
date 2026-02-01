@@ -1,4 +1,4 @@
-﻿// <copyright file="package-versions-client.cs" company="Soup">
+﻿// <copyright file="package-version-artifacts-client.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -18,14 +18,14 @@ using System.Threading.Tasks;
 namespace Soup.Build.Api.Client;
 
 /// <summary>
-/// The package version client.
+/// The package version artifacts client.
 /// </summary>
-public class PackageVersionsClient
+public class PackageVersionArtifactsClient
 {
 	private readonly HttpClient httpClient;
 	private readonly string? bearerToken;
 
-	public PackageVersionsClient(HttpClient httpClient, Uri baseUri, string? bearerToken)
+	public PackageVersionArtifactsClient(HttpClient httpClient, Uri baseUri, string? bearerToken)
 	{
 		this.httpClient = httpClient;
 		this.BaseUrl = baseUri;
@@ -35,21 +35,24 @@ public class PackageVersionsClient
 	public Uri BaseUrl { get; init; }
 
 	/// <summary>
-	/// Get a package version.
+	/// Get a package artifact.
 	/// </summary>
 	/// <param name="languageName">The name of the language.</param>
 	/// <param name="ownerName">The owner user name.</param>
 	/// <param name="packageName">The unique name of the package.</param>
 	/// <param name="packageVersion">The package version to get.</param>
+	/// <param name="digest">The package artifact to get.</param>
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
-	public virtual Task<PackageVersionModel> GetPackageVersionAsync(
+	public virtual Task<PackageVersionArtifactModel> GetPackageVersionArtfactAsync(
 		string languageName,
 		string ownerName,
 		string packageName,
-		string packageVersion)
+		string packageVersion,
+		string digest)
 	{
-		return GetPackageVersionAsync(languageName, ownerName, packageName, packageVersion, CancellationToken.None);
+		return GetPackageVersionArtifactAsync(
+			languageName, ownerName, packageName, packageVersion, digest, CancellationToken.None);
 	}
 
 	/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -60,19 +63,21 @@ public class PackageVersionsClient
 	/// <param name="ownerName">The owner user name.</param>
 	/// <param name="packageName">The unique name of the package.</param>
 	/// <param name="packageVersion">The package version to get.</param>
+	/// <param name="digest">The package artifact to get.</param>
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
-	public virtual async Task<PackageVersionModel> GetPackageVersionAsync(
+	public virtual async Task<PackageVersionArtifactModel> GetPackageVersionArtifactAsync(
 		string languageName,
 		string ownerName,
 		string packageName,
 		string packageVersion,
+		string digest,
 		CancellationToken cancellationToken)
 	{
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
 			.Append(this.BaseUrl.OriginalString.TrimEnd('/'))
-			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}");
+			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts/{digest}");
 
 		var client = this.httpClient;
 
@@ -91,7 +96,7 @@ public class PackageVersionsClient
 		{
 			var objectResponse = await ReadObjectResponseAsync(
 				response,
-				SourceGenerationContext.Default.PackageVersionModel,
+				SourceGenerationContext.Default.PackageVersionArtifactModel,
 				cancellationToken).ConfigureAwait(false);
 			return objectResponse;
 		}
@@ -103,7 +108,7 @@ public class PackageVersionsClient
 	}
 
 	/// <summary>
-	/// Publish a new version of a package.
+	/// Publish a new artifact of a package.
 	/// </summary>
 	/// <param name="languageName">The name of the language.</param>
 	/// <param name="ownerName">The owner user name.</param>
@@ -112,14 +117,14 @@ public class PackageVersionsClient
 	/// <param name="file">The uploaded file.</param>
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
-	public virtual Task PublishPackageVersionAsync(
+	public virtual Task PublishPackageVersionArtifactAsync(
 		string languageName,
 		string ownerName,
 		string packageName,
 		string packageVersion,
 		FileParameter file)
 	{
-		return PublishPackageVersionAsync(
+		return PublishPackageVersionArtifactAsync(
 			languageName,
 			ownerName,
 			packageName,
@@ -140,7 +145,7 @@ public class PackageVersionsClient
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
 	[SuppressMessage("Style", "IDE0010:Add missing cases", Justification = "Allow default handler")]
-	public virtual async Task PublishPackageVersionAsync(
+	public virtual async Task PublishPackageVersionArtifactAsync(
 		string languageName,
 		string ownerName,
 		string packageName,
@@ -153,7 +158,7 @@ public class PackageVersionsClient
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
 			.Append(this.BaseUrl.OriginalString.TrimEnd('/'))
-			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}");
+			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts");
 
 		var client = this.httpClient;
 
@@ -180,44 +185,49 @@ public class PackageVersionsClient
 	}
 
 	/// <summary>
-	/// Download a package version archive.
+	/// Download a package version artifact.
 	/// </summary>
 	/// <param name="languageName">The name of the language.</param>
 	/// <param name="ownerName">The owner user name.</param>
 	/// <param name="packageName">The unique name of the package.</param>
-	/// <param name="packageVersion">The package version to download.</param>
+	/// <param name="packageVersion">The package version.</param>
+	/// <param name="digest">The package artifact to download.</param>
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
-	public virtual Task<FileResponse> DownloadPackageVersionAsync(
-		string languageName,
-		string ownerName,
-		string packageName,
-		string packageVersion)
-	{
-		return DownloadPackageVersionAsync(languageName, ownerName, packageName, packageVersion, CancellationToken.None);
-	}
-
-	/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-	/// <summary>
-	/// Download a package version archive.
-	/// </summary>
-	/// <param name="languageName">The name of the language.</param>
-	/// <param name="ownerName">The owner user name.</param>
-	/// <param name="packageName">The unique name of the package.</param>
-	/// <param name="packageVersion">The package version to download.</param>
-	/// <returns>The action result.</returns>
-	/// <exception cref="ApiException">A server side error occurred.</exception>
-	public virtual async Task<FileResponse> DownloadPackageVersionAsync(
+	public virtual Task<FileResponse> DownloadPackageVersionArtifactAsync(
 		string languageName,
 		string ownerName,
 		string packageName,
 		string packageVersion,
+		string digest)
+	{
+		return DownloadPackageVersionArtifactAsync(
+			languageName, ownerName, packageName, packageVersion, digest, CancellationToken.None);
+	}
+
+	/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+	/// <summary>
+	/// Download a package version artifact.
+	/// </summary>
+	/// <param name="languageName">The name of the language.</param>
+	/// <param name="ownerName">The owner user name.</param>
+	/// <param name="packageName">The unique name of the package.</param>
+	/// <param name="packageVersion">The package version.</param>
+	/// <param name="digest">The package artifact to download.</param>
+	/// <returns>The action result.</returns>
+	/// <exception cref="ApiException">A server side error occurred.</exception>
+	public virtual async Task<FileResponse> DownloadPackageVersionArtifactAsync(
+		string languageName,
+		string ownerName,
+		string packageName,
+		string packageVersion,
+		string digest,
 		CancellationToken cancellationToken)
 	{
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
 			.Append(this.BaseUrl.OriginalString.TrimEnd('/'))
-			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/download");
+			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts/{digest}/download");
 
 		var client = this.httpClient;
 

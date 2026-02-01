@@ -296,6 +296,134 @@ public class PackageManager
 		}
 	}
 
+	/// <summary>
+	/// Publish an artifact
+	/// </summary>
+	[SuppressMessage("Style", "IDE0010:Add missing cases", Justification = "Allow default fallthrough")]
+	public async Task PublishArtifactAsync(Path workingDirectory)
+	{
+		Log.Info($"Publish Project: {workingDirectory}");
+
+		var recipePath =
+			workingDirectory +
+			BuildConstants.RecipeFileName;
+		var (isSuccess, recipe) = await RecipeExtensions.TryLoadRecipeFromFileAsync(recipePath);
+		if (!isSuccess)
+		{
+			throw new InvalidOperationException($"Could not load the recipe file: {recipePath}");
+		}
+
+		var packageStore = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
+			new Path("./.soup/packages/");
+		Log.Info("Using Package Store: " + packageStore.ToString());
+
+		// Create the staging directory
+		var stagingPath = EnsureStagingDirectoryExists(packageStore);
+
+		try
+		{
+			var archivePath = stagingPath + new Path($"./{recipe.Name}.zip");
+
+			// Create the archive of the package
+			using (var zipArchive = LifetimeManager.Get<IZipManager>().OpenCreate(archivePath))
+			{
+				AddPackageFiles(workingDirectory, zipArchive);
+			}
+
+			// Authenticate the user
+			Log.Info("Request Authentication Token");
+			var forceRefresh = false;
+			var accessToken = await LifetimeManager.Get<IAuthenticationManager>().EnsureSignInAsync(forceRefresh);
+			var ownerName = "_";
+
+			// Publish the archive
+			Log.Info("Publish artifact");
+			var packageClient = new Api.Client.PackagesClient(this.httpClient, this.apiEndpoint, accessToken);
+
+			// Check if the package exists
+			bool packageExists = false;
+			try
+			{
+				var package = await packageClient.GetPackageAsync(recipe.Language.Name, ownerName, recipe.Name);
+				packageExists = true;
+			}
+			catch (Api.Client.ApiException ex)
+			{
+				if (ex.StatusCode == HttpStatusCode.NotFound)
+				{
+					Log.Info("Package does not exist");
+					packageExists = false;
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			// Create the package if it does not exist
+			if (!packageExists)
+			{
+				Log.Info("Creating package");
+				var createPackageModel = new Api.Client.PackageCreateOrUpdateModel()
+				{
+					Description = string.Empty,
+				};
+				_ = await packageClient.CreateOrUpdatePackageAsync(
+					recipe.Language.Name,
+					ownerName,
+					recipe.Name,
+					createPackageModel);
+			}
+
+			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
+
+			using (var readArchiveFile = LifetimeManager.Get<IFileSystem>().OpenRead(archivePath))
+			{
+				try
+				{
+					await packageVersionClient.PublishPackageVersionAsync(
+						recipe.Language.Name,
+						ownerName,
+						recipe.Name,
+						recipe.Version.ToString(),
+						new Api.Client.FileParameter(readArchiveFile.GetInStream(), string.Empty, "application/zip"));
+					Log.Info("Package published");
+				}
+				catch (Api.Client.ApiException ex)
+				{
+					switch (ex.StatusCode)
+					{
+						case HttpStatusCode.BadRequest:
+							if (ex is Api.Client.ApiException<Api.Client.ProblemDetails> problemDetailsEx)
+								Log.Error(problemDetailsEx.Result.Detail ?? "Bad request");
+							else
+								Log.Error("Bad request");
+							break;
+						case HttpStatusCode.Forbidden:
+							Log.Error("You do not have permission to edit this package");
+							break;
+						case HttpStatusCode.Conflict:
+							Log.Info("Package version already exists");
+							break;
+						default:
+							throw;
+					}
+				}
+			}
+
+			// Cleanup the staging directory
+			Log.Info("Cleanup staging directory");
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+		}
+		catch (Exception)
+		{
+			// Cleanup the staging directory and accept that we failed
+			Log.Info("Publish Failed: Cleanup staging directory");
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+			throw;
+		}
+	}
+
 	private async Task<Api.Client.PackageModel> GetPackageModelAsync(
 		string languageName,
 		string ownerName,

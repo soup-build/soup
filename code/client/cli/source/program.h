@@ -134,12 +134,13 @@ namespace Soup::Client
 		static void WriteUsage()
 		{
 			Log::HighPriority("soup <command>:");
-			Log::HighPriority("  build   - Build the target recipe.");
-			Log::HighPriority("  run     - Run the target recipe.");
-			Log::HighPriority("  init    - Initialize wizard for creating a new recipe.");
-			Log::HighPriority("  install - Install a dependency to the target recipes.");
-			Log::HighPriority("  publish - Publish the contents of a recipe to the public feed.");
-			Log::HighPriority("  restore - Install all dependencies required by the target recipe.");
+			Log::HighPriority("  build   - Build the target package.");
+			Log::HighPriority("  run     - Run the target package.");
+			Log::HighPriority("  init    - Initialize wizard for creating a new package.");
+			Log::HighPriority("  install - Install a dependency to the target package.");
+			Log::HighPriority("  publish - Publish the contents of a package to the public feed.");
+			Log::HighPriority("  release - Upload the build artifacts for the target package.");
+			Log::HighPriority("  restore - Install all dependencies required by the target package.");
 			Log::HighPriority("  version - Display the current version of this tool.");
 			Log::HighPriority("  view    - Launch the view tool.");
 		}
