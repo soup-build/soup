@@ -8,6 +8,7 @@
 #include "initialize-command.h"
 #include "install-command.h"
 #include "publish-command.h"
+#include "release-command.h"
 #include "restore-command.h"
 #include "run-command.h"
 #include "target-command.h"
@@ -188,6 +189,14 @@ namespace Soup::Client
 			Log::Diag("Setup PublishCommand");
 			SetupShared(options);
 			return std::make_shared<PublishCommand>(
+				std::move(options));
+		}
+
+		std::shared_ptr<ICommand> Setup(ReleaseOptions options)
+		{
+			Log::Diag("Setup ReleaseCommand");
+			SetupShared(options);
+			return std::make_shared<ReleaseCommand>(
 				std::move(options));
 		}
 
