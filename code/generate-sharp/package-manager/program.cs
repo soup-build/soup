@@ -13,8 +13,8 @@ namespace Soup.Build.PackageManager;
 
 public static class Program
 {
-	private static Uri SoupApiEndpoint => new Uri("https://api.soupbuild.com");
-	// private static Uri SoupApiEndpoint => new Uri("https://api.dev.soupbuild.com");
+	// private static Uri SoupApiEndpoint => new Uri("https://api.soupbuild.com");
+	private static Uri SoupApiEndpoint => new Uri("https://api.dev.soupbuild.com");
 	// private static Uri SoupApiEndpoint => new Uri("https://localhost:7070");
 
 	public static async Task<int> Main(string[] args)
@@ -85,6 +85,18 @@ public static class Program
 						await packageManager.InstallPackageReferenceAsync(workingDirectory, packageReference);
 					}
 					break;
+				case "publish-artifact":
+					{
+						if (args.Length != 3)
+						{
+							PrintUsage();
+							return -1;
+						}
+
+						var targetDirectory = new Path(args[2]);
+						await packageManager.PublishArtifactAsync(workingDirectory, targetDirectory);
+					}
+					break;
 				case "publish-package":
 					{
 						if (args.Length != 2)
@@ -114,6 +126,7 @@ public static class Program
 		Log.Info("Soup.Build.PackageManager.exe [command] [directory]");
 		Log.Info("\tinstall-package [directory] [packageReference]");
 		Log.Info("\trestore-packages [directory]");
+		Log.Info("\tpublish-artifact [working-directory] [target-directory]");
 		Log.Info("\tpublish-package [directory]");
 	}
 }

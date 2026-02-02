@@ -258,16 +258,17 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto workingDirectory = Path("C:/TestLocation");
-			PackageManager::PublishArtifact(workingDirectory);
+			auto targetDirectory = Path("C:/TestLocation/target");
+			PackageManager::PublishArtifact(workingDirectory, targetDirectory);
 
 			Assert::AreEqual(
 				std::vector<std::string>({
 					"INFO: PublishArtifact",
 					"INFO: Running PackageManager",
 					#ifdef _WIN32
-						"DIAG:   C:/testlocation/package-manager/package-manager.exe publish-artifact C:/TestLocation",
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe publish-artifact C:/TestLocation C:/TestLocation/target",
 					#else
-						"DIAG:   C:/lib/soup/package-manager/package-manager publish-artifact C:/TestLocation",
+						"DIAG:   C:/lib/soup/package-manager/package-manager publish-artifact C:/TestLocation C:/TestLocation/target",
 					#endif
 				}),
 				testListener->GetMessages(),
@@ -277,9 +278,9 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"GetCurrentProcessFileName",
 					#ifdef _WIN32
-						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe publish-artifact C:/TestLocation",
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe publish-artifact C:/TestLocation C:/TestLocation/target",
 					#else
-						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager publish-artifact C:/TestLocation",
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager publish-artifact C:/TestLocation C:/TestLocation/target",
 					#endif
 					"ProcessStart: 1",
 					"WaitForExit: 1",

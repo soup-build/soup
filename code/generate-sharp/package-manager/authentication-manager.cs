@@ -11,8 +11,8 @@ namespace Soup.Build.PackageManager;
 
 internal sealed class AuthenticationManager : IAuthenticationManager
 {
-	private const string _authority = "https://auth.soupbuild.com/";
-	// private const string _authority = "https://auth.dev.soupbuild.com/";
+	// private const string _authority = "https://auth.soupbuild.com/";
+	private const string _authority = "https://auth.dev.soupbuild.com/";
 	// private const string _authority = "https://localhost:5001/";
 
 	/// <summary>
@@ -42,7 +42,8 @@ internal sealed class AuthenticationManager : IAuthenticationManager
 			DisablePushedAuthorization = true,
 			LoggerFactory = LoggerFactory.Create(builder =>
 			{
-				_ = builder.AddConsole();
+				// TODO: Add verbose logging
+				// _ = builder.AddConsole();
 			})
 		};
 

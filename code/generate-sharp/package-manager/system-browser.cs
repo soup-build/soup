@@ -6,7 +6,9 @@ using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -123,6 +125,12 @@ public class LoopbackHttpListener : IDisposable
 
 		var builder = WebApplication.CreateBuilder();
 		_ = builder.WebHost.UseUrls(this.Url.ToString());
+
+		_ = builder.Services.AddLogging(builder =>
+		{
+			// Disable logging
+			_ = builder.ClearProviders();
+		});
 
 		this.app = builder.Build();
 

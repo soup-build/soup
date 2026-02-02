@@ -91,7 +91,7 @@ namespace Soup::Core
 		/// <summary>
 		/// Publish a package artifact
 		/// </summary>
-		static void PublishArtifact(const Path& workingDirectory)
+		static void PublishArtifact(const Path& workingDirectory, const Path& targetDirectory)
 		{
 			Log::Info("PublishArtifact");
 
@@ -99,6 +99,7 @@ namespace Soup::Core
 			{
 				"publish-artifact",
 				workingDirectory.ToString(),
+				targetDirectory.ToString(),
 			});
 
 			RunCommand(std::move(arguments));

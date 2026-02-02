@@ -300,9 +300,9 @@ public class PackageManager
 	/// Publish an artifact
 	/// </summary>
 	[SuppressMessage("Style", "IDE0010:Add missing cases", Justification = "Allow default fallthrough")]
-	public async Task PublishArtifactAsync(Path workingDirectory)
+	public async Task PublishArtifactAsync(Path workingDirectory, Path targetDirectory)
 	{
-		Log.Info($"Publish Project: {workingDirectory}");
+		Log.Info($"Publish Artifact: {workingDirectory} {targetDirectory}");
 
 		var recipePath =
 			workingDirectory +
@@ -327,7 +327,7 @@ public class PackageManager
 			// Create the archive of the package
 			using (var zipArchive = LifetimeManager.Get<IZipManager>().OpenCreate(archivePath))
 			{
-				AddPackageFiles(workingDirectory, zipArchive);
+				AddAllFilesRecursive(targetDirectory, targetDirectory, zipArchive);
 			}
 
 			// Authenticate the user
@@ -338,56 +338,25 @@ public class PackageManager
 
 			// Publish the archive
 			Log.Info("Publish artifact");
-			var packageClient = new Api.Client.PackagesClient(this.httpClient, this.apiEndpoint, accessToken);
+			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			// Check if the package exists
-			bool packageExists = false;
-			try
-			{
-				var package = await packageClient.GetPackageAsync(recipe.Language.Name, ownerName, recipe.Name);
-				packageExists = true;
-			}
-			catch (Api.Client.ApiException ex)
-			{
-				if (ex.StatusCode == HttpStatusCode.NotFound)
-				{
-					Log.Info("Package does not exist");
-					packageExists = false;
-				}
-				else
-				{
-					throw;
-				}
-			}
+			var packageVersion = await packageVersionClient.GetPackageVersionAsync(recipe.Language.Name, ownerName, recipe.Name, recipe.Version.ToString());
+			Log.Info("Found package version");
 
-			// Create the package if it does not exist
-			if (!packageExists)
-			{
-				Log.Info("Creating package");
-				var createPackageModel = new Api.Client.PackageCreateOrUpdateModel()
-				{
-					Description = string.Empty,
-				};
-				_ = await packageClient.CreateOrUpdatePackageAsync(
-					recipe.Language.Name,
-					ownerName,
-					recipe.Name,
-					createPackageModel);
-			}
-
-			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
+			var packageArtifactClient = new Api.Client.PackageVersionArtifactsClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			using (var readArchiveFile = LifetimeManager.Get<IFileSystem>().OpenRead(archivePath))
 			{
 				try
 				{
-					await packageVersionClient.PublishPackageVersionAsync(
+					await packageArtifactClient.PublishPackageVersionArtifactAsync(
 						recipe.Language.Name,
 						ownerName,
 						recipe.Name,
 						recipe.Version.ToString(),
 						new Api.Client.FileParameter(readArchiveFile.GetInStream(), string.Empty, "application/zip"));
-					Log.Info("Package published");
+					Log.Info("Artifact published");
 				}
 				catch (Api.Client.ApiException ex)
 				{
@@ -403,7 +372,7 @@ public class PackageManager
 							Log.Error("You do not have permission to edit this package");
 							break;
 						case HttpStatusCode.Conflict:
-							Log.Info("Package version already exists");
+							Log.Info("Artifact version already exists");
 							break;
 						default:
 							throw;
@@ -413,13 +382,13 @@ public class PackageManager
 
 			// Cleanup the staging directory
 			Log.Info("Cleanup staging directory");
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+			//LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 		}
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
 			Log.Info("Publish Failed: Cleanup staging directory");
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+			//LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
 	}
@@ -438,13 +407,14 @@ public class PackageManager
 	{
 		var ignoreFileList = new string[]
 		{
-				"package-lock.sml",
+			"package-lock.sml",
 		};
 		var ignoreFolderList = new string[]
 		{
-				"out",
-				".git",
+			"out",
+			".git",
 		};
+
 		foreach (var child in LifetimeManager.Get<IFileSystem>().GetChildren(workingDirectory))
 		{
 			if (child.IsDirectory)

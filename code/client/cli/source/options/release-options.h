@@ -19,5 +19,17 @@ namespace Soup::Client
 		/// </summary>
 		// [[Args::Option("path", Index = 0, HelpText = "Path to the package to release.")]]
 		std::string Path;
+
+		/// <summary>
+		/// Gets or sets a value indicating what flavor to use
+		/// </summary>
+		// [[Args::Option('f', "flavor", Default = false, HelpText = "Flavor.")]]
+		std::string Flavor;
+
+		/// <summary>
+		/// Gets or sets a value indicating what target architecture
+		/// </summary>
+		// [[Args::Option('a', "architecture", Default = false, HelpText = "Architecture.")]]
+		std::string Architecture;
 	};
 }

@@ -108,7 +108,7 @@ namespace Soup::Client
 				recipeCache);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime -startTime);
+			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 			std::ostringstream durationMessage;
 			if (duration.count() >= 60)
