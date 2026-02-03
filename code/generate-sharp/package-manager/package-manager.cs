@@ -382,13 +382,13 @@ public class PackageManager
 
 			// Cleanup the staging directory
 			Log.Info("Cleanup staging directory");
-			//LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 		}
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
 			Log.Info("Publish Failed: Cleanup staging directory");
-			//LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
 	}

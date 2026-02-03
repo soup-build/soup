@@ -266,6 +266,7 @@ public class ClosureManager : IClosureManager
 					Minor = this.builtInLanguageVersionWren.Minor ?? throw new InvalidOperationException("Built In Language must be fully resolved"),
 					Patch = this.builtInLanguageVersionWren.Patch ?? throw new InvalidOperationException("Built In Language must be fully resolved"),
 				},
+				Digest = "foo",
 			}
 		};
 

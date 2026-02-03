@@ -545,19 +545,16 @@ public class PackageManagerUnitTests
 			httpClient,
 			mockClosureManager.Object);
 
-		var getPackageResponse = JsonSerializer.Serialize(new Api.Client.PackageModel()
+		var getPackageVersionResponse = JsonSerializer.Serialize(new Api.Client.PackageVersionModel()
 		{
-			Name = "MyPackage",
-			Owner = "User1",
-			Latest = new Api.Client.SemanticVersion() { Major = 1, Minor = 2, Patch = 3, },
 		});
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
 				It.IsAny<string>(),
 				null))
-			.Returns(() => new HttpResponseMessage() { Content = new StringContent(getPackageResponse) });
+			.Returns(() => new HttpResponseMessage() { Content = new StringContent(getPackageVersionResponse) });
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Put,
@@ -567,17 +564,19 @@ public class PackageManagerUnitTests
 			.Returns(() => new HttpResponseMessage(HttpStatusCode.Created));
 
 		var workingDirectory = new Path("C:/Root/MyPackage/");
-		await uut.PublishArtifactAsync(workingDirectory);
+		var targetDirectory = new Path("C:/Root/MyPackage/target/");
+		await uut.PublishArtifactAsync(workingDirectory, targetDirectory);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Publish Project: C:/Root/MyPackage/",
+				"INFO: Publish Artifact: C:/Root/MyPackage/ C:/Root/MyPackage/target/",
 				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Using Package Store: C:/Users/Me/.soup/packages/",
 				"INFO: Request Authentication Token",
-				"INFO: Publish package",
-				"INFO: Package published",
+				"INFO: Publish artifact",
+				"INFO: Found package version",
+				"INFO: Artifact published",
 				"INFO: Cleanup staging directory",
 			],
 			testListener.Messages);
@@ -590,7 +589,7 @@ public class PackageManagerUnitTests
 				"GetUserProfileDirectory",
 				"Exists: C:/Users/Me/.soup/packages/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
-				"GetChildren: C:/Root/MyPackage/",
+				"GetChildren: C:/Root/MyPackage/target/",
 				"OpenRead: C:/Users/Me/.soup/packages/.staging/MyPackage.zip",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
 			],
@@ -602,7 +601,6 @@ public class PackageManagerUnitTests
 
 		// Verify zip requests
 		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip")), Times.Once());
-		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/MyPackage/recipe.sml"), "recipe.sml"), Times.Once());
 		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
 		mockZipManager.VerifyNoOtherCalls();
 
@@ -610,14 +608,14 @@ public class PackageManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Put,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0/artifacts"),
 				"",
 				"ZIP_FILE_CONTENT"),
 			Times.Once());
