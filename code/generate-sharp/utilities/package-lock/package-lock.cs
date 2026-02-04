@@ -12,6 +12,7 @@ namespace Soup.Build.Utilities;
 /// </summary>
 public class PackageLock
 {
+	public static string Property_Digest => "Digest";
 	public static string Property_Version => "Version";
 	private static string Property_Closures => "Closures";
 	private static string Property_Build => "Build";
@@ -83,7 +84,7 @@ public class PackageLock
 		string closure,
 		string language,
 		PackageName uniqueName,
-		PackageReference package,
+		ResolvedPackageReference package,
 		string? buildClosure,
 		string? toolClosure)
 	{
@@ -103,6 +104,7 @@ public class PackageLock
 			if (package.Version is null)
 				throw new InvalidOperationException("Missing version on external package reference");
 			projectTable.AddInlineItemWithSyntax(Property_Version, package.Version);
+			projectTable.AddInlineItemWithSyntax(Property_Digest, package.Digest);
 		}
 
 		if (buildClosure != null)

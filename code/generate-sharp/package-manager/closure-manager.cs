@@ -237,9 +237,9 @@ public class ClosureManager : IClosureManager
 
 	[SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "False positive")]
 	private async Task<(
-		IDictionary<string, IDictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>> RuntimeClosure,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> BuildClosures,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> ToolClosures)> GenerateServiceClosureAsync(
+		IDictionary<string, IDictionary<PackageName, (ResolvedPackageReference Package, string BuildClosure, string ToolClosure)>> RuntimeClosure,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedPackageReference>>> BuildClosures,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedPackageReference>>> ToolClosures)> GenerateServiceClosureAsync(
 		int rootPackageId,
 		Dictionary<int, (string Language, string? Owner, string Name, Path Path)> localPackageReverseLookup,
 		IDictionary<Path, Api.Client.PackageLocalReferenceModel> localPackageLookup,
@@ -308,17 +308,18 @@ public class ClosureManager : IClosureManager
 			throw new InvalidOperationException("ToolClosures was null");
 
 		// Convert back to resolved closures
-		var runtimeClosure = new Dictionary<string, IDictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>>();
+		var runtimeClosure = new Dictionary<string, IDictionary<PackageName, (ResolvedPackageReference Package, string BuildClosure, string ToolClosure)>>();
 		foreach (var package in result.RuntimeClosure)
 		{
 			string language;
 			PackageName uniqueName;
-			PackageReference packageReference;
+			ResolvedPackageReference packageReference;
 			if (package.Public is not null)
 			{
 				language = package.Public.Language;
 				var owner = package.Public.Owner;
 				var name = package.Public.Name;
+				var digest = package.Public.Digest;
 
 				// Create unique name from owner/name
 				uniqueName = new PackageName(owner, name);
@@ -327,14 +328,14 @@ public class ClosureManager : IClosureManager
 					package.Public.Version.Major,
 					package.Public.Version.Minor,
 					package.Public.Version.Patch);
-				packageReference = new PackageReference(owner, language, name, version);
+				packageReference = new ResolvedPackageReference(owner, language, name, version, digest);
 			}
 			else if (package.LocalId is not null)
 			{
 				var localReference = localPackageReverseLookup[package.LocalId.Value];
 				language = localReference.Language;
 				uniqueName = new PackageName(localReference.Owner, localReference.Name);
-				packageReference = new PackageReference(localReference.Path);
+				packageReference = new ResolvedPackageReference(localReference.Path);
 			}
 			else
 			{
@@ -345,7 +346,7 @@ public class ClosureManager : IClosureManager
 			{
 				runtimeClosure.Add(
 					language,
-					new Dictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>());
+					new Dictionary<PackageName, (ResolvedPackageReference Package, string BuildClosure, string ToolClosure)>());
 			}
 
 			if (runtimeClosure[language].ContainsKey(uniqueName))
@@ -354,20 +355,21 @@ public class ClosureManager : IClosureManager
 				runtimeClosure[language].Add(uniqueName, (packageReference, package.Build, package.Tool));
 		}
 
-		var buildClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>>();
+		var buildClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedPackageReference>>>();
 		foreach (var (closureName, closure) in result.BuildClosures)
 		{
-			var buildClosure = new Dictionary<string, IDictionary<PackageName, PackageReference>>();
+			var buildClosure = new Dictionary<string, IDictionary<PackageName, ResolvedPackageReference>>();
 			foreach (var package in closure)
 			{
 				string language;
 				PackageName uniqueName;
-				PackageReference packageReference;
+				ResolvedPackageReference packageReference;
 				if (package.Public is not null)
 				{
 					language = package.Public.Language;
 					var owner = package.Public.Owner;
 					var name = package.Public.Name;
+					var digest = package.Public.Digest;
 
 					// Create unique name from owner/name
 					uniqueName = new PackageName(owner, name);
@@ -376,14 +378,14 @@ public class ClosureManager : IClosureManager
 						package.Public.Version.Major,
 						package.Public.Version.Minor,
 						package.Public.Version.Patch);
-					packageReference = new PackageReference(language, owner, name, version);
+					packageReference = new ResolvedPackageReference(language, owner, name, version, digest);
 				}
 				else if (package.LocalId is not null)
 				{
 					var localReference = localPackageReverseLookup[package.LocalId.Value];
 					language = localReference.Language;
 					uniqueName = new PackageName(localReference.Owner, localReference.Name);
-					packageReference = new PackageReference(localReference.Path);
+					packageReference = new ResolvedPackageReference(localReference.Path);
 				}
 				else
 				{
@@ -391,7 +393,7 @@ public class ClosureManager : IClosureManager
 				}
 
 				if (!buildClosure.ContainsKey(language))
-					buildClosure.Add(language, new Dictionary<PackageName, PackageReference>());
+					buildClosure.Add(language, new Dictionary<PackageName, ResolvedPackageReference>());
 
 				buildClosure[language].Add(uniqueName, packageReference);
 			}
@@ -399,20 +401,21 @@ public class ClosureManager : IClosureManager
 			buildClosures.Add(closureName, buildClosure);
 		}
 
-		var toolClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>>();
+		var toolClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedPackageReference>>>();
 		foreach (var (closureName, closure) in result.ToolClosures)
 		{
-			var toolClosure = new Dictionary<string, IDictionary<PackageName, PackageReference>>();
+			var toolClosure = new Dictionary<string, IDictionary<PackageName, ResolvedPackageReference>>();
 			foreach (var package in closure)
 			{
 				string language;
 				PackageName uniqueName;
-				PackageReference packageReference;
+				ResolvedPackageReference packageReference;
 				if (package.Public is not null)
 				{
 					language = package.Public.Language;
 					var owner = package.Public.Owner;
 					var name = package.Public.Name;
+					var digest = package.Public.Digest;
 
 					// Create unique name from owner/name
 					uniqueName = new PackageName(owner, name);
@@ -421,14 +424,14 @@ public class ClosureManager : IClosureManager
 						package.Public.Version.Major,
 						package.Public.Version.Minor,
 						package.Public.Version.Patch);
-					packageReference = new PackageReference(language, owner, name, version);
+					packageReference = new ResolvedPackageReference(language, owner, name, version, digest);
 				}
 				else if (package.LocalId is not null)
 				{
 					var localReference = localPackageReverseLookup[package.LocalId.Value];
 					language = localReference.Language;
 					uniqueName = new PackageName(localReference.Owner, localReference.Name);
-					packageReference = new PackageReference(localReference.Path);
+					packageReference = new ResolvedPackageReference(localReference.Path);
 				}
 				else
 				{
@@ -436,7 +439,7 @@ public class ClosureManager : IClosureManager
 				}
 
 				if (!toolClosure.ContainsKey(language))
-					toolClosure.Add(language, new Dictionary<PackageName, PackageReference>());
+					toolClosure.Add(language, new Dictionary<PackageName, ResolvedPackageReference>());
 
 				toolClosure[language].Add(uniqueName, packageReference);
 			}
@@ -449,9 +452,9 @@ public class ClosureManager : IClosureManager
 
 	private static PackageLock BuildPackageLock(
 		Path workingDirectory,
-		IDictionary<string, IDictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>> runtimeClosure,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> buildClosures,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> toolClosures)
+		IDictionary<string, IDictionary<PackageName, (ResolvedPackageReference Package, string BuildClosure, string ToolClosure)>> runtimeClosure,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedPackageReference>>> buildClosures,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedPackageReference>>> toolClosures)
 	{
 		var packageLock = new PackageLock();
 		packageLock.SetVersion(PackageLockVersion);
