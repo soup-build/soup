@@ -149,6 +149,18 @@ namespace Soup::Client
 				
 				options->Verbosity = CheckVerbosity(unusedArgs);
 
+				auto flavorValue = std::string();
+				if (TryGetValueArgument("flavor", unusedArgs, flavorValue))
+				{
+					options->Flavor = std::move(flavorValue);
+				}
+
+				auto architectureValue = std::string();
+				if (TryGetValueArgument("architecture", unusedArgs, architectureValue))
+				{
+					options->Architecture = std::move(architectureValue);
+				}
+
 				result = std::move(options);
 			}
 			else if (commandType == "restore")

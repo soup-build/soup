@@ -6,6 +6,7 @@ using Opal;
 using Opal.System;
 using Soup.Build.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
@@ -290,7 +291,7 @@ public class PackageManager
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
-			Log.Info("Publish Failed: Cleanup staging directory");
+			Log.Info("Publish Package Failed: Cleanup staging directory");
 			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
@@ -312,6 +313,21 @@ public class PackageManager
 		{
 			throw new InvalidOperationException($"Could not load the recipe file: {recipePath}");
 		}
+
+		// Load the generate input so we can pass along context
+		var soupTargetDirectory = targetDirectory + new Path("./.soup/");
+		var generateInputFile = soupTargetDirectory + BuildConstants.GenerateInputFileName;
+		ValueTable generateInput;
+		if (ValueTableManager.TryLoadState(generateInputFile, out var loadGenerateInput))
+		{
+			generateInput = loadGenerateInput;
+		}
+		else
+		{
+			throw new InvalidOperationException($"Failed to load generate input {generateInputFile}");
+		}
+
+		var globalState = generateInput["GlobalState"].AsTable();
 
 		var packageStore = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
 			new Path("./.soup/packages/");
@@ -344,6 +360,12 @@ public class PackageManager
 			var packageVersion = await packageVersionClient.GetPackageVersionAsync(recipe.Language.Name, ownerName, recipe.Name, recipe.Version.ToString());
 			Log.Info("Found package version");
 
+			var createPackageModel = new Api.Client.PackageVersionArtifactPublishContentModel()
+			{
+				Context = ConvertToDictionary(globalState["Context"].AsTable(), ["PackageDirectory", "TargetDirectory"]),
+				Parameters = ConvertToDictionary(globalState["Parameters"].AsTable(), []),
+			};
+
 			var packageArtifactClient = new Api.Client.PackageVersionArtifactsClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			using (var readArchiveFile = LifetimeManager.Get<IFileSystem>().OpenRead(archivePath))
@@ -355,7 +377,8 @@ public class PackageManager
 						ownerName,
 						recipe.Name,
 						recipe.Version.ToString(),
-						new Api.Client.FileParameter(readArchiveFile.GetInStream(), string.Empty, "application/zip"));
+						new Api.Client.FileParameter(readArchiveFile.GetInStream(), string.Empty, "application/zip"),
+						createPackageModel);
 					Log.Info("Artifact published");
 				}
 				catch (Api.Client.ApiException ex)
@@ -387,7 +410,7 @@ public class PackageManager
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
-			Log.Info("Publish Failed: Cleanup staging directory");
+			Log.Info("Publish Artifact Failed: Cleanup staging directory");
 			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
@@ -471,5 +494,36 @@ public class PackageManager
 		LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingDirectory);
 
 		return stagingDirectory;
+	}
+
+	private static Dictionary<string, string> ConvertToDictionary(
+		ValueTable table, IList<string> ignore)
+	{
+		var result = new Dictionary<string, string>();
+
+		foreach (var value in table)
+		{
+			if (!ignore.Contains(value.Key))
+			{
+				switch (value.Value.Type)
+				{
+					case Utilities.ValueType.String:
+						result.Add(value.Key, value.Value.AsString());
+						break;
+					case Utilities.ValueType.Table:
+					case Utilities.ValueType.List:
+					case Utilities.ValueType.Integer:
+					case Utilities.ValueType.Float:
+					case Utilities.ValueType.Boolean:
+					case Utilities.ValueType.Version:
+					case Utilities.ValueType.PackageReference:
+					case Utilities.ValueType.LanguageReference:
+					default:
+						throw new InvalidOperationException($"Cannot convert type {value.Value.Type}");
+				}
+			}
+		}
+
+		return result;
 	}
 }

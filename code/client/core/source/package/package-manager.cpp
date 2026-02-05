@@ -91,7 +91,9 @@ namespace Soup::Core
 		/// <summary>
 		/// Publish a package artifact
 		/// </summary>
-		static void PublishArtifact(const Path& workingDirectory, const Path& targetDirectory)
+		static void PublishArtifact(
+			const Path& workingDirectory,
+			const Path& targetDirectory)
 		{
 			Log::Info("PublishArtifact");
 

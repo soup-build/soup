@@ -114,7 +114,8 @@ public class PackageVersionArtifactsClient
 	/// <param name="ownerName">The owner user name.</param>
 	/// <param name="packageName">The unique name of the package.</param>
 	/// <param name="packageVersion">The package version to publish.</param>
-	/// <param name="file">The uploaded file.</param>
+	/// <param name="archive">The uploaded file.</param>
+	/// <param name="model">The uploaded model.</param>
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
 	public virtual Task PublishPackageVersionArtifactAsync(
@@ -122,14 +123,16 @@ public class PackageVersionArtifactsClient
 		string ownerName,
 		string packageName,
 		string packageVersion,
-		FileParameter file)
+		FileParameter archive,
+		PackageVersionArtifactPublishContentModel model)
 	{
 		return PublishPackageVersionArtifactAsync(
 			languageName,
 			ownerName,
 			packageName,
 			packageVersion,
-			file,
+			archive,
+			model,
 			CancellationToken.None);
 	}
 
@@ -141,7 +144,8 @@ public class PackageVersionArtifactsClient
 	/// <param name="ownerName">The owner user name.</param>
 	/// <param name="packageName">The unique name of the package.</param>
 	/// <param name="packageVersion">The package version to publish.</param>
-	/// <param name="file">The uploaded file.</param>
+	/// <param name="archive">The uploaded file.</param>
+	/// <param name="model">The uploaded model.</param>
 	/// <returns>The action result.</returns>
 	/// <exception cref="ApiException">A server side error occurred.</exception>
 	[SuppressMessage("Style", "IDE0010:Add missing cases", Justification = "Allow default handler")]
@@ -150,10 +154,11 @@ public class PackageVersionArtifactsClient
 		string ownerName,
 		string packageName,
 		string packageVersion,
-		FileParameter file,
+		FileParameter archive,
+		PackageVersionArtifactPublishContentModel model,
 		CancellationToken cancellationToken)
 	{
-		ArgumentNullException.ThrowIfNull(file.ContentType);
+		ArgumentNullException.ThrowIfNull(archive.ContentType);
 
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
@@ -163,9 +168,17 @@ public class PackageVersionArtifactsClient
 		var client = this.httpClient;
 
 		using var request = await CreateHttpRequestMessageAsync().ConfigureAwait(false);
-		using var content = new StreamContent(file.Data);
 
-		content.Headers.ContentType = MediaTypeHeaderValue.Parse(file.ContentType);
+		using var archiveContent = new StreamContent(archive.Data);
+		using var modelContent = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+		using var content = new MultipartFormDataContent()
+		{
+			// file
+			{ archiveContent, "data.Archive", "archive.zip" },
+			// payload
+			{ modelContent, "data.Model" },
+		};
+
 		request.Content = content;
 		request.Method = new HttpMethod("PUT");
 
@@ -180,6 +193,7 @@ public class PackageVersionArtifactsClient
 			case HttpStatusCode.Created:
 				break;
 			default:
+				Console.WriteLine(await response.Content.ReadAsStringAsync(cancellationToken));
 				throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
 		}
 	}
