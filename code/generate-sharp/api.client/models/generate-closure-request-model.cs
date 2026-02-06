@@ -46,4 +46,12 @@ public class GenerateClosureRequestModel
 	[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
 	[Required]
 	public ICollection<PackagePublicExactReferenceModel> PreferredVersions { get; init; } = [];
+
+	/// <summary>
+	/// Gets or sets the artifact build configuration.
+	/// </summary>
+	[JsonPropertyName("artifactBuildConfiguration")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+	[Required]
+	public required BuildConfigurationModel ArtifactBuildConfiguration { get; set; }
 }

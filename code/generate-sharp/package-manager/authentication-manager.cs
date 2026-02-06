@@ -5,7 +5,6 @@
 using Duende.IdentityModel.OidcClient;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Soup.Build.PackageManager;
@@ -13,8 +12,8 @@ namespace Soup.Build.PackageManager;
 internal sealed class AuthenticationManager : IAuthenticationManager
 {
 	// private const string _authority = "https://auth.soupbuild.com/";
-	// private const string _authority = "https://auth.dev.soupbuild.com/";
-	private const string _authority = "https://localhost:5001/";
+	private const string _authority = "https://auth.dev.soupbuild.com/";
+	// private const string _authority = "https://localhost:5001/";
 
 	/// <summary>
 	/// Ensure the user is logged in
@@ -46,15 +45,15 @@ internal sealed class AuthenticationManager : IAuthenticationManager
 				// TODO: Add verbose logging
 				// _ = builder.AddConsole();
 			}),
-			HttpClientFactory = (options) =>
-			{
-				var handler = new HttpClientHandler()
-				{
-					// Ignore SSL
-					ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-				};
-				return new HttpClient(handler);
-			}
+			// HttpClientFactory = (options) =>
+			// {
+			// 	var handler = new HttpClientHandler()
+			// 	{
+			// 		// Ignore SSL
+			// 		ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+			// 	};
+			// 	return new HttpClient(handler);
+			// }
 		};
 
 		var oidcClient = new OidcClient(options);

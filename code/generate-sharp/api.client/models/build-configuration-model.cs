@@ -1,4 +1,4 @@
-﻿// <copyright file="package-create-or-update-model.cs" company="Soup">
+﻿// <copyright file="build-configuration-model.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -9,7 +9,7 @@ namespace Soup.Build.Api.Client;
 /// <summary>
 /// A container for the package creation or update request.
 /// </summary>
-public class PackageVersionArtifactPublishContentModel
+public class BuildConfigurationModel
 {
 	/// <summary>
 	/// Gets or sets the context.

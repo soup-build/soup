@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using Opal;
 
 namespace Soup.Build.Api.Client;
 
@@ -168,6 +169,7 @@ public class PackagesClient
 		}
 		else
 		{
+			Log.Error(await response.Content.ReadAsStringAsync(cancellationToken));
 			throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
 		}
 	}

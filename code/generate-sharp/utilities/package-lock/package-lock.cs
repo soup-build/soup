@@ -12,6 +12,7 @@ namespace Soup.Build.Utilities;
 /// </summary>
 public class PackageLock
 {
+	public static string Property_Artifact => "Artifact";
 	public static string Property_Digest => "Digest";
 	public static string Property_Version => "Version";
 	private static string Property_Closures => "Closures";
@@ -84,7 +85,7 @@ public class PackageLock
 		string closure,
 		string language,
 		PackageName uniqueName,
-		ResolvedPackageReference package,
+		ResolvedRuntimePackageReference package,
 		string? buildClosure,
 		string? toolClosure)
 	{
@@ -105,6 +106,51 @@ public class PackageLock
 				throw new InvalidOperationException("Missing version on external package reference");
 			projectTable.AddInlineItemWithSyntax(Property_Version, package.Version);
 			projectTable.AddInlineItemWithSyntax(Property_Digest, package.Digest);
+		}
+
+		if (buildClosure != null)
+		{
+			projectTable.AddInlineItemWithSyntax(Property_Build, buildClosure);
+		}
+
+		if (toolClosure != null)
+		{
+			projectTable.AddInlineItemWithSyntax(Property_Tool, toolClosure);
+		}
+	}
+
+	public void AddProject(
+		Path workingDirectory,
+		string closure,
+		string language,
+		PackageName uniqueName,
+		ResolvedBuildPackageReference package,
+		string? buildClosure,
+		string? toolClosure)
+	{
+		var closures = EnsureHasTable(this.Document, Property_Closures);
+		var closureTable = EnsureHasTable(closures, closure, 1);
+		var projectLanguageTable = EnsureHasTable(closureTable, language, 2);
+
+		var projectTable = projectLanguageTable.AddInlineTableWithSyntax(uniqueName.ToString(), 3);
+
+		if (package.IsLocal)
+		{
+			var relativePath = package.Path.GetRelativeTo(workingDirectory);
+			projectTable.AddInlineItemWithSyntax(Property_Version, relativePath.ToString());
+		}
+		else
+		{
+			if (package.Version is null)
+				throw new InvalidOperationException("Missing version on external package reference");
+			projectTable.AddInlineItemWithSyntax(Property_Version, package.Version);
+			projectTable.AddInlineItemWithSyntax(Property_Digest, package.Digest);
+
+			if (package.ArtifactDigest is not null)
+			{
+				var artifactTable = projectTable.AddInlineTableWithSyntax(Property_Artifact, 2);
+				artifactTable.AddInlineItemWithSyntax(Property_Digest, package.ArtifactDigest);
+			}
 		}
 
 		if (buildClosure != null)

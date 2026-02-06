@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using Opal;
 
 namespace Soup.Build.Api.Client;
 
@@ -124,7 +125,7 @@ public class PackageVersionArtifactsClient
 		string packageName,
 		string packageVersion,
 		FileParameter archive,
-		PackageVersionArtifactPublishContentModel model)
+		BuildConfigurationModel model)
 	{
 		return PublishPackageVersionArtifactAsync(
 			languageName,
@@ -155,7 +156,7 @@ public class PackageVersionArtifactsClient
 		string packageName,
 		string packageVersion,
 		FileParameter archive,
-		PackageVersionArtifactPublishContentModel model,
+		BuildConfigurationModel model,
 		CancellationToken cancellationToken)
 	{
 		ArgumentNullException.ThrowIfNull(archive.ContentType);
@@ -193,7 +194,7 @@ public class PackageVersionArtifactsClient
 			case HttpStatusCode.Created:
 				break;
 			default:
-				Console.WriteLine(await response.Content.ReadAsStringAsync(cancellationToken));
+				Log.Error(await response.Content.ReadAsStringAsync(cancellationToken));
 				throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
 		}
 	}

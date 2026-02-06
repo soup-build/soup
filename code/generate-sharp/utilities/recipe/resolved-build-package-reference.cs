@@ -12,46 +12,50 @@ namespace Soup.Build;
 /// A resolved package reference object which will consist of a name version pair that
 /// refers to a published package or a path to a local recipe
 /// </summary>
-public partial class ResolvedPackageReference : IEquatable<ResolvedPackageReference>
+public partial class ResolvedBuildPackageReference : IEquatable<ResolvedBuildPackageReference>
 {
 	private readonly PackageIdentifier? packageIdentifier;
 	private readonly SemanticVersion? version;
 #pragma warning disable IDE0032 // Use auto property
 	private readonly string? digest;
+	private readonly string? artifactDigest;
 #pragma warning restore IDE0032 // Use auto property
 	private readonly Path? path;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ResolvedPackageReference"/> class.
+	/// Initializes a new instance of the <see cref="ResolvedBuildPackageReference"/> class.
 	/// </summary>
-	public ResolvedPackageReference()
+	public ResolvedBuildPackageReference()
 	{
 		this.packageIdentifier = null;
 		this.version = null;
 		this.digest = null;
+		this.artifactDigest = null;
 		this.path = null;
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ResolvedPackageReference"/> class.
+	/// Initializes a new instance of the <see cref="ResolvedBuildPackageReference"/> class.
 	/// </summary>
-	public ResolvedPackageReference(
+	public ResolvedBuildPackageReference(
 		string? language,
 		string? owner,
 		string name,
 		SemanticVersion version,
-		string digest)
+		string digest,
+		string? artifactDigest)
 	{
 		this.packageIdentifier = new PackageIdentifier(language, owner, name);
 		this.version = version;
 		this.digest = digest;
+		this.artifactDigest = artifactDigest;
 		this.path = null;
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ResolvedPackageReference"/> class.
+	/// Initializes a new instance of the <see cref="ResolvedBuildPackageReference"/> class.
 	/// </summary>
-	public ResolvedPackageReference(Path path)
+	public ResolvedBuildPackageReference(Path path)
 	{
 		this.packageIdentifier = null;
 		this.version = null;
@@ -130,6 +134,17 @@ public partial class ResolvedPackageReference : IEquatable<ResolvedPackageRefere
 	}
 
 	/// <summary>
+	/// Gets or sets the artifact digest.
+	/// </summary>
+	public string? ArtifactDigest
+	{
+		get
+		{
+			return this.artifactDigest;
+		}
+	}
+
+	/// <summary>
 	/// Gets or sets the Path.
 	/// </summary>
 	public Path Path
@@ -145,7 +160,7 @@ public partial class ResolvedPackageReference : IEquatable<ResolvedPackageRefere
 	/// <summary>
 	/// Equality operator
 	/// </summary>
-	public bool Equals(ResolvedPackageReference? other)
+	public bool Equals(ResolvedBuildPackageReference? other)
 	{
 		if (other is null)
 			return false;
@@ -156,7 +171,7 @@ public partial class ResolvedPackageReference : IEquatable<ResolvedPackageRefere
 
 	public override bool Equals(object? obj)
 	{
-		return Equals(obj as ResolvedPackageReference);
+		return Equals(obj as ResolvedBuildPackageReference);
 	}
 
 	public override int GetHashCode()
@@ -167,12 +182,12 @@ public partial class ResolvedPackageReference : IEquatable<ResolvedPackageRefere
 		return identifierHash + versionHash + pathHash;
 	}
 
-	public static bool operator ==(ResolvedPackageReference? lhs, ResolvedPackageReference? rhs)
+	public static bool operator ==(ResolvedBuildPackageReference? lhs, ResolvedBuildPackageReference? rhs)
 	{
 		return lhs is null ? rhs is null : lhs.Equals(rhs);
 	}
 
-	public static bool operator !=(ResolvedPackageReference? lhs, ResolvedPackageReference? rhs)
+	public static bool operator !=(ResolvedBuildPackageReference? lhs, ResolvedBuildPackageReference? rhs)
 	{
 		return !(lhs == rhs);
 	}

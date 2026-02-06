@@ -360,7 +360,7 @@ public class PackageManager
 			var packageVersion = await packageVersionClient.GetPackageVersionAsync(recipe.Language.Name, ownerName, recipe.Name, recipe.Version.ToString());
 			Log.Info("Found package version");
 
-			var createPackageModel = new Api.Client.PackageVersionArtifactPublishContentModel()
+			var createPackageModel = new Api.Client.BuildConfigurationModel()
 			{
 				Context = ConvertToDictionary(globalState["Context"].AsTable(), ["PackageDirectory", "TargetDirectory"]),
 				Parameters = ConvertToDictionary(globalState["Parameters"].AsTable(), []),

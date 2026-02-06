@@ -14,8 +14,8 @@ namespace Soup.Build.PackageManager;
 public static class Program
 {
 	// private static Uri SoupApiEndpoint => new Uri("https://api.soupbuild.com");
-	// private static Uri SoupApiEndpoint => new Uri("https://api.dev.soupbuild.com");
-	private static Uri SoupApiEndpoint => new Uri("https://localhost:7070");
+	private static Uri SoupApiEndpoint => new Uri("https://api.dev.soupbuild.com");
+	// private static Uri SoupApiEndpoint => new Uri("https://localhost:7070");
 
 	public static async Task<int> Main(string[] args)
 	{
@@ -41,12 +41,12 @@ public static class Program
 			var command = args[0];
 			var workingDirectory = new Path(args[1]);
 
-			using var handler = new HttpClientHandler()
-			{
-				// Ignore SSL
-				ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-			};
-			var httpClient = new HttpClient(handler);
+			// using var handler = new HttpClientHandler()
+			// {
+			// 	// Ignore SSL
+			// 	ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+			// };
+			var httpClient = new HttpClient();
 			SemanticVersion minimumLanguageVersionCpp = new SemanticVersion(0, 16, 0);
 			SemanticVersion builtInLanguageVersionWren = new SemanticVersion(0, 5, 4);
 			var closureManager = new ClosureManager(
