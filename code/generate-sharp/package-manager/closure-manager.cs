@@ -270,16 +270,10 @@ public class ClosureManager : IClosureManager
 			}
 		};
 
-		var artifactBuildConfiguration = new Api.Client.BuildConfigurationModel()
+		var artifactHostPlatforms = new List<string>()
 		{
-			Context = new Dictionary<string, string>()
-			{
-				{ "HostPlatform", "Linux" },
-			},
-			Parameters = new Dictionary<string, string>()
-			{
-				{ "Flavor", "Release" },
-			},
+			"Linux",
+			"Windows",
 		};
 
 		var generateClosureRequest = new Api.Client.GenerateClosureRequestModel()
@@ -288,7 +282,7 @@ public class ClosureManager : IClosureManager
 			LocalPackages = localPackages,
 			PublicPackages = publicPackages,
 			PreferredVersions = preferredVersions,
-			ArtifactBuildConfiguration = artifactBuildConfiguration,
+			ArtifactHostPlatforms = artifactHostPlatforms,
 		};
 
 		Api.Client.GenerateClosureResultModel result;
@@ -383,7 +377,7 @@ public class ClosureManager : IClosureManager
 					var owner = package.Public.Owner;
 					var name = package.Public.Name;
 					var digest = package.Public.Digest;
-					var artifactDigest = package.Artifact?.Digest;
+					var artifacts = package.Artifacts?.ToDictionary(entity => entity.Key, entity => entity.Value.Digest);
 
 					// Create unique name from owner/name
 					uniqueName = new PackageName(owner, name);
@@ -393,7 +387,7 @@ public class ClosureManager : IClosureManager
 						package.Public.Version.Minor,
 						package.Public.Version.Patch);
 					packageReference = new ResolvedBuildPackageReference(
-						language, owner, name, version, digest, artifactDigest);
+						language, owner, name, version, digest, artifacts);
 				}
 				else if (package.LocalId is not null)
 				{
@@ -431,7 +425,7 @@ public class ClosureManager : IClosureManager
 					var owner = package.Public.Owner;
 					var name = package.Public.Name;
 					var digest = package.Public.Digest;
-					var artifactDigest = package.Artifact?.Digest;
+					var artifacts = package.Artifacts?.ToDictionary(entity => entity.Key, entity => entity.Value.Digest);
 
 					// Create unique name from owner/name
 					uniqueName = new PackageName(owner, name);
@@ -441,7 +435,7 @@ public class ClosureManager : IClosureManager
 						package.Public.Version.Minor,
 						package.Public.Version.Patch);
 					packageReference = new ResolvedBuildPackageReference(
-						language, owner, name, version, digest, artifactDigest);
+						language, owner, name, version, digest, artifacts);
 				}
 				else if (package.LocalId is not null)
 				{

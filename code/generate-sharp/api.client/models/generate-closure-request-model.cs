@@ -48,10 +48,10 @@ public class GenerateClosureRequestModel
 	public ICollection<PackagePublicExactReferenceModel> PreferredVersions { get; init; } = [];
 
 	/// <summary>
-	/// Gets or sets the artifact build configuration.
+	/// Gets or sets the list of artfact host platforms to resolve
 	/// </summary>
-	[JsonPropertyName("artifactBuildConfiguration")]
+	[JsonPropertyName("artifactHostPlatforms")]
 	[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
 	[Required]
-	public required BuildConfigurationModel ArtifactBuildConfiguration { get; set; }
+	public required IList<string> ArtifactHostPlatforms { get; init; }
 }

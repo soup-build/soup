@@ -2,6 +2,7 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Soup.Build.Api.Client;
@@ -26,9 +27,9 @@ public class PackageBuildDependencyReferenceModel
 	public PackagePublicExactReferenceModel? Public { get; set; }
 
 	/// <summary>
-	/// Gets or sets the artifact reference.
+	/// Gets or sets the artifact references for each host.
 	/// </summary>
-	[JsonPropertyName("artifact")]
+	[JsonPropertyName("artifacts")]
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-	public PackageArtifactReferenceModel? Artifact { get; set; }
+	public Dictionary<string, PackageArtifactReferenceModel>? Artifacts { get; init; }
 }

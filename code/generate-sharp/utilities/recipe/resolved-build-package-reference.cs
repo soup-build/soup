@@ -4,6 +4,7 @@
 
 using Opal;
 using System;
+using System.Collections.Generic;
 using Path = Opal.Path;
 
 namespace Soup.Build;
@@ -18,7 +19,7 @@ public partial class ResolvedBuildPackageReference : IEquatable<ResolvedBuildPac
 	private readonly SemanticVersion? version;
 #pragma warning disable IDE0032 // Use auto property
 	private readonly string? digest;
-	private readonly string? artifactDigest;
+	private readonly Dictionary<string, string>? artifactDigests;
 #pragma warning restore IDE0032 // Use auto property
 	private readonly Path? path;
 
@@ -30,7 +31,7 @@ public partial class ResolvedBuildPackageReference : IEquatable<ResolvedBuildPac
 		this.packageIdentifier = null;
 		this.version = null;
 		this.digest = null;
-		this.artifactDigest = null;
+		this.artifactDigests = null;
 		this.path = null;
 	}
 
@@ -43,12 +44,12 @@ public partial class ResolvedBuildPackageReference : IEquatable<ResolvedBuildPac
 		string name,
 		SemanticVersion version,
 		string digest,
-		string? artifactDigest)
+		Dictionary<string, string>? artifactDigests)
 	{
 		this.packageIdentifier = new PackageIdentifier(language, owner, name);
 		this.version = version;
 		this.digest = digest;
-		this.artifactDigest = artifactDigest;
+		this.artifactDigests = artifactDigests;
 		this.path = null;
 	}
 
@@ -134,13 +135,13 @@ public partial class ResolvedBuildPackageReference : IEquatable<ResolvedBuildPac
 	}
 
 	/// <summary>
-	/// Gets or sets the artifact digest.
+	/// Gets or sets the artifact digests.
 	/// </summary>
-	public string? ArtifactDigest
+	public Dictionary<string, string>? ArtifactDigests
 	{
 		get
 		{
-			return this.artifactDigest;
+			return this.artifactDigests;
 		}
 	}
 

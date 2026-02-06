@@ -12,7 +12,7 @@ namespace Soup.Build.Utilities;
 /// </summary>
 public class PackageLock
 {
-	public static string Property_Artifact => "Artifact";
+	public static string Property_Artifacts => "Artifacts";
 	public static string Property_Digest => "Digest";
 	public static string Property_Version => "Version";
 	private static string Property_Closures => "Closures";
@@ -132,7 +132,9 @@ public class PackageLock
 		var closureTable = EnsureHasTable(closures, closure, 1);
 		var projectLanguageTable = EnsureHasTable(closureTable, language, 2);
 
-		var projectTable = projectLanguageTable.AddInlineTableWithSyntax(uniqueName.ToString(), 3);
+		var projectTable = package.IsLocal ?
+			projectLanguageTable.AddInlineTableWithSyntax(uniqueName.ToString(), 3) :
+			projectLanguageTable.AddTableWithSyntax(uniqueName.ToString(), 3);
 
 		if (package.IsLocal)
 		{
@@ -143,13 +145,18 @@ public class PackageLock
 		{
 			if (package.Version is null)
 				throw new InvalidOperationException("Missing version on external package reference");
-			projectTable.AddInlineItemWithSyntax(Property_Version, package.Version);
-			projectTable.AddInlineItemWithSyntax(Property_Digest, package.Digest);
 
-			if (package.ArtifactDigest is not null)
+			projectTable.AddItemWithSyntax(Property_Version, package.Version, 4);
+			projectTable.AddItemWithSyntax(Property_Digest, package.Digest, 4);
+
+			if (package.ArtifactDigests is not null && package.ArtifactDigests.Count > 0)
 			{
-				var artifactTable = projectTable.AddInlineTableWithSyntax(Property_Artifact, 2);
-				artifactTable.AddInlineItemWithSyntax(Property_Digest, package.ArtifactDigest);
+
+				var artifactTable = projectTable.AddTableWithSyntax(Property_Artifacts, 4);
+				foreach (var (hostPlatform, digest) in package.ArtifactDigests)
+				{
+					artifactTable.AddItemWithSyntax(hostPlatform, digest, 5);
+				}
 			}
 		}
 

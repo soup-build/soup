@@ -364,22 +364,33 @@ public static partial class SMLExtensions
 		document.Values.Add(key, CreateTableValue(key, newValue));
 	}
 
-	public static void AddItemWithSyntax(this SMLTable table, string key, long value)
+	public static void AddItemWithSyntax(this SMLTable table, string key, SemanticVersion value, int indentLevel)
 	{
+		var indent = string.Concat(Enumerable.Repeat(Indent, indentLevel));
+
+		// If this is the first item then place it on a newline
+		List<string> leadingTrivia =
+		[
+			indent,
+		];
+
 		// Create a new item and matching syntax
-		var newValue = new SMLValue(new SMLIntegerValue(value));
+		var newValue = new SMLValue(new SMLVersionValue(value));
 
 		// Tables items should be on newline
-		var keyToken = new SMLToken(EnsureSafeKey(key));
+		var keyToken = new SMLToken(EnsureSafeKey(key))
+		{
+			LeadingTrivia = leadingTrivia,
+		};
 
 		// Add the model to the parent table model
 		table.Values.Add(key, CreateTableValue(keyToken, newValue));
 	}
 
-	public static void AddItemWithSyntax(this SMLTable table, string key, string value)
+	public static void AddItemWithSyntax(this SMLTable table, string key, long value)
 	{
 		// Create a new item and matching syntax
-		var newValue = new SMLValue(new SMLStringValue(value));
+		var newValue = new SMLValue(new SMLIntegerValue(value));
 
 		// Tables items should be on newline
 		var keyToken = new SMLToken(EnsureSafeKey(key));
