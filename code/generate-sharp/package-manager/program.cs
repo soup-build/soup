@@ -6,6 +6,7 @@ using Opal;
 using Opal.System;
 using System;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Path = Opal.Path;
 
@@ -41,6 +42,20 @@ public static class Program
 			var command = args[0];
 			var workingDirectory = new Path(args[1]);
 
+			string hostPlatform;
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				hostPlatform = "Windows";
+			}
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			{
+				hostPlatform = "Linux";
+			}
+			else
+			{
+				throw new NotSupportedException("Unknown OS Platform");
+			}
+
 			// using var handler = new HttpClientHandler()
 			// {
 			// 	// Ignore SSL
@@ -52,7 +67,8 @@ public static class Program
 			var closureManager = new ClosureManager(
 				SoupApiEndpoint,
 				httpClient,
-				builtInLanguageVersionWren);
+				builtInLanguageVersionWren,
+				hostPlatform);
 			var packageManager = new PackageManager(
 				SoupApiEndpoint,
 				httpClient,

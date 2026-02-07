@@ -28,6 +28,7 @@ public class ClosureManager : IClosureManager
 	private const string BuiltInOwner = "Soup";
 	private const string DependencyTypeBuild = "Build";
 	private const string DependencyTypeTool = "Tool";
+	private const string ArtifactsTableName = "Artifacts";
 
 	private readonly Uri apiEndpoint;
 
@@ -35,14 +36,18 @@ public class ClosureManager : IClosureManager
 
 	private readonly SemanticVersion builtInLanguageVersionWren;
 
+	private readonly string hostPlatform;
+
 	public ClosureManager(
 		Uri apiEndpoint,
 		HttpClient httpClient,
-		SemanticVersion builtInLanguageVersionWren)
+		SemanticVersion builtInLanguageVersionWren,
+		string hostPlatform)
 	{
 		this.apiEndpoint = apiEndpoint;
 		this.httpClient = httpClient;
 		this.builtInLanguageVersionWren = builtInLanguageVersionWren;
+		this.hostPlatform = hostPlatform;
 	}
 
 	/// <summary>
@@ -766,18 +771,20 @@ public class ClosureManager : IClosureManager
 		}
 	}
 
-	private static bool TryGetArtifactDigest(SMLTable packageTable, [MaybeNullWhen(false)] out string digest)
+	private bool TryGetArtifactDigest(SMLTable packageTable, [MaybeNullWhen(false)] out string digest)
 	{
-		if (packageTable.Values.ContainsKey("test"))
+		if (packageTable.Values.TryGetValue(ArtifactsTableName, out var hostPlatformTableValue))
 		{
-			digest = "1234";
-			return true;
+			var hostPlatformTable = hostPlatformTableValue.Value.AsTable();
+			if (hostPlatformTable.Values.TryGetValue(this.hostPlatform, out var platformArtifact))
+			{
+				digest = platformArtifact.Value.AsString().Value;
+				return true;
+			}
 		}
-		else
-		{
-			digest = null;
-			return false;
-		}
+
+		digest = null;
+		return false;
 	}
 
 	private static bool TryGetAsVersion(SMLValue value, out SemanticVersion version)

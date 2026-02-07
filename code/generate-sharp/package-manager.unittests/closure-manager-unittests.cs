@@ -39,6 +39,10 @@ public class ClosureManagerUnitTests
 				Version: 1.0.0
 				"""))));
 
+		// Setup the mock zip manager
+		var mockZipManager = new Mock<IZipManager>();
+		using var scopedZipManager = new ScopedSingleton<IZipManager>(mockZipManager.Object);
+
 		// Mock out the http
 		var mockMessageHandler = new Mock<IHttpMessageHandler>();
 		using var shimHandler = new ShimHttpMessageHandler(mockMessageHandler.Object);
@@ -71,7 +75,11 @@ public class ClosureManagerUnitTests
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "sha256:abcdefg",
-							}
+							},
+							Artifacts = new Dictionary<string, Api.Client.PackageArtifactReferenceModel>()
+							{
+								{ "FakePlatform", new Api.Client.PackageArtifactReferenceModel() { Digest = "sha256:abcdefg" } }
+							},
 						},
 					}
 				}
@@ -96,10 +104,19 @@ public class ClosureManagerUnitTests
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult)),
 			});
 
+		_ = mockMessageHandler
+			.Setup(messageHandler => messageHandler.SendAsync(
+				HttpMethod.Get,
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/Soup/Wren/versions/4.5.6/artifacts/sha256:abcdefg/download"),
+				It.IsAny<string>(),
+				null))
+			.Returns(() => new HttpResponseMessage());
+
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -124,8 +141,8 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: MyPackage -> ./",
 				"INFO: Restore Packages for Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
-				"HIGH: Skip built in language version in build closure",
+				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Downloading artifact",
 				"INFO: Restore Packages for Closure Tool0",
 				"HIGH: Skip built in language version in build closure",
 			],
@@ -138,6 +155,13 @@ public class ClosureManagerUnitTests
 				"Exists: C:/Root/MyPackage/recipe.sml",
 				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/sha256:abcdefg/",
+				"OpenWriteTruncate: C:/Staging/Wren.zip",
+				"CreateDirectory: C:/Staging/Wren_Wren_4.5.6/",
+				"DeleteFile: C:/Staging/Wren.zip",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/",
+				"CreateDirectory: C:/ArtifactStore/Wren/Soup/Wren/",
+				"Rename: [C:/Staging/Wren_Wren_4.5.6/] -> [C:/ArtifactStore/Wren/Soup/Wren/sha256:abcdefg/]",
 			],
 			mockFileSystem.Requests);
 
@@ -177,6 +201,13 @@ public class ClosureManagerUnitTests
 				"{Accept: [application/json]}",
 				expectedGenerateRequestValue),
 			Times.Once());
+		mockMessageHandler.Verify(messageHandler =>
+			messageHandler.SendAsync(
+				HttpMethod.Get,
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/Soup/Wren/versions/4.5.6/artifacts/sha256:abcdefg/download"),
+				"{Accept: [application/json]}",
+				null),
+			Times.Once());
 
 		mockMessageHandler.VerifyNoOtherCalls();
 
@@ -199,6 +230,9 @@ public class ClosureManagerUnitTests
 						'Soup|Wren': {
 							Version: 4.5.6
 							Digest: 'sha256:abcdefg'
+							Artifacts: {
+								FakePlatform: 'sha256:abcdefg'
+							}
 						}
 					}
 				}
@@ -276,7 +310,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		_ = await Assert.ThrowsAsync<HandledException>(async () =>
 		{
@@ -508,7 +543,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -889,7 +925,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -1534,7 +1571,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -2182,7 +2220,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -2602,7 +2641,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -3070,7 +3110,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
@@ -3281,7 +3322,8 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6));
+			new SemanticVersion(4, 5, 6),
+			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
 			new Path("C:/Root/MyPackage/"),
