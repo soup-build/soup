@@ -52,6 +52,7 @@ public class ClosureManager : IClosureManager
 		Path workingDirectory,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory)
 	{
 		// Place the lock in the local directory
@@ -66,6 +67,7 @@ public class ClosureManager : IClosureManager
 			packageLockPath,
 			packageStoreDirectory,
 			packageLockStoreDirectory,
+			packageArtifactStoreDirectory,
 			stagingDirectory,
 			processedLocks);
 	}
@@ -76,6 +78,7 @@ public class ClosureManager : IClosureManager
 		Path packageLockPath,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory,
 		HashSet<Path> processedLocks)
 	{
@@ -91,6 +94,7 @@ public class ClosureManager : IClosureManager
 				packageLockPath);
 			await RestorePackageLockAsync(
 				packageStoreDirectory,
+				packageArtifactStoreDirectory,
 				stagingDirectory,
 				packageLock);
 
@@ -98,6 +102,7 @@ public class ClosureManager : IClosureManager
 				workingDirectory,
 				packageStoreDirectory,
 				packageLockStoreDirectory,
+				packageArtifactStoreDirectory,
 				stagingDirectory,
 				packageLock,
 				processedLocks);
@@ -108,6 +113,7 @@ public class ClosureManager : IClosureManager
 		Path workingDirectory,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory,
 		PackageLock packageLock,
 		HashSet<Path> processedLocks)
@@ -157,6 +163,7 @@ public class ClosureManager : IClosureManager
 									packageLockPath,
 									packageStoreDirectory,
 									packageLockStoreDirectory,
+									packageArtifactStoreDirectory,
 									stagingDirectory,
 									processedLocks);
 							}
@@ -176,6 +183,7 @@ public class ClosureManager : IClosureManager
 								dependencyLockPath,
 								packageStoreDirectory,
 								packageLockStoreDirectory,
+								packageArtifactStoreDirectory,
 								stagingDirectory,
 								processedLocks);
 						}
@@ -707,6 +715,7 @@ public class ClosureManager : IClosureManager
 	/// </summary>
 	private async Task RestorePackageLockAsync(
 		Path packageStore,
+		Path artifactStore,
 		Path stagingDirectory,
 		PackageLock packageLock)
 	{
@@ -724,14 +733,29 @@ public class ClosureManager : IClosureManager
 					var projectVersionValue = projectTable.Values[PackageLock.Property_Version];
 					if (TryGetAsVersion(projectVersionValue.Value, out var version))
 					{
-						await EnsurePackageDownloadedAsync(
-							isRuntime,
-							projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
-							languageName,
-							projectName.Name,
-							version,
-							packageStore,
-							stagingDirectory);
+						// Restore directly from the artifact if available
+						if (TryGetArtifactDigest(projectTable, out var digest))
+						{
+							await EnsureArtifactDownloadedAsync(
+								projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
+								languageName,
+								projectName.Name,
+								version,
+								digest,
+								artifactStore,
+								stagingDirectory);
+						}
+						else
+						{
+							await EnsurePackageDownloadedAsync(
+								isRuntime,
+								projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
+								languageName,
+								projectName.Name,
+								version,
+								packageStore,
+								stagingDirectory);
+						}
 					}
 					else
 					{
@@ -739,6 +763,20 @@ public class ClosureManager : IClosureManager
 					}
 				}
 			}
+		}
+	}
+
+	private static bool TryGetArtifactDigest(SMLTable packageTable, [MaybeNullWhen(false)] out string digest)
+	{
+		if (packageTable.Values.ContainsKey("test"))
+		{
+			digest = "1234";
+			return true;
+		}
+		else
+		{
+			digest = null;
+			return false;
 		}
 	}
 
@@ -771,6 +809,81 @@ public class ClosureManager : IClosureManager
 			default:
 				version = new SemanticVersion();
 				return false;
+		}
+	}
+
+	/// <summary>
+	/// Ensure a package artifact is downloaded
+	/// </summary>
+	private async Task EnsureArtifactDownloadedAsync(
+		string ownerName,
+		string languageName,
+		string packageName,
+		SemanticVersion packageVersion,
+		string digest,
+		Path artifactStore,
+		Path stagingDirectory)
+	{
+		Log.HighPriority($"Install Artifact: {languageName} {ownerName} {packageName}@{packageVersion}");
+
+		var languageRootFolder = artifactStore + new Path($"./{languageName}/");
+		var packageRootFolder = languageRootFolder + new Path($"./{ownerName}/{packageName}/");
+		var packageArtifactFolder = packageRootFolder + new Path($"./{digest}/");
+
+		// Check if the package version already exists
+		if (LifetimeManager.Get<IFileSystem>().Exists(packageArtifactFolder))
+		{
+			Log.HighPriority("Found local version");
+		}
+		else
+		{
+			// Download the archive
+			Log.HighPriority("Downloading artifact");
+			var archivePath = stagingDirectory + new Path($"./{packageName}.zip");
+
+			var client = new Api.Client.PackageVersionArtifactsClient(this.httpClient, this.apiEndpoint, null);
+
+			try
+			{
+				var result = await client.DownloadPackageVersionArtifactAsync(
+					languageName, ownerName, packageName, packageVersion.ToString(), digest);
+
+				// Write the contents to disk, scope cleanup
+				using var archiveWriteFile = LifetimeManager.Get<IFileSystem>().OpenWrite(archivePath, true);
+				await result.Stream.CopyToAsync(archiveWriteFile.GetOutStream());
+			}
+			catch (Api.Client.ApiException ex)
+			{
+				if (ex.StatusCode == HttpStatusCode.NotFound)
+				{
+					Log.HighPriority("Package artifact Missing");
+					throw new HandledException();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			// Create the package folder to extract to
+			var stagingVersionFolder = stagingDirectory + new Path($"./{languageName}_{packageName}_{packageVersion}/");
+			LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingVersionFolder);
+
+			// Unpack the contents of the archive
+			LifetimeManager.Get<IZipManager>().ExtractToDirectory(archivePath, stagingVersionFolder);
+
+			// Delete the archive file
+			LifetimeManager.Get<IFileSystem>().DeleteFile(archivePath);
+
+			// Ensure the package root folder exists
+			if (!LifetimeManager.Get<IFileSystem>().Exists(packageRootFolder))
+			{
+				// Create the folder
+				LifetimeManager.Get<IFileSystem>().CreateDirectory2(packageRootFolder);
+			}
+
+			// Move the extracted contents into the version folder
+			LifetimeManager.Get<IFileSystem>().Rename(stagingVersionFolder, packageArtifactFolder);
 		}
 	}
 

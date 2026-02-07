@@ -56,13 +56,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				}
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -76,11 +76,11 @@ public class ClosureManagerUnitTests
 					}
 				}
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
 		};
@@ -90,7 +90,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult)),
@@ -105,6 +105,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -166,6 +167,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequestValue = JsonSerializer.Serialize(expectedGenerateRequest);
 		mockMessageHandler.Verify(messageHandler =>
@@ -194,7 +196,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -248,7 +253,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":3,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Runtime":[1,2]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}},{"id":2,"language":"Wren","owner":"User1","name":"Package2","version":{"major":3,"minor":2,"patch":1}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":3,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Runtime":[1,2]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}},{"id":2,"language":"Wren","owner":"User1","name":"Package2","version":{"major":3,"minor":2,"patch":1}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult)),
@@ -279,6 +284,7 @@ public class ClosureManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/PackageStore/"),
 				new Path("C:/LockStore/"),
+				new Path("C:/ArtifactStore/"),
 				new Path("C:/Staging/"));
 		});
 
@@ -358,6 +364,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequestValue = JsonSerializer.Serialize(expectedGenerateRequest);
 		mockMessageHandler.Verify(messageHandler =>
@@ -444,13 +451,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -464,11 +471,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -478,7 +485,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":3,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Runtime":[1,2]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}},{"id":2,"language":"Wren","owner":"User1","name":"Package2","version":{"major":3,"minor":2,"patch":1}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":3,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Runtime":[1,2]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}},{"id":2,"language":"Wren","owner":"User1","name":"Package2","version":{"major":3,"minor":2,"patch":1}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult)),
@@ -507,6 +514,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -594,7 +602,7 @@ public class ClosureManagerUnitTests
 							2,
 						}
 					},
-				}
+				},
 			},
 			LocalPackages = [],
 			PublicPackages =
@@ -627,6 +635,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequestValue = JsonSerializer.Serialize(expectedGenerateRequest);
 		mockMessageHandler.Verify(messageHandler =>
@@ -665,13 +674,16 @@ public class ClosureManagerUnitTests
 				Root: {
 					Wren: {
 						MyPackage: { Version: './', Build: 'Build0', Tool: 'Tool0' }
-						'User1|Package1': { Version: 1.2.3, Build: 'Build0', Tool: 'Tool0' }
-						'User1|Package2': { Version: 3.2.1, Build: 'Build0', Tool: 'Tool0' }
+						'User1|Package1': { Version: 1.2.3, Digest: 'sha256:abcdefg', Build: 'Build0', Tool: 'Tool0' }
+						'User1|Package2': { Version: 3.2.1, Digest: 'sha256:abcdefg', Build: 'Build0', Tool: 'Tool0' }
 					}
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -747,13 +759,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -764,7 +776,7 @@ public class ClosureManagerUnitTests
 								Digest = "sha256:abcdefg",
 							}
 						},
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -778,11 +790,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -798,13 +810,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -818,11 +830,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -832,7 +844,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":2,"language":{"name":"C\u002B\u002B","version":{"major":5}},"dependencies":{"Build":[1]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":2,"language":{"name":"C\u002B\u002B","version":{"major":5}},"dependencies":{"Build":[1]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult1)),
@@ -843,7 +855,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":4}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":4}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult2)),
@@ -883,6 +895,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -1038,6 +1051,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest1Value = JsonSerializer.Serialize(expectedGenerateRequest1);
 		mockMessageHandler.Verify(messageHandler =>
@@ -1073,6 +1087,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest2Value = JsonSerializer.Serialize(expectedGenerateRequest2);
 		mockMessageHandler.Verify(messageHandler =>
@@ -1116,8 +1131,14 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Cpp': { Version: 5.0.0 }
-						'User1|Package1': { Version: 1.2.3 }
+						'Soup|Cpp': {
+							Version: 5.0.0
+							Digest: 'sha256:abcdefg'
+						}
+						'User1|Package1': {
+							Version: 1.2.3
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -1143,7 +1164,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -1169,7 +1193,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -1259,13 +1286,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -1276,7 +1303,7 @@ public class ClosureManagerUnitTests
 					Digest = "sha256:abcdefg",
 							}
 						},
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -1290,11 +1317,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -1310,13 +1337,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -1330,11 +1357,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -1350,13 +1377,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -1370,13 +1397,13 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -1403,13 +1430,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -1423,11 +1450,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -1437,7 +1464,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":2,"language":{"name":"C\u002B\u002B","version":{"major":5}},"dependencies":{"Build":[1]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":2,"language":{"name":"C\u002B\u002B","version":{"major":5}},"dependencies":{"Build":[1]}},"localPackages":[],"publicPackages":[{"id":1,"language":"Wren","owner":"User1","name":"Package1","version":{"major":1,"minor":2,"patch":3}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult1)),
@@ -1448,7 +1475,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult2)),
@@ -1459,7 +1486,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":2,"language":{"name":"Wren","version":{"major":6}},"dependencies":{"Tool":[1]}},"localPackages":[],"publicPackages":[{"id":1,"language":"C\u002B\u002B","owner":"User1","name":"Package2","version":{"major":2,"minor":3,"patch":4}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":2,"language":{"name":"Wren","version":{"major":6}},"dependencies":{"Tool":[1]}},"localPackages":[],"publicPackages":[{"id":1,"language":"C\u002B\u002B","owner":"User1","name":"Package2","version":{"major":2,"minor":3,"patch":4}}],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult3)),
@@ -1470,7 +1497,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult4)),
@@ -1513,6 +1540,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -1711,6 +1739,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest1Value = JsonSerializer.Serialize(expectedGenerateRequest1);
 		mockMessageHandler.Verify(messageHandler =>
@@ -1746,6 +1775,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest2Value = JsonSerializer.Serialize(expectedGenerateRequest2);
 		mockMessageHandler.Verify(messageHandler =>
@@ -1800,6 +1830,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest3Value = JsonSerializer.Serialize(expectedGenerateRequest3);
 		mockMessageHandler.Verify(messageHandler =>
@@ -1835,6 +1866,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest4Value = JsonSerializer.Serialize(expectedGenerateRequest4);
 		mockMessageHandler.Verify(messageHandler =>
@@ -1885,8 +1917,14 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Cpp': { Version: 5.0.0 }
-						'User1|Package1': { Version: 1.2.3 }
+						'Soup|Cpp': {
+							Version: 5.0.0
+							Digest: 'sha256:abcdefg'
+						}
+						'User1|Package1': {
+							Version: 1.2.3
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -1912,12 +1950,18 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
 					'C++': {
-						'User1|Package2': { Version: 2.3.4 }
+						'User1|Package2': {
+							Version: 2.3.4
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 			}
@@ -1940,7 +1984,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Cpp': { Version: 5.0.0 }
+						'Soup|Cpp': {
+							Version: 5.0.0
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -1966,7 +2013,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -2029,13 +2079,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				}
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -2046,18 +2096,18 @@ public class ClosureManagerUnitTests
 					Digest = "sha256:abcdefg",
 							}
 						},
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							LocalId = 1,
 						},
 					}
 				}
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
 		};
@@ -2073,13 +2123,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				}
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -2093,11 +2143,11 @@ public class ClosureManagerUnitTests
 					}
 				}
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
 		};
@@ -2107,7 +2157,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":2,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Build":[1]}},"localPackages":[{"id":1,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{}}],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":2,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Build":[1]}},"localPackages":[{"id":1,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{}}],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult1)),
@@ -2123,7 +2173,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult2)),
@@ -2138,6 +2188,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -2246,6 +2297,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest1Value = JsonSerializer.Serialize(expectedGenerateRequest1);
 		mockMessageHandler.Verify(messageHandler =>
@@ -2281,6 +2333,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest2Value = JsonSerializer.Serialize(expectedGenerateRequest2);
 		mockMessageHandler.Verify(messageHandler =>
@@ -2309,7 +2362,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 						Package1: { Version: '../Package1/' }
 					}
 				}
@@ -2336,7 +2392,10 @@ public class ClosureManagerUnitTests
 				}
 				Build0: {
 					Wren: {
-						'Soup|Wren': { Version: 4.5.6 }
+						'Soup|Wren': {
+							Version: 4.5.6
+							Digest: 'sha256:abcdefg'
+						}
 					}
 				}
 				Tool0: {
@@ -2422,26 +2481,26 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				}
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							LocalId = 2,
 						},
 					}
 				}
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							LocalId = 1,
 						},
@@ -2462,18 +2521,18 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				}
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
 		};
@@ -2490,18 +2549,18 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				}
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				}
 			},
 		};
@@ -2512,7 +2571,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":3,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Build":[2]}},"localPackages":[{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5,"minor":0}},"dependencies":{}},{"id":2,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{"Tool":[1]}}],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":3,"language":{"name":"Wren","version":{"major":3,"minor":2}},"dependencies":{"Build":[2]}},"localPackages":[{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5,"minor":0}},"dependencies":{}},{"id":2,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{"Tool":[1]}}],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult1)),
@@ -2523,7 +2582,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":2,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{"Tool":[1]}},"localPackages":[{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5,"minor":0}},"dependencies":{}}],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":2,"language":{"name":"Wren","version":{"major":4,"minor":5}},"dependencies":{"Tool":[1]}},"localPackages":[{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5,"minor":0}},"dependencies":{}}],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult2)),
@@ -2534,7 +2593,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5,"minor":0}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"C\u002B\u002B","version":{"major":5,"minor":0}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult3)),
@@ -2549,6 +2608,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -2692,6 +2752,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest1Value = JsonSerializer.Serialize(expectedGenerateRequest1);
 		mockMessageHandler.Verify(messageHandler =>
@@ -2748,6 +2809,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest2Value = JsonSerializer.Serialize(expectedGenerateRequest2);
 		mockMessageHandler.Verify(messageHandler =>
@@ -2783,6 +2845,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest3Value = JsonSerializer.Serialize(expectedGenerateRequest3);
 		mockMessageHandler.Verify(messageHandler =>
@@ -2964,13 +3027,13 @@ public class ClosureManagerUnitTests
 					Tool = "Tool0",
 				},
 			],
-			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			BuildClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Build0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 					{
-						new Api.Client.PackageLocalOrPublicExactReferenceModel()
+						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
@@ -2984,11 +3047,11 @@ public class ClosureManagerUnitTests
 					}
 				},
 			},
-			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageLocalOrPublicExactReferenceModel>>()
+			ToolClosures = new Dictionary<string, ICollection<Api.Client.PackageBuildDependencyReferenceModel>>()
 			{
 				{
 					"Tool0",
-					new List<Api.Client.PackageLocalOrPublicExactReferenceModel>()
+					new List<Api.Client.PackageBuildDependencyReferenceModel>()
 				},
 			},
 		};
@@ -2998,7 +3061,7 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				It.IsAny<string>(),
 				/*lang=json,strict*/
-				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":1,"minor":2}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}]}"""))
+				"""{"rootPackage":{"id":1,"language":{"name":"Wren","version":{"major":1,"minor":2}},"dependencies":{}},"localPackages":[],"publicPackages":[],"preferredVersions":[{"language":"Wren","owner":"Soup","name":"Wren","version":{"major":4,"minor":5,"patch":6},"digest":"foo"}],"artifactHostPlatforms":["Linux","Windows"]}"""))
 			.Returns(() => new HttpResponseMessage()
 			{
 				Content = new StringContent(JsonSerializer.Serialize(generateClosureResult)),
@@ -3013,6 +3076,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs
@@ -3129,6 +3193,7 @@ public class ClosureManagerUnitTests
 					Digest = "foo",
 				},
 			],
+			ArtifactHostPlatforms = ["Linux", "Windows"],
 		};
 		var expectedGenerateRequest1Value = JsonSerializer.Serialize(expectedGenerateRequest1);
 		mockMessageHandler.Verify(messageHandler =>
@@ -3222,6 +3287,7 @@ public class ClosureManagerUnitTests
 			new Path("C:/Root/MyPackage/"),
 			new Path("C:/PackageStore/"),
 			new Path("C:/LockStore/"),
+			new Path("C:/ArtifactStore/"),
 			new Path("C:/Staging/"));
 
 		// Verify expected logs

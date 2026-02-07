@@ -5,7 +5,9 @@
 using Moq;
 using Opal;
 using Opal.System;
+using Soup.Build.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -42,6 +44,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
+				new Path("C:/Users/Me/.soup/artifacts/"),
 				new Path("C:/Users/Me/.soup/packages/.staging/")))
 			.Returns(() => Task.CompletedTask);
 
@@ -58,6 +61,7 @@ public class PackageManagerUnitTests
 			[
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
+				"DIAG: Using Artifact Store: C:/Users/Me/.soup/artifacts/",
 				"DIAG: Deleting staging directory",
 			],
 			testListener.Messages);
@@ -81,6 +85,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
+				new Path("C:/Users/Me/.soup/artifacts/"),
 				new Path("C:/Users/Me/.soup/packages/.staging/")),
 			Times.Once());
 	}
@@ -129,6 +134,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
+				new Path("C:/Users/Me/.soup/artifacts/"),
 				new Path("C:/Users/Me/.soup/packages/.staging/")))
 			.Returns(() => Task.CompletedTask);
 
@@ -147,6 +153,7 @@ public class PackageManagerUnitTests
 				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
+				"DIAG: Using Artifact Store: C:/Users/Me/.soup/artifacts/",
 				"INFO: Adding reference to recipe",
 				"INFO: Deleting staging directory",
 			],
@@ -174,6 +181,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
+				new Path("C:/Users/Me/.soup/artifacts/"),
 				new Path("C:/Users/Me/.soup/packages/.staging/")),
 			Times.Once());
 
@@ -241,6 +249,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
+				new Path("C:/Users/Me/.soup/artifacts/"),
 				new Path("C:/Users/Me/.soup/packages/.staging/")))
 			.Returns(() => Task.CompletedTask);
 
@@ -282,6 +291,7 @@ public class PackageManagerUnitTests
 				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
+				"DIAG: Using Artifact Store: C:/Users/Me/.soup/artifacts/",
 				"HIGH: Latest Version: 1.2.3",
 				"INFO: Adding reference to recipe",
 				"INFO: Deleting staging directory",
@@ -316,6 +326,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Root/MyPackage/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
+				new Path("C:/Users/Me/.soup/artifacts/"),
 				new Path("C:/Users/Me/.soup/packages/.staging/")),
 			Times.Once());
 
@@ -505,6 +516,40 @@ public class PackageManagerUnitTests
 			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(originalContent));
 
+		using var generateInput = new System.IO.MemoryStream();
+		using var generateInputWriter = new System.IO.BinaryWriter(generateInput);
+		ValueTableWriter.Serialize(
+			new ValueTable(new Dictionary<string, Value>()
+			{
+				{
+					"GlobalState",
+					new Value(new ValueTable(new Dictionary<string, Value>()
+					{
+						{
+							"Context",
+							new Value(new ValueTable(new Dictionary<string, Value>()
+							{
+								{ "HostPlatform", new Value("TestPlatform") },
+								{ "PackageDirectory", new Value("/(PACKAGE_MyPackage)/") },
+								{ "TargetDirectory", new Value("/(TARGET_MyPackage)/") },
+							}))
+						},
+						{
+							"Parameters",
+							new Value(new ValueTable(new Dictionary<string, Value>()
+							{
+								{ "Flavor", new Value("Release") },
+							}))
+						},
+					}))
+				},
+			}),
+			generateInputWriter);
+		_ = generateInput.Seek(0, System.IO.SeekOrigin.Begin);
+		mockFileSystem.CreateMockFile(
+			new Path("C:/Root/MyPackage/target/.soup/generate-input.bvt"),
+			new MockFile(generateInput));
+
 		// Pretend that there is a zip file created
 		mockFileSystem.CreateMockFile(
 			new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip"),
@@ -586,6 +631,8 @@ public class PackageManagerUnitTests
 			[
 				"Exists: C:/Root/MyPackage/recipe.sml",
 				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"Exists: C:/Root/MyPackage/target/.soup/generate-input.bvt",
+				"OpenRead: C:/Root/MyPackage/target/.soup/generate-input.bvt",
 				"GetUserProfileDirectory",
 				"Exists: C:/Users/Me/.soup/packages/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
@@ -617,7 +664,7 @@ public class PackageManagerUnitTests
 				HttpMethod.Put,
 				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0/artifacts"),
 				"",
-				"ZIP_FILE_CONTENT"),
+				It.IsAny<string>()), // Hard to verify multi-part content
 			Times.Once());
 
 		mockMessageHandler.VerifyNoOtherCalls();

@@ -48,9 +48,11 @@ public class PackageManager
 		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
 		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
 		var lockStore = userProfileDirectory + new Path("./.soup/locks/");
+		var artifactStore = userProfileDirectory + new Path("./.soup/artifacts/");
 
 		Log.Diag("Using Package Store: " + packageStore.ToString());
 		Log.Diag("Using Lock Store: " + lockStore.ToString());
+		Log.Diag("Using Artifact Store: " + artifactStore.ToString());
 
 		// Create the staging directory
 		var stagingPath = EnsureStagingDirectoryExists(packageStore);
@@ -61,6 +63,7 @@ public class PackageManager
 				workingDirectory,
 				packageStore,
 				lockStore,
+				artifactStore,
 				stagingPath);
 
 			// Cleanup the working directory
@@ -78,7 +81,9 @@ public class PackageManager
 	/// <summary>
 	/// Install a package
 	/// </summary>
-	public async Task InstallPackageReferenceAsync(Path workingDirectory, string packageReference)
+	public async Task InstallPackageReferenceAsync(
+		Path workingDirectory,
+		string packageReference)
 	{
 		var recipePath =
 			workingDirectory +
@@ -92,8 +97,10 @@ public class PackageManager
 		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
 		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
 		var lockStore = userProfileDirectory + new Path("./.soup/locks/");
+		var artifactStore = userProfileDirectory + new Path("./.soup/artifacts/");
 		Log.Diag("Using Package Store: " + packageStore.ToString());
 		Log.Diag("Using Lock Store: " + lockStore.ToString());
+		Log.Diag("Using Artifact Store: " + artifactStore.ToString());
 
 		// Parse the package reference to get the name
 		var targetPackageReference = PackageReference.Parse(packageReference);
@@ -155,6 +162,7 @@ public class PackageManager
 				workingDirectory,
 				packageStore,
 				lockStore,
+				artifactStore,
 				stagingDirectory);
 
 			// Cleanup the working directory
