@@ -203,6 +203,14 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets the Version.
 		/// </summary>
+		bool HasVersion() const
+		{
+			return _version.has_value();
+		}
+
+		/// <summary>
+		/// Gets or sets the Version.
+		/// </summary>
 		const SemanticVersion& GetVersion() const
 		{
 			if (!_version.has_value())

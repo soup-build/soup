@@ -21,7 +21,7 @@ namespace Soup.Build.PackageManager;
 /// </summary>
 public class ClosureManager : IClosureManager
 {
-	private const int PackageLockVersion = 5;
+	private const int PackageLockVersion = 6;
 	private const string RootClosureName = "Root";
 	private const string BuiltInLanguageWren = "Wren";
 	private const string BuiltInLanguagePackageWren = "Wren";
@@ -834,7 +834,7 @@ public class ClosureManager : IClosureManager
 		Log.HighPriority($"Install Artifact: {languageName} {ownerName} {packageName}@{packageVersion}");
 
 		var languageRootFolder = artifactStore + new Path($"./{languageName}/");
-		var packageRootFolder = languageRootFolder + new Path($"./{ownerName}/{packageName}/");
+		var packageRootFolder = languageRootFolder + new Path($"./{ownerName}/{packageName}/{packageVersion}/");
 		var packageArtifactFolder = packageRootFolder + new Path($"./{digest}/");
 
 		// Check if the package version already exists

@@ -58,7 +58,7 @@
       "name": "Debug Soup (GDB)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/out/run/soup",
+      "program": "${workspaceFolder}/out/run/bin/soup",
       "args": [
         "build",
         "samples/cpp/console-application"

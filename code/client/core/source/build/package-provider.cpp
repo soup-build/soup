@@ -81,13 +81,13 @@ export namespace Soup::Core
 		PackageInfo(
 			PackageId id,
 			PackageName name,
-			bool isPrebuilt,
+			std::optional<std::string> artifactDigest,
 			Path packageRoot,
 			const Recipe* recipe,
 			PackageChildrenMap dependencies) :
 			Id(id),
 			Name(std::move(name)),
-			IsPrebuilt(isPrebuilt),
+			ArtifactDigest(std::move(artifactDigest)),
 			PackageRoot(std::move(packageRoot)),
 			Recipe(recipe),
 			Dependencies(std::move(dependencies))
@@ -96,10 +96,15 @@ export namespace Soup::Core
 
 		PackageId Id;
 		PackageName Name;
-		bool IsPrebuilt;
+		std::optional<std::string> ArtifactDigest;
 		Path PackageRoot;
 		const ::Soup::Core::Recipe* Recipe;
 		PackageChildrenMap Dependencies;
+
+		bool IsPrebuilt() const
+		{
+			return ArtifactDigest.has_value();
+		}
 
 		/// <summary>
 		/// Equality operator
@@ -108,7 +113,7 @@ export namespace Soup::Core
 		{
 			return Id == rhs.Id &&
 				Name == rhs.Name &&
-				IsPrebuilt == rhs.IsPrebuilt &&
+				ArtifactDigest == rhs.ArtifactDigest &&
 				PackageRoot == rhs.PackageRoot &&
 				Recipe == rhs.Recipe &&
 				Dependencies == rhs.Dependencies;

@@ -22,8 +22,6 @@ namespace Soup.Build.PackageManager;
 [SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "Primary class")]
 public class PackageManager
 {
-	private static readonly Path StagingFolder = new Path("./.staging/");
-
 	private readonly Uri apiEndpoint;
 
 	private readonly HttpClient httpClient;
@@ -49,13 +47,14 @@ public class PackageManager
 		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
 		var lockStore = userProfileDirectory + new Path("./.soup/locks/");
 		var artifactStore = userProfileDirectory + new Path("./.soup/artifacts/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
 
 		Log.Diag("Using Package Store: " + packageStore.ToString());
 		Log.Diag("Using Lock Store: " + lockStore.ToString());
 		Log.Diag("Using Artifact Store: " + artifactStore.ToString());
 
 		// Create the staging directory
-		var stagingPath = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -98,6 +97,8 @@ public class PackageManager
 		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
 		var lockStore = userProfileDirectory + new Path("./.soup/locks/");
 		var artifactStore = userProfileDirectory + new Path("./.soup/artifacts/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
+
 		Log.Diag("Using Package Store: " + packageStore.ToString());
 		Log.Diag("Using Lock Store: " + lockStore.ToString());
 		Log.Diag("Using Artifact Store: " + artifactStore.ToString());
@@ -154,7 +155,7 @@ public class PackageManager
 		await RecipeExtensions.SaveToFileAsync(recipePath, recipe);
 
 		// Create the staging directory
-		var stagingDirectory = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -163,16 +164,16 @@ public class PackageManager
 				packageStore,
 				lockStore,
 				artifactStore,
-				stagingDirectory);
+				stagingPath);
 
 			// Cleanup the working directory
 			Log.Info("Deleting staging directory");
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingDirectory, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 		}
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingDirectory, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
 	}
@@ -194,12 +195,14 @@ public class PackageManager
 			throw new InvalidOperationException($"Could not load the recipe file: {recipePath}");
 		}
 
-		var packageStore = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
-			new Path("./.soup/packages/");
+		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
+		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
+
 		Log.Info("Using Package Store: " + packageStore.ToString());
 
 		// Create the staging directory
-		var stagingPath = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -337,12 +340,14 @@ public class PackageManager
 
 		var globalState = generateInput["GlobalState"].AsTable();
 
-		var packageStore = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
-			new Path("./.soup/packages/");
+		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
+		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
+
 		Log.Info("Using Package Store: " + packageStore.ToString());
 
 		// Create the staging directory
-		var stagingPath = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -489,19 +494,16 @@ public class PackageManager
 	/// <summary>
 	/// Ensure the staging directory exists
 	/// </summary>
-	private static Path EnsureStagingDirectoryExists(Path packageStore)
+	private static void EnsureStagingDirectoryExists(Path stagingPath)
 	{
-		var stagingDirectory = packageStore + StagingFolder;
-		if (LifetimeManager.Get<IFileSystem>().Exists(stagingDirectory))
+		if (LifetimeManager.Get<IFileSystem>().Exists(stagingPath))
 		{
 			Log.Warning("The staging directory already exists from a previous failed run");
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingDirectory, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 		}
 
 		// Create the folder
-		LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingDirectory);
-
-		return stagingDirectory;
+		LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingPath);
 	}
 
 	private static Dictionary<string, string> ConvertToDictionary(

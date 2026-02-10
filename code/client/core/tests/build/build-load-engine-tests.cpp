@@ -42,6 +42,7 @@ namespace Soup::Core::UnitTests
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -51,6 +52,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 		}
@@ -81,6 +83,7 @@ namespace Soup::Core::UnitTests
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -90,6 +93,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -228,6 +232,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -237,6 +242,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -455,6 +461,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -464,6 +471,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -718,6 +726,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -727,6 +736,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -1076,6 +1086,7 @@ namespace Soup::Core::UnitTests
 				{
 					{ "HostValue", Value(true) },
 				});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -1085,6 +1096,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -1423,6 +1435,7 @@ namespace Soup::Core::UnitTests
 				{
 					{ "HostValue", Value(true) },
 				});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -1432,6 +1445,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -1790,6 +1804,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -1799,6 +1814,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -2066,6 +2082,7 @@ namespace Soup::Core::UnitTests
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -2075,6 +2092,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -2242,6 +2260,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -2251,6 +2270,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -2621,6 +2641,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -2630,6 +2651,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -3019,6 +3041,7 @@ namespace Soup::Core::UnitTests
 			{
 				{ "HostValue", Value(true) },
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -3028,6 +3051,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -3439,6 +3463,7 @@ namespace Soup::Core::UnitTests
 					Value(true),
 				},
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -3448,6 +3473,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -3832,6 +3858,7 @@ namespace Soup::Core::UnitTests
 					Value(true),
 				},
 			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -3841,6 +3868,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -4091,41 +4119,42 @@ namespace Soup::Core::UnitTests
 
 			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
+			{
 				{
-					{
-						"C++",
-						KnownLanguage("User1", "Cpp")
-					},
-					{
-						"C#",
-						KnownLanguage("User1", "Soup.CSharp")
-					},
-				});
+					"C++",
+					KnownLanguage("User1", "Cpp")
+				},
+				{
+					"C#",
+					KnownLanguage("User1", "Soup.CSharp")
+				},
+			});
 			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
+			{
 				{
+					"Wren",
 					{
-						"Wren",
 						{
-							{
-								PackageName("User1", "Cpp"),
-								SemanticVersion(1, 1, 1)
-							},
-							{
-								PackageName("User1", "Soup.CSharp"),
-								SemanticVersion(2, 2, 2)
-							},
-						}
-					},
-				});
+							PackageName("User1", "Cpp"),
+							SemanticVersion(1, 1, 1)
+						},
+						{
+							PackageName("User1", "Soup.CSharp"),
+							SemanticVersion(2, 2, 2)
+						},
+					}
+				},
+			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
-				{
-					{ "ArgumentValue", Value(true) },
-				});
+			{
+				{ "ArgumentValue", Value(true) },
+			});
 			auto hostBuildGlobalParameters = ValueTable(
-				{
-					{ "HostValue", Value(true) },
-				});
+			{
+				{ "HostValue", Value(true) },
+			});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -4135,6 +4164,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 
@@ -4443,6 +4473,7 @@ namespace Soup::Core::UnitTests
 						Value(true),
 					},
 				});
+			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
@@ -4452,6 +4483,7 @@ namespace Soup::Core::UnitTests
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 

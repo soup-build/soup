@@ -76,7 +76,7 @@ json11::Json ConvertToJson(const PackageLookupMap& lookup)
 			{ "Id", value.second.Id },
 			{ "Name", value.second.Name.GetName() },
 			{ "Owner", std::move(ownerValue) },
-			{ "IsPrebuilt", value.second.IsPrebuilt },
+			{ "IsPrebuilt", value.second.IsPrebuilt() },
 			{ "PackageRoot", value.second.PackageRoot.ToString() },
 			{ "Dependencies",  std::move(dependencies) },
 		});

@@ -1,19 +1,24 @@
-Version: 5
-Closures: {
-	Root: {
-		'C++': {
-			'Samples.Cpp.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-		}
+Version: 6
+Closure: {
+	'C++': {
+		'Samples.Cpp.ConsoleApplication': { Version: './', Build: '0', Tool: '0' }
 	}
-	Build0: {
+}
+Builds: {
+	0: {
 		Wren: {
 			'Soup|Cpp': {
 				Version: 0.16.1
 				Digest: 'sha256:ba382dc10cad04e619a7d3b069c5936e5dfc2ab3f7cfab439b6e3ee9149248b1'
+				Artifacts: {
+					Linux: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+				}
 			}
 		}
 	}
-	Tool0: {
+}
+Tools: {
+	0: {
 		'C++': {
 			'mwasplund|copy': {
 				Version: 1.2.0

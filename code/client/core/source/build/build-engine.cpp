@@ -110,6 +110,7 @@ namespace Soup::Core
 
 			// Load the system specific state
 			auto hostGlobalParameters = LoadHostSystemState();
+			auto hostPlatform = "Linux";
 
 			auto endTime = std::chrono::high_resolution_clock::now();
 			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
@@ -129,6 +130,7 @@ namespace Soup::Core
 				locationManager,
 				targetGlobalParameters,
 				hostGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
 			auto packageProvider = loadEngine.Load(workingDirectory);
