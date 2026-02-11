@@ -626,7 +626,6 @@ int main()
 
 		ankerl::nanobench::Bench().minEpochIterations(3000).run("BuildEngine Execute NoDependencies UpToDate", [&]
 		{
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "TestPlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
@@ -636,7 +635,6 @@ int main()
 			auto recipeCache = RecipeCache();
 
 			auto packageProvider = BuildEngine::LoadBuildGraph(
-				builtInPackageDirectory,
 				arguments.WorkingDirectory,
 				arguments.GlobalParameters,
 				userDataPath,

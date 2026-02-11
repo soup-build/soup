@@ -171,7 +171,6 @@ namespace Soup::Core::UnitTests
 						std::make_shared<MockFile>(std::move(soupCppGenerateResultContent)));
 				});
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "TestPlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
@@ -181,7 +180,6 @@ namespace Soup::Core::UnitTests
 			auto recipeCache = RecipeCache();
 
 			auto packageProvider = BuildEngine::LoadBuildGraph(
-				builtInPackageDirectory,
 				arguments.WorkingDirectory,
 				arguments.GlobalParameters,
 				userDataPath,
@@ -1112,7 +1110,6 @@ namespace Soup::Core::UnitTests
 			auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
 			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "TestPlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
@@ -1122,7 +1119,6 @@ namespace Soup::Core::UnitTests
 			auto recipeCache = RecipeCache();
 
 			auto packageProvider = BuildEngine::LoadBuildGraph(
-				builtInPackageDirectory,
 				arguments.WorkingDirectory,
 				arguments.GlobalParameters,
 				userDataPath,
@@ -1405,7 +1401,6 @@ namespace Soup::Core::UnitTests
 						std::make_shared<MockFile>(std::move(soupCppGenerateResultContent)));
 				});
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "TestPlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
@@ -1415,7 +1410,6 @@ namespace Soup::Core::UnitTests
 			auto recipeCache = RecipeCache();
 
 			auto packageProvider = BuildEngine::LoadBuildGraph(
-				builtInPackageDirectory,
 				arguments.WorkingDirectory,
 				arguments.GlobalParameters,
 				userDataPath,
@@ -2394,7 +2388,6 @@ namespace Soup::Core::UnitTests
 			auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
 			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "TestPlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
@@ -2404,7 +2397,6 @@ namespace Soup::Core::UnitTests
 			auto recipeCache = RecipeCache();
 
 			auto packageProvider = BuildEngine::LoadBuildGraph(
-				builtInPackageDirectory,
 				arguments.WorkingDirectory,
 				arguments.GlobalParameters,
 				userDataPath,

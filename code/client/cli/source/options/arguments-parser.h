@@ -149,6 +149,16 @@ namespace Soup::Client
 				
 				options->Verbosity = CheckVerbosity(unusedArgs);
 
+				auto ownerValue = std::string();
+				if (TryGetValueArgument("owner", unusedArgs, ownerValue))
+				{
+					options->Owner = std::move(ownerValue);
+				}
+				else
+				{
+					throw std::runtime_error("Missing required value owner");
+				}
+
 				auto flavorValue = std::string();
 				if (TryGetValueArgument("flavor", unusedArgs, flavorValue))
 				{

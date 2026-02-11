@@ -92,9 +92,7 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="BuildLoadEngine"/> class.
 		/// </summary>
 		BuildLoadEngine(
-			const Path& builtInPackageDirectory,
 			const std::map<std::string, KnownLanguage>& knownLanguageLookup,
-			const std::map<std::string, std::map<PackageName, SemanticVersion>>& builtInPackageLookup,
 			RecipeBuildLocationManager& locationManager,
 			const ValueTable& targetBuildGlobalParameters,
 			const ValueTable& hostBuildGlobalParameters,

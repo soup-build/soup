@@ -21,6 +21,12 @@ namespace Soup::Client
 		std::string Path;
 
 		/// <summary>
+		/// Gets or sets a value indicating the owner
+		/// </summary>
+		// [[Args::Option('o', "owner", Default = false, HelpText = "Owner.")]]
+		std::string Owner;
+
+		/// <summary>
 		/// Gets or sets a value indicating what flavor to use
 		/// </summary>
 		// [[Args::Option('f', "flavor", Default = false, HelpText = "Flavor.")]]

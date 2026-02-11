@@ -85,10 +85,10 @@
       "name": "Debug Generate (GDB)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/out/run/generate",
+      "program": "${workspaceFolder}/out/run/lib/soup/generate",
       "args": [
-        "false",
-        "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+        "true",
+        "${workspaceFolder}/out/C++/Local/Samples.Cpp.ConsoleApplication/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

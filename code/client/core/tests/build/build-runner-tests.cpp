@@ -137,7 +137,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							1,
 							PackageName(std::nullopt, "MyPackage"),
-							false,
+							std::nullopt,
 							Path("C:/WorkingDirectory/MyPackage/"),
 							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap())
@@ -421,7 +421,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							1,
 							PackageName(std::nullopt, "MyPackage"),
-							false,
+							std::nullopt,
 							Path("C:/WorkingDirectory/MyPackage/"),
 							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap())
@@ -766,7 +766,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							1,
 							PackageName(std::nullopt, "MyPackage"),
-							false,
+							std::nullopt,
 							Path("C:/WorkingDirectory/MyPackage/"),
 							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap({
@@ -787,7 +787,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							2,
 							PackageName("User1", "TestBuild"),
-							false,
+							std::nullopt,
 							Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/"),
 							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/recipe.sml")),
 							PackageChildrenMap())
@@ -1315,7 +1315,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							1,
 							PackageName(std::nullopt, "MyPackage"),
-							false,
+							std::nullopt,
 							Path("C:/WorkingDirectory/MyPackage/"),
 							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap({
@@ -1333,7 +1333,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							2,
 							PackageName("User1", "PackageA"),
-							false,
+							std::nullopt,
 							Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/"),
 							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml")),
 							PackageChildrenMap({
@@ -1350,7 +1350,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							3,
 							PackageName("User1", "PackageB"),
-							false,
+							std::nullopt,
 							Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/"),
 							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml")),
 							PackageChildrenMap())
@@ -2090,7 +2090,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							1,
 							PackageName(std::nullopt, "MyPackage"),
-							false,
+							std::nullopt,
 							Path("C:/WorkingDirectory/MyPackage/"),
 							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 							PackageChildrenMap({
@@ -2107,7 +2107,7 @@ namespace Soup::Core::UnitTests
 						PackageInfo(
 							2,
 							PackageName("User1", "TestBuild"),
-							false,
+							std::nullopt,
 							Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/"),
 							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/recipe.sml")),
 							PackageChildrenMap())

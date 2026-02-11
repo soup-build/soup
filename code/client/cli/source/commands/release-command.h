@@ -92,21 +92,12 @@ namespace Soup::Client
 			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto processDirectory = processFilename.GetParent();
 
-			#if defined(_WIN32)
-			auto builtInPackageDirectory = processDirectory + Path("./built-in/");
-			#elif defined(__linux__)
-			auto builtInPackageDirectory = processDirectory + Path("../lib/soup/built-in/");
-			#else
-			#error "Unknown platform"
-			#endif
-
 			// Load user config state
 			auto userDataPath = Core::BuildEngine::GetSoupUserDataPath();
 			
 			auto recipeCache = Core::RecipeCache();
 
 			auto packageProvider = Core::BuildEngine::LoadBuildGraph(
-				builtInPackageDirectory,
 				arguments.WorkingDirectory,
 				arguments.GlobalParameters,
 				userDataPath,

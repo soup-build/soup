@@ -36,9 +36,7 @@ namespace Soup::Core::UnitTests
 		// Verifies we can initialize a Build Load Engine
 		void Initialize()
 		{
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>();
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>();
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
@@ -46,9 +44,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -77,9 +73,7 @@ namespace Soup::Core::UnitTests
 					Language: (C++@1.1)
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>();
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>();
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
@@ -87,9 +81,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -186,7 +178,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -196,31 +187,6 @@ namespace Soup::Core::UnitTests
 				{
 					"C#",
 					KnownLanguage("User1", "Soup.CSharp")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Soup.CSharp"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
-				},
-				{
-					"C++",
-					{
-						{
-							PackageName("User1", "TestTool"),
-							SemanticVersion(4, 4, 4)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -236,9 +202,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -312,7 +276,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -335,7 +299,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestTool"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/TestTool/4.4.4/"),
 								nullptr,
 								PackageChildrenMap())
@@ -345,7 +309,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -423,7 +387,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -433,22 +396,6 @@ namespace Soup::Core::UnitTests
 				{
 					"C#",
 					KnownLanguage("User1", "Soup.CSharp")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Soup.CSharp"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -465,9 +412,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -532,7 +477,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -549,7 +494,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -689,7 +634,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -699,22 +643,6 @@ namespace Soup::Core::UnitTests
 				{
 					"Wren",
 					KnownLanguage("User1", "Wren")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -730,9 +658,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -852,7 +778,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -875,7 +801,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "Cpp"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/recipe.sml")),
 								PackageChildrenMap({
@@ -892,7 +818,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "TestTool"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -909,7 +835,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -919,7 +845,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -1049,7 +975,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 				{
 					{
@@ -1059,22 +984,6 @@ namespace Soup::Core::UnitTests
 					{
 						"Wren",
 						KnownLanguage("User1", "Wren")
-					},
-				});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-				{
-					{
-						"Wren",
-						{
-							{
-								PackageName("User1", "Cpp"),
-								SemanticVersion(1, 1, 1)
-							},
-							{
-								PackageName("User1", "Wren"),
-								SemanticVersion(2, 2, 2)
-							},
-						}
 					},
 				});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -1090,9 +999,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -1195,7 +1102,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -1213,7 +1120,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -1230,7 +1137,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -1240,7 +1147,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -1398,7 +1305,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 				{
 					{
@@ -1408,22 +1314,6 @@ namespace Soup::Core::UnitTests
 					{
 						"Wren",
 						KnownLanguage("User1", "Wren")
-					},
-				});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-				{
-					{
-						"Wren",
-						{
-							{
-								PackageName("User1", "Cpp"),
-								SemanticVersion(1, 1, 1)
-							},
-							{
-								PackageName("User1", "Wren"),
-								SemanticVersion(2, 2, 2)
-							},
-						}
 					},
 				});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -1439,9 +1329,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -1571,7 +1459,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -1595,7 +1483,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -1612,7 +1500,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "TestTool"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -1629,7 +1517,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -1639,7 +1527,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -1767,7 +1655,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -1777,22 +1664,6 @@ namespace Soup::Core::UnitTests
 				{
 					"Wren",
 					KnownLanguage("User1", "Wren")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -1808,9 +1679,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -1901,7 +1770,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -1919,7 +1788,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName(std::nullopt, "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/TestBuild/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/TestBuild/recipe.sml")),
 								PackageChildrenMap({
@@ -1936,7 +1805,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -1946,7 +1815,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -2051,7 +1920,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -2063,22 +1931,6 @@ namespace Soup::Core::UnitTests
 					KnownLanguage("User1", "Wren")
 				},
 			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
-				},
-			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable();
 			auto hostBuildGlobalParameters = ValueTable();
@@ -2086,9 +1938,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -2223,7 +2073,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -2233,22 +2082,6 @@ namespace Soup::Core::UnitTests
 				{
 					"Wren",
 					KnownLanguage("User1", "Wren")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -2264,9 +2097,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -2380,7 +2211,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -2398,7 +2229,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -2421,7 +2252,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "TestBuild2"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -2438,7 +2269,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -2448,7 +2279,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -2604,7 +2435,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -2614,22 +2444,6 @@ namespace Soup::Core::UnitTests
 				{
 					"Wren",
 					KnownLanguage("User1", "Wren")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -2645,9 +2459,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -2777,7 +2589,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -2795,7 +2607,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -2813,7 +2625,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "TestBuild2"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/recipe.sml")),
 								PackageChildrenMap({
@@ -2830,7 +2642,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -2840,7 +2652,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -3004,7 +2816,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -3014,22 +2825,6 @@ namespace Soup::Core::UnitTests
 				{
 					"Wren",
 					KnownLanguage("User1", "Wren")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -3045,9 +2840,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -3177,7 +2970,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -3201,7 +2994,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -3218,7 +3011,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "TestTool"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -3235,7 +3028,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -3245,7 +3038,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -3420,7 +3213,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -3430,22 +3222,6 @@ namespace Soup::Core::UnitTests
 				{
 					"Wren",
 					KnownLanguage("User1", "Wren")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -3467,9 +3243,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -3616,7 +3390,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -3634,7 +3408,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "TestBuild"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.4/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.4/recipe.sml")),
 								PackageChildrenMap({
@@ -3651,7 +3425,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/recipe.sml")),
 								PackageChildrenMap({
@@ -3668,7 +3442,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -3678,7 +3452,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/recipe.sml")),
 								PackageChildrenMap({
@@ -3815,7 +3589,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -3825,22 +3598,6 @@ namespace Soup::Core::UnitTests
 				{
 					"C#",
 					KnownLanguage("User1", "Soup.CSharp")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Wren"),
-							SemanticVersion(2, 2, 2)
-						},
-						{
-							PackageName("User1", "Soup.CSharp"),
-							SemanticVersion(3, 3, 3)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -3862,9 +3619,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -3957,7 +3712,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -3980,7 +3735,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName(std::nullopt, "Package1"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/Package1/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/Package1/recipe.sml")),
 								PackageChildrenMap({
@@ -3997,7 +3752,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Soup.CSharp"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/recipe.sml")),
 								PackageChildrenMap({
@@ -4014,7 +3769,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
@@ -4117,7 +3872,6 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
 			{
 				{
@@ -4127,22 +3881,6 @@ namespace Soup::Core::UnitTests
 				{
 					"C#",
 					KnownLanguage("User1", "Soup.CSharp")
-				},
-			});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"Wren",
-					{
-						{
-							PackageName("User1", "Cpp"),
-							SemanticVersion(1, 1, 1)
-						},
-						{
-							PackageName("User1", "Soup.CSharp"),
-							SemanticVersion(2, 2, 2)
-						},
-					}
 				},
 			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
@@ -4158,9 +3896,7 @@ namespace Soup::Core::UnitTests
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -4256,7 +3992,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -4280,7 +4016,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "PackageA"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/recipe.sml")),
 								PackageChildrenMap({
@@ -4303,7 +4039,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "PackageB"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/recipe.sml")),
 								PackageChildrenMap({
@@ -4320,7 +4056,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())
@@ -4422,64 +4158,41 @@ namespace Soup::Core::UnitTests
 					}
 				)")));
 
-			auto builtInPackageDirectory = Path("C:/BuiltIn/Packages/");
 			auto knownLanguages = std::map<std::string, KnownLanguage>(
+			{
 				{
-					{
-						"C++",
-						KnownLanguage("User1", "Cpp")
-					},
-					{
-						"Wren",
-						KnownLanguage("User1", "Wren")
-					},
-					{
-						"C#",
-						KnownLanguage("User1", "Soup.CSharp")
-					},
-				});
-			auto builtInPackages = std::map<std::string, std::map<PackageName, SemanticVersion>>(
+					"C++",
+					KnownLanguage("User1", "Cpp")
+				},
 				{
-					{
-						"Wren",
-						{
-							{
-								PackageName("User1", "Cpp"),
-								SemanticVersion(1, 1, 1)
-							},
-							{
-								PackageName("User1", "Wren"),
-								SemanticVersion(2, 2, 2)
-							},
-							{
-								PackageName("User1", "Soup.CSharp"),
-								SemanticVersion(3, 3, 3)
-							},
-						}
-					},
-				});
+					"Wren",
+					KnownLanguage("User1", "Wren")
+				},
+				{
+					"C#",
+					KnownLanguage("User1", "Soup.CSharp")
+				},
+			});
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto targetBuildGlobalParameters = ValueTable(
+			{
 				{
-					{
-						"ArgumentValue",
-						Value(true),
-					},
-				});
+					"ArgumentValue",
+					Value(true),
+				},
+			});
 			auto hostBuildGlobalParameters = ValueTable(
+			{
 				{
-					{
-						"HostValue",
-						Value(true),
-					},
-				});
+					"HostValue",
+					Value(true),
+				},
+			});
 			auto hostPlatform = "FakePlatform";
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto recipeCache = RecipeCache();
 			auto uut = BuildLoadEngine(
-				builtInPackageDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetBuildGlobalParameters,
 				hostBuildGlobalParameters,
@@ -4566,7 +4279,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								1,
 								PackageName(std::nullopt, "MyPackage"),
-								false,
+								std::nullopt,
 								Path("C:/WorkingDirectory/MyPackage/"),
 								&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
 								PackageChildrenMap({
@@ -4589,7 +4302,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "Package1"),
-								false,
+								std::nullopt,
 								Path("C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/recipe.sml")),
 								PackageChildrenMap({
@@ -4606,7 +4319,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Soup.CSharp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/"),
 								nullptr,
 								PackageChildrenMap())
@@ -4616,7 +4329,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								true,
+								"sha256:abcdefg",
 								Path("C:/BuiltIn/Packages/User1/Cpp/1.1.1/"),
 								nullptr,
 								PackageChildrenMap())

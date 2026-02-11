@@ -61,46 +61,10 @@ namespace Soup::Core
 			return result;
 		}
 
-		static std::map<std::string, std::map<PackageName, SemanticVersion>> GetBuiltInPackages()
-		{
-			auto result = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"C++",
-					{
-						{
-							PackageName("mwasplund", "copy"),
-							SemanticVersion(1, 2, 0)
-						},
-						{
-							PackageName("mwasplund", "mkdir"),
-							SemanticVersion(1, 2, 0)
-						},
-						{
-							PackageName("mwasplund", "parse.modules"),
-							SemanticVersion(1, 2, 0)
-						},
-					}
-				},
-				{
-					"Wren",
-					{
-						{
-							PackageName("Soup", "Wren"),
-							SemanticVersion(0, 5, 4)
-						},
-					}
-				},
-			});
-
-			return result;
-		}
-
 		/// <summary>
 		/// Load the build graph
 		/// </summary>
 		static PackageProvider LoadBuildGraph(
-			const Path& builtInDirectory,
 			const Path& workingDirectory,
 			const ValueTable& targetGlobalParameters,
 			const Path& userDataPath,
@@ -121,12 +85,9 @@ namespace Soup::Core
 
 			// Generate the package build graph
 			auto knownLanguages = GetKnownLanguages();
-			auto builtInPackages = GetBuiltInPackages();
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto loadEngine = BuildLoadEngine(
-				builtInDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetGlobalParameters,
 				hostGlobalParameters,
