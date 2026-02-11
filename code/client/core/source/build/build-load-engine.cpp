@@ -117,7 +117,7 @@ namespace Soup::Core
 		/// Load the package lock and using it recursively load up all packages that are a part of the build closure
 		/// Validates that there are no circular dependencies and all required packages are available
 		/// </summary>
-		PackageProvider Load(const Path& projectRoot)
+		PackageProvider Load(const Path& projectRoot, std::optional<std::string> owner)
 		{
 			// Load the package lock from project folder
 			const auto& packageLockState = LoadPackageLock(projectRoot);
@@ -150,7 +150,7 @@ namespace Soup::Core
 			// Build up the unique identifier
 			auto packageIdentifier = PackageIdentifier(
 				recipe->GetLanguage().GetName(),
-				std::nullopt,
+				std::move(owner),
 				recipe->GetName());
 
 			auto parentSet = std::set<PackageName>();

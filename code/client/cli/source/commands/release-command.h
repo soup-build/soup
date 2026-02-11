@@ -99,6 +99,7 @@ namespace Soup::Client
 
 			auto packageProvider = Core::BuildEngine::LoadBuildGraph(
 				arguments.WorkingDirectory,
+				_options.Owner,
 				arguments.GlobalParameters,
 				userDataPath,
 				recipeCache);

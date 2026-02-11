@@ -636,6 +636,7 @@ int main()
 
 			auto packageProvider = BuildEngine::LoadBuildGraph(
 				arguments.WorkingDirectory,
+				std::nullopt,
 				arguments.GlobalParameters,
 				userDataPath,
 				recipeCache);

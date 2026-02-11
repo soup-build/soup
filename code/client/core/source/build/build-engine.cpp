@@ -66,6 +66,7 @@ namespace Soup::Core
 		/// </summary>
 		static PackageProvider LoadBuildGraph(
 			const Path& workingDirectory,
+			std::optional<std::string> owner,
 			const ValueTable& targetGlobalParameters,
 			const Path& userDataPath,
 			RecipeCache& recipeCache)
@@ -94,7 +95,7 @@ namespace Soup::Core
 				hostPlatform,
 				userDataPath,
 				recipeCache);
-			auto packageProvider = loadEngine.Load(workingDirectory);
+			auto packageProvider = loadEngine.Load(workingDirectory, std::move(owner));
 
 			endTime = std::chrono::high_resolution_clock::now();
 			duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);

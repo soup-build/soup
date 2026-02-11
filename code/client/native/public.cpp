@@ -149,7 +149,9 @@ Value JsonToValue(const json11::Json& json)
 	}
 }
 
-std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::istream& globalParametersStream)
+std::string LoadBuildGraphContent(
+	std::string_view workingDirectoryString,
+	std::istream& globalParametersStream)
 {
 	try
 	{
@@ -189,6 +191,7 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::
 
 		auto packageProvider = BuildEngine::LoadBuildGraph(
 			workingDirectory,
+			std::nullopt,
 			globalParameters,
 			userDataPath,
 			recipeCache);
