@@ -63,11 +63,9 @@ public static class Program
 			// };
 			var httpClient = new HttpClient();
 			SemanticVersion minimumLanguageVersionCpp = new SemanticVersion(0, 16, 0);
-			SemanticVersion builtInLanguageVersionWren = new SemanticVersion(0, 5, 4);
 			var closureManager = new ClosureManager(
 				SoupApiEndpoint,
 				httpClient,
-				builtInLanguageVersionWren,
 				hostPlatform);
 			var packageManager = new PackageManager(
 				SoupApiEndpoint,
