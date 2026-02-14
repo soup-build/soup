@@ -275,7 +275,7 @@ namespace Soup::Core
 				PackageLock packageLock = {};
 				if (PackageLockExtensions::TryLoadFromFile(packageLockPath, packageLock))
 				{
-					Log::Info("Package lock loaded {}", packageLockPath.ToString());
+					Log::Info("Package lock loaded");
 					if (packageLock.GetVersion() == _packageLockVersion)
 					{
 						packageLockState.RootDirectory = projectRoot;
@@ -1178,7 +1178,7 @@ namespace Soup::Core
 			else
 			{
 				auto packageRecipePath = dependencyProjectRoot + BuildConstants::RecipeFileName();
-				const Recipe* dependencyRecipe;
+				const Recipe* dependencyRecipe = nullptr;
 				if (!_recipeCache.TryGetOrLoadRecipe(packageRecipePath, dependencyRecipe))
 				{
 					if (activeReference.GetPackage().IsLocal())

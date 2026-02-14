@@ -1972,16 +1972,16 @@ namespace Soup::Core::UnitTests
 			fileSystem->CreateMockFile(
 				Path("C:/WorkingDirectory/MyPackage/package-lock.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
-					Version: 5
-					Closures: {
-						Root: {
-							"C#": {
-								"User1|TestBuild": { Version: "1.3.0", Build: "Build1" }
-							}
-							"C++": {
-								MyPackage: { Version: "../MyPackage/", Build: "Build0" }
-							}
+					Version: 6
+					Closure: {
+						"C#": {
+							"User1|TestBuild": { Version: "1.3.0", Build: "Build1" }
 						}
+						"C++": {
+							MyPackage: { Version: "../MyPackage/", Build: "Build0" }
+						}
+					}
+					Builds: {
 						Build0: {
 							"C#": {
 								"User1|Cpp": { Version: "1.0.2" }
