@@ -529,7 +529,7 @@ public class PackageManagerUnitTests
 							"Context",
 							new Value(new ValueTable(new Dictionary<string, Value>()
 							{
-								{ "HostPlatform", new Value("TestPlatform") },
+								{ "HostPlatform", new Value("FakePlatform") },
 								{ "PackageDirectory", new Value("/(PACKAGE_MyPackage)/") },
 								{ "TargetDirectory", new Value("/(TARGET_MyPackage)/") },
 							}))

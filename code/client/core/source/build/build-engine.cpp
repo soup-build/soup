@@ -75,7 +75,7 @@ namespace Soup::Core
 
 			// Load the system specific state
 			auto hostGlobalParameters = LoadHostSystemState();
-			auto hostPlatform = "Linux";
+			auto hostPlatform = GetHostSystemName();
 
 			auto endTime = std::chrono::high_resolution_clock::now();
 			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
@@ -179,11 +179,22 @@ namespace Soup::Core
 		}
 
 	private:
+		static std::string GetHostSystemName()
+		{
+			#if defined(_WIN32)
+			return "Windows";
+			#elif defined(__linux__)
+			return "Linux";
+			#else
+			#error "Unknown platform"
+			#endif
+		}
+
 		static ValueTable LoadHostSystemState()
 		{
 			auto hostGlobalParameters = ValueTable();
 
-			auto system = std::string("Windows");
+			auto system = GetHostSystemName();
 			hostGlobalParameters.emplace("System", Value(system));
 
 			return hostGlobalParameters;
@@ -193,9 +204,14 @@ namespace Soup::Core
 		{
 			auto systemReadAccess = std::vector<Path>();
 
+			#if defined(_WIN32)
 			// Allow read access from system directories
 			systemReadAccess.push_back(
 				Path("C:/Windows/"));
+			#elif defined(__linux__)
+			#else
+			#error "Unknown platform"
+			#endif
 
 			return systemReadAccess;
 		}

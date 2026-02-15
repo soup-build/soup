@@ -55,7 +55,7 @@ namespace Soup::Core
 	{
 	private:
 		const int _packageLockVersion = 6;
-		const std::string _builtInWrenLanguage = "Wren";
+		const std::string _wrenLanguage = "Wren";
 		const std::string _dependencyTypeBuild = "Build";
 		const std::string _dependencyTypeTool = "Tool";
 
@@ -981,7 +981,7 @@ namespace Soup::Core
 				{
 					// Build dependencies do not inherit the parent language
 					// Instead, they default to Wren
-					language = _builtInWrenLanguage;
+					language = _wrenLanguage;
 				}
 
 				// Resolve the owner
@@ -1328,7 +1328,7 @@ namespace Soup::Core
 
 			auto& knownLanguage = knownLanguageResult->second;
 
-			auto builtInExtensionReference = PackageReference(
+			auto buildExtensionReference = PackageReference(
 				std::nullopt,
 				knownLanguage.ExtensionOwner,
 				knownLanguage.ExtensionName,
@@ -1336,7 +1336,7 @@ namespace Soup::Core
 
 			return LoadBuildDependency(
 				packageIdentifier,
-				builtInExtensionReference,
+				buildExtensionReference,
 				projectRoot,
 				buildClosureName,
 				toolClosureName,

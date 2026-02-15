@@ -117,7 +117,7 @@ namespace Soup::Core::UnitTests
 
 		// [[Fact]]
 		// Verifies that a built in language extension is able to load a built in tool dependency
-		void Load_LanguageExtension_BuiltIn_ToolDependency_BuiltIn()
+		void Load_LanguageExtension_Prebuilt_ToolDependency_Prebuilt()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -236,7 +236,9 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -455,6 +457,7 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -594,7 +597,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@2.2)
@@ -722,7 +725,8 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -737,7 +741,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/root-recipe.sml",
@@ -886,7 +890,7 @@ namespace Soup::Core::UnitTests
 								5,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -914,7 +918,7 @@ namespace Soup::Core::UnitTests
 						{
 							4,
 							{
-								{ 5, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 5, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -969,7 +973,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -1069,7 +1073,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 				}),
 				testListener->GetMessages(),
@@ -1082,7 +1086,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -1188,7 +1192,7 @@ namespace Soup::Core::UnitTests
 								3,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -1214,7 +1218,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 3, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 3, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -1288,7 +1292,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -1423,7 +1427,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/",
 				}),
 				testListener->GetMessages(),
@@ -1439,7 +1443,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/root-recipe.sml",
@@ -1598,7 +1602,7 @@ namespace Soup::Core::UnitTests
 								5,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -1626,7 +1630,7 @@ namespace Soup::Core::UnitTests
 						{
 							4,
 							{
-								{ 5, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 5, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -1681,7 +1685,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -1780,7 +1784,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/WorkingDirectory/TestBuild/recipe.sml",
 					"DIAG: Load PackageLock: C:/WorkingDirectory/TestBuild/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 				}),
 				testListener->GetMessages(),
@@ -1793,7 +1797,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/TestBuild/recipe.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/TestBuild/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -1887,7 +1891,7 @@ namespace Soup::Core::UnitTests
 								3,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -1913,7 +1917,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 3, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 3, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -1974,7 +1978,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -2116,7 +2120,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -2218,8 +2222,8 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/recipe.sml",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
-					"DIAG: Graph already loaded: C:/BuiltIn/Packages/User1/Wren/2.2.2/",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 				}),
 				testListener->GetMessages(),
@@ -2233,7 +2237,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/recipe.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -2370,7 +2374,7 @@ namespace Soup::Core::UnitTests
 								4,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -2396,7 +2400,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -2470,7 +2474,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -2595,8 +2599,8 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/TestBuild2/4.4.4/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
-					"DIAG: Graph already loaded: C:/BuiltIn/Packages/User1/Wren/2.2.2/",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 				}),
 				testListener->GetMessages(),
@@ -2611,7 +2615,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild2/4.4.4/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -2756,7 +2760,7 @@ namespace Soup::Core::UnitTests
 								4,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -2782,7 +2786,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -2862,7 +2866,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -2997,7 +3001,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/",
 				}),
 				testListener->GetMessages(),
@@ -3013,7 +3017,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/root-recipe.sml",
@@ -3172,7 +3176,7 @@ namespace Soup::Core::UnitTests
 								5,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -3200,7 +3204,7 @@ namespace Soup::Core::UnitTests
 						{
 							4,
 							{
-								{ 5, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 5, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -3262,7 +3266,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -3406,11 +3410,11 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Wren/2.2.3/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Cpp/1.1.2/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Graph already loaded: C:/BuiltIn/Packages/User1/Wren/2.2.2/",
+					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -3424,7 +3428,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.4/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Wren/2.2.3/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Cpp/1.1.2/package-lock.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
@@ -3583,7 +3587,7 @@ namespace Soup::Core::UnitTests
 								4,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -3616,7 +3620,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -3682,7 +3686,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
@@ -3783,7 +3787,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Soup.CSharp/2.2.3/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/",
 				}),
 				testListener->GetMessages(),
@@ -3797,7 +3801,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/Package1/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Soup.CSharp/2.2.3/package-lock.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
@@ -3913,7 +3917,7 @@ namespace Soup::Core::UnitTests
 								4,
 								PackageName("User1", "Wren"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Wren/2.2.2/"),
+								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -3930,7 +3934,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 4, "C:/BuiltIn/Packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
 							}
 						},
 						{
@@ -4277,7 +4281,7 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Soup.CSharp'
 					Language: (Wren@1)
@@ -4372,7 +4376,7 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/recipe.sml",
-					"DIAG: Load Recipe: C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 				}),
 				testListener->GetMessages(),
@@ -4384,7 +4388,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/package-lock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/recipe.sml",
-					"TryOpenReadBinary: C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -4482,7 +4486,7 @@ namespace Soup::Core::UnitTests
 								3,
 								PackageName("User1", "Soup.CSharp"),
 								"sha256:abcdefg",
-								Path("C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/"),
+								Path("C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/"),
 								nullptr,
 								PackageChildrenMap())
 						},
@@ -4509,7 +4513,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 3, "C:/BuiltIn/Packages/User1/Soup.CSharp/3.3.3/out/"},
+								{ 3, "C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/out/"},
 							}
 						},
 						{

@@ -79,6 +79,7 @@ namespace Soup::Core::UnitTests
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Cpp'
 					Language: (Wren@1)
+					Version: 0.8.2
 				)")));
 
 			fileSystem->CreateMockFile(
@@ -102,7 +103,14 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'Soup|Cpp': { Version: 0.8.2 }
+								'Soup|Cpp': {
+									Version: 0.8.2
+									Digest: 'fake:soup-cpp'
+									Artifacts: {
+										Linux: 'fake:soup-cpp-artifact'
+										Windows: 'fake:soup-cpp-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -127,7 +135,8 @@ namespace Soup::Core::UnitTests
 									Version: 0.5.4
 									Digest: 'fake:soup-wren'
 									Artifacts: {
-										FakePlatform: 'fake:soup-wren-artifact'
+										Linux: 'fake:soup-wren-artifact'
+										Windows: 'fake:soup-wren-artifact'
 									}
 								}
 							}
@@ -184,7 +193,7 @@ namespace Soup::Core::UnitTests
 				});
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = GetSystemPlatform();
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 
 			// Load user config state
@@ -451,7 +460,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string(GetSystemPlatform()) },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})
@@ -590,7 +599,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string(GetSystemPlatform()) },
 									{ "PackageDirectory", std::string("/(PACKAGE_Soup|Cpp)/") },
 									{ "TargetDirectory", std::string("/(TARGET_Soup|Cpp)/") },
 								})
@@ -792,7 +801,8 @@ namespace Soup::Core::UnitTests
 									Version: 0.5.4
 									Digest: 'fake:soup-wren'
 									Artifacts: {
-										FakePlatform: 'fake:soup-wren-artifact'
+										Linux: 'fake:soup-wren-artifact'
+										Windows: 'fake:soup-wren-artifact'
 									}
 								}
 							}
@@ -894,7 +904,7 @@ namespace Soup::Core::UnitTests
 							"Context",
 							ValueTable(
 							{
-								{ "HostPlatform", std::string("TestPlatform") },
+								{ "HostPlatform", std::string(GetSystemPlatform()) },
 								{ "PackageDirectory", std::string("/(PACKAGE_Soup|Cpp)/") },
 								{ "TargetDirectory", std::string("/(TARGET_Soup|Cpp)/") },
 							})
@@ -1020,7 +1030,7 @@ namespace Soup::Core::UnitTests
 							"Context",
 							ValueTable(
 							{
-								{ "HostPlatform", std::string("TestPlatform") },
+								{ "HostPlatform", std::string(GetSystemPlatform()) },
 								{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 								{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 							})
@@ -1136,7 +1146,7 @@ namespace Soup::Core::UnitTests
 			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = GetSystemPlatform();
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 
 			// Load user config state
@@ -1368,7 +1378,8 @@ namespace Soup::Core::UnitTests
 									Version: 0.5.4
 									Digest: 'fake:soup-wren'
 									Artifacts: {
-										FakePlatform: 'fake:soup-wren-artifact'
+										Linux: 'fake:soup-wren-artifact'
+										Windows: 'fake:soup-wren-artifact'
 									}
 								}
 							}
@@ -1440,7 +1451,7 @@ namespace Soup::Core::UnitTests
 				});
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = GetSystemPlatform();
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 
 			// Load user config state
@@ -1748,7 +1759,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string(GetSystemPlatform()) },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})
@@ -1887,7 +1898,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string(GetSystemPlatform()) },
 									{ "PackageDirectory", std::string("/(PACKAGE_Soup|Cpp)/") },
 									{ "TargetDirectory", std::string("/(TARGET_Soup|Cpp)/") },
 								})
@@ -2089,7 +2100,8 @@ namespace Soup::Core::UnitTests
 									Version: 0.5.4
 									Digest: 'fake:soup-wren'
 									Artifacts: {
-										FakePlatform: 'fake:soup-wren-artifact'
+										Linux: 'fake:soup-wren-artifact'
+										Windows: 'fake:soup-wren-artifact'
 									}
 								}
 							}
@@ -2191,7 +2203,7 @@ namespace Soup::Core::UnitTests
 							"Context",
 							ValueTable(
 							{
-								{ "HostPlatform", std::string("TestPlatform") },
+								{ "HostPlatform", std::string(GetSystemPlatform()) },
 								{ "PackageDirectory", std::string("/(PACKAGE_Soup|Cpp)/") },
 								{ "TargetDirectory", std::string("/(TARGET_Soup|Cpp)/") },
 							})
@@ -2317,7 +2329,7 @@ namespace Soup::Core::UnitTests
 							"Context",
 							ValueTable(
 							{
-								{ "HostPlatform", std::string("TestPlatform") },
+								{ "HostPlatform", std::string(GetSystemPlatform()) },
 								{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 								{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 							})
@@ -2440,7 +2452,7 @@ namespace Soup::Core::UnitTests
 			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = GetSystemPlatform();
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 
 			// Load user config state
@@ -2599,12 +2611,25 @@ namespace Soup::Core::UnitTests
 		}
 
 	private:
+		std::string_view GetSystemPlatform()
+		{
+			#if defined(_WIN32)
+				return "Windows";
+			#elif defined(__linux__)
+				return "Linux";
+			#else
+				#error "Unknown platform"
+			#endif
+		}
+
 		std::string_view GetRuntimeLibraryPath()
 		{
 			#ifdef _WIN32
 				return "C:/testlocation/";
-			#else
+			#elif defined(__linux__)
 				return "C:/lib/soup/";
+			#else
+				#error "Unknown platform"
 			#endif
 		}
 
@@ -2612,8 +2637,10 @@ namespace Soup::Core::UnitTests
 		{
 			#ifdef _WIN32
 				return "C:/testlocation/Soup.Generate.exe";
-			#else
+			#elif defined(__linux__)
 				return "C:/lib/soup/generate";
+			#else
+				#error "Unknown platform"
 			#endif
 		}
 	};

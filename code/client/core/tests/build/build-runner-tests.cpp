@@ -99,7 +99,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
@@ -280,7 +280,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})
@@ -383,7 +383,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
@@ -593,7 +593,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})
@@ -701,7 +701,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
@@ -976,7 +976,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_User1|TestBuild)/") },
 									{ "TargetDirectory", std::string("/(TARGET_User1|TestBuild)/") },
 								})
@@ -1096,7 +1096,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})
@@ -1244,7 +1244,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
@@ -1597,7 +1597,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_User1|PackageA)/") },
 									{ "TargetDirectory", std::string("/(TARGET_User1|PackageA)/") },
 								})
@@ -1721,7 +1721,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_User1|PackageB)/") },
 									{ "TargetDirectory", std::string("/(TARGET_User1|PackageB)/") },
 								})
@@ -1850,7 +1850,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})
@@ -2025,7 +2025,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
@@ -2296,7 +2296,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_User1|TestBuild)/") },
 									{ "TargetDirectory", std::string("/(TARGET_User1|TestBuild)/") },
 								})
@@ -2416,7 +2416,7 @@ namespace Soup::Core::UnitTests
 								"Context",
 								ValueTable(
 								{
-									{ "HostPlatform", std::string("TestPlatform") },
+									{ "HostPlatform", std::string("FakePlatform") },
 									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 								})

@@ -22,7 +22,7 @@ namespace Soup.Build.PackageManager;
 public class ClosureManager : IClosureManager
 {
 	private const int PackageLockVersion = 6;
-	private const string BuiltInLanguageWren = "Wren";
+	private const string BuildLanguageWren = "Wren";
 	private const string DependencyTypeBuild = "Build";
 	private const string DependencyTypeTool = "Tool";
 	private const string ArtifactsTableName = "Artifacts";
@@ -594,7 +594,7 @@ public class ClosureManager : IClosureManager
 			string? implicitLanguage;
 			if (dependencyType == DependencyTypeBuild)
 			{
-				implicitLanguage = BuiltInLanguageWren;
+				implicitLanguage = BuildLanguageWren;
 			}
 			else if (dependencyType == DependencyTypeTool)
 			{
