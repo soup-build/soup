@@ -383,7 +383,7 @@ int main()
 						"Context",
 						ValueTable(
 						{
-							{ "HostPlatform", std::string("TestPlatform") },
+							{ "HostPlatform", std::string("FakePlatform") },
 							{ "PackageDirectory", std::string("/(PACKAGE_Soup|Cpp)/") },
 							{ "TargetDirectory", std::string("/(TARGET_Soup|Cpp)/") },
 						})
@@ -509,7 +509,7 @@ int main()
 						"Context",
 						ValueTable(
 						{
-							{ "HostPlatform", std::string("TestPlatform") },
+							{ "HostPlatform", std::string("FakePlatform") },
 							{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
 							{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
 						})
@@ -627,7 +627,7 @@ int main()
 		ankerl::nanobench::Bench().minEpochIterations(3000).run("BuildEngine Execute NoDependencies UpToDate", [&]
 		{
 			auto arguments = RecipeBuildArguments();
-			arguments.HostPlatform = "TestPlatform";
+			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 
 			// Load user config state

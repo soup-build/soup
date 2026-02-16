@@ -71,7 +71,7 @@ namespace Soup::Core
 		// System Parameters
 		Path _userDataPath;
 		const ValueTable& _hostBuildGlobalParameters;
-		std::string _hostPlatform;
+		std::string_view _hostPlatform;
 
 		// Shared Runtime State
 		RecipeCache& _recipeCache;
@@ -96,14 +96,14 @@ namespace Soup::Core
 			RecipeBuildLocationManager& locationManager,
 			const ValueTable& targetBuildGlobalParameters,
 			const ValueTable& hostBuildGlobalParameters,
-			std::string hostPlatform,
+			std::string_view hostPlatform,
 			Path userDataPath,
 			RecipeCache& recipeCache) :
 			_knownLanguageLookup(knownLanguageLookup),
 			_locationManager(locationManager),
 			_targetBuildGlobalParameters(targetBuildGlobalParameters),
 			_hostBuildGlobalParameters(hostBuildGlobalParameters),
-			_hostPlatform(std::move(hostPlatform)),
+			_hostPlatform(hostPlatform),
 			_userDataPath(std::move(userDataPath)),
 			_recipeCache(recipeCache),
 			_knownPackageLocks(),

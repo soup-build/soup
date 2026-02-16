@@ -69,13 +69,13 @@ namespace Soup::Core
 			std::optional<std::string> owner,
 			const ValueTable& targetGlobalParameters,
 			const Path& userDataPath,
+			std::string_view hostPlatform,
 			RecipeCache& recipeCache)
 		{
 			auto startTime = std::chrono::high_resolution_clock::now();
 
 			// Load the system specific state
-			auto hostGlobalParameters = LoadHostSystemState();
-			auto hostPlatform = GetHostSystemName();
+			auto hostGlobalParameters = LoadHostSystemState(hostPlatform);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
 			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
@@ -136,12 +136,10 @@ namespace Soup::Core
 			PackageProvider& packageProvider,
 			const RecipeBuildArguments& arguments,
 			const Path& userDataPath,
+			const std::vector<Path>& systemReadAccess,
 			RecipeCache& recipeCache)
 		{
 			auto startTime = std::chrono::high_resolution_clock::now();
-
-			// Load the system specific state
-			auto systemReadAccess = LoadHostSystemAccess();
 
 			// Load the file system state
 			auto fileSystemState = PreloadFileSystemState(packageProvider);
@@ -178,42 +176,13 @@ namespace Soup::Core
 			return result;
 		}
 
-	private:
-		static std::string GetHostSystemName()
-		{
-			#if defined(_WIN32)
-			return "Windows";
-			#elif defined(__linux__)
-			return "Linux";
-			#else
-			#error "Unknown platform"
-			#endif
-		}
-
-		static ValueTable LoadHostSystemState()
+		static ValueTable LoadHostSystemState(std::string_view hostPlatform)
 		{
 			auto hostGlobalParameters = ValueTable();
 
-			auto system = GetHostSystemName();
-			hostGlobalParameters.emplace("System", Value(system));
+			hostGlobalParameters.emplace("System", Value(std::string(hostPlatform)));
 
 			return hostGlobalParameters;
-		}
-
-		static std::vector<Path> LoadHostSystemAccess()
-		{
-			auto systemReadAccess = std::vector<Path>();
-
-			#if defined(_WIN32)
-			// Allow read access from system directories
-			systemReadAccess.push_back(
-				Path("C:/Windows/"));
-			#elif defined(__linux__)
-			#else
-			#error "Unknown platform"
-			#endif
-
-			return systemReadAccess;
 		}
 	};
 }

@@ -160,7 +160,7 @@ export namespace Soup::Core
 		/// <summary>
 		/// Gets the build sets
 		/// </summary>
-		BuildSets GetBuildSets(const std::string& hostPlatform)
+		BuildSets GetBuildSets(std::string_view hostPlatform)
 		{
 			return GetBuildPackageSets(Property_Builds, hostPlatform);
 		}
@@ -168,7 +168,7 @@ export namespace Soup::Core
 		/// <summary>
 		/// Gets the tool sets
 		/// </summary>
-		BuildSets GetToolSets(const std::string& hostPlatform)
+		BuildSets GetToolSets(std::string_view hostPlatform)
 		{
 			return GetBuildPackageSets(Property_Tools, hostPlatform);
 		}
@@ -198,7 +198,9 @@ export namespace Soup::Core
 		}
 
 	private:
-		BuildSets GetBuildPackageSets(std::string_view property, const std::string& hostPlatform)
+		BuildSets GetBuildPackageSets(
+			std::string_view property,
+			std::string_view hostPlatform)
 		{
 			if (!HasValue(_table, property))
 				throw std::runtime_error("No build sets.");

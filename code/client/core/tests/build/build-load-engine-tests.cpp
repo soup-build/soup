@@ -276,15 +276,21 @@ namespace Soup::Core::UnitTests
 							2,
 							PackageGraph(
 								2,
-								2,
-								ValueTable())
+								3,
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
 							PackageGraph(
 								3,
-								3,
-								ValueTable())
+								2,
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -316,20 +322,20 @@ namespace Soup::Core::UnitTests
 							2,
 							PackageInfo(
 								2,
-								PackageName("User1", "TestTool"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/"),
-								nullptr,
+								PackageName("User1", "Cpp"),
+								"fake:user1-cpp-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
 							3,
 							PackageInfo(
 								3,
-								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								PackageName("User1", "TestTool"),
+								"fake:user1-test-tool-artifact",
+								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -344,13 +350,13 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/out/"},
+								{ 3, "C:/Users/Me/.soup/artifacts/C++/User1/TestTool/4.4.4/fake:user1-test-tool-artifact/"},
 							}
 						},
 						{
 							3,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 2, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/"},
 							}
 						},
 					})),
@@ -495,7 +501,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								2,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -522,9 +531,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -533,13 +542,13 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 						2,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 2, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
@@ -597,10 +606,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@2.2)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -641,7 +651,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -725,8 +741,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
-					"",
+					"INFO: Skip loading sub graph for prebuilt package",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -741,7 +758,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/root-recipe.sml",
@@ -785,7 +802,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -802,7 +822,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								4,
 								5,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							5,
@@ -879,9 +902,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -889,9 +912,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -900,31 +923,31 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							4,
 							{
-								{ 5, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 5, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
 							5,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/4.5.6/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 					})),
@@ -973,10 +996,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -1020,7 +1044,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -1073,8 +1103,10 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -1086,7 +1118,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -1115,10 +1147,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -1126,7 +1155,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								3,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -1135,10 +1167,7 @@ namespace Soup::Core::UnitTests
 								2,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -1146,7 +1175,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								4,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -1191,9 +1223,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -1201,9 +1233,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -1212,25 +1244,25 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 3, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							4,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
@@ -1292,10 +1324,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -1343,7 +1376,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -1427,7 +1466,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/",
 				}),
 				testListener->GetMessages(),
@@ -1443,7 +1484,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/root-recipe.sml",
@@ -1479,10 +1520,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -1490,7 +1528,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -1499,10 +1540,7 @@ namespace Soup::Core::UnitTests
 								3,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -1510,7 +1548,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								4,
 								5,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							5,
@@ -1519,10 +1560,7 @@ namespace Soup::Core::UnitTests
 								2,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 					}),
@@ -1591,9 +1629,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -1601,9 +1639,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -1612,13 +1650,13 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 						{
@@ -1630,13 +1668,13 @@ namespace Soup::Core::UnitTests
 						{
 							4,
 							{
-								{ 5, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 5, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
 							5,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 					})),
@@ -1685,10 +1723,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -1731,7 +1770,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -1784,8 +1829,10 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/WorkingDirectory/TestBuild/recipe.sml",
 					"DIAG: Load PackageLock: C:/WorkingDirectory/TestBuild/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -1797,7 +1844,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/TestBuild/recipe.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/TestBuild/package-lock.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -1828,7 +1875,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								3,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -1845,7 +1895,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								4,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -1890,9 +1943,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -1900,9 +1953,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -1911,25 +1964,25 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 3, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 2, "C:/WorkingDirectory/TestBuild/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 2, "C:/WorkingDirectory/TestBuild/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							4,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
@@ -1978,10 +2031,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -2120,10 +2174,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -2168,7 +2223,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -2222,9 +2283,11 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/recipe.sml",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
-					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
+					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -2237,7 +2300,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -2274,10 +2337,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -2285,7 +2345,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -2294,10 +2357,7 @@ namespace Soup::Core::UnitTests
 								2,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -2305,7 +2365,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								4,
 								5,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -2373,9 +2436,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -2383,9 +2446,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -2394,26 +2457,26 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
-								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
+								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							4,
 							{
-								{ 5, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 5, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
@@ -2474,10 +2537,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -2521,7 +2585,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 								'User1|TestBuild2': { Version: 4.4.4 }
 							}
 						}
@@ -2543,7 +2613,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -2599,9 +2675,11 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/TestBuild2/4.4.4/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
-					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
+					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -2615,7 +2693,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild2/4.4.4/package-lock.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -2652,10 +2730,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -2663,7 +2738,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -2672,10 +2750,7 @@ namespace Soup::Core::UnitTests
 								3,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -2685,10 +2760,7 @@ namespace Soup::Core::UnitTests
 								2,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -2696,7 +2768,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								5,
 								5,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -2759,9 +2834,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -2769,9 +2844,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -2780,31 +2855,31 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 3, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild2/4.4.4/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							4,
 							{
-								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 2, "C:/Users/Me/.soup/packages/Wren/User1/TestBuild/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							5,
 							{
-								{ 5, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 5, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
@@ -2866,10 +2941,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -2917,7 +2993,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -3001,7 +3083,9 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/",
 				}),
 				testListener->GetMessages(),
@@ -3017,7 +3101,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/C++/User1/TestTool/3.3.3/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/Users/Me/.soup/packages/C++/User1/TestTool/root-recipe.sml",
@@ -3053,10 +3137,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -3064,7 +3145,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -3073,10 +3157,7 @@ namespace Soup::Core::UnitTests
 								3,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -3084,7 +3165,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								4,
 								5,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							5,
@@ -3093,10 +3177,7 @@ namespace Soup::Core::UnitTests
 								2,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 					}),
@@ -3165,9 +3246,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -3175,9 +3256,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -3186,25 +3267,25 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/TestTool/3.3.3/out/zDqRc65c9x3jySpevCCCyZ15fGs/" },
 							}
 						},
 						{
 							4,
 							{
-								{ 5, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 5, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
@@ -3266,10 +3347,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -3327,7 +3409,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -3348,7 +3436,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -3410,11 +3504,12 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Wren/2.2.3/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Cpp/1.1.2/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/",
+					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -3428,7 +3523,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/TestBuild/3.3.4/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Wren/2.2.3/package-lock.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.2/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Cpp/1.1.2/package-lock.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
@@ -3474,10 +3569,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -3485,7 +3577,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -3494,10 +3589,7 @@ namespace Soup::Core::UnitTests
 								3,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -3507,10 +3599,7 @@ namespace Soup::Core::UnitTests
 								2,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 						{
@@ -3520,10 +3609,7 @@ namespace Soup::Core::UnitTests
 								5,
 								ValueTable(
 								{
-									{
-										"HostValue",
-										Value(true),
-									},
+									{ "HostValue", Value(true) },
 								}))
 						},
 					}),
@@ -3586,9 +3672,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -3620,7 +3706,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
@@ -3686,10 +3772,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Wren'
 					Language: (Wren@1)
+					Version: 2.2.2
 				)")));
 
 			// Create the package lock
@@ -3727,7 +3814,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							Wren: {
-								'User1|Wren': { Version: 2.2.2 }
+								'User1|Wren': {
+									Version: 2.2.2
+									Digest: 'fake:user1-wren'
+									Artifacts: {
+										FakePlatform: 'fake:user1-wren-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -3787,7 +3880,8 @@ namespace Soup::Core::UnitTests
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/recipe.sml",
 					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Soup.CSharp/2.2.3/package-lock.sml",
 					"INFO: Package lock loaded",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Graph already loaded: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/",
 				}),
 				testListener->GetMessages(),
@@ -3801,7 +3895,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/Package1/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/2.2.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Soup.CSharp/2.2.3/package-lock.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Wren/2.2.2/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
@@ -3839,7 +3933,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
@@ -3916,9 +4013,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Wren/2.2.2/"),
-								nullptr,
+								"fake:user1-wren-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -3934,7 +4031,7 @@ namespace Soup::Core::UnitTests
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/User1/Wren/2.2.2/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Wren/2.2.2/fake:user1-wren-artifact/" },
 							}
 						},
 						{
@@ -4139,7 +4236,10 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -4213,9 +4313,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -4224,15 +4324,15 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
-								{ 2, "C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
-								{ 3, "C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
+								{ 2, "C:/Users/Me/.soup/packages/C++/User1/PackageA/3.3.3/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
+								{ 3, "C:/Users/Me/.soup/packages/C++/User1/PackageB/4.4.4/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
@@ -4281,10 +4381,11 @@ namespace Soup::Core::UnitTests
 				)")));
 
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/recipe.sml"),
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Name: 'Soup.CSharp'
 					Language: (Wren@1)
+					Version: 3.3.3
 				)")));
 
 			// Create the package lock
@@ -4314,7 +4415,13 @@ namespace Soup::Core::UnitTests
 						}
 						Build1: {
 							Wren: {
-								'User1|Soup.CSharp': { Version: 3.3.3 }
+								'User1|Soup.CSharp': {
+									Version: 3.3.3
+									Digest: 'fake:user1-soup-csharp'
+									Artifacts: {
+										FakePlatform: 'fake:user1-soup-csharp-artifact'
+									}
+								}
 							}
 						}
 					}
@@ -4376,8 +4483,10 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/recipe.sml",
-					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
+					"INFO: Skip loading sub graph for prebuilt package",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -4388,7 +4497,7 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/package-lock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -4417,10 +4526,7 @@ namespace Soup::Core::UnitTests
 								1,
 								ValueTable(
 								{
-									{
-										"ArgumentValue",
-										Value(true),
-									},
+									{ "ArgumentValue", Value(true) },
 								}))
 						},
 						{
@@ -4428,14 +4534,20 @@ namespace Soup::Core::UnitTests
 							PackageGraph(
 								2,
 								3,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 						{
 							3,
 							PackageGraph(
 								3,
 								4,
-								ValueTable())
+								ValueTable(
+								{
+									{ "HostValue", Value(true) },
+								}))
 						},
 					}),
 					PackageLookupMap(
@@ -4485,9 +4597,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Soup.CSharp"),
-								"sha256:abcdefg",
-								Path("C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/"),
-								nullptr,
+								"fake:user1-soup-csharp-artifact",
+								Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/"),
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/recipe.sml")),
 								PackageChildrenMap())
 						},
 						{
@@ -4495,9 +4607,9 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"sha256:abcdefg",
+								"fake:user1-cpp-artifact",
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
-								nullptr,
+								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
 						},
 					}),
@@ -4506,20 +4618,20 @@ namespace Soup::Core::UnitTests
 						{
 							1,
 							{
-								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
-								{ 2, "C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								{ 1, "C:/WorkingDirectory/MyPackage/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
+								{ 2, "C:/Users/Me/.soup/packages/C#/User1/Package1/4.4.4/out/zxAcy-Et010fdZUKLgFemwwWuC8/" },
 							}
 						},
 						{
 							2,
 							{
-								{ 3, "C:/Users/Me/.soup/packages/User1/Soup.CSharp/3.3.3/out/"},
+								{ 3, "C:/Users/Me/.soup/artifacts/Wren/User1/Soup.CSharp/3.3.3/fake:user1-soup-csharp-artifact/" },
 							}
 						},
 						{
 							3,
 							{
-								{ 4, "C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/out/"},
+								{ 4, "C:/Users/Me/.soup/artifacts/Wren/User1/Cpp/1.1.1/fake:user1-cpp-artifact/" },
 							}
 						},
 					})),
