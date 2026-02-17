@@ -111,10 +111,15 @@ export namespace Soup::Core
 		/// </summary>
 		bool operator ==(const PackageInfo& rhs) const
 		{
+			auto artifactDigestEqual = ArtifactDigest.has_value() == rhs.ArtifactDigest.has_value();
+			if (ArtifactDigest.has_value())
+			{
+				artifactDigestEqual = ArtifactDigest.value() == rhs.ArtifactDigest.value();
+			}
+
 			return Id == rhs.Id &&
 				Name == rhs.Name &&
-				ArtifactDigest.has_value() == rhs.ArtifactDigest.has_value() &&
-				(ArtifactDigest.has_value() && ArtifactDigest.value() == rhs.ArtifactDigest.value()) &&
+				artifactDigestEqual &&
 				PackageRoot == rhs.PackageRoot &&
 				Recipe == rhs.Recipe &&
 				Dependencies == rhs.Dependencies;
