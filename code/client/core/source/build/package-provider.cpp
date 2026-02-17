@@ -113,7 +113,8 @@ export namespace Soup::Core
 		{
 			return Id == rhs.Id &&
 				Name == rhs.Name &&
-				ArtifactDigest == rhs.ArtifactDigest &&
+				ArtifactDigest.has_value() == rhs.ArtifactDigest.has_value() &&
+				(ArtifactDigest.has_value() && ArtifactDigest.value() == rhs.ArtifactDigest.value()) &&
 				PackageRoot == rhs.PackageRoot &&
 				Recipe == rhs.Recipe &&
 				Dependencies == rhs.Dependencies;
