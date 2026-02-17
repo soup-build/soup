@@ -178,6 +178,15 @@ std::string LoadBuildGraphContent(
 		System::ISystem::Register(std::make_shared<System::STLSystem>());
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
+		// Platform specific defaults
+		#if defined(_WIN32)
+			auto hostPlatform = "Windows";
+		#elif defined(__linux__)
+			auto hostPlatform = "Linux";
+		#else
+			#error "Unknown Platform"
+		#endif
+
 		auto workingDirectory = Path(workingDirectoryString);
 		auto globalParameters = ValueTableReader::Deserialize(globalParametersStream);
 
@@ -194,6 +203,7 @@ std::string LoadBuildGraphContent(
 			std::nullopt,
 			globalParameters,
 			userDataPath,
+			hostPlatform,
 			recipeCache);
 
 		auto packageGraphs = ConvertToJson(packageProvider.GetPackageGraphLookup());

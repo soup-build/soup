@@ -1,8 +1,8 @@
 Version: 6
 Closure: {
 	C: {
-		'mwasplund|libseccomp': { Version: 2.5.9, Digest: 'sha256:13d4dd00af9758bacffac95d987071ecbdfa994de2d86e331dd7f81318bed243', Build: '3', Tool: '0' }
-		'mwasplund|wren': { Version: 1.2.0, Digest: 'sha256:6b867a0b48ad53165921bc734032dc245b045898683e744c4df74c2ee06faecc', Build: '3', Tool: '0' }
+		'mwasplund|libseccomp': { Version: 2.5.9, Digest: 'sha256:13d4dd00af9758bacffac95d987071ecbdfa994de2d86e331dd7f81318bed243', Build: '4', Tool: '0' }
+		'mwasplund|wren': { Version: 1.2.0, Digest: 'sha256:6b867a0b48ad53165921bc734032dc245b045898683e744c4df74c2ee06faecc', Build: '4', Tool: '0' }
 	}
 	'C#': {
 		Opal: { Version: '../../generate-sharp/opal/', Build: '0', Tool: '0' }
@@ -13,7 +13,7 @@ Closure: {
 	'C++': {
 		'Monitor.Host': { Version: '../../monitor/host/', Build: '2', Tool: '1' }
 		'Monitor.Shared': { Version: '../../monitor/shared/', Build: '2', Tool: '1' }
-		'Soup.Core': { Version: '../../client/core/', Build: '2', Tool: '1' }
+		'Soup.Core': { Version: '../../client/core/', Build: '3', Tool: '1' }
 		'Soup.Native': { Version: '../../client/native/', Build: '2', Tool: '1' }
 		'mwasplund|CryptoPP': { Version: 1.2.7, Digest: 'sha256:354692b27aae43193129cf3607e3ced863f980083de84dddc0a7d6203f471e45', Build: '2', Tool: '1' }
 		'mwasplund|Detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '2', Tool: '1' }
@@ -56,6 +56,21 @@ Builds: {
 		}
 	}
 	3: {
+		Wren: {
+			'Soup|Cpp': {
+				Version: 0.16.1
+				Digest: 'sha256:ba382dc10cad04e619a7d3b069c5936e5dfc2ab3f7cfab439b6e3ee9149248b1'
+				Artifacts: {
+					Linux: 'sha256:71d6886c5c78f9ef813aea3e02529d69bcf442a9d73a0026454d6b12f11d40ef'
+				}
+			}
+			'mwasplund|Soup.Test.Cpp': {
+				Version: 0.15.2
+				Digest: 'sha256:7edd5e44357e50dd8a1ccc6f82d5d86f1d164f26810548b73cadbca91308fce1'
+			}
+		}
+	}
+	4: {
 		Wren: {
 			'Soup|C': {
 				Version: 0.5.0

@@ -48,6 +48,21 @@ namespace Soup::Client
 				}
 			}
 
+			auto systemReadAccess = std::vector<Path>();
+
+			// Platform specific defaults
+			#if defined(_WIN32)
+				auto hostPlatform = "Windows";
+
+				// Allow read access from system directories
+				systemReadAccess.push_back(
+					Path("C:/Windows/"));
+			#elif defined(__linux__)
+				auto hostPlatform = "Linux";
+			#else
+				#error "Unknown Platform"
+			#endif
+
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
 			arguments.WorkingDirectory = std::move(workingDirectory);
@@ -56,15 +71,7 @@ namespace Soup::Client
 			arguments.SkipEvaluate = _options.SkipEvaluate;
 			arguments.DisableMonitor = _options.DisableMonitor;
 			arguments.PartialMonitor = _options.PartialMonitor;
-
-			// Platform specific defaults
-			#if defined(_WIN32)
-				arguments.HostPlatform = "Windows";
-			#elif defined(__linux__)
-				arguments.HostPlatform = "Linux";
-			#else
-				#error "Unknown Platform"
-			#endif
+			arguments.HostPlatform = hostPlatform;
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
@@ -91,12 +98,14 @@ namespace Soup::Client
 				std::nullopt,
 				arguments.GlobalParameters,
 				userDataPath,
+				hostPlatform,
 				recipeCache);
 
 			Core::BuildEngine::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
+				systemReadAccess,
 				recipeCache);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
