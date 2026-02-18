@@ -115,7 +115,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -310,7 +309,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		_ = await Assert.ThrowsAsync<HandledException>(async () =>
@@ -543,7 +541,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -925,7 +922,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -1571,7 +1567,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -2220,7 +2215,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -2641,7 +2635,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -3110,7 +3103,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(
@@ -3322,7 +3314,6 @@ public class ClosureManagerUnitTests
 		var uut = new ClosureManager(
 			new Uri("https://test.api.soupbuild.com/"),
 			httpClient,
-			new SemanticVersion(4, 5, 6),
 			"FakePlatform");
 
 		await uut.GenerateAndRestoreRecursiveLocksAsync(

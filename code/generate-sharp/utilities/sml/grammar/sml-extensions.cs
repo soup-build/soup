@@ -663,6 +663,6 @@ public static partial class SMLExtensions
 		return keyTokenText;
 	}
 
-	[GeneratedRegex(@"^([A-Za-z0-9]+)$")]
+	[GeneratedRegex(@"^([A-Za-z][A-Za-z0-9]*)$")]
 	private static partial Regex SafeKeyRegex();
 }

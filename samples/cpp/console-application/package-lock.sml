@@ -5,7 +5,7 @@ Closure: {
 	}
 }
 Builds: {
-	0: {
+	'0': {
 		Wren: {
 			'Soup|Cpp': {
 				Version: 0.16.1
@@ -18,7 +18,7 @@ Builds: {
 	}
 }
 Tools: {
-	0: {
+	'0': {
 		'C++': {
 			'mwasplund|copy': {
 				Version: 1.2.0
