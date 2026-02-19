@@ -4,7 +4,11 @@
 
 using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -40,7 +44,9 @@ public class SystemBrowser : IBrowser
 		return port;
 	}
 
-	public async Task<BrowserResult> InvokeAsync(BrowserOptions options, CancellationToken cancellationToken = default)
+	public async Task<BrowserResult> InvokeAsync(
+		BrowserOptions options,
+		CancellationToken cancellationToken = default)
 	{
 		using var listener = new LoopbackHttpListener(this.Port, this.path);
 
@@ -118,6 +124,14 @@ public class LoopbackHttpListener : IDisposable
 		this.Url = new Uri($"http://127.0.0.1:{port}/{path}");
 
 		var builder = WebApplication.CreateBuilder();
+		_ = builder.WebHost.UseUrls(this.Url.ToString());
+
+		_ = builder.Services.AddLogging(builder =>
+		{
+			// Disable logging
+			_ = builder.ClearProviders();
+		});
+
 		this.app = builder.Build();
 
 		_ = this.app.MapGet("/", async (context) =>
@@ -140,7 +154,7 @@ public class LoopbackHttpListener : IDisposable
 				}
 			});
 
-		this.app.Run();
+		this.app.Start();
 	}
 
 	[SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Special case")]

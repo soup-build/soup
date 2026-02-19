@@ -2,14 +2,15 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Soup.Build.Api.Client;
 
 /// <summary>
-/// A class representing a local or public reference to an exact package.
+/// A class representing a local or public reference to a build dependency package.
 /// </summary>
-public class PackageLocalOrPublicExactReferenceModel
+public class PackageBuildDependencyReferenceModel
 {
 	/// <summary>
 	/// Gets or sets the local package id.
@@ -24,4 +25,11 @@ public class PackageLocalOrPublicExactReferenceModel
 	[JsonPropertyName("public")]
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 	public PackagePublicExactReferenceModel? Public { get; set; }
+
+	/// <summary>
+	/// Gets or sets the artifact references for each host.
+	/// </summary>
+	[JsonPropertyName("artifacts")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public Dictionary<string, PackageArtifactReferenceModel>? Artifacts { get; init; }
 }

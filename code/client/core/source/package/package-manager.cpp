@@ -88,6 +88,25 @@ namespace Soup::Core
 			RunCommand(std::move(arguments));
 		}
 
+		/// <summary>
+		/// Publish a package artifact
+		/// </summary>
+		static void PublishArtifact(
+			const Path& workingDirectory,
+			const Path& targetDirectory)
+		{
+			Log::Info("PublishArtifact");
+
+			auto arguments = std::vector<std::string>(
+			{
+				"publish-artifact",
+				workingDirectory.ToString(),
+				targetDirectory.ToString(),
+			});
+
+			RunCommand(std::move(arguments));
+		}
+
 	private:
 		static void RunCommand(std::vector<std::string> arguments)
 		{

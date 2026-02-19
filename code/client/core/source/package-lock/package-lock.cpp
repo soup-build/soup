@@ -13,8 +13,10 @@ module;
 export module Soup.Core:PackageLock;
 
 import Opal;
+import :Digest;
 import :PackageName;
 import :PackageReference;
+import :PackageWithArtifactReference;
 import :RecipeValue;
 import :SequenceMap;
 
@@ -27,31 +29,35 @@ export namespace Soup::Core
 	public:
 		PackageClosureValue(
 			PackageReference reference,
-			std::optional<std::string> buildValue,
-			std::optional<std::string> toolValue) :
+			std::string build,
+			std::string tool) :
 			Reference(std::move(reference)),
-			BuildValue(std::move(buildValue)),
-			ToolValue(std::move(toolValue))
+			Build(std::move(build)),
+			Tool(std::move(tool))
 		{
 		}
 
 		PackageReference Reference;
-		std::optional<std::string> BuildValue;
-		std::optional<std::string> ToolValue;
+		std::string Build;
+		std::string Tool;
 	};
 
 	/// <summary>
 	/// The package lock container
 	/// </summary>
 	using PackageClosure = std::map<std::string, std::map<PackageName, PackageClosureValue>>;
-	using PackageClosures = std::map<std::string, PackageClosure>;
+	using BuildSet = std::map<std::string, std::map<PackageName, PackageWithArtifactReference>>;
+	using BuildSets = std::map<std::string, BuildSet>;
 	class PackageLock
 	{
 	private:
-		static constexpr const char* Property_Closures = "Closures";
+		static constexpr const char* Property_Artifacts = "Artifacts";
+		static constexpr const char* Property_Closure = "Closure";
 		static constexpr const char* Property_Version = "Version";
 		static constexpr const char* Property_Build = "Build";
+		static constexpr const char* Property_Builds = "Builds";
 		static constexpr const char* Property_Tool = "Tool";
+		static constexpr const char* Property_Tools = "Tools";
 
 	public:
 		/// <summary>
@@ -88,79 +94,84 @@ export namespace Soup::Core
 		}
 
 		/// <summary>
-		/// Gets or sets the table of closures
+		/// Gets the closure
 		/// </summary>
-		bool HasClosures()
+		PackageClosure GetClosure()
 		{
-			return HasValue(_table, Property_Closures);
-		}
-
-		PackageClosures GetClosures()
-		{
-			if (!HasClosures())
+			if (!HasValue(_table, Property_Closure))
 				throw std::runtime_error("No closures.");
 
-			auto& values = GetValue(_table, Property_Closures).AsTable();
-			auto result = PackageClosures();
-			for (const auto& [closureKey, closureValue] : values)
+			auto& closureValue = GetValue(_table, Property_Closure).AsTable();
+			auto result = PackageClosure();
+			for (const auto& [languageKey, languageValue] : closureValue)
 			{
-				auto closureLock = PackageClosure();
-				for (const auto& [languageKey, languageValue] : closureValue.AsTable())
+				auto languageLock = std::map<PackageName, PackageClosureValue>();
+				for (auto& [projectUniqueName, projectValue] : languageValue.AsTable())
 				{
-					auto languageLock = std::map<PackageName, PackageClosureValue>();
-					for (auto& [projectUniqueName, projectValue] : languageValue.AsTable())
+					auto& projectTable = projectValue.AsTable();
+
+					auto projectName = PackageName::Parse(projectUniqueName);
+
+					if (!HasValue(projectTable, Property_Version))
+						throw std::runtime_error("No Version on project table.");
+					auto& versionValue = GetValue(projectTable, Property_Version);
+
+					PackageReference reference;
+					if (versionValue.IsVersion())
 					{
-						auto& projectTable = projectValue.AsTable();
-
-						auto projectName = PackageName::Parse(projectUniqueName);
-
-						if (!HasValue(projectTable, Property_Version))
-							throw std::runtime_error("No Version on project table.");
-						auto& versionValue = GetValue(projectTable, Property_Version);
-
-						PackageReference reference;
-						if (versionValue.IsVersion())
+						auto version = versionValue.AsVersion();
+						reference = PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
+					}
+					else if (versionValue.IsString())
+					{
+						SemanticVersion version;
+						if (SemanticVersion::TryParse(versionValue.AsString(), version))
 						{
-							auto version = versionValue.AsVersion();
 							reference = PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
-						}
-						else if (versionValue.IsString())
-						{
-							SemanticVersion version;
-							if (SemanticVersion::TryParse(versionValue.AsString(), version))
-							{
-								reference = PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
-							}
-							else
-							{
-								// Assume that the version value is a path
-								reference = PackageReference(Path(versionValue.AsString()));
-							}
 						}
 						else
 						{
-							throw std::runtime_error("Package version must be a Version or String.");
+							// Assume that the version value is a path
+							reference = PackageReference(Path(versionValue.AsString()));
 						}
-
-						std::optional<std::string> buildValue = std::nullopt;
-						if (HasValue(projectTable, Property_Build))
-							buildValue = GetValue(projectTable, Property_Build).AsString();
-
-						std::optional<std::string> toolValue = std::nullopt;
-						if (HasValue(projectTable, Property_Tool))
-							toolValue = GetValue(projectTable, Property_Tool).AsString();
-
-						auto lockValue = PackageClosureValue(std::move(reference), std::move(buildValue), std::move(toolValue));
-						languageLock.emplace(projectName, std::move(lockValue));
+					}
+					else
+					{
+						throw std::runtime_error("Package version must be a Version or String.");
 					}
 
-					closureLock.emplace(languageKey, std::move(languageLock));
+					if (!HasValue(projectTable, Property_Build))
+						throw std::runtime_error("Missing closure package build set reference.");
+					auto buildValue = GetValue(projectTable, Property_Build).AsString();
+
+					if (!HasValue(projectTable, Property_Tool))
+						throw std::runtime_error("Missing closure package build set reference.");
+					auto toolValue = GetValue(projectTable, Property_Tool).AsString();
+
+					auto lockValue = PackageClosureValue(std::move(reference), std::move(buildValue), std::move(toolValue));
+					languageLock.emplace(projectName, std::move(lockValue));
 				}
 
-				result.emplace(closureKey, std::move(closureLock));
+				result.emplace(languageKey, std::move(languageLock));
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Gets the build sets
+		/// </summary>
+		BuildSets GetBuildSets(std::string_view hostPlatform)
+		{
+			return GetBuildPackageSets(Property_Builds, hostPlatform);
+		}
+
+		/// <summary>
+		/// Gets the tool sets
+		/// </summary>
+		BuildSets GetToolSets(std::string_view hostPlatform)
+		{
+			return GetBuildPackageSets(Property_Tools, hostPlatform);
 		}
 
 		/// <summary>
@@ -188,6 +199,84 @@ export namespace Soup::Core
 		}
 
 	private:
+		BuildSets GetBuildPackageSets(
+			std::string_view property,
+			std::string_view hostPlatform)
+		{
+			if (!HasValue(_table, property))
+				throw std::runtime_error("No build sets.");
+
+			auto& values = GetValue(_table, property).AsTable();
+			auto result = BuildSets();
+			for (const auto& [buildSetKey, buildSetValue] : values)
+			{
+				auto buildSet = BuildSet();
+				for (const auto& [languageKey, languageValue] : buildSetValue.AsTable())
+				{
+					auto languageLock = std::map<PackageName, PackageWithArtifactReference>();
+					for (auto& [projectUniqueName, projectValue] : languageValue.AsTable())
+					{
+						auto& projectTable = projectValue.AsTable();
+
+						auto projectName = PackageName::Parse(projectUniqueName);
+
+						if (!HasValue(projectTable, Property_Version))
+							throw std::runtime_error("No Version on project table.");
+						auto& versionValue = GetValue(projectTable, Property_Version);
+
+						std::optional<Digest> artifactDigest;
+						if (HasValue(projectTable, Property_Artifacts))
+						{
+							auto& hostPlatformTable = GetValue(projectTable, Property_Artifacts).AsTable();
+							if (HasValue(hostPlatformTable, hostPlatform))
+							{
+								artifactDigest = Digest::Parse(
+									GetValue(hostPlatformTable, hostPlatform).AsString());
+							}
+						}
+
+						PackageWithArtifactReference reference;
+						if (versionValue.IsVersion())
+						{
+							auto version = versionValue.AsVersion();
+							reference = PackageWithArtifactReference(
+								PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version),
+								artifactDigest);
+						}
+						else if (versionValue.IsString())
+						{
+							SemanticVersion version;
+							if (SemanticVersion::TryParse(versionValue.AsString(), version))
+							{
+								reference = PackageWithArtifactReference(
+									PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version),
+									artifactDigest);
+							}
+							else
+							{
+								// Assume that the version value is a path
+								reference = PackageWithArtifactReference(
+									PackageReference(Path(versionValue.AsString())),
+									std::nullopt);
+							}
+						}
+						else
+						{
+							throw std::runtime_error("Package version must be a Version or String.");
+						}
+
+						languageLock.emplace(projectName, std::move(reference));
+					}
+
+					buildSet.emplace(languageKey, std::move(languageLock));
+				}
+
+				result.emplace(buildSetKey, std::move(buildSet));
+			}
+
+			return result;
+		}
+
 		bool HasValue(const RecipeTable& table, std::string_view key) const
 		{
 			return table.Contains(key.data());

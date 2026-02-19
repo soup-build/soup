@@ -14,9 +14,9 @@ public class ValueTable : IEnumerable, IEnumerable<KeyValuePair<string, Value>>
 {
 	private readonly Dictionary<string, Value> impl;
 
-	public ValueTable(IDictionary<string, Value> values)
+	public ValueTable(Dictionary<string, Value> values)
 	{
-		this.impl = new Dictionary<string, Value>(values);
+		this.impl = values;
 	}
 
 	public ValueTable()

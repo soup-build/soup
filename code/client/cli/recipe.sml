@@ -1,5 +1,5 @@
 Name: 'Soup'
-Version: 0.42.8
+Version: 0.43.0
 Language: 'C++|0'
 Type: 'Executable'
 Source: [
@@ -15,12 +15,6 @@ Dependencies: {
 		'../core/'
 		'../../generate/'
 		'../../monitor/host/'
-	]
-	Other: [
-		'../../tools/copy/'
-		'../../tools/mkdir/'
-		'../../tools/parse-modules/'
-		'[Wren]Soup|Wren@0'
 	]
 	Build: [
 		# TODO: 'Soup.Test.Cpp@0.4.0'

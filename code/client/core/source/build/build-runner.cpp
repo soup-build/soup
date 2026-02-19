@@ -119,7 +119,7 @@ namespace Soup::Core
 			const PackageGraph& packageGraph,
 			const PackageInfo& packageInfo)
 		{
-			if (packageInfo.IsPrebuilt)
+			if (packageInfo.IsPrebuilt())
 			{
 				if (_buildCache.contains(packageInfo.Id))
 				{

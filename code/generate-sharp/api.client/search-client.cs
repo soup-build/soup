@@ -21,13 +21,14 @@ public class SearchClient
 	private readonly HttpClient httpClient;
 	private readonly string bearerToken;
 
-	public SearchClient(HttpClient httpClient, string bearerToken)
+	public SearchClient(HttpClient httpClient, Uri baseUri, string bearerToken)
 	{
 		this.httpClient = httpClient;
+		this.BaseUrl = baseUri;
 		this.bearerToken = bearerToken;
 	}
 
-	public Uri BaseUrl { get; init; } = new Uri("https://api.soupbuild.com");
+	public Uri BaseUrl { get; init; }
 
 	/// <summary>
 	/// Search for packages.
