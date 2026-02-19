@@ -14,6 +14,7 @@ module;
 export module Soup.Core:PackageWithArtifactReference;
 
 import Opal;
+import :Digest;
 import :PackageIdentifier;
 import :PackageReference;
 
@@ -30,7 +31,7 @@ namespace Soup::Core
 	{
 	private:
 		PackageReference _packageReference;
-		std::optional<std::string> _artifactDigest;
+		std::optional<Digest> _artifactDigest;
 
 	public:
 		/// <summary>
@@ -47,7 +48,7 @@ namespace Soup::Core
 		/// </summary>
 		PackageWithArtifactReference(
 			PackageReference packageReference,
-			std::optional<std::string> artifactDigest) :
+			std::optional<Digest> artifactDigest) :
 			_packageReference(std::move(packageReference)),
 			_artifactDigest(std::move(artifactDigest))
 		{
@@ -72,13 +73,13 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets the artifact digest.
 		/// </summary>
-		const std::string& GetArtifactDigest() const
+		const Digest& GetArtifactDigest() const
 		{
 			if (!_artifactDigest.has_value())
 				throw std::runtime_error("PackageWithArtifactReference does not have an artifact digest.");
 			return _artifactDigest.value();
 		}
-		const std::optional<std::string>& GetArtifactDigestValue() const
+		const std::optional<Digest>& GetArtifactDigestValue() const
 		{
 			return _artifactDigest;
 		}

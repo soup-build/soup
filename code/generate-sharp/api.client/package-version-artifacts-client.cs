@@ -214,7 +214,7 @@ public class PackageVersionArtifactsClient
 		string ownerName,
 		string packageName,
 		string packageVersion,
-		string digest)
+		Digest digest)
 	{
 		return DownloadPackageVersionArtifactAsync(
 			languageName, ownerName, packageName, packageVersion, digest, CancellationToken.None);
@@ -236,7 +236,7 @@ public class PackageVersionArtifactsClient
 		string ownerName,
 		string packageName,
 		string packageVersion,
-		string digest,
+		Digest digest,
 		CancellationToken cancellationToken)
 	{
 		var urlBuilder = new StringBuilder();

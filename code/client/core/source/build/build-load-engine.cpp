@@ -221,7 +221,7 @@ namespace Soup::Core
 							packageInfo.Name.GetOwner(),
 							packageInfo.Name.GetName(),
 							packageInfo.Recipe->GetVersion().ToString(),
-							packageInfo.ArtifactDigest.value()));
+							packageInfo.ArtifactDigest.value().GetHash()));
 				}
 				else
 				{

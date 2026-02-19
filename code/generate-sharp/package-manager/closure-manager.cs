@@ -741,6 +741,14 @@ public class ClosureManager : IClosureManager
 				var projectVersionValue = projectTable.Values[PackageLock.Property_Version];
 				if (TryGetAsVersion(projectVersionValue.Value, out var version))
 				{
+					await EnsurePackageDownloadedAsync(
+						projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
+						languageName,
+						projectName.Name,
+						version,
+						packageStore,
+						stagingDirectory);
+
 					// Restore directly from the artifact if available
 					if (TryGetArtifactDigest(projectTable, out var digest))
 					{
@@ -753,16 +761,6 @@ public class ClosureManager : IClosureManager
 							artifactStore,
 							stagingDirectory);
 					}
-					else
-					{
-						await EnsurePackageDownloadedAsync(
-							projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
-							languageName,
-							projectName.Name,
-							version,
-							packageStore,
-							stagingDirectory);
-					}
 				}
 				else
 				{
@@ -772,14 +770,14 @@ public class ClosureManager : IClosureManager
 		}
 	}
 
-	private bool TryGetArtifactDigest(SMLTable packageTable, [MaybeNullWhen(false)] out string digest)
+	private bool TryGetArtifactDigest(SMLTable packageTable, [MaybeNullWhen(false)] out Digest digest)
 	{
 		if (packageTable.Values.TryGetValue(ArtifactsTableName, out var hostPlatformTableValue))
 		{
 			var hostPlatformTable = hostPlatformTableValue.Value.AsTable();
 			if (hostPlatformTable.Values.TryGetValue(this.hostPlatform, out var platformArtifact))
 			{
-				digest = platformArtifact.Value.AsString().Value;
+				digest = Digest.Parse(platformArtifact.Value.AsString().Value);
 				return true;
 			}
 		}
@@ -828,7 +826,7 @@ public class ClosureManager : IClosureManager
 		string languageName,
 		string packageName,
 		SemanticVersion packageVersion,
-		string digest,
+		Digest digest,
 		Path artifactStore,
 		Path stagingDirectory)
 	{
@@ -836,7 +834,7 @@ public class ClosureManager : IClosureManager
 
 		var languageRootFolder = artifactStore + new Path($"./{languageName}/");
 		var packageRootFolder = languageRootFolder + new Path($"./{ownerName}/{packageName}/{packageVersion}/");
-		var packageArtifactFolder = packageRootFolder + new Path($"./{digest}/");
+		var packageArtifactFolder = packageRootFolder + new Path($"./{digest.Hash}/");
 
 		// Check if the package version already exists
 		if (LifetimeManager.Get<IFileSystem>().Exists(packageArtifactFolder))

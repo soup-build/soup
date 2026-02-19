@@ -13,6 +13,7 @@ module;
 export module Soup.Core:PackageLock;
 
 import Opal;
+import :Digest;
 import :PackageName;
 import :PackageReference;
 import :PackageWithArtifactReference;
@@ -223,13 +224,14 @@ export namespace Soup::Core
 							throw std::runtime_error("No Version on project table.");
 						auto& versionValue = GetValue(projectTable, Property_Version);
 
-						std::optional<std::string> artifactDigest;
+						std::optional<Digest> artifactDigest;
 						if (HasValue(projectTable, Property_Artifacts))
 						{
 							auto& hostPlatformTable = GetValue(projectTable, Property_Artifacts).AsTable();
 							if (HasValue(hostPlatformTable, hostPlatform))
 							{
-								artifactDigest = GetValue(hostPlatformTable, hostPlatform).AsString();
+								artifactDigest = Digest::Parse(
+									GetValue(hostPlatformTable, hostPlatform).AsString());
 							}
 						}
 

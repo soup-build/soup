@@ -13,6 +13,7 @@ module;
 export module Soup.Core:PackageProvider;
 
 import Opal;
+import :Digest;
 import :PackageName;
 import :PackageReference;
 import :Recipe;
@@ -81,7 +82,7 @@ export namespace Soup::Core
 		PackageInfo(
 			PackageId id,
 			PackageName name,
-			std::optional<std::string> artifactDigest,
+			std::optional<Digest> artifactDigest,
 			Path packageRoot,
 			const Recipe* recipe,
 			PackageChildrenMap dependencies) :
@@ -96,7 +97,7 @@ export namespace Soup::Core
 
 		PackageId Id;
 		PackageName Name;
-		std::optional<std::string> ArtifactDigest;
+		std::optional<Digest> ArtifactDigest;
 		Path PackageRoot;
 		const ::Soup::Core::Recipe* Recipe;
 		PackageChildrenMap Dependencies;
