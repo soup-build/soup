@@ -253,7 +253,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 2>C:/Windows/",
 					"DIAG: 2>C:/Program Files/dotnet/",
-					"DIAG: 2>C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/",
+					"DIAG: 2>C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 2>Allowed Write Access:",
@@ -550,7 +550,7 @@ namespace Soup::Core::UnitTests
 										"Soup|Wren",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/.soup/") },
 										})
 									},
 								})
@@ -584,7 +584,7 @@ namespace Soup::Core::UnitTests
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/") },
+							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/") },
 						})
 					},
 					{
@@ -854,7 +854,7 @@ namespace Soup::Core::UnitTests
 									"Soup|Wren",
 									ValueTable(
 									{
-										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/.soup/") },
+										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/.soup/") },
 									})
 								},
 							})
@@ -888,7 +888,7 @@ namespace Soup::Core::UnitTests
 					"GenerateMacros",
 					ValueTable(
 					{
-						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/") },
+						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/") },
 					})
 				},
 				{
@@ -1525,7 +1525,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 2>C:/Windows/",
 					"DIAG: 2>C:/Program Files/dotnet/",
-					"DIAG: 2>C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/",
+					"DIAG: 2>C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 2>Allowed Write Access:",
@@ -1863,7 +1863,7 @@ namespace Soup::Core::UnitTests
 										"Soup|Wren",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/.soup/") },
 										})
 									},
 								})
@@ -1897,7 +1897,7 @@ namespace Soup::Core::UnitTests
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/") },
+							{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/") },
 						})
 					},
 					{
@@ -2167,7 +2167,7 @@ namespace Soup::Core::UnitTests
 									"Soup|Wren",
 									ValueTable(
 									{
-										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/.soup/") },
+										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/.soup/") },
 									})
 								},
 							})
@@ -2201,7 +2201,7 @@ namespace Soup::Core::UnitTests
 					"GenerateMacros",
 					ValueTable(
 					{
-						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/fake:soup-wren-artifact/") },
+						{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/Soup/Wren/0.5.4/soup-wren-artifact/") },
 					})
 				},
 				{

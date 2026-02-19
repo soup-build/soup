@@ -323,7 +323,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -333,7 +333,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "TestTool"),
-								"fake:user1-test-tool-artifact",
+								Digest("fake", "user1-test-tool-artifact"),
 								Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/TestTool/4.4.4/recipe.sml")),
 								PackageChildrenMap())
@@ -531,7 +531,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								2,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -902,7 +902,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -912,7 +912,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -1223,7 +1223,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -1233,7 +1233,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -1629,7 +1629,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -1639,7 +1639,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -1943,7 +1943,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -1953,7 +1953,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -2436,7 +2436,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -2446,7 +2446,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -2834,7 +2834,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -2844,7 +2844,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -3246,7 +3246,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -3256,7 +3256,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								5,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -3672,7 +3672,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -4013,7 +4013,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Wren"),
-								"fake:user1-wren-artifact",
+								Digest("fake", "user1-wren-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/2.2.2/recipe.sml")),
 								PackageChildrenMap())
@@ -4313,7 +4313,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
@@ -4597,7 +4597,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								3,
 								PackageName("User1", "Soup.CSharp"),
-								"fake:user1-soup-csharp-artifact",
+								Digest("fake", "user1-soup-csharp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Soup.CSharp/3.3.3/recipe.sml")),
 								PackageChildrenMap())
@@ -4607,7 +4607,7 @@ namespace Soup::Core::UnitTests
 							PackageInfo(
 								4,
 								PackageName("User1", "Cpp"),
-								"fake:user1-cpp-artifact",
+								Digest("fake", "user1-cpp-artifact"),
 								Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/"),
 								&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/Wren/User1/Cpp/1.1.1/recipe.sml")),
 								PackageChildrenMap())
