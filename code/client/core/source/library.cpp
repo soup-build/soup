@@ -102,6 +102,7 @@ export import :PackageLock;
 export import :PackageLockExtensions;
 
 // Recipe 
+export import :Digest;
 export import :LanguageReference;
 export import :PackageIdentifier;
 export import :PackageName;
