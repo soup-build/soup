@@ -2,6 +2,7 @@ Version: 6
 Closure: {
 	'C++': {
 		copy: { Version: './', Build: '0', Tool: '0' }
+		'mwasplund|copy': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
