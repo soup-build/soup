@@ -249,6 +249,14 @@ namespace Soup::Core
 		}
 
 		/// <summary>
+		/// Less Than operator
+		/// </summary>
+		bool operator<(const PackageReference& other) const
+		{
+			return std::tie(_identifier, _version, _path) < std::tie(other._identifier, other._version, other._path);
+		}
+
+		/// <summary>
 		/// Convert to string
 		/// </summary>
 		std::string ToString() const

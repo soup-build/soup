@@ -2094,7 +2094,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			auto workingDirectory = Path("C:/WorkingDirectory/MyPackage/");
-			
+
 			auto exception = Assert::Throws<HandledException>([&]()
 			{
 				auto packageProvider = uut.Load(workingDirectory, std::nullopt);
@@ -4637,6 +4637,177 @@ namespace Soup::Core::UnitTests
 					})),
 				packageProvider,
 				"Verify package graph matches expected.");
+		}
+
+		// [[Fact]]
+		// Verifies ability to detect a runtime dependency that uses the parent build package creating a circular dependency
+		// that requires a pre-built package to break the circle
+		void Load_CircularBuildDependency_Throws()
+		{
+			// Register the test listener
+			auto testListener = std::make_shared<TestTraceListener>();
+			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
+
+			// Register the test file system
+			auto fileSystem = std::make_shared<MockFileSystem>();
+			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
+
+			// Create the Recipe to build
+			fileSystem->CreateMockFile(
+				Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+				std::make_shared<MockFile>(std::stringstream(R"(
+					Name: 'MyPackage'
+					Language: (Wren@1)
+				)")));
+
+			fileSystem->CreateMockFile(
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Wren/1.1.1/recipe.sml"),
+				std::make_shared<MockFile>(std::stringstream(R"(
+					Name: 'Wren'
+					Language: (Wren@1)
+					Version: 1.1.1
+					Dependencies: {
+						Runtime: [
+							'Package1@4'
+						]
+					}
+				)")));
+
+			fileSystem->CreateMockFile(
+				Path("C:/Users/Me/.soup/packages/Wren/User1/Package1/4.4.4/recipe.sml"),
+				std::make_shared<MockFile>(std::stringstream(R"(
+					Name: 'Package1'
+					Language: (Wren@1)
+				)")));
+
+			// Create the package lock
+			fileSystem->CreateMockFile(
+				Path("C:/WorkingDirectory/MyPackage/package-lock.sml"),
+				std::make_shared<MockFile>(std::stringstream(R"(
+					Version: 6
+					Closure: {
+						'Wren': {
+							MyPackage: { Version: './', Build: 'Build0', Tool: 'Tool0' }
+						}
+					}
+					Builds: {
+						Build0: {
+							Wren: {
+								'User1|Wren': {
+									Version: 1.1.1
+									Digest: 'fake:user1-wren'
+								}
+							}
+						}
+					}
+					Tools: {
+						Tool1: {
+						}
+					}
+				)")));
+
+			// Create the package lock
+			fileSystem->CreateMockFile(
+				Path("C:/Users/Me/.soup/locks/Wren/User1/Wren/1.1.1/package-lock.sml"),
+				std::make_shared<MockFile>(std::stringstream(R"(
+					Version: 6
+					Closure: {
+						'Wren': {
+							'User1|Wren': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+							'User1|Package1': { Version: '../../../../../packages/Wren/User1/Package1/4.4.4/', Build: 'Build0', Tool: 'Tool0' }
+						}
+					}
+					Builds: {
+						Build0: {
+							Wren: {
+								'User1|Wren': {
+									Version: 1.1.1
+									Digest: 'fake:user1-wren'
+								}
+							}
+						}
+					}
+					Tools: {
+						Tool1: {
+						}
+					}
+				)")));
+
+			auto knownLanguages = std::map<std::string, KnownLanguage>(
+			{
+				{
+					"C++",
+					KnownLanguage("User1", "Cpp")
+				},
+				{
+					"Wren",
+					KnownLanguage("User1", "Wren")
+				},
+				{
+					"C#",
+					KnownLanguage("User1", "Soup.CSharp")
+				},
+			});
+			auto locationManager = RecipeBuildLocationManager(knownLanguages);
+			auto targetBuildGlobalParameters = ValueTable(
+			{
+				{
+					"ArgumentValue",
+					Value(true),
+				},
+			});
+			auto hostBuildGlobalParameters = ValueTable(
+			{
+				{
+					"HostValue",
+					Value(true),
+				},
+			});
+			auto hostPlatform = "FakePlatform";
+			auto userDataPath = Path("C:/Users/Me/.soup/");
+			auto recipeCache = RecipeCache();
+			auto uut = BuildLoadEngine(
+				knownLanguages,
+				locationManager,
+				targetBuildGlobalParameters,
+				hostBuildGlobalParameters,
+				hostPlatform,
+				userDataPath,
+				recipeCache);
+
+			auto workingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+
+			auto exception = Assert::Throws<std::runtime_error>([&]()
+			{
+				auto packageProvider = uut.Load(workingDirectory, std::nullopt);
+			});
+
+			// Verify expected logs
+			Assert::AreEqual(
+				std::vector<std::string>({
+					"DIAG: Load PackageLock: C:/WorkingDirectory/MyPackage/package-lock.sml",
+					"INFO: Package lock loaded",
+					"DIAG: Load Recipe: C:/WorkingDirectory/MyPackage/recipe.sml",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Wren/1.1.1/recipe.sml",
+					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/User1/Wren/1.1.1/package-lock.sml",
+					"INFO: Package lock loaded",
+					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/User1/Package1/4.4.4/recipe.sml",
+					"ERRO: Found circular build dependency: [Wren]User1|Wren -> User1|Wren@1",
+				}),
+				testListener->GetMessages(),
+				"Verify log messages match expected.");
+
+			// Verify expected file system requests
+			Assert::AreEqual(
+				std::vector<std::string>({
+					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/package-lock.sml",
+					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Wren/1.1.1/recipe.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/User1/Wren/1.1.1/package-lock.sml",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/User1/Package1/4.4.4/recipe.sml",
+				}),
+				fileSystem->GetRequests(),
+				"Verify file system requests match expected.");
 		}
 	};
 }

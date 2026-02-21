@@ -28,6 +28,7 @@ export TestState RunBuildLoadEngineTests()
 	state += Soup::Test::RunTest(className, "Load_RuntimeDependency_Local_ExplicitLanguageOverride_MultipleReferences_ReuseBuildGraph", [&testClass]() { testClass->Load_RuntimeDependency_Local_ExplicitLanguageOverride_MultipleReferences_ReuseBuildGraph(); });
 	state += Soup::Test::RunTest(className, "Load_RuntimeDependency_External_Triangle_BuildOnce", [&testClass]() { testClass->Load_RuntimeDependency_External_Triangle_BuildOnce(); });
 	state += Soup::Test::RunTest(className, "Load_OtherDependency_ExplicitLanguage", [&testClass]() { testClass->Load_OtherDependency_ExplicitLanguage(); });
+	state += Soup::Test::RunTest(className, "Load_CircularBuildDependency_Throws", [&testClass]() { testClass->Load_CircularBuildDependency_Throws(); });
 
 	return state;
 }

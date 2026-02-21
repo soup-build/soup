@@ -153,7 +153,8 @@ namespace Soup::Core
 				std::move(owner),
 				recipe->GetName());
 
-			auto parentSet = std::set<PackageName>();
+			auto parentRuntimeSet = std::set<PackageName>();
+			auto parentBuildSet = std::set<PackageReference>();
 			auto knownPackageSet = KnownPackageMap();
 			auto toolDependencyProjects = std::vector<PackageChildInfo>();
 			std::optional<std::string> rootBuildToolClosureName = std::nullopt;
@@ -163,7 +164,8 @@ namespace Soup::Core
 				*recipe,
 				projectRoot,
 				rootPackageId,
-				parentSet,
+				parentRuntimeSet,
+				parentBuildSet,
 				knownPackageSet,
 				packageLockState,
 				parentPackageLockState,
@@ -587,15 +589,16 @@ namespace Soup::Core
 			const Recipe& recipe,
 			const Path& projectRoot,
 			PackageId packageId,
-			const std::set<PackageName>& parentSet,
+			const std::set<PackageName>& parentRuntimeSet,
+			const std::set<PackageReference>& parentBuildSet,
 			KnownPackageMap& knownPackageSet,
 			const PackageLockState& packageLockState,
 			const PackageLockState& parentPackageLockState,
 			std::vector<PackageChildInfo>& toolDependencies)
 		{
 			// Add current package to the parent set when building child dependencies
-			auto activeParentSet = parentSet;
-			activeParentSet.insert(packageIdentifier.GetPackageName());
+			auto activeParentRuntimeSet = parentRuntimeSet;
+			activeParentRuntimeSet.insert(packageIdentifier.GetPackageName());
 
 			// Keep track of the packages we have already seen
 			auto insertKnown = knownPackageSet.emplace(
@@ -623,6 +626,7 @@ namespace Soup::Core
 						projectRoot,
 						buildClosureName,
 						toolClosureName,
+						parentBuildSet,
 						packageLockState);
 					dependencyProjects.emplace(_dependencyTypeBuild, std::move(buildDependencies));
 					buildDependencyToolDependencies = std::move(buildToolDependencies);
@@ -636,6 +640,7 @@ namespace Soup::Core
 							recipe,
 							projectRoot,
 							buildToolClosureName.value(),
+							parentBuildSet,
 							packageLockState,
 							parentPackageLockState);
 					}
@@ -651,7 +656,8 @@ namespace Soup::Core
 						recipe,
 						projectRoot,
 						dependencyType,
-						activeParentSet,
+						activeParentRuntimeSet,
+						parentBuildSet,
 						knownPackageSet,
 						packageLockState,
 						parentPackageLockState);
@@ -667,6 +673,7 @@ namespace Soup::Core
 					projectRoot,
 					buildClosureName,
 					toolClosureName,
+					parentBuildSet,
 					packageLockState);
 			buildDependencyToolDependencies.insert(
 				buildDependencyToolDependencies.end(),
@@ -699,7 +706,8 @@ namespace Soup::Core
 			const Recipe& recipe,
 			const Path& projectRoot,
 			const std::string& dependencyType,
-			const std::set<PackageName>& activeParentSet,
+			const std::set<PackageName>& parentRuntimeSet,
+			const std::set<PackageReference>& parentBuildSet,
 			KnownPackageMap& knownPackageSet,
 			const PackageLockState& packageLockState,
 			const PackageLockState& parentPackageLockState)
@@ -711,7 +719,8 @@ namespace Soup::Core
 					packageIdentifier,
 					dependency,
 					projectRoot,
-					activeParentSet,
+					parentRuntimeSet,
+					parentBuildSet,
 					knownPackageSet,
 					packageLockState,
 					parentPackageLockState);
@@ -727,7 +736,8 @@ namespace Soup::Core
 			const PackageIdentifier& parentIdentifier,
 			const PackageReference& originalReference,
 			const Path& projectRoot,
-			const std::set<PackageName>& activeParentSet,
+			const std::set<PackageName>& parentRuntimeSet,
+			const std::set<PackageReference>& parentBuildSet,
 			KnownPackageMap& knownPackageSet,
 			const PackageLockState& packageLockState,
 			const PackageLockState& parentPackageLockState)
@@ -827,10 +837,10 @@ namespace Soup::Core
 			}
 
 			// Ensure we do not have any circular dependencies
-			if (activeParentSet.contains(dependencyIdentifier.GetPackageName()))
+			if (parentRuntimeSet.contains(dependencyIdentifier.GetPackageName()))
 			{
-				Log::Error("Found circular dependency: {} -> {}", parentIdentifier.ToString(), dependencyIdentifier.ToString());
-				throw std::runtime_error("BuildRecipeAndDependencies: Circular dependency.");
+				Log::Error("Found circular runtime dependency: {} -> {}", parentIdentifier.ToString(), dependencyIdentifier.ToString());
+				throw std::runtime_error("BuildRecipeAndDependencies: Circular runtime dependency.");
 			}
 
 			// Check if the package has already been processed from another reference
@@ -861,7 +871,8 @@ namespace Soup::Core
 					*dependencyRecipe,
 					dependencyProjectRoot,
 					childPackageId,
-					activeParentSet,
+					parentRuntimeSet,
+					parentBuildSet,
 					knownPackageSet,
 					packageLockState,
 					parentPackageLockState,
@@ -881,6 +892,7 @@ namespace Soup::Core
 			const Path& projectRoot,
 			const std::string& buildClosureName,
 			const std::string& toolClosureName,
+			const std::set<PackageReference>& parentBuildSet,
 			const PackageLockState& packageLockState)
 		{
 			auto buildProjects = std::vector<PackageChildInfo>();
@@ -893,6 +905,7 @@ namespace Soup::Core
 					projectRoot,
 					buildClosureName,
 					toolClosureName,
+					parentBuildSet,
 					packageLockState);
 				buildProjects.push_back(std::move(buildDependency));
 
@@ -911,6 +924,7 @@ namespace Soup::Core
 			const Recipe& recipe,
 			const Path& projectRoot,
 			const std::string& toolClosureName,
+			const std::set<PackageReference>& parentBuildSet,
 			const PackageLockState& packageLockState,
 			const PackageLockState& parentPackageLockState)
 		{
@@ -923,6 +937,7 @@ namespace Soup::Core
 						dependency,
 						projectRoot,
 						toolClosureName,
+						parentBuildSet,
 						packageLockState,
 						parentPackageLockState));
 			}
@@ -936,6 +951,7 @@ namespace Soup::Core
 			const Path& projectRoot,
 			const std::string& buildClosureName,
 			const std::string& toolClosureName,
+			const std::set<PackageReference>& parentBuildSet,
 			const PackageLockState& packageLockState)
 		{
 			PackageIdentifier dependencyIdentifier;
@@ -1025,6 +1041,7 @@ namespace Soup::Core
 				activeReference,
 				projectRoot,
 				toolClosureName,
+				parentBuildSet,
 				packageLockState);
 		}
 
@@ -1033,6 +1050,7 @@ namespace Soup::Core
 			const PackageReference& originalReference,
 			const Path& projectRoot,
 			const std::string& toolClosureName,
+			const std::set<PackageReference>& parentBuildSet,
 			const PackageLockState& packageLockState,
 			const PackageLockState& parentPackageLockState)
 		{
@@ -1131,6 +1149,7 @@ namespace Soup::Core
 				activeReference,
 				projectRoot,
 				toolToolClosureName,
+				parentBuildSet,
 				packageLockState);
 
 			for (auto& toolToolDependency : toolToolDependencies)
@@ -1145,6 +1164,7 @@ namespace Soup::Core
 			const PackageWithArtifactReference& activeReference,
 			const Path& projectRoot,
 			const std::string& toolClosureName,
+			const std::set<PackageReference>& parentBuildSet,
 			const PackageLockState& packageLockState)
 		{
 			// Load this package recipe
@@ -1227,6 +1247,17 @@ namespace Soup::Core
 					owner,
 					dependencyRecipe->GetName());
 
+				// Ensure we do not have any circular dependencies
+				if (parentBuildSet.contains(originalReference))
+				{
+					Log::Error("Found circular build dependency: {} -> {}", parentIdentifier.ToString(), originalReference.ToString());
+					throw std::runtime_error("Circular build dependency.");
+				}
+
+				// Add current package to the parent set when building child dependencies
+				auto activeParentBuildSet = parentBuildSet;
+				activeParentBuildSet.insert(originalReference);
+
 				// Discover all recursive dependencies
 				auto childPackageId = ++_uniquePackageId;
 
@@ -1242,16 +1273,17 @@ namespace Soup::Core
 					const auto& dependencyPackageLockState = LoadPackageLock(packageLockRoot);
 
 					// Reset parent set to allow uniqueness within sub graph
-					auto parentSet = std::set<PackageName>();
+					auto parentRuntimeSet = std::set<PackageName>();
 					auto knownPackageSet = KnownPackageMap();
-					
+
 					LoadClosure(
 						toolClosureName,
 						dependencyIdentifier,
 						*dependencyRecipe,
 						dependencyProjectRoot,
 						childPackageId,
-						parentSet,
+						parentRuntimeSet,
+						activeParentBuildSet,
 						knownPackageSet,
 						dependencyPackageLockState,
 						packageLockState,
@@ -1270,6 +1302,7 @@ namespace Soup::Core
 							*dependencyRecipe,
 							dependencyProjectRoot,
 							toolClosureName,
+							activeParentBuildSet,
 							dependencyPackageLockState,
 							packageLockState);
 					}
@@ -1314,6 +1347,7 @@ namespace Soup::Core
 			const Path& projectRoot,
 			const std::string& buildClosureName,
 			const std::string& toolClosureName,
+			const std::set<PackageReference>& parentBuildSet,
 			const PackageLockState& packageLockState)
 		{
 			auto language = recipe.GetLanguage();
@@ -1340,6 +1374,7 @@ namespace Soup::Core
 				projectRoot,
 				buildClosureName,
 				toolClosureName,
+				parentBuildSet,
 				packageLockState);
 		}
 	};
