@@ -4,6 +4,7 @@ Closure: {
 		'mwasplund|Opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.2, Digest: 'sha256:96bf955a7f231259e49faa821cd9f5fe4610b146038f5c6a3c8e91c8192d747c', Build: '0', Tool: '0' }
 		'parse.modules': { Version: './', Build: '0', Tool: '0' }
+		'mwasplund|parse.modules': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
