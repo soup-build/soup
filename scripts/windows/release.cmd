@@ -16,4 +16,4 @@ msbuild %InstallerDir% -p:Configuration=Release
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 REM - Generate zip release
-tar -a -cf %ReleaseDir%/soup-build-%SOUP_VERSION%-windows-x64.zip -C %RunDir% *
+tar -a -cf %ReleaseDir%/%SOUP_VERSION%/soup-build-windows-x64.zip -C %RunDir% *
