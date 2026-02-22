@@ -92,6 +92,7 @@ public static class MigrationManager
 		{
 			case "net8.0":
 			case "net9.0":
+			case "net10.0":
 				recipe.Document.EnsureValueWithSyntax("TargetFramework", parser.TargetFramework);
 				break;
 			default:

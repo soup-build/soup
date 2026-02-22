@@ -22,13 +22,14 @@ public class LanguagesClient
 	private readonly HttpClient httpClient;
 	private readonly string bearerToken;
 
-	public LanguagesClient(HttpClient httpClient, string bearerToken)
+	public LanguagesClient(HttpClient httpClient, Uri baseUri, string bearerToken)
 	{
 		this.httpClient = httpClient;
+		this.BaseUrl = baseUri;
 		this.bearerToken = bearerToken;
 	}
 
-	public Uri BaseUrl { get; init; } = new Uri("https://api.soupbuild.com");
+	public Uri BaseUrl { get; init; }
 
 	/// <summary>
 	/// Get a language by unique name.

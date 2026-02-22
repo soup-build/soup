@@ -38,12 +38,12 @@ public class GenerateClosureResultModel
 	/// </summary>
 	[JsonPropertyName("buildClosures")]
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-	public IDictionary<string, ICollection<PackageLocalOrPublicExactReferenceModel>>? BuildClosures { get; init; }
+	public IDictionary<string, ICollection<PackageBuildDependencyReferenceModel>>? BuildClosures { get; init; }
 
 	/// <summary>
 	/// Gets or sets the collection of tool closures.
 	/// </summary>
 	[JsonPropertyName("toolClosures")]
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-	public IDictionary<string, ICollection<PackageLocalOrPublicExactReferenceModel>>? ToolClosures { get; init; }
+	public IDictionary<string, ICollection<PackageBuildDependencyReferenceModel>>? ToolClosures { get; init; }
 }

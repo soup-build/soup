@@ -2,8 +2,6 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Soup.Build.Utilities;
 using System;
 using System.Collections.ObjectModel;
@@ -13,25 +11,13 @@ namespace Soup.View.ViewModels;
 
 public class TaskDetailsViewModel : ViewModelBase
 {
-	private readonly ObservableCollection<ValueTableItemViewModel> properties = [];
-
 	public TaskDetailsViewModel(ValueTable taskInfo)
 	{
-		this.properties.Clear();
-		BuildValueTable(taskInfo, this.properties);
-
-		this.Properties = new HierarchicalTreeDataGridSource<ValueTableItemViewModel>(this.properties)
-		{
-			Columns =
-			{
-				new HierarchicalExpanderColumn<ValueTableItemViewModel>(
-					new TextColumn<ValueTableItemViewModel, string>("Title", x => x.Title),
-					x => x.Children),
-			},
-		};
+		this.Properties.Clear();
+		BuildValueTable(taskInfo, this.Properties);
 	}
 
-	public HierarchicalTreeDataGridSource<ValueTableItemViewModel> Properties { get; }
+	public ObservableCollection<ValueTableItemViewModel> Properties { get; } = [];
 
 	private void BuildValueTable(
 		ValueTable table,

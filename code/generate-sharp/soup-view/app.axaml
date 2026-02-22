@@ -12,7 +12,6 @@
 	<!-- Use system theme -->
 	<Application.Styles>
 		<FluentTheme />
-		<StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml"/>
 		<StyleInclude Source="/views/graph-viewer.axaml"/>
 		<StyleInclude Source="/views/selected-button.axaml"/>
 	</Application.Styles>

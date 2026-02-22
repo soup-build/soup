@@ -203,6 +203,14 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets the Version.
 		/// </summary>
+		bool HasVersion() const
+		{
+			return _version.has_value();
+		}
+
+		/// <summary>
+		/// Gets or sets the Version.
+		/// </summary>
 		const SemanticVersion& GetVersion() const
 		{
 			if (!_version.has_value())
@@ -238,6 +246,14 @@ namespace Soup::Core
 			return _identifier != rhs._identifier ||
 				_version != rhs._version ||
 				_path != rhs._path;
+		}
+
+		/// <summary>
+		/// Less Than operator
+		/// </summary>
+		bool operator<(const PackageReference& other) const
+		{
+			return std::tie(_identifier, _version, _path) < std::tie(other._identifier, other._version, other._path);
 		}
 
 		/// <summary>

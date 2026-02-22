@@ -61,55 +61,21 @@ namespace Soup::Core
 			return result;
 		}
 
-		static std::map<std::string, std::map<PackageName, SemanticVersion>> GetBuiltInPackages()
-		{
-			auto result = std::map<std::string, std::map<PackageName, SemanticVersion>>(
-			{
-				{
-					"C++",
-					{
-						{
-							PackageName("mwasplund", "copy"),
-							SemanticVersion(1, 2, 0)
-						},
-						{
-							PackageName("mwasplund", "mkdir"),
-							SemanticVersion(1, 2, 0)
-						},
-						{
-							PackageName("mwasplund", "parse.modules"),
-							SemanticVersion(1, 2, 0)
-						},
-					}
-				},
-				{
-					"Wren",
-					{
-						{
-							PackageName("Soup", "Wren"),
-							SemanticVersion(0, 5, 4)
-						},
-					}
-				},
-			});
-
-			return result;
-		}
-
 		/// <summary>
 		/// Load the build graph
 		/// </summary>
 		static PackageProvider LoadBuildGraph(
-			const Path& builtInDirectory,
 			const Path& workingDirectory,
+			std::optional<std::string> owner,
 			const ValueTable& targetGlobalParameters,
 			const Path& userDataPath,
+			std::string_view hostPlatform,
 			RecipeCache& recipeCache)
 		{
 			auto startTime = std::chrono::high_resolution_clock::now();
 
 			// Load the system specific state
-			auto hostGlobalParameters = LoadHostSystemState();
+			auto hostGlobalParameters = LoadHostSystemState(hostPlatform);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
 			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
@@ -120,18 +86,16 @@ namespace Soup::Core
 
 			// Generate the package build graph
 			auto knownLanguages = GetKnownLanguages();
-			auto builtInPackages = GetBuiltInPackages();
 			auto locationManager = RecipeBuildLocationManager(knownLanguages);
 			auto loadEngine = BuildLoadEngine(
-				builtInDirectory,
 				knownLanguages,
-				builtInPackages,
 				locationManager,
 				targetGlobalParameters,
 				hostGlobalParameters,
+				hostPlatform,
 				userDataPath,
 				recipeCache);
-			auto packageProvider = loadEngine.Load(workingDirectory);
+			auto packageProvider = loadEngine.Load(workingDirectory, std::move(owner));
 
 			endTime = std::chrono::high_resolution_clock::now();
 			duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
@@ -172,12 +136,10 @@ namespace Soup::Core
 			PackageProvider& packageProvider,
 			const RecipeBuildArguments& arguments,
 			const Path& userDataPath,
+			const std::vector<Path>& systemReadAccess,
 			RecipeCache& recipeCache)
 		{
 			auto startTime = std::chrono::high_resolution_clock::now();
-
-			// Load the system specific state
-			auto systemReadAccess = LoadHostSystemAccess();
 
 			// Load the file system state
 			auto fileSystemState = PreloadFileSystemState(packageProvider);
@@ -214,26 +176,13 @@ namespace Soup::Core
 			return result;
 		}
 
-	private:
-		static ValueTable LoadHostSystemState()
+		static ValueTable LoadHostSystemState(std::string_view hostPlatform)
 		{
 			auto hostGlobalParameters = ValueTable();
 
-			auto system = std::string("Windows");
-			hostGlobalParameters.emplace("System", Value(system));
+			hostGlobalParameters.emplace("System", Value(std::string(hostPlatform)));
 
 			return hostGlobalParameters;
-		}
-
-		static std::vector<Path> LoadHostSystemAccess()
-		{
-			auto systemReadAccess = std::vector<Path>();
-
-			// Allow read access from system directories
-			systemReadAccess.push_back(
-				Path("C:/Windows/"));
-
-			return systemReadAccess;
 		}
 	};
 }

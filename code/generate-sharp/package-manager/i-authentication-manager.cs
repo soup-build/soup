@@ -15,5 +15,5 @@ public interface IAuthenticationManager
 	/// <summary>
 	/// Get the authentication token for the user
 	/// </summary>
-	Task<string> EnsureSignInAsync();
+	Task<string> EnsureSignInAsync(bool forceRefresh);
 }

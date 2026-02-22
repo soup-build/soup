@@ -35,7 +35,7 @@ public partial class PackageReference : IEquatable<PackageReference>
 				matchName.Groups["Owner"].Value : null;
 			var name = matchName.Groups["Name"].Value;
 			var version = matchName.Groups.ContainsKey("Version") && matchName.Groups["Version"].Success ?
-					SemanticVersion.Parse(matchName.Groups["Version"].Value) : null;
+				SemanticVersion.Parse(matchName.Groups["Version"].Value) : null;
 			result = new PackageReference(language, owner, name, version);
 			return true;
 		}

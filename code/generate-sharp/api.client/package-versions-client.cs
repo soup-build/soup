@@ -1,4 +1,4 @@
-﻿// <copyright file="package-version-client.cs" company="Soup">
+﻿// <copyright file="package-versions-client.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using Opal;
 
 namespace Soup.Build.Api.Client;
 
@@ -25,13 +26,14 @@ public class PackageVersionsClient
 	private readonly HttpClient httpClient;
 	private readonly string? bearerToken;
 
-	public PackageVersionsClient(HttpClient httpClient, string? bearerToken)
+	public PackageVersionsClient(HttpClient httpClient, Uri baseUri, string? bearerToken)
 	{
 		this.httpClient = httpClient;
+		this.BaseUrl = baseUri;
 		this.bearerToken = bearerToken;
 	}
 
-	public Uri BaseUrl { get; init; } = new Uri("https://api.soupbuild.com");
+	public Uri BaseUrl { get; init; }
 
 	/// <summary>
 	/// Get a package version.
@@ -174,6 +176,7 @@ public class PackageVersionsClient
 			case HttpStatusCode.Created:
 				break;
 			default:
+				Log.Error($"Error {await response.Content.ReadAsStringAsync(cancellationToken)}");
 				throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
 		}
 	}

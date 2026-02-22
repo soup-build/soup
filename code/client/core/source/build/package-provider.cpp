@@ -13,6 +13,7 @@ module;
 export module Soup.Core:PackageProvider;
 
 import Opal;
+import :Digest;
 import :PackageName;
 import :PackageReference;
 import :Recipe;
@@ -81,13 +82,13 @@ export namespace Soup::Core
 		PackageInfo(
 			PackageId id,
 			PackageName name,
-			bool isPrebuilt,
+			std::optional<Digest> artifactDigest,
 			Path packageRoot,
 			const Recipe* recipe,
 			PackageChildrenMap dependencies) :
 			Id(id),
 			Name(std::move(name)),
-			IsPrebuilt(isPrebuilt),
+			ArtifactDigest(std::move(artifactDigest)),
 			PackageRoot(std::move(packageRoot)),
 			Recipe(recipe),
 			Dependencies(std::move(dependencies))
@@ -96,19 +97,30 @@ export namespace Soup::Core
 
 		PackageId Id;
 		PackageName Name;
-		bool IsPrebuilt;
+		std::optional<Digest> ArtifactDigest;
 		Path PackageRoot;
 		const ::Soup::Core::Recipe* Recipe;
 		PackageChildrenMap Dependencies;
+
+		bool IsPrebuilt() const
+		{
+			return ArtifactDigest.has_value();
+		}
 
 		/// <summary>
 		/// Equality operator
 		/// </summary>
 		bool operator ==(const PackageInfo& rhs) const
 		{
+			auto artifactDigestEqual = ArtifactDigest.has_value() == rhs.ArtifactDigest.has_value();
+			if (ArtifactDigest.has_value())
+			{
+				artifactDigestEqual = ArtifactDigest.value() == rhs.ArtifactDigest.value();
+			}
+
 			return Id == rhs.Id &&
 				Name == rhs.Name &&
-				IsPrebuilt == rhs.IsPrebuilt &&
+				artifactDigestEqual &&
 				PackageRoot == rhs.PackageRoot &&
 				Recipe == rhs.Recipe &&
 				Dependencies == rhs.Dependencies;

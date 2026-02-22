@@ -21,28 +21,26 @@ namespace Soup.Build.PackageManager;
 /// </summary>
 public class ClosureManager : IClosureManager
 {
-	private const int PackageLockVersion = 5;
-	private const string RootClosureName = "Root";
-	private const string BuiltInLanguageWren = "Wren";
-	private const string BuiltInLanguagePackageWren = "Wren";
-	private const string BuiltInOwner = "Soup";
+	private const int PackageLockVersion = 6;
+	private const string BuildLanguageWren = "Wren";
 	private const string DependencyTypeBuild = "Build";
 	private const string DependencyTypeTool = "Tool";
+	private const string ArtifactsTableName = "Artifacts";
 
 	private readonly Uri apiEndpoint;
 
 	private readonly HttpClient httpClient;
 
-	private readonly SemanticVersion builtInLanguageVersionWren;
+	private readonly string hostPlatform;
 
 	public ClosureManager(
 		Uri apiEndpoint,
 		HttpClient httpClient,
-		SemanticVersion builtInLanguageVersionWren)
+		string hostPlatform)
 	{
 		this.apiEndpoint = apiEndpoint;
 		this.httpClient = httpClient;
-		this.builtInLanguageVersionWren = builtInLanguageVersionWren;
+		this.hostPlatform = hostPlatform;
 	}
 
 	/// <summary>
@@ -52,6 +50,7 @@ public class ClosureManager : IClosureManager
 		Path workingDirectory,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory)
 	{
 		// Place the lock in the local directory
@@ -66,6 +65,7 @@ public class ClosureManager : IClosureManager
 			packageLockPath,
 			packageStoreDirectory,
 			packageLockStoreDirectory,
+			packageArtifactStoreDirectory,
 			stagingDirectory,
 			processedLocks);
 	}
@@ -76,6 +76,7 @@ public class ClosureManager : IClosureManager
 		Path packageLockPath,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory,
 		HashSet<Path> processedLocks)
 	{
@@ -91,94 +92,102 @@ public class ClosureManager : IClosureManager
 				packageLockPath);
 			await RestorePackageLockAsync(
 				packageStoreDirectory,
+				packageArtifactStoreDirectory,
 				stagingDirectory,
 				packageLock);
 
 			await CheckGenerateAndRestoreSubGraphDependencyLocksAsync(
+				packageLock.GetBuildClosures(),
 				workingDirectory,
 				packageStoreDirectory,
 				packageLockStoreDirectory,
+				packageArtifactStoreDirectory,
 				stagingDirectory,
-				packageLock,
+				processedLocks);
+			await CheckGenerateAndRestoreSubGraphDependencyLocksAsync(
+				packageLock.GetToolClosures(),
+				workingDirectory,
+				packageStoreDirectory,
+				packageLockStoreDirectory,
+				packageArtifactStoreDirectory,
+				stagingDirectory,
 				processedLocks);
 		}
 	}
 
 	private async Task CheckGenerateAndRestoreSubGraphDependencyLocksAsync(
+		SMLTable buildClosure,
 		Path workingDirectory,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory,
-		PackageLock packageLock,
 		HashSet<Path> processedLocks)
 	{
-		foreach (var closure in packageLock.GetClosures().Values)
+		foreach (var closure in buildClosure.Values)
 		{
-			// Skip the root closure and only generate locks for the build extensions
-			if (closure.Key != RootClosureName)
+			foreach (var (languageName, languageProjects) in closure.Value.Value.AsTable().Values)
 			{
-				foreach (var (languageName, languageProjects) in closure.Value.Value.AsTable().Values)
+				foreach (var (projectUniqueName, project) in languageProjects.Value.AsTable().Values)
 				{
-					foreach (var (projectUniqueName, project) in languageProjects.Value.AsTable().Values)
+					var projectTable = project.Value.AsTable();
+					var projectName = PackageName.Parse(projectUniqueName);
+					var projectVersionValue = projectTable.Values[PackageLock.Property_Version];
+					if (TryGetAsVersion(projectVersionValue.Value, out var version))
 					{
-						var projectTable = project.Value.AsTable();
-						var projectName = PackageName.Parse(projectUniqueName);
-						var projectVersionValue = projectTable.Values[PackageLock.Property_Version];
-						if (TryGetAsVersion(projectVersionValue.Value, out var version))
+						// Check if the package version already exists
+						if (TryGetArtifactDigest(projectTable, out var _))
 						{
-							// Check if the package version already exists
-							if (projectName.HasOwner && projectName.Owner == BuiltInOwner &&
-								projectName.Name == BuiltInLanguagePackageWren && version == this.builtInLanguageVersionWren)
-							{
-								Log.HighPriority("Skip built in language version in build closure");
-							}
-							else
-							{
-								var userFolder = projectName.Owner is not null ? new Path($"./{projectName.Owner}/") : new Path("./Local/");
-								var packageLanguageNameVersionPath =
-									new Path($"./{languageName}/") +
-									userFolder +
-									new Path($"./{projectName.Name}/{version}/");
-								var packageContentDirectory = packageStoreDirectory + packageLanguageNameVersionPath;
-
-								// Place the lock in the lock store
-								var packageLockDirectory =
-									packageLockStoreDirectory +
-									packageLanguageNameVersionPath;
-								var packageLockPath =
-									packageLockDirectory +
-									BuildConstants.PackageLockFileName;
-
-								EnsureDirectoryExists(packageLockDirectory);
-
-								await CheckGenerateAndRestoreRecursiveLocksAsync(
-									packageContentDirectory,
-									projectName.Owner,
-									packageLockPath,
-									packageStoreDirectory,
-									packageLockStoreDirectory,
-									stagingDirectory,
-									processedLocks);
-							}
+							Log.HighPriority("Skip pre-built package in build closure");
 						}
 						else
 						{
-							// Process the local dependency and place the lock in the root
-							var referencePath = new Path(projectVersionValue.Value.AsString().Value);
-							var dependencyPath = referencePath.HasRoot ? referencePath : workingDirectory + referencePath;
-							var dependencyLockPath =
-								dependencyPath +
+							var userFolder = projectName.Owner is not null ? new Path($"./{projectName.Owner}/") : new Path("./Local/");
+							var packageLanguageNameVersionPath =
+								new Path($"./{languageName}/") +
+								userFolder +
+								new Path($"./{projectName.Name}/{version}/");
+							var packageContentDirectory = packageStoreDirectory + packageLanguageNameVersionPath;
+
+							// Place the lock in the lock store
+							var packageLockDirectory =
+								packageLockStoreDirectory +
+								packageLanguageNameVersionPath;
+							var packageLockPath =
+								packageLockDirectory +
 								BuildConstants.PackageLockFileName;
 
+							EnsureDirectoryExists(packageLockDirectory);
+
 							await CheckGenerateAndRestoreRecursiveLocksAsync(
-								dependencyPath,
-								null,
-								dependencyLockPath,
+								packageContentDirectory,
+								projectName.Owner,
+								packageLockPath,
 								packageStoreDirectory,
 								packageLockStoreDirectory,
+								packageArtifactStoreDirectory,
 								stagingDirectory,
 								processedLocks);
 						}
+					}
+					else
+					{
+						// Process the local dependency and place the lock in the root
+						var referencePath = new Path(projectVersionValue.Value.AsString().Value);
+						var dependencyPath = referencePath.HasRoot ? referencePath : workingDirectory + referencePath;
+						var dependencyLockPath =
+							dependencyPath +
+							BuildConstants.PackageLockFileName;
+
+						await CheckGenerateAndRestoreRecursiveLocksAsync(
+							dependencyPath,
+							null,
+							dependencyLockPath,
+							packageStoreDirectory,
+							packageLockStoreDirectory,
+							packageArtifactStoreDirectory,
+							stagingDirectory,
+							processedLocks);
 					}
 				}
 			}
@@ -237,19 +246,16 @@ public class ClosureManager : IClosureManager
 
 	[SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "False positive")]
 	private async Task<(
-		IDictionary<string, IDictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>> RuntimeClosure,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> BuildClosures,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> ToolClosures)> GenerateServiceClosureAsync(
+		IDictionary<string, IDictionary<PackageName, (ResolvedRuntimePackageReference Package, string BuildClosure, string ToolClosure)>> RuntimeClosure,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>> BuildClosures,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>> ToolClosures)> GenerateServiceClosureAsync(
 		int rootPackageId,
 		Dictionary<int, (string Language, string? Owner, string Name, Path Path)> localPackageReverseLookup,
 		IDictionary<Path, Api.Client.PackageLocalReferenceModel> localPackageLookup,
 		IList<Api.Client.PackagePublicReferenceModel> publicPackages)
 	{
 		// Publish the archive
-		var packageClient = new Api.Client.ClosureClient(this.httpClient, null)
-		{
-			BaseUrl = this.apiEndpoint,
-		};
+		var packageClient = new Api.Client.ClosureClient(this.httpClient, this.apiEndpoint, null);
 
 		// Pull out the root package
 		var rootPackage = localPackageLookup.Values.First(value => value.Id == rootPackageId);
@@ -258,18 +264,12 @@ public class ClosureManager : IClosureManager
 		// Request the built in versions for the language extensions
 		var preferredVersions = new List<Api.Client.PackagePublicExactReferenceModel>
 		{
-			new Api.Client.PackagePublicExactReferenceModel()
-			{
-				Language = BuiltInLanguageWren,
-				Owner = BuiltInOwner,
-				Name = BuiltInLanguagePackageWren,
-				Version = new Api.Client.SemanticVersionExactModel()
-				{
-					Major = this.builtInLanguageVersionWren.Major,
-					Minor = this.builtInLanguageVersionWren.Minor ?? throw new InvalidOperationException("Built In Language must be fully resolved"),
-					Patch = this.builtInLanguageVersionWren.Patch ?? throw new InvalidOperationException("Built In Language must be fully resolved"),
-				},
-			}
+		};
+
+		var artifactHostPlatforms = new List<string>()
+		{
+			"Linux",
+			"Windows",
 		};
 
 		var generateClosureRequest = new Api.Client.GenerateClosureRequestModel()
@@ -278,6 +278,7 @@ public class ClosureManager : IClosureManager
 			LocalPackages = localPackages,
 			PublicPackages = publicPackages,
 			PreferredVersions = preferredVersions,
+			ArtifactHostPlatforms = artifactHostPlatforms,
 		};
 
 		Api.Client.GenerateClosureResultModel result;
@@ -310,17 +311,18 @@ public class ClosureManager : IClosureManager
 			throw new InvalidOperationException("ToolClosures was null");
 
 		// Convert back to resolved closures
-		var runtimeClosure = new Dictionary<string, IDictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>>();
+		var runtimeClosure = new Dictionary<string, IDictionary<PackageName, (ResolvedRuntimePackageReference Package, string BuildClosure, string ToolClosure)>>();
 		foreach (var package in result.RuntimeClosure)
 		{
 			string language;
 			PackageName uniqueName;
-			PackageReference packageReference;
+			ResolvedRuntimePackageReference packageReference;
 			if (package.Public is not null)
 			{
 				language = package.Public.Language;
 				var owner = package.Public.Owner;
 				var name = package.Public.Name;
+				var digest = package.Public.Digest;
 
 				// Create unique name from owner/name
 				uniqueName = new PackageName(owner, name);
@@ -329,14 +331,14 @@ public class ClosureManager : IClosureManager
 					package.Public.Version.Major,
 					package.Public.Version.Minor,
 					package.Public.Version.Patch);
-				packageReference = new PackageReference(owner, language, name, version);
+				packageReference = new ResolvedRuntimePackageReference(owner, language, name, version, digest);
 			}
 			else if (package.LocalId is not null)
 			{
 				var localReference = localPackageReverseLookup[package.LocalId.Value];
 				language = localReference.Language;
 				uniqueName = new PackageName(localReference.Owner, localReference.Name);
-				packageReference = new PackageReference(localReference.Path);
+				packageReference = new ResolvedRuntimePackageReference(localReference.Path);
 			}
 			else
 			{
@@ -347,7 +349,7 @@ public class ClosureManager : IClosureManager
 			{
 				runtimeClosure.Add(
 					language,
-					new Dictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>());
+					new Dictionary<PackageName, (ResolvedRuntimePackageReference Package, string BuildClosure, string ToolClosure)>());
 			}
 
 			if (runtimeClosure[language].ContainsKey(uniqueName))
@@ -356,20 +358,22 @@ public class ClosureManager : IClosureManager
 				runtimeClosure[language].Add(uniqueName, (packageReference, package.Build, package.Tool));
 		}
 
-		var buildClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>>();
+		var buildClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>>();
 		foreach (var (closureName, closure) in result.BuildClosures)
 		{
-			var buildClosure = new Dictionary<string, IDictionary<PackageName, PackageReference>>();
+			var buildClosure = new Dictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>();
 			foreach (var package in closure)
 			{
 				string language;
 				PackageName uniqueName;
-				PackageReference packageReference;
+				ResolvedBuildPackageReference packageReference;
 				if (package.Public is not null)
 				{
 					language = package.Public.Language;
 					var owner = package.Public.Owner;
 					var name = package.Public.Name;
+					var digest = package.Public.Digest;
+					var artifacts = package.Artifacts?.ToDictionary(entity => entity.Key, entity => entity.Value.Digest);
 
 					// Create unique name from owner/name
 					uniqueName = new PackageName(owner, name);
@@ -378,14 +382,15 @@ public class ClosureManager : IClosureManager
 						package.Public.Version.Major,
 						package.Public.Version.Minor,
 						package.Public.Version.Patch);
-					packageReference = new PackageReference(language, owner, name, version);
+					packageReference = new ResolvedBuildPackageReference(
+						language, owner, name, version, digest, artifacts);
 				}
 				else if (package.LocalId is not null)
 				{
 					var localReference = localPackageReverseLookup[package.LocalId.Value];
 					language = localReference.Language;
 					uniqueName = new PackageName(localReference.Owner, localReference.Name);
-					packageReference = new PackageReference(localReference.Path);
+					packageReference = new ResolvedBuildPackageReference(localReference.Path);
 				}
 				else
 				{
@@ -393,7 +398,7 @@ public class ClosureManager : IClosureManager
 				}
 
 				if (!buildClosure.ContainsKey(language))
-					buildClosure.Add(language, new Dictionary<PackageName, PackageReference>());
+					buildClosure.Add(language, new Dictionary<PackageName, ResolvedBuildPackageReference>());
 
 				buildClosure[language].Add(uniqueName, packageReference);
 			}
@@ -401,20 +406,22 @@ public class ClosureManager : IClosureManager
 			buildClosures.Add(closureName, buildClosure);
 		}
 
-		var toolClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>>();
+		var toolClosures = new Dictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>>();
 		foreach (var (closureName, closure) in result.ToolClosures)
 		{
-			var toolClosure = new Dictionary<string, IDictionary<PackageName, PackageReference>>();
+			var toolClosure = new Dictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>();
 			foreach (var package in closure)
 			{
 				string language;
 				PackageName uniqueName;
-				PackageReference packageReference;
+				ResolvedBuildPackageReference packageReference;
 				if (package.Public is not null)
 				{
 					language = package.Public.Language;
 					var owner = package.Public.Owner;
 					var name = package.Public.Name;
+					var digest = package.Public.Digest;
+					var artifacts = package.Artifacts?.ToDictionary(entity => entity.Key, entity => entity.Value.Digest);
 
 					// Create unique name from owner/name
 					uniqueName = new PackageName(owner, name);
@@ -423,14 +430,15 @@ public class ClosureManager : IClosureManager
 						package.Public.Version.Major,
 						package.Public.Version.Minor,
 						package.Public.Version.Patch);
-					packageReference = new PackageReference(language, owner, name, version);
+					packageReference = new ResolvedBuildPackageReference(
+						language, owner, name, version, digest, artifacts);
 				}
 				else if (package.LocalId is not null)
 				{
 					var localReference = localPackageReverseLookup[package.LocalId.Value];
 					language = localReference.Language;
 					uniqueName = new PackageName(localReference.Owner, localReference.Name);
-					packageReference = new PackageReference(localReference.Path);
+					packageReference = new ResolvedBuildPackageReference(localReference.Path);
 				}
 				else
 				{
@@ -438,7 +446,7 @@ public class ClosureManager : IClosureManager
 				}
 
 				if (!toolClosure.ContainsKey(language))
-					toolClosure.Add(language, new Dictionary<PackageName, PackageReference>());
+					toolClosure.Add(language, new Dictionary<PackageName, ResolvedBuildPackageReference>());
 
 				toolClosure[language].Add(uniqueName, packageReference);
 			}
@@ -451,9 +459,9 @@ public class ClosureManager : IClosureManager
 
 	private static PackageLock BuildPackageLock(
 		Path workingDirectory,
-		IDictionary<string, IDictionary<PackageName, (PackageReference Package, string BuildClosure, string ToolClosure)>> runtimeClosure,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> buildClosures,
-		IDictionary<string, IDictionary<string, IDictionary<PackageName, PackageReference>>> toolClosures)
+		IDictionary<string, IDictionary<PackageName, (ResolvedRuntimePackageReference Package, string BuildClosure, string ToolClosure)>> runtimeClosure,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>> buildClosures,
+		IDictionary<string, IDictionary<string, IDictionary<PackageName, ResolvedBuildPackageReference>>> toolClosures)
 	{
 		var packageLock = new PackageLock();
 		packageLock.SetVersion(PackageLockVersion);
@@ -461,10 +469,9 @@ public class ClosureManager : IClosureManager
 		{
 			foreach (var (packageName, (package, buildClosure, toolClosure)) in languageClosure.OrderBy(value => value.Key))
 			{
-				Log.Diag($"{RootClosureName}:{languageName} {packageName} -> {package}");
+				Log.Diag($"{languageName} {packageName} -> {package}");
 				packageLock.AddProject(
 					workingDirectory,
-					RootClosureName,
 					languageName,
 					packageName,
 					package,
@@ -475,13 +482,13 @@ public class ClosureManager : IClosureManager
 
 		foreach (var buildClosure in buildClosures.OrderBy(value => value.Key))
 		{
-			packageLock.EnsureClosure(buildClosure.Key);
+			packageLock.EnsureBuildClosure(buildClosure.Key);
 			foreach (var (languageName, languageClosure) in buildClosure.Value.OrderBy(value => value.Key))
 			{
 				foreach (var (packageName, package) in languageClosure)
 				{
 					Log.Diag($"{buildClosure.Key}:{languageName} {packageName} -> {package}");
-					packageLock.AddProject(
+					packageLock.AddBuildProject(
 						workingDirectory,
 						buildClosure.Key,
 						languageName,
@@ -495,13 +502,13 @@ public class ClosureManager : IClosureManager
 
 		foreach (var toolClosure in toolClosures.OrderBy(value => value.Key))
 		{
-			packageLock.EnsureClosure(toolClosure.Key);
+			packageLock.EnsureToolClosure(toolClosure.Key);
 			foreach (var (languageName, languageClosure) in toolClosure.Value.OrderBy(value => value.Key))
 			{
 				foreach (var (packageName, package) in languageClosure)
 				{
 					Log.Diag($"{toolClosure.Key}:{languageName} {packageName} -> {package}");
-					packageLock.AddProject(
+					packageLock.AddToolProject(
 						workingDirectory,
 						toolClosure.Key,
 						languageName,
@@ -587,7 +594,7 @@ public class ClosureManager : IClosureManager
 			string? implicitLanguage;
 			if (dependencyType == DependencyTypeBuild)
 			{
-				implicitLanguage = BuiltInLanguageWren;
+				implicitLanguage = BuildLanguageWren;
 			}
 			else if (dependencyType == DependencyTypeTool)
 			{
@@ -695,39 +702,88 @@ public class ClosureManager : IClosureManager
 	/// </summary>
 	private async Task RestorePackageLockAsync(
 		Path packageStore,
+		Path artifactStore,
 		Path stagingDirectory,
 		PackageLock packageLock)
 	{
-		foreach (var closure in packageLock.GetClosures().Values)
+		Log.Info($"Restore Packages for Closure");
+		await RestoreClosureAsync(
+			packageStore, artifactStore, stagingDirectory, packageLock.GetClosure());
+
+		foreach (var closure in packageLock.GetBuildClosures().Values)
 		{
-			Log.Info($"Restore Packages for Closure {closure.Key}");
-			var isRuntime = closure.Key == RootClosureName;
-			foreach (var (languageName, languageProjects) in closure.Value.Value.AsTable().Values)
+			Log.Info($"Restore Packages for Build Closure {closure.Key}");
+			await RestoreClosureAsync(
+				packageStore, artifactStore, stagingDirectory, closure.Value.Value.AsTable());
+		}
+
+		foreach (var closure in packageLock.GetToolClosures().Values)
+		{
+			Log.Info($"Restore Packages for Tool Closure {closure.Key}");
+			await RestoreClosureAsync(
+				packageStore, artifactStore, stagingDirectory, closure.Value.Value.AsTable());
+		}
+	}
+
+	private async Task RestoreClosureAsync(
+		Path packageStore,
+		Path artifactStore,
+		Path stagingDirectory,
+		SMLTable closure)
+	{
+		foreach (var (languageName, languageProjects) in closure.Values)
+		{
+			Log.Info($"Restore Packages for Language {languageName}");
+			foreach (var (projectUniqueName, project) in languageProjects.Value.AsTable().Values)
 			{
-				Log.Info($"Restore Packages for Language {languageName}");
-				foreach (var (projectUniqueName, project) in languageProjects.Value.AsTable().Values)
+				var projectTable = project.Value.AsTable();
+				var projectName = PackageName.Parse(projectUniqueName);
+				var projectVersionValue = projectTable.Values[PackageLock.Property_Version];
+				if (TryGetAsVersion(projectVersionValue.Value, out var version))
 				{
-					var projectTable = project.Value.AsTable();
-					var projectName = PackageName.Parse(projectUniqueName);
-					var projectVersionValue = projectTable.Values[PackageLock.Property_Version];
-					if (TryGetAsVersion(projectVersionValue.Value, out var version))
+					await EnsurePackageDownloadedAsync(
+						projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
+						languageName,
+						projectName.Name,
+						version,
+						packageStore,
+						stagingDirectory);
+
+					// Restore directly from the artifact if available
+					if (TryGetArtifactDigest(projectTable, out var digest))
 					{
-						await EnsurePackageDownloadedAsync(
-							isRuntime,
+						await EnsureArtifactDownloadedAsync(
 							projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
 							languageName,
 							projectName.Name,
 							version,
-							packageStore,
+							digest,
+							artifactStore,
 							stagingDirectory);
 					}
-					else
-					{
-						Log.Info($"Skip Package: {projectName} -> {projectVersionValue.Value.AsString().Value}");
-					}
+				}
+				else
+				{
+					Log.Info($"Skip Package: {projectName} -> {projectVersionValue.Value.AsString().Value}");
 				}
 			}
 		}
+	}
+
+	private bool TryGetArtifactDigest(SMLTable packageTable, [MaybeNullWhen(false)] out Digest digest)
+	{
+		if (packageTable.Values.TryGetValue(ArtifactsTableName, out var hostPlatformTableValue))
+		{
+			var hostPlatformTable = hostPlatformTableValue.Value.AsTable();
+			if (hostPlatformTable.Values.TryGetValue(this.hostPlatform, out var platformArtifact))
+			{
+				digest = Digest.Parse(platformArtifact.Value.AsString().Value);
+				return true;
+			}
+		}
+
+		digest = null;
+		return false;
 	}
 
 	private static bool TryGetAsVersion(SMLValue value, out SemanticVersion version)
@@ -763,10 +819,84 @@ public class ClosureManager : IClosureManager
 	}
 
 	/// <summary>
+	/// Ensure a package artifact is downloaded
+	/// </summary>
+	private async Task EnsureArtifactDownloadedAsync(
+		string ownerName,
+		string languageName,
+		string packageName,
+		SemanticVersion packageVersion,
+		Digest digest,
+		Path artifactStore,
+		Path stagingDirectory)
+	{
+		Log.HighPriority($"Install Artifact: {languageName} {ownerName} {packageName}@{packageVersion}");
+
+		var languageRootFolder = artifactStore + new Path($"./{languageName}/");
+		var packageRootFolder = languageRootFolder + new Path($"./{ownerName}/{packageName}/{packageVersion}/");
+		var packageArtifactFolder = packageRootFolder + new Path($"./{digest.Hash}/");
+
+		// Check if the package version already exists
+		if (LifetimeManager.Get<IFileSystem>().Exists(packageArtifactFolder))
+		{
+			Log.HighPriority("Found local version");
+		}
+		else
+		{
+			// Download the archive
+			Log.HighPriority("Downloading artifact");
+			var archivePath = stagingDirectory + new Path($"./{packageName}.zip");
+
+			var client = new Api.Client.PackageVersionArtifactsClient(this.httpClient, this.apiEndpoint, null);
+
+			try
+			{
+				var result = await client.DownloadPackageVersionArtifactAsync(
+					languageName, ownerName, packageName, packageVersion.ToString(), digest);
+
+				// Write the contents to disk, scope cleanup
+				using var archiveWriteFile = LifetimeManager.Get<IFileSystem>().OpenWrite(archivePath, true);
+				await result.Stream.CopyToAsync(archiveWriteFile.GetOutStream());
+			}
+			catch (Api.Client.ApiException ex)
+			{
+				if (ex.StatusCode == HttpStatusCode.NotFound)
+				{
+					Log.HighPriority("Package artifact Missing");
+					throw new HandledException();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			// Create the package folder to extract to
+			var stagingVersionFolder = stagingDirectory + new Path($"./{languageName}_{packageName}_{packageVersion}/");
+			LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingVersionFolder);
+
+			// Unpack the contents of the archive
+			LifetimeManager.Get<IZipManager>().ExtractToDirectory(archivePath, stagingVersionFolder);
+
+			// Delete the archive file
+			LifetimeManager.Get<IFileSystem>().DeleteFile(archivePath);
+
+			// Ensure the package root folder exists
+			if (!LifetimeManager.Get<IFileSystem>().Exists(packageRootFolder))
+			{
+				// Create the folder
+				LifetimeManager.Get<IFileSystem>().CreateDirectory2(packageRootFolder);
+			}
+
+			// Move the extracted contents into the version folder
+			LifetimeManager.Get<IFileSystem>().Rename(stagingVersionFolder, packageArtifactFolder);
+		}
+	}
+
+	/// <summary>
 	/// Ensure a package version is downloaded
 	/// </summary>
 	private async Task EnsurePackageDownloadedAsync(
-		bool isRuntime,
 		string ownerName,
 		string languageName,
 		string packageName,
@@ -781,12 +911,7 @@ public class ClosureManager : IClosureManager
 		var packageVersionFolder = packageRootFolder + new Path($"./{packageVersion}/");
 
 		// Check if the package version already exists
-		if (!isRuntime &&
-			packageName == BuiltInLanguagePackageWren && packageVersion == this.builtInLanguageVersionWren)
-		{
-			Log.HighPriority("Skip built in language version in build closure");
-		}
-		else if (LifetimeManager.Get<IFileSystem>().Exists(packageVersionFolder))
+		if (LifetimeManager.Get<IFileSystem>().Exists(packageVersionFolder))
 		{
 			Log.HighPriority("Found local version");
 		}
@@ -796,10 +921,7 @@ public class ClosureManager : IClosureManager
 			Log.HighPriority("Downloading package");
 			var archivePath = stagingDirectory + new Path($"./{packageName}.zip");
 
-			var client = new Api.Client.PackageVersionsClient(this.httpClient, null)
-			{
-				BaseUrl = this.apiEndpoint,
-			};
+			var client = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, null);
 
 			try
 			{

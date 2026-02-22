@@ -12,6 +12,7 @@ using namespace Soup::Test;
 #include "commands/initialize-command-tests.gen.h"
 #include "commands/install-command-tests.gen.h"
 #include "commands/publish-command-tests.gen.h"
+#include "commands/release-command-tests.gen.h"
 #include "commands/version-command-tests.gen.h"
 
 int main()
@@ -22,6 +23,7 @@ int main()
 
 	state += RunBuildCommandTests();
 	state += RunInitializeCommandTests();
+	state += RunPublishArtifactCommandTests();
 	state += RunPublishCommandTests();
 	state += RunVersionCommandTests();
 

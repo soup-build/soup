@@ -8,6 +8,7 @@
 #include "initialize-command.h"
 #include "install-command.h"
 #include "publish-command.h"
+#include "release-command.h"
 #include "restore-command.h"
 #include "run-command.h"
 #include "target-command.h"
@@ -95,6 +96,8 @@ namespace Soup::Client
 					command = Setup(arguments.ExtractResult<InstallOptions>());
 				else if (arguments.IsA<PublishOptions>())
 					command = Setup(arguments.ExtractResult<PublishOptions>());
+				else if (arguments.IsA<ReleaseOptions>())
+					command = Setup(arguments.ExtractResult<ReleaseOptions>());
 				else if (arguments.IsA<RestoreOptions>())
 					command = Setup(arguments.ExtractResult<RestoreOptions>());
 				else if (arguments.IsA<TargetOptions>())
@@ -134,12 +137,14 @@ namespace Soup::Client
 		static void WriteUsage()
 		{
 			Log::HighPriority("soup <command>:");
-			Log::HighPriority("  build   - Build the target recipe.");
-			Log::HighPriority("  run     - Run the target recipe.");
-			Log::HighPriority("  init    - Initialize wizard for creating a new recipe.");
-			Log::HighPriority("  install - Install a dependency to the target recipes.");
-			Log::HighPriority("  publish - Publish the contents of a recipe to the public feed.");
-			Log::HighPriority("  restore - Install all dependencies required by the target recipe.");
+			Log::HighPriority("  build   - Build the target package.");
+			Log::HighPriority("  run     - Run the target package.");
+			Log::HighPriority("  init    - Initialize wizard for creating a new package.");
+			Log::HighPriority("  install - Install a dependency to the target package.");
+			Log::HighPriority("  publish - Publish the contents of a package to the public feed.");
+			Log::HighPriority("  release - Upload the build artifacts for the target package.");
+			Log::HighPriority("  restore - Install all dependencies required by the target package.");
+			Log::HighPriority("  target  - Print the output directory for the target package.");
 			Log::HighPriority("  version - Display the current version of this tool.");
 			Log::HighPriority("  view    - Launch the view tool.");
 		}
@@ -187,6 +192,14 @@ namespace Soup::Client
 			Log::Diag("Setup PublishCommand");
 			SetupShared(options);
 			return std::make_shared<PublishCommand>(
+				std::move(options));
+		}
+
+		std::shared_ptr<ICommand> Setup(ReleaseOptions options)
+		{
+			Log::Diag("Setup ReleaseCommand");
+			SetupShared(options);
+			return std::make_shared<ReleaseCommand>(
 				std::move(options));
 		}
 
