@@ -14,7 +14,7 @@ REM - Cleanup previous runs
 rmdir /S /Q %RunDir% > NUL
 
 REM - Use a copy of the final binary in case we are re-building itself
-robocopy %ScriptsDir%\Install\ %RunDir%\ /MIR /NJH /NJS /NDL > NUL
+robocopy %ScriptsDir%\install\ %RunDir%\ /MIR /NJH /NJS /NDL > NUL
 robocopy %OutDir%\C++\Local\Soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\ /MIR /NJH /NJS /NDL > NUL
 
 robocopy %MSBuildDir%\bin\soup.build.package-manager\Debug\net10.0\win-x64\publish\ %RunDir%\Soup\package-manager\ /MIR /NJH /NJS /NDL > NUL
@@ -23,4 +23,4 @@ robocopy %MSBuildDir%\bin\soup-view\Debug\net10.0\win-x64\publish\ %RunDir%\Soup
 
 robocopy %MSBuildDir%\bin\swhere\Debug\net10.0\win-x64\publish\ %RunDir%\ swhere.exe /NJH /NJS /NDL > NUL
 
-%RunDir%\Soup.cmd %*
+%RunDir%\soup.cmd %*
