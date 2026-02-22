@@ -10,4 +10,4 @@ RUN_DIR=$OUT_DIR/run
 RELEASE_DIR=$OUT_DIR/release
 VERSION=$($RUN_DIR/bin/soup "version")
 
-sudo apt install -f $RELEASE_DIR/soup-build_$VERSION-1_amd64.deb
+sudo apt install -f $RELEASE_DIR/$VERSION/soup-build-amd64.deb
