@@ -33,7 +33,7 @@ jobs:
     - name: Soup Where
       run: swhere
     - name: Soup Restore Client
-      run: soup restore ./soup/code/client/cli/
+      run: soup restore ./soup/code/client/cli/ -v:d
     - name: Soup Build Client
       run: soup build ./soup/code/client/cli/ -flavor ${{matrix.config}}
     - name: Soup Run Version
