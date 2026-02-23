@@ -12,7 +12,7 @@ Builds: {
 				Version: 0.5.0
 				Digest: 'sha256:1e9683087b84ed998a5ea4a96ee70561e4af5575f46c68d4cdf8a154d405d52b'
 				Artifacts: {
-					Linux: 'sha256:78475282211521684dd619b99b2cce6edb3034192209aa86317aec2b26a0f207'
+					Linux: 'sha256:d662f78b7ac28b68fc34236dcc564167d565f64debe480d4699561ec4421b13d'
 				}
 			}
 		}

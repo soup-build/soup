@@ -23,7 +23,7 @@ Builds: {
 				Version: 0.16.1
 				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
 				Artifacts: {
-					Linux: 'sha256:839b38ef0586fff071e4101429ce751431eefa2a499d6b8b5f9f92349a817e1d'
+					Linux: 'sha256:2accd63cb5e791898174789694dd3e7479eb04d59761ef749858a5eb78a9fcf5'
 					Windows: 'sha256:bca32ccccf13a3f77bdcf3f4f81167642b55ffc987b810a91d7c10d5aa03030b'
 				}
 			}
@@ -35,7 +35,7 @@ Builds: {
 				Version: 0.16.1
 				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
 				Artifacts: {
-					Linux: 'sha256:839b38ef0586fff071e4101429ce751431eefa2a499d6b8b5f9f92349a817e1d'
+					Linux: 'sha256:2accd63cb5e791898174789694dd3e7479eb04d59761ef749858a5eb78a9fcf5'
 					Windows: 'sha256:bca32ccccf13a3f77bdcf3f4f81167642b55ffc987b810a91d7c10d5aa03030b'
 				}
 			}
@@ -51,7 +51,7 @@ Builds: {
 				Version: 0.5.0
 				Digest: 'sha256:1e9683087b84ed998a5ea4a96ee70561e4af5575f46c68d4cdf8a154d405d52b'
 				Artifacts: {
-					Linux: 'sha256:78475282211521684dd619b99b2cce6edb3034192209aa86317aec2b26a0f207'
+					Linux: 'sha256:d662f78b7ac28b68fc34236dcc564167d565f64debe480d4699561ec4421b13d'
 				}
 			}
 		}

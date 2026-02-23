@@ -4,7 +4,6 @@ Closure: {
 		'mwasplund|Opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.2, Digest: 'sha256:1b49b3cd0ff90bd4f9241f0d00464e8de92dc0454301b0c443297dfe02fac3e6', Build: '0', Tool: '0' }
 		'parse.modules': { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|parse.modules': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
@@ -14,7 +13,7 @@ Builds: {
 				Version: 0.16.1
 				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
 				Artifacts: {
-					Linux: 'sha256:839b38ef0586fff071e4101429ce751431eefa2a499d6b8b5f9f92349a817e1d'
+					Linux: 'sha256:2accd63cb5e791898174789694dd3e7479eb04d59761ef749858a5eb78a9fcf5'
 					Windows: 'sha256:bca32ccccf13a3f77bdcf3f4f81167642b55ffc987b810a91d7c10d5aa03030b'
 				}
 			}
