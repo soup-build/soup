@@ -48,10 +48,10 @@ Builds: {
 	'2': {
 		Wren: {
 			'Soup|C': {
-				Version: 0.6.0
-				Digest: 'sha256:fc7f3ef198329d8b268f17e64ad9cbb3996516e2960578d9d127ec912a3ebfcb'
+				Version: 0.6.1
+				Digest: 'sha256:aeef46ffb39aa3f46e39967b0762106e2554aacb299638b83198a812e5a818b0'
 				Artifacts: {
-					Linux: 'sha256:f859a989d71b3549d30948553acd8bb9e89ee5d422f6e434f84fec28324ee80e'
+					Linux: 'sha256:8c3b9a842cdc84a3a27ed8eff8258529eb8f78c215d82b4faf00bf1bda55a814'
 				}
 			}
 		}
