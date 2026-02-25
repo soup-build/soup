@@ -5,6 +5,7 @@
 using Opal;
 using Opal.System;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -43,6 +44,11 @@ public static class Program
 			var workingDirectory = new Path(args[1]);
 
 			string hostPlatform;
+			var knownHostPlatforms = new List<string>()
+			{
+				"Linux",
+				 "Windows",
+			};
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				hostPlatform = "Windows";
@@ -66,7 +72,8 @@ public static class Program
 			var closureManager = new ClosureManager(
 				SoupApiEndpoint,
 				httpClient,
-				hostPlatform);
+				hostPlatform,
+				knownHostPlatforms);
 			var packageManager = new PackageManager(
 				SoupApiEndpoint,
 				httpClient,
