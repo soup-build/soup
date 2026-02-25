@@ -14,28 +14,6 @@ Version: 1.0.0
 
 ## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/console-application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C++': {
-      'Samples.Cpp.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Cpp': { Version: 0.16.1 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-      'mwasplund|parse.modules': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/console-application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" and returns a success status.
@@ -51,6 +29,3 @@ int main()
 
 ## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/console-application/.gitignore)
 A simple git ignore file to exclude all Soup build output.
-```
-out/
-```

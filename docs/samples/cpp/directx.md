@@ -22,28 +22,6 @@ RuntimeDependencies: [
 
 ## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/directx/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C++': {
-      'Samples.Cpp.DirectX': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Cpp': { Version: 0.16.1 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-      'mwasplund|parse.modules': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## Content
 The remaining content assumes that you are familiar with creating a graphics application and windows. This is not meant as a graphics tutorial and is only present as a sample of a more complex scenario for building within Soup.

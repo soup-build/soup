@@ -14,28 +14,6 @@ Version: 1.0.0
 
 ## [tool/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/tool/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C++': {
-      'Samples.SimpleBuildExtension.Tool': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Cpp': { Version: 0.16.1 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-      'mwasplund|parse.modules': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [tool/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/tool/main.cpp)
 A simple main method that prints our "Tool, Soup Style!" during the build.
@@ -67,28 +45,6 @@ Dependencies: {
 
 ## [extension/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/extension/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    Wren: {
-      'Samples.Cpp.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'Soup|Build.Utils': { Version: 0.9.1, Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Wren': { Version: 0.5.4 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [extension/custom-build-task.wren](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/extension/custom-build-task.wren)
 A Wren file defining a custom build Task that will run before the build definition and sets a custom preprocessor definition to show how a user can alter the build state through an extension.
@@ -184,30 +140,6 @@ Dependencies: {
 
 ## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/executable/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C++': {
-      'Samples.SimpleBuildExtension.Executable': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Samples.Cpp.BuildExtension.Extension': { Version: '../extension/' }
-      'Soup|Cpp': { Version: 0.16.1 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'Samples.SimpleBuildExtension.Tool': { Version: '../tool/' }
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-      'mwasplund|parse.modules': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [executable/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/executable/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
@@ -228,6 +160,3 @@ int main()
 
 ## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/.gitignore)
 A simple git ignore file to exclude all Soup build output.
-```
-out/
-```
