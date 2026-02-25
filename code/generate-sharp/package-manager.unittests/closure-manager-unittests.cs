@@ -30,6 +30,13 @@ public class ClosureManagerUnitTests
 		var mockFileSystem = new MockFileSystem();
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
+		mockFileSystem.RegisterChildren(
+			new Path("C:/PackageStore/Wren/Soup/Wren/4.5.6/"),
+			[]);
+		mockFileSystem.RegisterChildren(
+			new Path("C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			[]);
+
 		mockFileSystem.CreateMockFile(
 			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
@@ -134,17 +141,19 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren MyPackage -> C:/Root/MyPackage/",
+				"DIAG: Wren MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: MyPackage -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
+				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Found local version",
 				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
-				"HIGH: Downloading artifact",
-				"INFO: Restore Packages for Closure Tool0",
-				"HIGH: Skip built in language version in build closure",
+				"HIGH: Found local version",
+				"INFO: Restore Packages for Tool Closure Tool0",
+				"HIGH: Skip pre-built package in build closure",
 			],
 			testListener.Messages);
 
@@ -155,13 +164,8 @@ public class ClosureManagerUnitTests
 				"Exists: C:/Root/MyPackage/recipe.sml",
 				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"OpenWriteTruncate: C:/Root/MyPackage/package-lock.sml",
-				"Exists: C:/ArtifactStore/Wren/Soup/Wren/wren-soup-wren-artifact/",
-				"OpenWriteTruncate: C:/Staging/Wren.zip",
-				"CreateDirectory: C:/Staging/Wren_Wren_4.5.6/",
-				"DeleteFile: C:/Staging/Wren.zip",
-				"Exists: C:/ArtifactStore/Wren/Soup/Wren/",
-				"CreateDirectory: C:/ArtifactStore/Wren/Soup/Wren/",
-				"Rename: [C:/Staging/Wren_Wren_4.5.6/] -> [C:/ArtifactStore/Wren/Soup/Wren/wren-soup-wren-artifact/]",
+				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/",
 			],
 			mockFileSystem.Requests);
 
@@ -190,13 +194,6 @@ public class ClosureManagerUnitTests
 				new Uri("https://test.api.soupbuild.com/v1/closure/generate"),
 				"{Accept: [application/json]}",
 				expectedGenerateRequestValue),
-			Times.Once());
-		mockMessageHandler.Verify(messageHandler =>
-			messageHandler.SendAsync(
-				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/Soup/Wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
-				"{Accept: [application/json]}",
-				null),
 			Times.Once());
 
 		mockMessageHandler.VerifyNoOtherCalls();
@@ -228,7 +225,9 @@ public class ClosureManagerUnitTests
 				}
 			}
 			Tools: {
-				Tool0: {}
+				Tool0: {
+
+				}
 			}
 			""";
 
@@ -780,6 +779,13 @@ public class ClosureManagerUnitTests
 		var mockFileSystem = new MockFileSystem();
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
+		mockFileSystem.RegisterChildren(
+			new Path("C:/PackageStore/Wren/Soup/Wren/4.5.6/"),
+			[]);
+		mockFileSystem.RegisterChildren(
+			new Path("C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			[]);
+
 		mockFileSystem.CreateMockFile(
 			new Path("C:/Root/MyPackage/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
@@ -849,10 +855,6 @@ public class ClosureManagerUnitTests
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 5, Minor = 0, Patch = 0, },
 								Digest = "fake:wren-soup-cpp",
 							},
-							Artifacts = new Dictionary<string, Api.Client.PackageArtifactReferenceModel>()
-							{
-								{ "FakePlatform", new  Api.Client.PackageArtifactReferenceModel() { Digest = "fake:wren-soup-cpp-artifact", } },
-							}
 						},
 						new Api.Client.PackageBuildDependencyReferenceModel()
 						{
@@ -990,19 +992,19 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:C++ MyPackage -> C:/Root/MyPackage/",
+				"DIAG: C++ MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
 				"DIAG: Build0:Wren User1|Package1 -> [Wren]User1|Package1@1.2.3",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: MyPackage -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Cpp@5.0.0",
 				"HIGH: Downloading package",
 				"HIGH: Install Package: Wren User1 Package1@1.2.3",
 				"HIGH: Downloading package",
-				"INFO: Restore Packages for Closure Tool0",
+				"INFO: Restore Packages for Tool Closure Tool0",
 				"DIAG: Create Directory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
 				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
 				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
@@ -1010,17 +1012,19 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren Soup|Cpp -> C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
+				"DIAG: Wren Soup|Cpp -> C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: Soup|Cpp -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Wren@4.5.6",
-				"HIGH: Skip built in language version in build closure",
-				"INFO: Restore Packages for Closure Tool0",
-				"HIGH: Skip built in language version in build closure",
+				"HIGH: Found local version",
+				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Found local version",
+				"INFO: Restore Packages for Tool Closure Tool0",
+				"HIGH: Skip pre-built package in build closure",
 				"DIAG: Create Directory: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"DIAG: Load Package Lock: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
@@ -1028,17 +1032,19 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren User1|Package1 -> C:/PackageStore/Wren/User1/Package1/1.2.3/",
+				"DIAG: Wren User1|Package1 -> C:/PackageStore/Wren/User1/Package1/1.2.3/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: User1|Package1 -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Wren@4.5.6",
-				"HIGH: Skip built in language version in build closure",
-				"INFO: Restore Packages for Closure Tool0",
-				"HIGH: Skip built in language version in build closure",
+				"HIGH: Found local version",
+				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Found local version",
+				"INFO: Restore Packages for Tool Closure Tool0",
+				"HIGH: Skip pre-built package in build closure",
 			],
 			testListener.Messages);
 
@@ -1069,12 +1075,16 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"OpenRead: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"CreateDirectory: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"OpenRead: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/",
 			],
 			mockFileSystem.Requests);
 
@@ -1232,6 +1242,9 @@ public class ClosureManagerUnitTests
 						'Soup|Wren': {
 							Version: 4.5.6
 							Digest: 'fake:wren-soup-wren'
+							Artifacts: {
+								FakePlatform: 'fake:wren-soup-wren-artifact'
+							}
 						}
 					}
 				}
@@ -1263,6 +1276,9 @@ public class ClosureManagerUnitTests
 						'Soup|Wren': {
 							Version: 4.5.6
 							Digest: 'fake:wren-soup-wren'
+							Artifacts: {
+								FakePlatform: 'fake:wren-soup-wren-artifact'
+							}
 						}
 					}
 				}
@@ -1287,6 +1303,13 @@ public class ClosureManagerUnitTests
 		// Setup the mock file system
 		var mockFileSystem = new MockFileSystem();
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
+
+		mockFileSystem.RegisterChildren(
+			new Path("C:/PackageStore/Wren/Soup/Wren/4.5.6/"),
+			[]);
+		mockFileSystem.RegisterChildren(
+			new Path("C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			[]);
 
 		mockFileSystem.CreateMockFile(
 			new Path("C:/Root/MyPackage/recipe.sml"),
@@ -1630,19 +1653,19 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:C++ MyPackage -> C:/Root/MyPackage/",
+				"DIAG: C++ MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
 				"DIAG: Build0:Wren User1|Package1 -> [Wren]User1|Package1@1.2.3",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: MyPackage -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Cpp@5.0.0",
 				"HIGH: Downloading package",
 				"HIGH: Install Package: Wren User1 Package1@1.2.3",
 				"HIGH: Downloading package",
-				"INFO: Restore Packages for Closure Tool0",
+				"INFO: Restore Packages for Tool Closure Tool0",
 				"DIAG: Create Directory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
 				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
 				"DIAG: Load Package Lock: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
@@ -1650,17 +1673,19 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren Soup|Cpp -> C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
+				"DIAG: Wren Soup|Cpp -> C:/PackageStore/Wren/Soup/Cpp/5.0.0/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: Soup|Cpp -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Wren@4.5.6",
-				"HIGH: Skip built in language version in build closure",
-				"INFO: Restore Packages for Closure Tool0",
-				"HIGH: Skip built in language version in build closure",
+				"HIGH: Found local version",
+				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Found local version",
+				"INFO: Restore Packages for Tool Closure Tool0",
+				"HIGH: Skip pre-built package in build closure",
 				"DIAG: Create Directory: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"DIAG: Load Package Lock: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
@@ -1668,21 +1693,23 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren User1|Package1 -> C:/PackageStore/Wren/User1/Package1/1.2.3/",
+				"DIAG: Wren User1|Package1 -> C:/PackageStore/Wren/User1/Package1/1.2.3/",
 				"DIAG: Build0:Wren Soup|Wren -> [Wren]Soup|Wren@4.5.6",
 				"DIAG: Tool0:C++ User1|Package2 -> [C++]User1|Package2@2.3.4",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: User1|Package1 -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Wren@4.5.6",
-				"HIGH: Skip built in language version in build closure",
-				"INFO: Restore Packages for Closure Tool0",
+				"HIGH: Found local version",
+				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Found local version",
+				"INFO: Restore Packages for Tool Closure Tool0",
 				"INFO: Restore Packages for Language C++",
 				"HIGH: Install Package: C++ User1 Package2@2.3.4",
 				"HIGH: Downloading package",
-				"HIGH: Skip built in language version in build closure",
+				"HIGH: Skip pre-built package in build closure",
 				"DIAG: Create Directory: C:/LockStore/C++/User1/Package2/2.3.4/",
 				"INFO: Ensure Package Lock Exists: C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml",
 				"DIAG: Load Package Lock: C:/LockStore/C++/User1/Package2/2.3.4/package-lock.sml",
@@ -1690,16 +1717,16 @@ public class ClosureManagerUnitTests
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/PackageStore/C++/User1/Package2/2.3.4/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:C++ User1|Package2 -> C:/PackageStore/C++/User1/Package2/2.3.4/",
+				"DIAG: C++ User1|Package2 -> C:/PackageStore/C++/User1/Package2/2.3.4/",
 				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: User1|Package2 -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"HIGH: Install Package: Wren Soup Cpp@5.0.0",
 				"HIGH: Found local version",
-				"INFO: Restore Packages for Closure Tool0",
+				"INFO: Restore Packages for Tool Closure Tool0",
 				"DIAG: Create Directory: C:/LockStore/Wren/Soup/Cpp/5.0.0/",
 				"INFO: Root already processed",
 			],
@@ -1732,12 +1759,16 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"OpenRead: C:/PackageStore/Wren/Soup/Cpp/5.0.0/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/Wren/Soup/Cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"CreateDirectory: C:/LockStore/Wren/User1/Package1/1.2.3/",
 				"Exists: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"OpenRead: C:/PackageStore/Wren/User1/Package1/1.2.3/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/Wren/User1/Package1/1.2.3/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/Soup/Wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/Soup/Wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/PackageStore/C++/User1/Package2/2.3.4/",
 				"OpenWriteTruncate: C:/Staging/Package2.zip",
 				"CreateDirectory: C:/Staging/C++_Package2_2.3.4/",
@@ -1982,7 +2013,7 @@ public class ClosureManagerUnitTests
 		var expectedPackage1Lock =
 			"""
 			Version: 6
-			Closures: {
+			Closure: {
 				Wren: {
 					'User1|Package1': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 				}
@@ -1993,6 +2024,9 @@ public class ClosureManagerUnitTests
 						'Soup|Wren': {
 							Version: 4.5.6
 							Digest: 'fake:wren-soup-wren'
+							Artifacts: {
+								FakePlatform: 'fake:wren-soup-wren-artifact'
+							}
 						}
 					}
 				}
@@ -2002,7 +2036,7 @@ public class ClosureManagerUnitTests
 					'C++': {
 						'User1|Package2': {
 							Version: 2.3.4
-							Digest: 'fake:cpp-user1-package2'
+							Digest: 'fake:wren-user1-package2'
 						}
 					}
 				}
@@ -2049,7 +2083,7 @@ public class ClosureManagerUnitTests
 		var expectedSoupCppLock =
 			"""
 			Version: 6
-			Closures: {
+			Closure: {
 				Wren: {
 					'Soup|Cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 				}
@@ -2060,6 +2094,9 @@ public class ClosureManagerUnitTests
 						'Soup|Wren': {
 							Version: 4.5.6
 							Digest: 'fake:wren-soup-wren'
+							Artifacts: {
+								FakePlatform: 'fake:wren-soup-wren-artifact'
+							}
 						}
 					}
 				}
@@ -2683,16 +2720,16 @@ public class ClosureManagerUnitTests
 				"DIAG: Load Recipe: C:/Root/Package1/recipe.sml",
 				"DIAG: Load Recipe: C:/Root/Package2/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren MyPackage -> C:/Root/MyPackage/",
+				"DIAG: Wren MyPackage -> C:/Root/MyPackage/",
 				"DIAG: Build0:Wren Package1 -> C:/Root/Package1/",
 				"DIAG: Tool0:C++ Package2 -> C:/Root/Package2/",
-				"INFO: Restore Packages for Closure Root",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: MyPackage -> ./",
-				"INFO: Restore Packages for Closure Build0",
+				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: Package1 -> ../Package1/",
-				"INFO: Restore Packages for Closure Tool0",
+				"INFO: Restore Packages for Tool Closure Tool0",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: Package2 -> ../Package2/",
 				"INFO: Ensure Package Lock Exists: C:/Root/Package1/package-lock.sml",
@@ -2702,24 +2739,24 @@ public class ClosureManagerUnitTests
 				"DIAG: Load Recipe: C:/Root/Package1/recipe.sml",
 				"DIAG: Load Recipe: C:/Root/Package2/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:Wren Package1 -> C:/Root/Package1/",
-				"INFO: Restore Packages for Closure Root",
+				"DIAG: Wren Package1 -> C:/Root/Package1/",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: Package1 -> ./",
-				"INFO: Restore Packages for Closure Build0",
-				"INFO: Restore Packages for Closure Tool0",
+				"INFO: Restore Packages for Build Closure Build0",
+				"INFO: Restore Packages for Tool Closure Tool0",
 				"INFO: Ensure Package Lock Exists: C:/Root/Package2/package-lock.sml",
 				"DIAG: Load Package Lock: C:/Root/Package2/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
 				"DIAG: Load Recipe: C:/Root/Package2/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Root:C++ Package2 -> C:/Root/Package2/",
-				"INFO: Restore Packages for Closure Root",
+				"DIAG: C++ Package2 -> C:/Root/Package2/",
+				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: Package2 -> ./",
-				"INFO: Restore Packages for Closure Build0",
-				"INFO: Restore Packages for Closure Tool0",
+				"INFO: Restore Packages for Build Closure Build0",
+				"INFO: Restore Packages for Tool Closure Tool0",
 			],
 			testListener.Messages);
 
