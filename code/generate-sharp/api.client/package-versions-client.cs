@@ -98,6 +98,7 @@ public class PackageVersionsClient
 		}
 		else
 		{
+			Log.Error($"Error {await response.Content.ReadAsStringAsync(cancellationToken)}");
 			throw new ApiException(
 				"The HTTP status code of the response was not expected.", response.StatusCode, null, null);
 		}

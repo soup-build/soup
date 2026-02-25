@@ -45,7 +45,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
-				new Path("C:/Users/Me/.soup/packages/.staging/")))
+				new Path("C:/Users/Me/.soup/.staging/")))
 			.Returns(() => Task.CompletedTask);
 
 		var uut = new PackageManager(
@@ -70,9 +70,9 @@ public class PackageManagerUnitTests
 		Assert.Equal(
 			[
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/packages/.staging/",
-				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
-				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
+				"Exists: C:/Users/Me/.soup/.staging/",
+				"CreateDirectory: C:/Users/Me/.soup/.staging/",
+				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
 
@@ -86,7 +86,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
-				new Path("C:/Users/Me/.soup/packages/.staging/")),
+				new Path("C:/Users/Me/.soup/.staging/")),
 			Times.Once());
 	}
 
@@ -135,7 +135,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
-				new Path("C:/Users/Me/.soup/packages/.staging/")))
+				new Path("C:/Users/Me/.soup/.staging/")))
 			.Returns(() => Task.CompletedTask);
 
 		var uut = new PackageManager(
@@ -166,9 +166,9 @@ public class PackageManagerUnitTests
 				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"GetUserProfileDirectory",
 				"OpenWriteTruncate: C:/Root/MyPackage/recipe.sml",
-				"Exists: C:/Users/Me/.soup/packages/.staging/",
-				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
-				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
+				"Exists: C:/Users/Me/.soup/.staging/",
+				"CreateDirectory: C:/Users/Me/.soup/.staging/",
+				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
 
@@ -182,7 +182,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
-				new Path("C:/Users/Me/.soup/packages/.staging/")),
+				new Path("C:/Users/Me/.soup/.staging/")),
 			Times.Once());
 
 		// Verify the contents of the recipe file
@@ -250,7 +250,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
-				new Path("C:/Users/Me/.soup/packages/.staging/")))
+				new Path("C:/Users/Me/.soup/.staging/")))
 			.Returns(() => Task.CompletedTask);
 
 		var uut = new PackageManager(
@@ -305,9 +305,9 @@ public class PackageManagerUnitTests
 				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"GetUserProfileDirectory",
 				"OpenWriteTruncate: C:/Root/MyPackage/recipe.sml",
-				"Exists: C:/Users/Me/.soup/packages/.staging/",
-				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
-				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
+				"Exists: C:/Users/Me/.soup/.staging/",
+				"CreateDirectory: C:/Users/Me/.soup/.staging/",
+				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
 
@@ -327,7 +327,7 @@ public class PackageManagerUnitTests
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
-				new Path("C:/Users/Me/.soup/packages/.staging/")),
+				new Path("C:/Users/Me/.soup/.staging/")),
 			Times.Once());
 
 		// Verify the contents of the recipe file
@@ -375,7 +375,7 @@ public class PackageManagerUnitTests
 
 		// Pretend that there is a zip file created
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip"),
+			new Path("C:/Users/Me/.soup/.staging/MyPackage.zip"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("ZIP_FILE_CONTENT"))));
 
 		mockFileSystem.RegisterChildren(
@@ -456,11 +456,11 @@ public class PackageManagerUnitTests
 				"Exists: C:/Root/MyPackage/recipe.sml",
 				"OpenRead: C:/Root/MyPackage/recipe.sml",
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/packages/.staging/",
-				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
+				"Exists: C:/Users/Me/.soup/.staging/",
+				"CreateDirectory: C:/Users/Me/.soup/.staging/",
 				"GetChildren: C:/Root/MyPackage/",
-				"OpenRead: C:/Users/Me/.soup/packages/.staging/MyPackage.zip",
-				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
+				"OpenRead: C:/Users/Me/.soup/.staging/MyPackage.zip",
+				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
 
@@ -469,7 +469,7 @@ public class PackageManagerUnitTests
 		mockAuthenticationManager.VerifyNoOtherCalls();
 
 		// Verify zip requests
-		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip")), Times.Once());
+		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/.staging/MyPackage.zip")), Times.Once());
 		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/MyPackage/recipe.sml"), "recipe.sml"), Times.Once());
 		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
 		mockZipManager.VerifyNoOtherCalls();
@@ -552,7 +552,7 @@ public class PackageManagerUnitTests
 
 		// Pretend that there is a zip file created
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip"),
+			new Path("C:/Users/Me/.soup/.staging/MyPackage.zip"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("ZIP_FILE_CONTENT"))));
 
 		mockFileSystem.RegisterChildren(
@@ -620,6 +620,7 @@ public class PackageManagerUnitTests
 				"INFO: Using Package Store: C:/Users/Me/.soup/packages/",
 				"INFO: Request Authentication Token",
 				"INFO: Publish artifact",
+				"INFO: Check package version",
 				"INFO: Found package version",
 				"INFO: Artifact published",
 				"INFO: Cleanup staging directory",
@@ -634,11 +635,11 @@ public class PackageManagerUnitTests
 				"Exists: C:/Root/MyPackage/target/.soup/generate-input.bvt",
 				"OpenRead: C:/Root/MyPackage/target/.soup/generate-input.bvt",
 				"GetUserProfileDirectory",
-				"Exists: C:/Users/Me/.soup/packages/.staging/",
-				"CreateDirectory: C:/Users/Me/.soup/packages/.staging/",
+				"Exists: C:/Users/Me/.soup/.staging/",
+				"CreateDirectory: C:/Users/Me/.soup/.staging/",
 				"GetChildren: C:/Root/MyPackage/target/",
-				"OpenRead: C:/Users/Me/.soup/packages/.staging/MyPackage.zip",
-				"DeleteDirectoryRecursive: C:/Users/Me/.soup/packages/.staging/",
+				"OpenRead: C:/Users/Me/.soup/.staging/MyPackage.zip",
+				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
 
@@ -647,7 +648,7 @@ public class PackageManagerUnitTests
 		mockAuthenticationManager.VerifyNoOtherCalls();
 
 		// Verify zip requests
-		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/packages/.staging/MyPackage.zip")), Times.Once());
+		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/.staging/MyPackage.zip")), Times.Once());
 		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
 		mockZipManager.VerifyNoOtherCalls();
 

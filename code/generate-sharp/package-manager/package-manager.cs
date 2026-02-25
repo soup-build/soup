@@ -370,6 +370,7 @@ public class PackageManager
 			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			// Check if the package exists
+			Log.Info("Check package version");
 			var packageVersion = await packageVersionClient.GetPackageVersionAsync(recipe.Language.Name, ownerName, recipe.Name, recipe.Version.ToString());
 			Log.Info("Found package version");
 

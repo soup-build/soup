@@ -33,14 +33,18 @@ public class ClosureManager : IClosureManager
 
 	private readonly string hostPlatform;
 
+	private readonly IList<string> knownHostPlatforms;
+
 	public ClosureManager(
 		Uri apiEndpoint,
 		HttpClient httpClient,
-		string hostPlatform)
+		string hostPlatform,
+		IList<string> knownHostPlatforms)
 	{
 		this.apiEndpoint = apiEndpoint;
 		this.httpClient = httpClient;
 		this.hostPlatform = hostPlatform;
+		this.knownHostPlatforms = knownHostPlatforms;
 	}
 
 	/// <summary>
@@ -266,19 +270,13 @@ public class ClosureManager : IClosureManager
 		{
 		};
 
-		var artifactHostPlatforms = new List<string>()
-		{
-			"Linux",
-			"Windows",
-		};
-
 		var generateClosureRequest = new Api.Client.GenerateClosureRequestModel()
 		{
 			RootPackage = rootPackage,
 			LocalPackages = localPackages,
 			PublicPackages = publicPackages,
 			PreferredVersions = preferredVersions,
-			ArtifactHostPlatforms = artifactHostPlatforms,
+			ArtifactHostPlatforms = this.knownHostPlatforms,
 		};
 
 		Api.Client.GenerateClosureResultModel result;
@@ -753,7 +751,7 @@ public class ClosureManager : IClosureManager
 					if (TryGetArtifactDigest(projectTable, out var digest))
 					{
 						await EnsureArtifactDownloadedAsync(
-							projectName.Owner ?? throw new InvalidOperationException("Missing owner"),
+							projectName.Owner,
 							languageName,
 							projectName.Name,
 							version,
