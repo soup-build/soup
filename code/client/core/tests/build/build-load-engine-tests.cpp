@@ -14,11 +14,22 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:BuildLoadEngineTests;
+export module Soup.Core:BuildLoadEngineTests;
+
+import :BuildLoadEngine;
+import :Digest;
+import :HandledException;
+import :KnownLanguage;
+import :PackageName;
+import :PackageProvider;
+import :PackageReference;
+import :RecipeBuildArguments;
+import :RecipeBuildLocationManager;
+import :RecipeCache;
+import :Value;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

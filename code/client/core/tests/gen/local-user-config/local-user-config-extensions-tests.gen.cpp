@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunLocalUserConfigExtensionsTests;
+export module Soup.Core:RunLocalUserConfigExtensionsTests;
 
 import :LocalUserConfigExtensionsTests;
 import Soup.Test.Assert;

@@ -13,11 +13,13 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:ValueTableReaderTests;
+export module Soup.Core:ValueTableReaderTests;
+
+import :Value;
+import :ValueTableReader;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

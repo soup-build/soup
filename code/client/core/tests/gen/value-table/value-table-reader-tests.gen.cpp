@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunValueTableReaderTests;
+export module Soup.Core:RunValueTableReaderTests;
 
 import :ValueTableReaderTests;
 import Soup.Test.Assert;

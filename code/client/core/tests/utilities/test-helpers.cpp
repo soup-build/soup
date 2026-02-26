@@ -8,10 +8,11 @@ module;
 #include <unordered_map>
 #include <vector>
 
-export module Soup.Core.Tests:TestHelpers;
+export module Soup.Core:TestHelpers;
+
+import :FileSystemState;
 
 import Opal;
-import Soup.Core;
 
 using namespace Opal;
 
