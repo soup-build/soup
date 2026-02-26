@@ -17,6 +17,7 @@ export TestState RunPackageManagerTests()
 	state += Soup::Test::RunTest(className, "InstallPackageReference_Version", [&testClass]() { testClass->InstallPackageReference_Version(); });
 	state += Soup::Test::RunTest(className, "InstallPackageReference_NoVersion", [&testClass]() { testClass->InstallPackageReference_NoVersion(); });
 	state += Soup::Test::RunTest(className, "PublishPackage", [&testClass]() { testClass->PublishPackage(); });
+	state += Soup::Test::RunTest(className, "PublishArtifact", [&testClass]() { testClass->PublishArtifact(); });
 
 	return state;
 }

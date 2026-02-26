@@ -43,4 +43,12 @@ public class PackagePublicExactReferenceModel
 	[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
 	[Required]
 	public required SemanticVersionExactModel Version { get; set; } = new SemanticVersionExactModel();
+
+	/// <summary>
+	/// Gets or sets the name.
+	/// </summary>
+	[JsonPropertyName("digest")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+	[Required(AllowEmptyStrings = true)]
+	public required string Digest { get; set; }
 }

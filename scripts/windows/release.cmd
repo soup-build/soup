@@ -1,14 +1,14 @@
 @echo off
 SETLOCAL
 SET ScriptsDir=%~dp0
-SET RootDir=%ScriptsDir%../..
-SET OutDir=%RootDir%/out
-SET ReleaseDir=%OutDir%/release
-SET RunDir=%OutDir%/run
-SET CodeDir=%RootDir%/code
-SET InstallerDir=%CodeDir%/installer/soup-installer
+SET RootDir=%ScriptsDir%..\..
+SET OutDir=%RootDir%\out
+SET ReleaseDir=%OutDir%\release
+SET RunDir=%OutDir%\run
+SET CodeDir=%RootDir%\code
+SET InstallerDir=%CodeDir%\installer\soup-installer
 
-SET SOUP_VERSION=0.42.7
+SET SOUP_VERSION=0.43.1
 
 REM - Build MSI Installer
 echo msbuild %InstallerDir% -p:Configuration=Release
@@ -16,4 +16,5 @@ msbuild %InstallerDir% -p:Configuration=Release
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 REM - Generate zip release
-tar -a -cf %ReleaseDir%/soup-build-%SOUP_VERSION%-windows-x64.zip -C %RunDir% *
+mkdir %ReleaseDir%\%SOUP_VERSION%\
+tar -a -cf %ReleaseDir%/%SOUP_VERSION%/soup-build-windows-x64.zip -C %RunDir% *

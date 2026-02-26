@@ -17,5 +17,6 @@ public interface IClosureManager
 		Path workingDirectory,
 		Path packageStoreDirectory,
 		Path packageLockStoreDirectory,
+		Path packageArtifactStoreDirectory,
 		Path stagingDirectory);
 }

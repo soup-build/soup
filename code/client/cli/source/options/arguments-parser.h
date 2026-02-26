@@ -7,6 +7,7 @@
 #include "initialize-options.h"
 #include "install-options.h"
 #include "publish-options.h"
+#include "release-options.h"
 #include "restore-options.h"
 #include "run-options.h"
 #include "target-options.h"
@@ -130,6 +131,45 @@ namespace Soup::Client
 				}
 				
 				options->Verbosity = CheckVerbosity(unusedArgs);
+
+				result = std::move(options);
+			}
+			else if (commandType == "release")
+			{
+				Log::Diag("Parse release");
+
+				auto options = std::make_unique<ReleaseOptions>();
+
+				// Check for required index argument
+				auto argument = std::string();
+				if (TryGetIndexArgument(unusedArgs, argument))
+				{
+					options->Path = std::move(argument);
+				}
+				
+				options->Verbosity = CheckVerbosity(unusedArgs);
+
+				auto ownerValue = std::string();
+				if (TryGetValueArgument("owner", unusedArgs, ownerValue))
+				{
+					options->Owner = std::move(ownerValue);
+				}
+				else
+				{
+					throw std::runtime_error("Missing required value owner");
+				}
+
+				auto flavorValue = std::string();
+				if (TryGetValueArgument("flavor", unusedArgs, flavorValue))
+				{
+					options->Flavor = std::move(flavorValue);
+				}
+
+				auto architectureValue = std::string();
+				if (TryGetValueArgument("architecture", unusedArgs, architectureValue))
+				{
+					options->Architecture = std::move(architectureValue);
+				}
 
 				result = std::move(options);
 			}

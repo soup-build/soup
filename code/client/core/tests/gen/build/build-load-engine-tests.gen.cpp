@@ -14,7 +14,7 @@ export TestState RunBuildLoadEngineTests()
 	TestState state = { 0, 0 };
 	state += Soup::Test::RunTest(className, "Initialize", [&testClass]() { testClass->Initialize(); });
 	state += Soup::Test::RunTest(className, "Load_MissingPackageLock_Throws", [&testClass]() { testClass->Load_MissingPackageLock_Throws(); });
-	state += Soup::Test::RunTest(className, "Load_LanguageExtension_BuiltIn_ToolDependency_BuiltIn", [&testClass]() { testClass->Load_LanguageExtension_BuiltIn_ToolDependency_BuiltIn(); });
+	state += Soup::Test::RunTest(className, "Load_LanguageExtension_Prebuilt_ToolDependency_Prebuilt", [&testClass]() { testClass->Load_LanguageExtension_Prebuilt_ToolDependency_Prebuilt(); });
 	state += Soup::Test::RunTest(className, "Load_LanguageExtension_External", [&testClass]() { testClass->Load_LanguageExtension_External(); });
 	state += Soup::Test::RunTest(className, "Load_LanguageExtension_External_ToolDependency_External", [&testClass]() { testClass->Load_LanguageExtension_External_ToolDependency_External(); });
 	state += Soup::Test::RunTest(className, "Load_BuildDependency_External", [&testClass]() { testClass->Load_BuildDependency_External(); });
@@ -28,6 +28,7 @@ export TestState RunBuildLoadEngineTests()
 	state += Soup::Test::RunTest(className, "Load_RuntimeDependency_Local_ExplicitLanguageOverride_MultipleReferences_ReuseBuildGraph", [&testClass]() { testClass->Load_RuntimeDependency_Local_ExplicitLanguageOverride_MultipleReferences_ReuseBuildGraph(); });
 	state += Soup::Test::RunTest(className, "Load_RuntimeDependency_External_Triangle_BuildOnce", [&testClass]() { testClass->Load_RuntimeDependency_External_Triangle_BuildOnce(); });
 	state += Soup::Test::RunTest(className, "Load_OtherDependency_ExplicitLanguage", [&testClass]() { testClass->Load_OtherDependency_ExplicitLanguage(); });
+	state += Soup::Test::RunTest(className, "Load_CircularBuildDependency_Throws", [&testClass]() { testClass->Load_CircularBuildDependency_Throws(); });
 
 	return state;
 }

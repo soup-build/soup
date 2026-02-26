@@ -7,4 +7,4 @@ SCRIPTS_DIR=$(dirname "$0")
 ROOT_DIR=$SCRIPTS_DIR/../..
 OUT_DIR=$ROOT_DIR/out
 
-$OUT_DIR/msbuild/bin/swhere/Release/net9.0/linux-x64/publish/swhere "$@"
+$OUT_DIR/msbuild/bin/swhere/Release/net10.0/linux-x64/publish/swhere "$@"

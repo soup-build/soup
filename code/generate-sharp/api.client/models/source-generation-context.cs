@@ -16,6 +16,7 @@ namespace Soup.Build.Api.Client;
 [JsonSerializable(typeof(PackageCreateOrUpdateModel))]
 [JsonSerializable(typeof(PackageModel))]
 [JsonSerializable(typeof(PackageVersionModel))]
+[JsonSerializable(typeof(PackageVersionArtifactModel))]
 [JsonSerializable(typeof(SearchPackagesModel))]
 internal sealed partial class SourceGenerationContext : JsonSerializerContext
 {

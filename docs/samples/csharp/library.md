@@ -8,7 +8,7 @@ The Recipe file that defines the static library "Samples.CSharp.Library.Library"
 ```sml
 Name: 'Samples.CSharp.Library.Library'
 Language: 'C#|0'
-TargetFramework: 'net9.0'
+TargetFramework: 'net10.0'
 Version: 1.0.0
 ```
 
@@ -32,7 +32,7 @@ The Recipe file that defines the static library "Samples.CSharp.Library.ConsoleA
 ```sml
 Name: 'Samples.CSharp.Library.ConsoleApplication'
 Language: 'C#|0'
-TargetFramework: 'net9.0'
+TargetFramework: 'net10.0'
 Type: 'Executable'
 Version: 1.0.0
 Dependencies: {
@@ -44,28 +44,6 @@ Dependencies: {
 
 ## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C#': {
-      'Samples.CSharp.Library.ConsoleApplication': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.CSharp.Library.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|CSharp': { Version: 0.16.0 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/program.cs)
 A C# Program file that implements the main method.
@@ -86,6 +64,3 @@ namespace Samples.CSharp.Library.Application
 
 ## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/.gitignore)
 A simple git ignore file to exclude all Soup build output.
-```
-out/
-```

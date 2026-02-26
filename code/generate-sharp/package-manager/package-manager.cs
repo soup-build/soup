@@ -6,6 +6,7 @@ using Opal;
 using Opal.System;
 using Soup.Build.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
@@ -21,8 +22,6 @@ namespace Soup.Build.PackageManager;
 [SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "Primary class")]
 public class PackageManager
 {
-	private static readonly Path StagingFolder = new Path("./.staging/");
-
 	private readonly Uri apiEndpoint;
 
 	private readonly HttpClient httpClient;
@@ -47,12 +46,15 @@ public class PackageManager
 		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
 		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
 		var lockStore = userProfileDirectory + new Path("./.soup/locks/");
+		var artifactStore = userProfileDirectory + new Path("./.soup/artifacts/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
 
 		Log.Diag("Using Package Store: " + packageStore.ToString());
 		Log.Diag("Using Lock Store: " + lockStore.ToString());
+		Log.Diag("Using Artifact Store: " + artifactStore.ToString());
 
 		// Create the staging directory
-		var stagingPath = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -60,6 +62,7 @@ public class PackageManager
 				workingDirectory,
 				packageStore,
 				lockStore,
+				artifactStore,
 				stagingPath);
 
 			// Cleanup the working directory
@@ -77,7 +80,9 @@ public class PackageManager
 	/// <summary>
 	/// Install a package
 	/// </summary>
-	public async Task InstallPackageReferenceAsync(Path workingDirectory, string packageReference)
+	public async Task InstallPackageReferenceAsync(
+		Path workingDirectory,
+		string packageReference)
 	{
 		var recipePath =
 			workingDirectory +
@@ -91,8 +96,12 @@ public class PackageManager
 		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
 		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
 		var lockStore = userProfileDirectory + new Path("./.soup/locks/");
+		var artifactStore = userProfileDirectory + new Path("./.soup/artifacts/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
+
 		Log.Diag("Using Package Store: " + packageStore.ToString());
 		Log.Diag("Using Lock Store: " + lockStore.ToString());
+		Log.Diag("Using Artifact Store: " + artifactStore.ToString());
 
 		// Parse the package reference to get the name
 		var targetPackageReference = PackageReference.Parse(packageReference);
@@ -146,7 +155,7 @@ public class PackageManager
 		await RecipeExtensions.SaveToFileAsync(recipePath, recipe);
 
 		// Create the staging directory
-		var stagingDirectory = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -154,16 +163,17 @@ public class PackageManager
 				workingDirectory,
 				packageStore,
 				lockStore,
-				stagingDirectory);
+				artifactStore,
+				stagingPath);
 
 			// Cleanup the working directory
 			Log.Info("Deleting staging directory");
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingDirectory, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 		}
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingDirectory, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
 	}
@@ -185,12 +195,14 @@ public class PackageManager
 			throw new InvalidOperationException($"Could not load the recipe file: {recipePath}");
 		}
 
-		var packageStore = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
-			new Path("./.soup/packages/");
+		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
+		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
+
 		Log.Info("Using Package Store: " + packageStore.ToString());
 
 		// Create the staging directory
-		var stagingPath = EnsureStagingDirectoryExists(packageStore);
+		EnsureStagingDirectoryExists(stagingPath);
 
 		try
 		{
@@ -204,15 +216,13 @@ public class PackageManager
 
 			// Authenticate the user
 			Log.Info("Request Authentication Token");
-			var accessToken = await LifetimeManager.Get<IAuthenticationManager>().EnsureSignInAsync();
+			var forceRefresh = false;
+			var accessToken = await LifetimeManager.Get<IAuthenticationManager>().EnsureSignInAsync(forceRefresh);
 			var ownerName = "_";
 
 			// Publish the archive
 			Log.Info("Publish package");
-			var packageClient = new Api.Client.PackagesClient(this.httpClient, accessToken)
-			{
-				BaseUrl = this.apiEndpoint,
-			};
+			var packageClient = new Api.Client.PackagesClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			// Check if the package exists
 			bool packageExists = false;
@@ -249,10 +259,7 @@ public class PackageManager
 					createPackageModel);
 			}
 
-			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, accessToken)
-			{
-				BaseUrl = this.apiEndpoint,
-			};
+			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
 
 			using (var readArchiveFile = LifetimeManager.Get<IFileSystem>().OpenRead(archivePath))
 			{
@@ -295,7 +302,129 @@ public class PackageManager
 		catch (Exception)
 		{
 			// Cleanup the staging directory and accept that we failed
-			Log.Info("Publish Failed: Cleanup staging directory");
+			Log.Info("Publish Package Failed: Cleanup staging directory");
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+			throw;
+		}
+	}
+
+	/// <summary>
+	/// Publish an artifact
+	/// </summary>
+	[SuppressMessage("Style", "IDE0010:Add missing cases", Justification = "Allow default fallthrough")]
+	public async Task PublishArtifactAsync(Path workingDirectory, Path targetDirectory)
+	{
+		Log.Info($"Publish Artifact: {workingDirectory} {targetDirectory}");
+
+		var recipePath =
+			workingDirectory +
+			BuildConstants.RecipeFileName;
+		var (isSuccess, recipe) = await RecipeExtensions.TryLoadRecipeFromFileAsync(recipePath);
+		if (!isSuccess)
+		{
+			throw new InvalidOperationException($"Could not load the recipe file: {recipePath}");
+		}
+
+		// Load the generate input so we can pass along context
+		var soupTargetDirectory = targetDirectory + new Path("./.soup/");
+		var generateInputFile = soupTargetDirectory + BuildConstants.GenerateInputFileName;
+		ValueTable generateInput;
+		if (ValueTableManager.TryLoadState(generateInputFile, out var loadGenerateInput))
+		{
+			generateInput = loadGenerateInput;
+		}
+		else
+		{
+			throw new InvalidOperationException($"Failed to load generate input {generateInputFile}");
+		}
+
+		var globalState = generateInput["GlobalState"].AsTable();
+
+		var userProfileDirectory = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory();
+		var packageStore = userProfileDirectory + new Path("./.soup/packages/");
+		var stagingPath = userProfileDirectory + new Path("./.soup/.staging/");
+
+		Log.Info("Using Package Store: " + packageStore.ToString());
+
+		// Create the staging directory
+		EnsureStagingDirectoryExists(stagingPath);
+
+		try
+		{
+			var archivePath = stagingPath + new Path($"./{recipe.Name}.zip");
+
+			// Create the archive of the package
+			using (var zipArchive = LifetimeManager.Get<IZipManager>().OpenCreate(archivePath))
+			{
+				AddAllFilesRecursive(targetDirectory, targetDirectory, zipArchive);
+			}
+
+			// Authenticate the user
+			Log.Info("Request Authentication Token");
+			var forceRefresh = false;
+			var accessToken = await LifetimeManager.Get<IAuthenticationManager>().EnsureSignInAsync(forceRefresh);
+			var ownerName = "_";
+
+			// Publish the archive
+			Log.Info("Publish artifact");
+			var packageVersionClient = new Api.Client.PackageVersionsClient(this.httpClient, this.apiEndpoint, accessToken);
+
+			// Check if the package exists
+			Log.Info("Check package version");
+			var packageVersion = await packageVersionClient.GetPackageVersionAsync(recipe.Language.Name, ownerName, recipe.Name, recipe.Version.ToString());
+			Log.Info("Found package version");
+
+			var createPackageModel = new Api.Client.BuildConfigurationModel()
+			{
+				Context = ConvertToDictionary(globalState["Context"].AsTable(), ["PackageDirectory", "TargetDirectory"]),
+				Parameters = ConvertToDictionary(globalState["Parameters"].AsTable(), []),
+			};
+
+			var packageArtifactClient = new Api.Client.PackageVersionArtifactsClient(this.httpClient, this.apiEndpoint, accessToken);
+
+			using (var readArchiveFile = LifetimeManager.Get<IFileSystem>().OpenRead(archivePath))
+			{
+				try
+				{
+					await packageArtifactClient.PublishPackageVersionArtifactAsync(
+						recipe.Language.Name,
+						ownerName,
+						recipe.Name,
+						recipe.Version.ToString(),
+						new Api.Client.FileParameter(readArchiveFile.GetInStream(), string.Empty, "application/zip"),
+						createPackageModel);
+					Log.Info("Artifact published");
+				}
+				catch (Api.Client.ApiException ex)
+				{
+					switch (ex.StatusCode)
+					{
+						case HttpStatusCode.BadRequest:
+							if (ex is Api.Client.ApiException<Api.Client.ProblemDetails> problemDetailsEx)
+								Log.Error(problemDetailsEx.Result.Detail ?? "Bad request");
+							else
+								Log.Error("Bad request");
+							break;
+						case HttpStatusCode.Forbidden:
+							Log.Error("You do not have permission to edit this package");
+							break;
+						case HttpStatusCode.Conflict:
+							Log.Info("Artifact version already exists");
+							break;
+						default:
+							throw;
+					}
+				}
+			}
+
+			// Cleanup the staging directory
+			Log.Info("Cleanup staging directory");
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
+		}
+		catch (Exception)
+		{
+			// Cleanup the staging directory and accept that we failed
+			Log.Info("Publish Artifact Failed: Cleanup staging directory");
 			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 			throw;
 		}
@@ -306,10 +435,7 @@ public class PackageManager
 		string ownerName,
 		string packageName)
 	{
-		var client = new Api.Client.PackagesClient(this.httpClient, null)
-		{
-			BaseUrl = this.apiEndpoint,
-		};
+		var client = new Api.Client.PackagesClient(this.httpClient, this.apiEndpoint, null);
 
 		return await client.GetPackageAsync(languageName, ownerName, packageName);
 	}
@@ -318,13 +444,14 @@ public class PackageManager
 	{
 		var ignoreFileList = new string[]
 		{
-				"package-lock.sml",
+			"package-lock.sml",
 		};
 		var ignoreFolderList = new string[]
 		{
-				"out",
-				".git",
+			"out",
+			".git",
 		};
+
 		foreach (var child in LifetimeManager.Get<IFileSystem>().GetChildren(workingDirectory))
 		{
 			if (child.IsDirectory)
@@ -368,18 +495,46 @@ public class PackageManager
 	/// <summary>
 	/// Ensure the staging directory exists
 	/// </summary>
-	private static Path EnsureStagingDirectoryExists(Path packageStore)
+	private static void EnsureStagingDirectoryExists(Path stagingPath)
 	{
-		var stagingDirectory = packageStore + StagingFolder;
-		if (LifetimeManager.Get<IFileSystem>().Exists(stagingDirectory))
+		if (LifetimeManager.Get<IFileSystem>().Exists(stagingPath))
 		{
 			Log.Warning("The staging directory already exists from a previous failed run");
-			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingDirectory, true);
+			LifetimeManager.Get<IFileSystem>().DeleteDirectory(stagingPath, true);
 		}
 
 		// Create the folder
-		LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingDirectory);
+		LifetimeManager.Get<IFileSystem>().CreateDirectory2(stagingPath);
+	}
 
-		return stagingDirectory;
+	private static Dictionary<string, string> ConvertToDictionary(
+		ValueTable table, IList<string> ignore)
+	{
+		var result = new Dictionary<string, string>();
+
+		foreach (var value in table)
+		{
+			if (!ignore.Contains(value.Key))
+			{
+				switch (value.Value.Type)
+				{
+					case Utilities.ValueType.String:
+						result.Add(value.Key, value.Value.AsString());
+						break;
+					case Utilities.ValueType.Table:
+					case Utilities.ValueType.List:
+					case Utilities.ValueType.Integer:
+					case Utilities.ValueType.Float:
+					case Utilities.ValueType.Boolean:
+					case Utilities.ValueType.Version:
+					case Utilities.ValueType.PackageReference:
+					case Utilities.ValueType.LanguageReference:
+					default:
+						throw new InvalidOperationException($"Cannot convert type {value.Value.Type}");
+				}
+			}
+		}
+
+		return result;
 	}
 }

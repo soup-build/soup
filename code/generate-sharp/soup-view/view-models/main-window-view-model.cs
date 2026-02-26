@@ -21,8 +21,6 @@ namespace Soup.View.ViewModels;
 public class MainWindowViewModel : ViewModelBase
 {
 	private readonly FileSystemState fileSystemState = new FileSystemState();
-
-	private Path? recipeFile;
 	private readonly DependencyGraphViewModel dependencyGraph;
 	private readonly PreprocessorTaskGraphViewModel preprocessorTaskGraph;
 	private readonly PreprocessorOperationGraphViewModel preprocessorOperationGraph;
@@ -51,14 +49,14 @@ public class MainWindowViewModel : ViewModelBase
 
 	public Path? RecipeFile
 	{
-		get => this.recipeFile;
+		get;
 		private set
 		{
-			if (CheckRaiseAndSetIfChanged(ref this.recipeFile, value))
+			if (CheckRaiseAndSetIfChanged(ref field, value))
 			{
-				if (this.recipeFile is not null)
+				if (field is not null)
 				{
-					_ = this.dependencyGraph.LoadProjectAsync(this.recipeFile);
+					_ = this.dependencyGraph.LoadProjectAsync(field);
 				}
 			}
 		}

@@ -35,11 +35,31 @@ void CopyFile(std::string_view sourcePath, std::string_view destinationPath)
 #elif defined(__linux__)
 void CopyFile(std::string_view sourcePath, std::string_view destinationPath)
 {
-	auto options = std::filesystem::copy_options::overwrite_existing;
-	if (!std::filesystem::copy_file(sourcePath, destinationPath, options))
+	// Get the original permissions
+    std::error_code error;
+    auto status = std::filesystem::status(sourcePath, error);
+    if (error)
 	{
+        std::cerr << "Error getting status: " << error.message() << std::endl;
+		throw std::runtime_error("Get status failed");
+    }
+
+    auto sourcePermissions = status.permissions();
+
+	auto options = std::filesystem::copy_options::overwrite_existing;
+	std::filesystem::copy_file(sourcePath, destinationPath, options, error);
+	if (error)
+	{
+        std::cerr << "Error copy file: " << error.message() << std::endl;
 		throw std::runtime_error("Copy failed");
 	}
+
+	std::filesystem::permissions(destinationPath, sourcePermissions, error);
+    if (error)
+	{
+        std::cerr << "Error setting permissions: " << error.message() << std::endl;
+		throw std::runtime_error("Set permissions failed");
+    }
 }
 #else
 #error "Unknown platform"

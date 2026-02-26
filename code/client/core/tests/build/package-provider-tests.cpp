@@ -51,7 +51,7 @@ namespace Soup::Core::UnitTests
 					PackageInfo(
 						1,
 						PackageName("User1", "Package1"),
-						false,
+						std::nullopt,
 						Path(),
 						&packageRecipe,
 						PackageChildrenMap())

@@ -19,29 +19,6 @@ Dependencies: {
 
 ## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
-```
-Version: 5
-Closures: {
-  Root: {
-    'C++': {
-      'Samples.Cpp.ParseJson': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'mwasplund|json11': { Version: 1.1.5, Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Cpp': { Version: 0.16.1 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-      'mwasplund|parse.modules': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [message.json](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/message.json)
 A json file containing a single property containing a message for the application to print.
@@ -82,6 +59,3 @@ int main()
 
 ## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/parse-json/.gitignore)
 A simple git ignore file to exclude all Soup build output.
-```
-out/
-```

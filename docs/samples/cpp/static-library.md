@@ -52,29 +52,6 @@ Dependencies: {
 
 ## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dependency static library.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C++': {
-      'Samples.Cpp.StaticLibrary.Application': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'Samples.Cpp.StaticLibrary.Library': { Version: '../library/', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Cpp': { Version: 0.16.1 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-      'mwasplund|parse.modules': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
@@ -93,6 +70,3 @@ int main()
 
 ## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.
-```
-out/
-```

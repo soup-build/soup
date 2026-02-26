@@ -76,7 +76,7 @@ json11::Json ConvertToJson(const PackageLookupMap& lookup)
 			{ "Id", value.second.Id },
 			{ "Name", value.second.Name.GetName() },
 			{ "Owner", std::move(ownerValue) },
-			{ "IsPrebuilt", value.second.IsPrebuilt },
+			{ "IsPrebuilt", value.second.IsPrebuilt() },
 			{ "PackageRoot", value.second.PackageRoot.ToString() },
 			{ "Dependencies",  std::move(dependencies) },
 		});
@@ -149,7 +149,9 @@ Value JsonToValue(const json11::Json& json)
 	}
 }
 
-std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::istream& globalParametersStream)
+std::string LoadBuildGraphContent(
+	std::string_view workingDirectoryString,
+	std::istream& globalParametersStream)
 {
 	try
 	{
@@ -176,19 +178,20 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::
 		System::ISystem::Register(std::make_shared<System::STLSystem>());
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
+		// Platform specific defaults
+		#if defined(_WIN32)
+			auto hostPlatform = "Windows";
+		#elif defined(__linux__)
+			auto hostPlatform = "Linux";
+		#else
+			#error "Unknown Platform"
+		#endif
+
 		auto workingDirectory = Path(workingDirectoryString);
 		auto globalParameters = ValueTableReader::Deserialize(globalParametersStream);
 
 		// Find the built in folder root
 		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-		
-		#if defined(_WIN32)
-		auto builtInPackageDirectory = rootDirectory + Path("./built-in/");
-		#elif defined(__linux__)
-		auto builtInPackageDirectory = rootDirectory + Path("../lib/soup/built-in/");
-		#else
-		#error "Unknown platform"
-		#endif
 
 		// Load user config state
 		auto userDataPath = BuildEngine::GetSoupUserDataPath();
@@ -196,10 +199,11 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString, std::
 		auto recipeCache = RecipeCache();
 
 		auto packageProvider = BuildEngine::LoadBuildGraph(
-			builtInPackageDirectory, 
 			workingDirectory,
+			std::nullopt,
 			globalParameters,
 			userDataPath,
+			hostPlatform,
 			recipeCache);
 
 		auto packageGraphs = ConvertToJson(packageProvider.GetPackageGraphLookup());

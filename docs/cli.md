@@ -13,6 +13,8 @@ soup <command> [arguments]
 
 * [Publish](cli/publish.md) - Publish a given package to the public feed.
 
+* [Release](cli/release.md) - Release a package by building and publishing output artifacts.
+
 * [Restore](cli/restore.md) - Restore all external package references in the target project closure.
 
 * [Run](cli/run.md) - Invoke the executable result (if applicable) for a specified package.

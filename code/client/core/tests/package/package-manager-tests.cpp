@@ -246,5 +246,49 @@ namespace Soup::Core::UnitTests
 				processManager->GetRequests(),
 				"Verify process requests match expected.");
 		}
+
+		// [[Fact]]
+		void PublishArtifact()
+		{
+			// Register the test listener
+			auto testListener = std::make_shared<TestTraceListener>();
+			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
+
+			// Register the test process manager
+			auto processManager = std::make_shared<MockProcessManager>();
+			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
+
+			auto workingDirectory = Path("C:/TestLocation");
+			auto targetDirectory = Path("C:/TestLocation/target");
+			PackageManager::PublishArtifact(workingDirectory, targetDirectory);
+
+			Assert::AreEqual(
+				std::vector<std::string>({
+					"INFO: PublishArtifact",
+					"INFO: Running PackageManager",
+					#ifdef _WIN32
+						"DIAG:   C:/testlocation/package-manager/package-manager.exe publish-artifact C:/TestLocation C:/TestLocation/target",
+					#else
+						"DIAG:   C:/lib/soup/package-manager/package-manager publish-artifact C:/TestLocation C:/TestLocation/target",
+					#endif
+				}),
+				testListener->GetMessages(),
+				"Verify log messages match expected.");
+
+			Assert::AreEqual(
+				std::vector<std::string>({
+					"GetCurrentProcessFileName",
+					#ifdef _WIN32
+						"CreateProcess: 1 0 [C:/testlocation/package-manager/] C:/testlocation/package-manager/package-manager.exe publish-artifact C:/TestLocation C:/TestLocation/target",
+					#else
+						"CreateProcess: 1 0 [C:/lib/soup/package-manager/] C:/lib/soup/package-manager/package-manager publish-artifact C:/TestLocation C:/TestLocation/target",
+					#endif
+					"ProcessStart: 1",
+					"WaitForExit: 1",
+					"GetExitCode: 1",
+				}),
+				processManager->GetRequests(),
+				"Verify process requests match expected.");
+		}
 	};
 }

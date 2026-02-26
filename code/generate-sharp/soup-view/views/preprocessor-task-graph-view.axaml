@@ -22,9 +22,9 @@
 		<GridSplitter
 			Grid.Column="1"
 			Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
-		<TreeDataGrid
+		<TreeView
 			Grid.Column="2"
 			DataContext="{Binding SelectedTask}"
-			Source="{Binding Properties}" />
+			ItemsSource="{Binding Properties}" />
 	</Grid>
 </UserControl>

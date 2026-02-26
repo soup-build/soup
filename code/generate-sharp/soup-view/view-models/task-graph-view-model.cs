@@ -22,34 +22,31 @@ public class TaskGraphViewModel : ContentPaneViewModel
 		public required List<TaskDetails> Children { get; init; }
 	}
 
-	private GraphNodeViewModel? selectedNode;
-	private TaskDetailsViewModel? selectedTask;
 	private uint uniqueId;
-	private IList<GraphNodeViewModel>? graph;
 	private readonly Dictionary<uint, TaskDetailsViewModel> taskDetailsLookup = [];
 
 	public IList<GraphNodeViewModel>? Graph
 	{
-		get => this.graph;
-		private set => this.RaiseAndSetIfChanged(ref this.graph, value);
+		get;
+		private set => this.RaiseAndSetIfChanged(ref field, value);
 	}
 
 	public GraphNodeViewModel? SelectedNode
 	{
-		get => this.selectedNode;
+		get;
 		set
 		{
-			if (CheckRaiseAndSetIfChanged(ref this.selectedNode, value))
+			if (CheckRaiseAndSetIfChanged(ref field, value))
 			{
-				this.SelectedTask = this.selectedNode is not null ? this.taskDetailsLookup[this.selectedNode.Id] : null;
+				this.SelectedTask = field is not null ? this.taskDetailsLookup[field.Id] : null;
 			}
 		}
 	}
 
 	public TaskDetailsViewModel? SelectedTask
 	{
-		get => this.selectedTask;
-		set => this.RaiseAndSetIfChanged(ref this.selectedTask, value);
+		get;
+		set => this.RaiseAndSetIfChanged(ref field, value);
 	}
 
 	public void Load(ValueTable? generateInfoTable)

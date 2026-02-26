@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "",
-      "program": "${workspaceFolder}/out/msbuild/bin/swhere/Debug/net9.0/linux-x64/swhere.dll",
+      "program": "${workspaceFolder}/out/msbuild/bin/swhere/Debug/net10.0/linux-x64/swhere.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
@@ -17,7 +17,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "",
-      "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net9.0/linux-x64/SoupView.dll",
+      "program": "${workspaceFolder}/out/msbuild/bin/SoupView/Debug/net10.0/linux-x64/SoupView.dll",
       "args": [
         "${workspaceFolder}/code/client/cli/recipe.sml"
       ],
@@ -58,7 +58,7 @@
       "name": "Debug Soup (GDB)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/out/run/soup",
+      "program": "${workspaceFolder}/out/run/bin/soup",
       "args": [
         "build",
         "samples/cpp/console-application"
@@ -85,10 +85,10 @@
       "name": "Debug Generate (GDB)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/out/run/generate",
+      "program": "${workspaceFolder}/out/run/lib/soup/generate",
       "args": [
-        "false",
-        "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+        "true",
+        "${workspaceFolder}/out/C++/Local/Samples.Cpp.ConsoleApplication/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -143,10 +143,21 @@
       ]
     },
     {
-      "name": "Debug Soup Core Test",
+      "name": "Debug Soup Core Test (VS)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/bin/tests/TestHarness.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Soup Core Test (GDB)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/bin/Test/TestHarness.exe",
+      "program": "${workspaceFolder}/out/C++/Local/Soup.Core/0.1.1/J_HqSstV55vlb-x6RWC_hLRFRDU/bin/tests/TestHarness.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

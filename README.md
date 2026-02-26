@@ -1,4 +1,4 @@
-# Soup Build A Test
+# Soup Build
 
 ## Quick Links
 * [Official Site](https://www.soupbuild.com/)

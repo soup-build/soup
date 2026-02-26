@@ -5,7 +5,9 @@
 using Opal;
 using Opal.System;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Path = Opal.Path;
 
@@ -13,8 +15,9 @@ namespace Soup.Build.PackageManager;
 
 public static class Program
 {
-	// private static Uri SoupApiEndpoint => new Uri("https://localhost:7070");
 	private static Uri SoupApiEndpoint => new Uri("https://api.soupbuild.com");
+	// private static Uri SoupApiEndpoint => new Uri("https://api.dev.soupbuild.com");
+	// private static Uri SoupApiEndpoint => new Uri("https://localhost:7070");
 
 	public static async Task<int> Main(string[] args)
 	{
@@ -40,13 +43,37 @@ public static class Program
 			var command = args[0];
 			var workingDirectory = new Path(args[1]);
 
-			using var httpClient = new HttpClient();
+			string hostPlatform;
+			var knownHostPlatforms = new List<string>()
+			{
+				"Linux",
+				 "Windows",
+			};
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				hostPlatform = "Windows";
+			}
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			{
+				hostPlatform = "Linux";
+			}
+			else
+			{
+				throw new NotSupportedException("Unknown OS Platform");
+			}
+
+			// using var handler = new HttpClientHandler()
+			// {
+			// 	// Ignore SSL
+			// 	ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+			// };
+			var httpClient = new HttpClient();
 			SemanticVersion minimumLanguageVersionCpp = new SemanticVersion(0, 16, 0);
-			SemanticVersion builtInLanguageVersionWren = new SemanticVersion(0, 5, 4);
 			var closureManager = new ClosureManager(
 				SoupApiEndpoint,
 				httpClient,
-				builtInLanguageVersionWren);
+				hostPlatform,
+				knownHostPlatforms);
 			var packageManager = new PackageManager(
 				SoupApiEndpoint,
 				httpClient,
@@ -84,6 +111,18 @@ public static class Program
 						await packageManager.InstallPackageReferenceAsync(workingDirectory, packageReference);
 					}
 					break;
+				case "publish-artifact":
+					{
+						if (args.Length != 3)
+						{
+							PrintUsage();
+							return -1;
+						}
+
+						var targetDirectory = new Path(args[2]);
+						await packageManager.PublishArtifactAsync(workingDirectory, targetDirectory);
+					}
+					break;
 				case "publish-package":
 					{
 						if (args.Length != 2)
@@ -113,6 +152,7 @@ public static class Program
 		Log.Info("Soup.Build.PackageManager.exe [command] [directory]");
 		Log.Info("\tinstall-package [directory] [packageReference]");
 		Log.Info("\trestore-packages [directory]");
+		Log.Info("\tpublish-artifact [working-directory] [target-directory]");
 		Log.Info("\tpublish-package [directory]");
 	}
 }

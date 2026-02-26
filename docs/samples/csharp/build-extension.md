@@ -18,28 +18,6 @@ Dependencies: {
 
 ## [extension/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/extension/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    Wren: {
-      'Samples.CSharp.BuildExtension.Extension': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-      'Soup|Build.Utils': { Version: 0.9.1, Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Soup|Wren': { Version: 0.5.4 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [extension/custom-build-task.wren](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/extension/custom-build-task.wren)
 A Wren file defining a custom build Task that will run before the build definition and sets a custom preprocessor definition to show how a user can alter the build state through an extension.
@@ -92,7 +70,7 @@ The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Execu
 ```sml
 Name: 'Samples.CSharp.BuildExtension.Executable'
 Language: 'C#|0'
-TargetFramework: 'net9.0'
+TargetFramework: 'net10.0'
 Type: 'Executable'
 Version: 1.0.0
 Dependencies: {
@@ -104,28 +82,6 @@ Dependencies: {
 
 ## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/executable/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
-```sml
-Version: 5
-Closures: {
-  Root: {
-    'C#': {
-      'Samples.CSharp.BuildExtension.Executable': { Version: './', Build: 'Build0', Tool: 'Tool0' }
-    }
-  }
-  Build0: {
-    Wren: {
-      'Samples.CSharp.BuildExtension.Extension': { Version: '../extension/' }
-      'Soup|CSharp': { Version: 0.16.0 }
-    }
-  }
-  Tool0: {
-    'C++': {
-      'mwasplund|copy': { Version: 1.2.0 }
-      'mwasplund|mkdir': { Version: 1.2.0 }
-    }
-  }
-}
-```
 
 ## [executable/program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/executable/program.cs)
 A simple C# Program method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
@@ -154,6 +110,3 @@ namespace Samples.CSharp.BuildExtension.Executable
 
 ## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/.gitignore)
 A simple git ignore file to exclude all Soup build output.
-```
-out/
-```
