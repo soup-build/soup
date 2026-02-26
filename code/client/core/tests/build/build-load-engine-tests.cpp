@@ -17,6 +17,7 @@ module;
 export module Soup.Core:BuildLoadEngineTests;
 
 import :BuildLoadEngine;
+import :Digest;
 import :HandledException;
 import :KnownLanguage;
 import :PackageName;
