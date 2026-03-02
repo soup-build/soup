@@ -460,7 +460,6 @@ namespace Soup::Core
 					{
 						throw std::runtime_error("Missing required generate phase 2 result.");
 					}
-					
 
 					Log::Diag("Map previous operation graph observed results");
 					auto updatedEvaluatePhase2Results = MergeOperationResults(
