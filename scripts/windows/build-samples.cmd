@@ -89,6 +89,10 @@ echo soup build %SamplesDir%/cpp/module-interface/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/module-interface/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
+echo soup build %SamplesDir%/cpp/module-partitions/ -flavor %Flavor%
+call soup build %SamplesDir%/cpp/module-partitions/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
 echo soup restore %SamplesDir%/cpp/parse-json/
 call soup restore %SamplesDir%/cpp/parse-json/
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
