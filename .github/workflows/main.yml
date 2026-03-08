@@ -107,7 +107,7 @@ jobs:
     - name: Soup Build C++ DynamicLibrary
       run: soup build ./soup/samples/cpp/dynamic-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ GenerateFile
-      run: soup build ./soup/samples/cpp/generate-file/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/generate-file/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ HeaderLibrary
       run: soup build ./soup/samples/cpp/header-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleDynamicLibrary
