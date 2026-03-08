@@ -1,6 +1,12 @@
 # C++ Generate File
 Sample build tool and extension that generates a translation unit and injects it into the normal build process. The custom build task will run before the core Build Task and will create an Operation that generates a new translation unit and properly registers it as a normal source file for the compiler.
 
+![Task Graph](assets/generage-file-task-graph.png)
+**Image showing updated task graph with the injected GenerateBuildTask**
+
+![Operation Graph](assets/generage-file-operation-graph.png)
+**Image showing updated operation graph with the injected mkdir and generate file operations**
+
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file)
 
 ## [tool/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/tool/recipe.sml)
