@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	'C++': {
-		'Samples.GenerateFile.Executable': { Version: './', Build: '0', Tool: '0' }
+		'Samples.Cpp.GenerateFile.Application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
@@ -22,7 +22,7 @@ Builds: {
 Tools: {
 	'0': {
 		'C++': {
-			'Samples.GenerateFile.Tool': { Version: '../tool/' }
+			'Samples.Cpp.GenerateFile.Tool': { Version: '../tool/' }
 			'mwasplund|copy': {
 				Version: 1.2.0
 				Digest: 'sha256:d493afdc0eba473a7f5a544cc196476a105556210bc18bd6c1ecfff81ba07290'

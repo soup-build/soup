@@ -2,7 +2,7 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-namespace Samples.CSharp.BuildExtension.Executable
+namespace Samples.CSharp.BuildExtension.Application
 {
 	using System;
 

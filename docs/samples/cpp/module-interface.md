@@ -12,7 +12,7 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/executable/package-lock.sml)
+## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
 ## [helper.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/helper.cpp)

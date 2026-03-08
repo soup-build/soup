@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	C: {
-		'Samples.C.SimpleBuildExtension.Executable': { Version: './', Build: '0', Tool: '0' }
+		'Samples.C.SimpleBuildExtension.Application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

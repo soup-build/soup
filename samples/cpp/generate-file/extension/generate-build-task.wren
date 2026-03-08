@@ -30,37 +30,60 @@ class GenerateBuildTask is SoupTask {
 		// Get the build table
 		var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
 
-		// As a sample of what a build extension can do we set a new
-		// preprocessor definition to influence the build
-		var preprocessorDefinitions = [
-			"SPECIAL_BUILD",
+		var contextTable = Soup.globalState["Context"]
+		var targetRoot = Path.new(contextTable["TargetDirectory"])
+
+		var generateDirectory = Path.new("gen/")
+		var generateFile = generateDirectory + Path.new("helper.cpp")
+		var generateFileAbsolute = targetRoot + generateFile
+
+		// Ensure the generate folder exists
+		var createGenerateDirectory = SharedOperations.CreateCreateDirectoryOperation(
+			targetRoot,
+			generateDirectory)
+		Soup.createOperation(
+			createGenerateDirectory.Title,
+			createGenerateDirectory.Executable.toString,
+			createGenerateDirectory.Arguments,
+			createGenerateDirectory.WorkingDirectory.toString,
+			ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredInput),
+			ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredOutput))
+
+		// Create the generate operation
+		GenerateBuildTask.CreateGenerateFileOperation(targetRoot, generateFile)
+
+		var generatedSourceInfo = {}
+		generatedSourceInfo["File"] = generateFileAbsolute.toString
+		generatedSourceInfo["IsInterface"] = true
+		generatedSourceInfo["Module"] = "Samples.Cpp.GenerateFile"
+		generatedSourceInfo["Imports"] = []
+
+		var sourceFiles = [
+			generatedSourceInfo
 		]
 
+		// Add the explicit source info for the generated file so we treat it like a normal
+		// compiled translation unit
 		ListExtensions.Append(
-			MapExtensions.EnsureList(buildTable, "PreprocessorDefinitions"),
-			preprocessorDefinitions)
-
-		var contextTable = Soup.globalState["Context"]
-		var packageRoot = Path.new(contextTable["PackageDirectory"])
-
-		CustomBuildTask.CreateCustomToolOperation(packageRoot)
+			MapExtensions.EnsureList(buildTable, "Source"),
+			sourceFiles)
 	}
 
 	/// <summary>
 	/// Create a build operation that will create a directory
 	/// </summary>
-	static CreateGenerateFileOperation(workingDirectory, file) {
+	static CreateGenerateFileOperation(workingDirectory, generateFile) {
 		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("Samples.GenerateFile.Tool")
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("Samples.Cpp.GenerateFile.Tool")
 
 		var title = "Run Generate Tool"
 
 		var program = Path.new(toolExecutable)
 		var inputFiles = []
-		var outputFiles = [file]
+		var outputFiles = [generateFile]
 
 		// Build the arguments
-		var arguments = [file]
+		var arguments = [generateFile.toString]
 
 		Soup.createOperation(
 			title,
