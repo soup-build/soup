@@ -3,7 +3,7 @@ Sample build tool and extension that generates a translation unit and injects it
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file)
 
-## [tool/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/tool/recipe.sml)
+## [tool/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/tool/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.GenerateFile.Tool" that will be run as part of the build.
 ```sml
 Name: 'Samples.Cpp.GenerateFile.Tool'
@@ -12,10 +12,10 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## [tool/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/tool/package-lock.sml)
+## [tool/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/tool/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [tool/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/tool/main.cpp)
+## [tool/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/tool/main.cpp)
 A simple tool that writes a hard coded module interface unit to a provided source file during the build.
 ```cpp
 #include <iostream>
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 }
 ```
 
-## [extension/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/extension/recipe.sml)
+## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/extension/recipe.sml)
 The Recipe file that defines the build extension dynamic library "Samples.Cpp.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.Cpp.BuildExtension.Extension'
@@ -86,10 +86,10 @@ Dependencies: {
 }
 ```
 
-## [extension/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/extension/package-lock.sml)
+## [extension/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/extension/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
 
-## [extension/generate-build-task.wren](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/extension/generate-build-task.wren)
+## [extension/generate-build-task.wren](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/extension/generate-build-task.wren)
 A Wren file defining a custom build Task that will run before the build definition and creates a build operation that will generate the source file. The task will also register this new file as a part of the full set of compilation inputs so it will be compiled in order the same as all other translation units.
 ```wren
 // <copyright file="generate-build-task.wren" company="Soup">
@@ -190,7 +190,7 @@ class GenerateBuildTask is SoupTask {
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/application/recipe.sml)
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/application/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.GenerateFile.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.Cpp.GenerateFile.Application'
@@ -204,10 +204,10 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/application/main.cpp)
+## [application/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the generated file.
 ```cpp
 #include <iostream>
@@ -221,5 +221,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/.gitignore)
 A simple git ignore file to exclude all Soup build output.
