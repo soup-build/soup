@@ -1,4 +1,4 @@
-# C++ Build Extension
+# C++ Generate File
 Sample build tool and extension that generates a translation unit and injects it into the normal build process. The custom build task will run before the core Build Task and will create an Operation that generates a new translation unit and properly registers it as a normal source file for the compiler.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file)
@@ -16,7 +16,7 @@ Version: 1.0.0
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
 ## [tool/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/generate-file/tool/main.cpp)
-A simple main method that prints our "Tool, Soup Style!" during the build.
+A simple tool that writes a hard coded module interface unit to a provided source file during the build.
 ```cpp
 #include <iostream>
 #include <fstream>
