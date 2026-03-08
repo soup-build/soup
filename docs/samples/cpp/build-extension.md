@@ -3,7 +3,7 @@ This is a console application that has a custom build extension that alters the 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension)
 
-## [tool/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/tool/recipe.sml)
+## [tool/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/tool/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.SimpleBuildExtension.Tool" that will be run as part of the build.
 ```sml
 Name: 'Samples.Cpp.SimpleBuildExtension.Tool'
@@ -12,10 +12,10 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## [tool/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/tool/package-lock.sml)
+## [tool/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/tool/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [tool/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/tool/main.cpp)
+## [tool/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/tool/main.cpp)
 A simple main method that prints our "Tool, Soup Style!" during the build.
 ```cpp
 #include <iostream>
@@ -27,7 +27,7 @@ int main()
 }
 ```
 
-## [extension/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/extension/recipe.sml)
+## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/extension/recipe.sml)
 The Recipe file that defines the build extension dynamic library "Samples.Cpp.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.Cpp.BuildExtension.Extension'
@@ -43,10 +43,10 @@ Dependencies: {
 }
 ```
 
-## [extension/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/extension/package-lock.sml)
+## [extension/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/extension/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project.
 
-## [extension/custom-build-task.wren](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/extension/custom-build-task.wren)
+## [extension/custom-build-task.wren](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/extension/custom-build-task.wren)
 A Wren file defining a custom build Task that will run before the build definition and sets a custom preprocessor definition to show how a user can alter the build state through an extension.
 ```wren
 // <copyright file="custom-build-task.wren" company="Soup">
@@ -124,7 +124,7 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/application/recipe.sml)
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/application/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.Cpp.SimpleBuildExtension.Application'
@@ -138,10 +138,10 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/application/main.cpp)
+## [application/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
 ```cpp
 #include <iostream>
@@ -158,5 +158,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/.gitignore)
 A simple git ignore file to exclude all Soup build output.

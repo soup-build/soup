@@ -3,7 +3,7 @@ This is a console application that has a custom build extension that alters the 
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension)
 
-## [extension/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/extension/recipe.sml)
+## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/extension/recipe.sml)
 The Recipe file that defines the build extension dynamic library "Samples.CSharp.BuildExtension.Extension" that will register new build tasks.
 ```sml
 Name: 'Samples.CSharp.BuildExtension.Extension'
@@ -16,10 +16,10 @@ Dependencies: {
 }
 ```
 
-## [extension/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/extension/package-lock.sml)
+## [extension/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/extension/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [extension/custom-build-task.wren](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/extension/custom-build-task.wren)
+## [extension/custom-build-task.wren](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/extension/custom-build-task.wren)
 A Wren file defining a custom build Task that will run before the build definition and sets a custom preprocessor definition to show how a user can alter the build state through an extension.
 ```wren
 // <copyright file="custom-build-task.wren" company="Soup">
@@ -65,7 +65,7 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/application/recipe.sml)
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/application/recipe.sml)
 The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.CSharp.BuildExtension.Application'
@@ -80,10 +80,10 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [application/program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/application/program.cs)
+## [application/program.cs](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/application/program.cs)
 A simple C# Program method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
 ```C#
 // <copyright file="Program.cs" company="Soup">
@@ -108,5 +108,5 @@ namespace Samples.CSharp.BuildExtension.Application
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/.gitignore)
 A simple git ignore file to exclude all Soup build output.
