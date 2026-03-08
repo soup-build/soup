@@ -1,0 +1,73 @@
+﻿// <copyright file="generate-build-task.wren" company="Soup">
+// Copyright (c) Soup. All rights reserved.
+// </copyright>
+
+import "soup" for Soup, SoupTask
+import "Soup|Build.Utils:./path" for Path
+import "Soup|Build.Utils:./list-extensions" for ListExtensions
+import "Soup|Build.Utils:./map-extensions" for MapExtensions
+import "Soup|Build.Utils:./shared-operations" for SharedOperations
+
+class GenerateBuildTask is SoupTask {
+	/// <summary>
+	/// Get the run before list
+	/// </summary>
+	static runBefore { [
+		"BuildTask"
+	] }
+
+	/// <summary>
+	/// Get the run after list
+	/// </summary>
+	static runAfter { [] }
+
+	/// <summary>
+	/// Core Evaluate
+	/// </summary>
+	static evaluate() {
+		Soup.info("Running Before Build!")
+
+		// Get the build table
+		var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
+
+		// As a sample of what a build extension can do we set a new
+		// preprocessor definition to influence the build
+		var preprocessorDefinitions = [
+			"SPECIAL_BUILD",
+		]
+
+		ListExtensions.Append(
+			MapExtensions.EnsureList(buildTable, "PreprocessorDefinitions"),
+			preprocessorDefinitions)
+
+		var contextTable = Soup.globalState["Context"]
+		var packageRoot = Path.new(contextTable["PackageDirectory"])
+
+		CustomBuildTask.CreateCustomToolOperation(packageRoot)
+	}
+
+	/// <summary>
+	/// Create a build operation that will create a directory
+	/// </summary>
+	static CreateGenerateFileOperation(workingDirectory, file) {
+		// Discover the dependency tool
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("Samples.GenerateFile.Tool")
+
+		var title = "Run Generate Tool"
+
+		var program = Path.new(toolExecutable)
+		var inputFiles = []
+		var outputFiles = [file]
+
+		// Build the arguments
+		var arguments = [file]
+
+		Soup.createOperation(
+			title,
+			program.toString,
+			arguments,
+			workingDirectory.toString,
+			ListExtensions.ConvertFromPathList(inputFiles),
+			ListExtensions.ConvertFromPathList(outputFiles))
+	}
+}
