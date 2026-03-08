@@ -23,7 +23,11 @@ PublicHeaders: [
 ]
 ```
 
+<<<<<<< Updated upstream
 ## [library/library.h](https://github.com/soup-build/soup/tree/main/samples/c/static-library/library/library.h)
+=======
+## [library/public/library.h](https://github.com/soup-build/soup/blob/main/samples/c/static-library/library/public/library.h)
+>>>>>>> Stashed changes
 A header interface file that declares a single sample function.
 ```c
 const char* GetName();

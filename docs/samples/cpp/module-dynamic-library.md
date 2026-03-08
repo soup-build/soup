@@ -12,7 +12,11 @@ Version: 1.0.0
 Type: 'DynamicLibrary'
 ```
 
+<<<<<<< Updated upstream
 ## [library/module.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-dynamic-library/library/module.cpp)
+=======
+## [library/mibrary.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-dynamic-library/library/library.cpp)
+>>>>>>> Stashed changes
 A module interface file that exports a single sample class.
 ```cpp
 module;

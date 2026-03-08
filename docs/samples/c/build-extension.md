@@ -65,7 +65,11 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
+<<<<<<< Updated upstream
 ## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/extension/application/recipe.sml)
+=======
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/build-extension/application/recipe.sml)
+>>>>>>> Stashed changes
 The Recipe file that defines the executable "Samples.C.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
 Name: 'Samples.C.SimpleBuildExtension.Application'
