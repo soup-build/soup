@@ -3,11 +3,7 @@ This is a console application and library with the minimal amount of code to get
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/library)
 
-<<<<<<< Updated upstream
-## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/library/recipe.sml)
-=======
 ## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/library/recipe.sml)
->>>>>>> Stashed changes
 The Recipe file that defines the static library "Samples.CSharp.Library.Library".
 ```sml
 Name: 'Samples.CSharp.Library.Library'
@@ -16,11 +12,7 @@ TargetFramework: 'net10.0'
 Version: 1.0.0
 ```
 
-<<<<<<< Updated upstream
-## [library/helper.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/library/helper.cs)
-=======
 ## [library/helper.cs](https://github.com/soup-build/soup/blob/main/samples/csharp/library/library/helper.cs)
->>>>>>> Stashed changes
 A C# file that implements the helper function.
 ```C#
 namespace Samples.CSharp.Library
@@ -35,11 +27,7 @@ namespace Samples.CSharp.Library
 }
 ```
 
-<<<<<<< Updated upstream
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/application/recipe.sml)
-=======
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/application/recipe.sml)
->>>>>>> Stashed changes
 The Recipe file that defines the static library "Samples.CSharp.Library.ConsoleApplication".
 ```sml
 Name: 'Samples.CSharp.Library.ConsoleApplication'
@@ -54,17 +42,10 @@ Dependencies: {
 }
 ```
 
-<<<<<<< Updated upstream
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/application/package-lock.sml)
-The package lock that was generated to capture the unique build dependencies required to build this project.
-
-## [program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/program.cs)
-=======
 ## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
 ## [program.cs](https://github.com/soup-build/soup/blob/main/samples/csharp/library/application/program.cs)
->>>>>>> Stashed changes
 A C# Program file that implements the main method.
 ```C#
 using System;
@@ -81,9 +62,5 @@ namespace Samples.CSharp.Library.Application
 }
 ```
 
-<<<<<<< Updated upstream
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/.gitignore)
-=======
 ## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/csharp/library/.gitignore)
->>>>>>> Stashed changes
 A simple git ignore file to exclude all Soup build output.
