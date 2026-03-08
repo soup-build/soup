@@ -65,10 +65,10 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## [executable/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/executable/recipe.sml)
-The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
+## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/application/recipe.sml)
+The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'Samples.CSharp.BuildExtension.Executable'
+Name: 'Samples.CSharp.BuildExtension.Application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'
@@ -80,17 +80,17 @@ Dependencies: {
 }
 ```
 
-## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/executable/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [executable/program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/executable/program.cs)
+## [application/program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension/application/program.cs)
 A simple C# Program method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
 ```C#
 // <copyright file="Program.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-namespace Samples.CSharp.BuildExtension.Executable
+namespace Samples.CSharp.BuildExtension.Application
 {
   using System;
 

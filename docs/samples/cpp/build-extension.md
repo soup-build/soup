@@ -6,7 +6,7 @@ This is a console application that has a custom build extension that alters the 
 ## [tool/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/tool/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.SimpleBuildExtension.Tool" that will be run as part of the build.
 ```sml
-Name: 'Samples.SimpleBuildExtension.Tool'
+Name: 'Samples.Cpp.SimpleBuildExtension.Tool'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -102,7 +102,7 @@ class CustomBuildTask is SoupTask {
   /// </summary>
   static CreateCustomToolOperation(workingDirectory) {
     // Discover the dependency tool
-    var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExectable("Samples.SimpleBuildExtension.Tool")
+    var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExectable("Samples.Cpp.SimpleBuildExtension.Tool")
 
     var title = "Run Custom Tool"
 
@@ -124,10 +124,10 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## [executable/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/executable/recipe.sml)
-The Recipe file that defines the executable "Samples.Cpp.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
+## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/application/recipe.sml)
+The Recipe file that defines the executable "Samples.Cpp.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'Samples.SimpleBuildExtension.Executable'
+Name: 'Samples.Cpp.SimpleBuildExtension.Application'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -138,10 +138,10 @@ Dependencies: {
 }
 ```
 
-## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/executable/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [executable/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/executable/main.cpp)
+## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
 ```cpp
 #include <iostream>
