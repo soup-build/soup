@@ -12,7 +12,7 @@ Version: 1.0.0
 Type: 'DynamicLibrary'
 ```
 
-## [library/module.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-dynamic-library/library/module.cpp)
+## [library/mibrary.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-dynamic-library/library/library.cpp)
 A module interface file that exports a single sample class.
 ```cpp
 module;

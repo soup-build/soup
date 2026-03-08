@@ -23,7 +23,7 @@ PublicHeaders: [
 ]
 ```
 
-## [library/library.h](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/library/library.h)
+## [library/public/library.h](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/library/public/library.h)
 A header interface file that declares a single sample function.
 ```c
 #ifdef _WIN32
