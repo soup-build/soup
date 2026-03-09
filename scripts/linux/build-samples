@@ -74,6 +74,9 @@ soup build $SAMPLES_DIR/cpp/module-dynamic-library/application/ -flavor $FLAVOR
 echo soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
 
+echo soup build $SAMPLES_DIR/cpp/module-partitions/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/module-partitions/ -flavor $FLAVOR
+
 echo soup restore $SAMPLES_DIR/cpp/parse-json/
 soup restore $SAMPLES_DIR/cpp/parse-json/
 

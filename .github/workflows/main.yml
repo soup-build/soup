@@ -114,6 +114,8 @@ jobs:
       run: soup build ./soup/samples/cpp/module-dynamic-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleInterface
       run: soup build ./soup/samples/cpp/module-interface/ -flavor ${{matrix.config}}
+    - name: Soup Build C++ ModulePartitions
+      run: soup build ./soup/samples/cpp/module-partitions/ -flavor ${{matrix.config}}
     - name: Soup Restore C++ ParseJson
       run: soup restore ./soup/samples/cpp/parse-json/
     - name: Soup Build C++ ParseJson

@@ -25,6 +25,9 @@ This is a console application that has a single dynamic library dependency that 
 ## [Module Interface](cpp/module-interface.md)
 This is a console application that uses a single module interface file used inside the same projects.
 
+## [Module Partitions](cpp/module-partitions.md)
+This is a console application that uses a single module interface with internal partitions used inside the same projects.
+
 ## [Parse Json](cpp/parse-json.md)
 This is a console application that reads in a json file using the an external module and prints a single known property value.
 
