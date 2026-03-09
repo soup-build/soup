@@ -3,7 +3,7 @@ This is a console application that has a single header library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library)
 
-## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/library/recipe.sml)
+## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/library/recipe.sml)
 The Recipe file that defines the header library "Samples.Cpp.HeaderLibrary.Library".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Library'
@@ -19,7 +19,7 @@ PublicHeaders: [
 ]
 ```
 
-## [library/library.h](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/library/library.h)
+## [library/library.h](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/library/library.h)
 The header file.
 ```cpp
 #include <string>
@@ -37,7 +37,7 @@ namespace Samples::Cpp::HeaderLibrary::Library
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/application/recipe.sml)
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/application/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.HeaderLibrary.Application".
 ```sml
 Name: 'Samples.Cpp.HeaderLibrary.Application'
@@ -51,10 +51,10 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dynamic library dependency.
 
-## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/application/main.cpp)
+## [application/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the header from the library.
 ```cpp
 #include <iostream>
@@ -69,5 +69,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.

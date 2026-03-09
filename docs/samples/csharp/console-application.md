@@ -3,7 +3,7 @@ This is a console application with the minimal amount of code to get up and runn
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application)
 
-## [recipe.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/recipe.sml)
+## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/console-application/recipe.sml)
 The Recipe file that defines the static library "Samples.CSharp.ConsoleApplication".
 ```sml
 Name: 'Samples.CSharp.ConsoleApplication'
@@ -13,10 +13,10 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## [package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/package-lock.sml)
+## [package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/console-application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [program.cs](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/program.cs)
+## [program.cs](https://github.com/soup-build/soup/blob/main/samples/csharp/console-application/program.cs)
 A C# Program file that implements the main method.
 ```C#
 using System;
@@ -33,5 +33,5 @@ namespace Samples.CSharp.ConsoleApplication
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/csharp/console-application/.gitignore)
 A simple git ignore file to exclude all Soup build output.
