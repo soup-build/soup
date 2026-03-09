@@ -14,7 +14,7 @@ graph TD;
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions)
 
-## [recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/recipe.sml)
+## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/recipe.sml)
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
 Name: 'Samples.Cpp.ModulePartitions'
@@ -23,10 +23,10 @@ Type: 'Executable'
 Version: 1.0.0
 ```
 
-## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/executable/package-lock.sml)
+## [package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [helper-a.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/helper-a.cpp)
+## [helper-a.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/helper-a.cpp)
 A module partition file that exports a single function.
 ```cpp
 module;
@@ -42,7 +42,7 @@ export std::string_view Truncate(std::string_view value, size_t length)
 }
 ```
 
-## [helper-b.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/helper-b.cpp)
+## [helper-b.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/helper-b.cpp)
 A module partition file that imports and exports a single function.
 ```cpp
 module;
@@ -59,7 +59,7 @@ export std::string_view GetSourcePrefix()
 }
 ```
 
-## [helper-c.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/helper-c.cpp)
+## [helper-c.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/helper-c.cpp)
 A module partition file that imports and exports a single function.
 ```cpp
 module;
@@ -76,7 +76,7 @@ export std::string_view GetPackagesPostfix()
 }
 ```
 
-## [helper.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/helper.cpp)
+## [helper.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/helper.cpp)
 A module interface file that exports a single sample class.
 ```cpp
 module;
@@ -101,7 +101,7 @@ public:
 };
 ```
 
-## [main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/main.cpp)
+## [main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the previous file.
 ```cpp
 #include <iostream>
@@ -115,5 +115,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/module-partitions/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/.gitignore)
 A simple git ignore file to exclude all Soup build output.
