@@ -1,12 +1,13 @@
 Version: 6
 Closure: {
 	'C++': {
-		copy: { Version: './', Build: '0', Tool: '0' }
+		'Samples.Cpp.GenerateFile.Application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
+			'Samples.Cpp.GenerateFile.Extension': { Version: '../extension/' }
 			'Soup|Cpp': {
 				Version: 0.16.1
 				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
@@ -21,6 +22,7 @@ Builds: {
 Tools: {
 	'0': {
 		'C++': {
+			'Samples.Cpp.GenerateFile.Tool': { Version: '../tool/' }
 			'mwasplund|copy': {
 				Version: 1.2.0
 				Digest: 'sha256:d493afdc0eba473a7f5a544cc196476a105556210bc18bd6c1ecfff81ba07290'

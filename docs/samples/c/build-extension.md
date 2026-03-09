@@ -65,10 +65,10 @@ class CustomBuildTask is SoupTask {
 }
 ```
 
-## [executable/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/extension/executable/recipe.sml)
-The Recipe file that defines the executable "Samples.C.BuildExtension.Executable". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
+## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/extension/application/recipe.sml)
+The Recipe file that defines the executable "Samples.C.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'Samples.C.SimpleBuildExtension.Executable'
+Name: 'Samples.C.SimpleBuildExtension.Application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -79,10 +79,10 @@ Dependencies: {
 }
 ```
 
-## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/executable/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/application/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [executable/main.c](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/executable/main.c)
+## [application/main.c](https://github.com/soup-build/soup/tree/main/samples/c/build-extension/application/main.c)
 A simple main method that prints our "Hello World, Soup Style!" only if the build extension was able to set the custom preprocessor definition "SPECIAL_BUILD".
 ```c
 #include <stdio.h>

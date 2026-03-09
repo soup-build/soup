@@ -1,18 +1,19 @@
 Version: 6
 Closure: {
-	'C++': {
-		copy: { Version: './', Build: '0', Tool: '0' }
+	Wren: {
+		'Samples.Cpp.GenerateFile.Extension': { Version: './', Build: '0', Tool: '0' }
+		'Soup|Build.Utils': { Version: 0.9.2, Digest: 'sha256:0b70e1c4392ee591b06e64b00fc3b267fad1f32ced90e7b2d61c01c2780e4096', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'Soup|Cpp': {
-				Version: 0.16.1
-				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
+			'Soup|Wren': {
+				Version: 0.5.4
+				Digest: 'sha256:11c795361ffddfb5f954cf747e69c7036d3f52fdd86e0869a40a55c03fa9bac3'
 				Artifacts: {
-					Linux: 'sha256:7d2b760eab0c81e09cfbc592fc6e76123dbbfe697cdb39299d648fa3913649c6'
-					Windows: 'sha256:8192aaa7ce904420b265d059c62775bd900dd4477b0d9718b8164a739d35bad7'
+					Linux: 'sha256:61028ebdd655b14bf293febc483d04c5312c3546b7890dfa104e0e1cf6121112'
+					Windows: 'sha256:a63c6fa40955a46b0e3b95a13cfceaba1e067229b9ef518b957fa7cabb6c195a'
 				}
 			}
 		}
@@ -35,14 +36,6 @@ Tools: {
 				Artifacts: {
 					Linux: 'sha256:bbf3cd98e44319844de6e9f21de269adeb0dabf1429accad9be97f3bd6c56bbd'
 					Windows: 'sha256:4d43a781ed25ae9a97fa6881da7c24425a3162703df19964d987fb2c7ae46ae3'
-				}
-			}
-			'mwasplund|parse.modules': {
-				Version: 1.2.1
-				Digest: 'sha256:0e1d4505c320d846008976b9ad4e6e1144c495b08a97979be68c64379b0c4ae5'
-				Artifacts: {
-					Linux: 'sha256:b3670d71a95093b37fc76b4f8908bd03085de79481e14796aadfae43e67fad64'
-					Windows: 'sha256:74bbd90feaee02a24cb08d5056f6b9960b6b7ecdfb375d24e0bc27b14b2a6eae'
 				}
 			}
 		}
