@@ -46,7 +46,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -60,7 +60,7 @@ namespace Soup::Core::UnitTests
 			}));
 
 			Assert::IsTrue(uut.HasName(), "Verify has name.");
-			Assert::AreEqual<std::string_view>("MyPackage", uut.GetName(), "Verify name matches expected.");
+			Assert::AreEqual<std::string_view>("my-package", uut.GetName(), "Verify name matches expected.");
 			Assert::IsTrue(uut.HasLanguage(), "Verify has language.");
 			Assert::AreEqual(LanguageReference("C++", SemanticVersion(1)), uut.GetLanguage(), "Verify language matches expected.");
 			Assert::IsTrue(uut.HasVersion(), "Verify has version.");
@@ -98,7 +98,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -114,7 +114,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{ "Version", "1.2.3" },
 					{
@@ -135,7 +135,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -151,7 +151,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage2" },
+					{ "Name", "my-package2" },
 					{ "Language", "C++|1" },
 					{ "Version", "1.2.3" },
 					{
@@ -172,7 +172,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -188,7 +188,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C#|1" },
 					{ "Version", "1.2.3" },
 					{
@@ -209,7 +209,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -225,7 +225,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{ "Version", "2.2.3" },
 					{
@@ -246,7 +246,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -262,7 +262,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{
 						"Dependencies",
@@ -282,7 +282,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -298,7 +298,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{ "Version", "1.2.3" },
 					{
@@ -319,7 +319,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -335,7 +335,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{ "Version", "1.2.3" },
 					{
@@ -355,7 +355,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -371,7 +371,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{ "Version", "1.2.3" },
 					{
@@ -392,7 +392,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 				{
@@ -408,7 +408,7 @@ namespace Soup::Core::UnitTests
 			Assert::AreNotEqual(
 				Recipe(RecipeTable(
 				{
-					{ "Name", "MyPackage" },
+					{ "Name", "my-package" },
 					{ "Language", "C++|1" },
 					{ "Version", "1.2.3" },
 					{

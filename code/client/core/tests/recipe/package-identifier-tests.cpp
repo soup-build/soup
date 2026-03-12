@@ -36,11 +36,11 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageIdentifier(
 				"C#",
 				"User1",
-				"MyPackage");
+				"my-package");
 
 			Assert::AreEqual("C#", uut.GetLanguage(), "Verify language matches expected.");
 			Assert::AreEqual("User1", uut.GetOwner(), "Verify owner matches expected.");
-			Assert::AreEqual("MyPackage", uut.GetName(), "Verify name matches expected.");
+			Assert::AreEqual("my-package", uut.GetName(), "Verify name matches expected.");
 		}
 
 		// [[Fact]]
@@ -49,13 +49,13 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageIdentifier(
 				"C#",
 				"User1",
-				"MyPackage");
+				"my-package");
 
 			Assert::AreEqual(
 				PackageIdentifier(
 					"C#",
 					"User1",
-					"MyPackage"),
+					"my-package"),
 				uut,
 				"Verify are equal.");
 		}
@@ -66,13 +66,13 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageIdentifier(
 				"C#",
 				"User1",
-				"MyPackage");
+				"my-package");
 
 			Assert::AreNotEqual(
 				PackageIdentifier(
 					"C++",
 					"User1",
-					"MyPackage"),
+					"my-package"),
 				uut,
 				"Verify are not equal.");
 		}
@@ -83,13 +83,13 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageIdentifier(
 				"C#",
 				"User1",
-				"MyPackage");
+				"my-package");
 
 			Assert::AreNotEqual(
 				PackageIdentifier(
 					"C#",
 					"User2",
-					"MyPackage"),
+					"my-package"),
 				uut,
 				"Verify are not equal.");
 		}
@@ -100,13 +100,13 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageIdentifier(
 				"C#",
 				"User1",
-				"MyPackage");
+				"my-package");
 
 			Assert::AreNotEqual(
 				PackageIdentifier(
 					"C#",
 					"User1",
-					"MyPackage2"),
+					"my-package2"),
 				uut,
 				"Verify are not equal.");
 		}

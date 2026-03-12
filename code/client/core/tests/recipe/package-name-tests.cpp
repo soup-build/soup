@@ -34,24 +34,24 @@ namespace Soup::Core::UnitTests
 		void Initialize()
 		{
 			auto uut = PackageName(
-				"User1",
-				"MyPackage");
+				"user1",
+				"my-package");
 
-			Assert::AreEqual("User1", uut.GetOwner(), "Verify owner matches expected.");
-			Assert::AreEqual("MyPackage", uut.GetName(), "Verify name matches expected.");
+			Assert::AreEqual("user1", uut.GetOwner(), "Verify owner matches expected.");
+			Assert::AreEqual("my-package", uut.GetName(), "Verify name matches expected.");
 		}
 
 		// [[Fact]]
 		void OperatorEqual()
 		{
 			auto uut = PackageName(
-				"User1",
-				"MyPackage");
+				"user1",
+				"my-package");
 
 			Assert::AreEqual(
 				PackageName(
-					"User1",
-					"MyPackage"),
+					"user1",
+					"my-package"),
 				uut,
 				"Verify are equal.");
 		}
@@ -60,13 +60,13 @@ namespace Soup::Core::UnitTests
 		void OperatorNotEqualOwner()
 		{
 			auto uut = PackageName(
-				"User1",
-				"MyPackage");
+				"user1",
+				"my-package");
 
 			Assert::AreNotEqual(
 				PackageName(
-					"User2",
-					"MyPackage"),
+					"user2",
+					"my-package"),
 				uut,
 				"Verify are not equal.");
 		}
@@ -75,20 +75,20 @@ namespace Soup::Core::UnitTests
 		void OperatorNotEqualName()
 		{
 			auto uut = PackageName(
-				"User1",
-				"MyPackage");
+				"user1",
+				"my-package");
 
 			Assert::AreNotEqual(
 				PackageName(
-					"User1",
-					"MyPackage2"),
+					"user1",
+					"my-package2"),
 				uut,
 				"Verify are not equal.");
 		}
 
 		// [[Theory]]
-		// [[InlineData("Name", std::nullopt, "Name")]]
-		// [[InlineData("User1|Name", "User1", "Name")]]
+		// [[InlineData("name", std::nullopt, "name")]]
+		// [[InlineData("user1|name", "user1", "name")]]
 		void ParseValues(std::string value, std::optional<std::string> owner, std::string name)
 		{
 			auto uut = PackageName::Parse(value);
@@ -99,7 +99,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Theory]]
-		// [[InlineData("Package", true)]] // Success
+		// [[InlineData("package", true)]] // Success
 		void TryParseValues(std::string value, bool expectedResult)
 		{
 			PackageReference uut;
@@ -111,8 +111,8 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Theory]]
-		// [[InlineData(std::nullopt, "Name", "Name")]]
-		// [[InlineData("User1", "Name", "User1|Name")]]
+		// [[InlineData(std::nullopt, "name", "name")]]
+		// [[InlineData("user1", "name", "user1|name")]]
 		void ToStringValues(std::optional<std::string> owner, std::string name, std::string expected)
 		{
 			auto uut = PackageName(owner, name);

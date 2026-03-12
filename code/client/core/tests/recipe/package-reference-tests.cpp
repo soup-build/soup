@@ -36,23 +36,23 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageReference(
 				"C#",
 				"User1",
-				"MyPackage",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::IsFalse(uut.IsLocal(), "Verify is not local.");
 			Assert::AreEqual("C#", uut.GetLanguage(), "Verify language matches expected.");
 			Assert::AreEqual("User1", uut.GetOwner(), "Verify owner matches expected.");
-			Assert::AreEqual("MyPackage", uut.GetName(), "Verify name matches expected.");
+			Assert::AreEqual("my-package", uut.GetName(), "Verify name matches expected.");
 			Assert::AreEqual(SemanticVersion(1, 2, 3), uut.GetVersion(), "Verify version matches expected.");
 		}
 
 		// [[Fact]]
 		void InitializePath()
 		{
-			auto uut = PackageReference(Path("../MyPackage"));
+			auto uut = PackageReference(Path("../my-package"));
 
 			Assert::IsTrue(uut.IsLocal(), "Verify is local.");
-			Assert::AreEqual(Path("../MyPackage"), uut.GetPath(), "Verify path matches expected.");
+			Assert::AreEqual(Path("../my-package"), uut.GetPath(), "Verify path matches expected.");
 		}
 
 		// [[Fact]]
@@ -61,14 +61,14 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageReference(
 				"C#",
 				"User1",
-				"MyPackage",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreEqual(
 				PackageReference(
 					"C#",
 					"User1",
-					"MyPackage",
+					"my-package",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are equal.");
@@ -77,10 +77,10 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void OperatorEqualPath()
 		{
-			auto uut = PackageReference(Path("../MyPackage"));
+			auto uut = PackageReference(Path("../my-package"));
 
 			Assert::AreEqual(
-				PackageReference(Path("../MyPackage")),
+				PackageReference(Path("../my-package")),
 				uut,
 				"Verify are equal.");
 		}
@@ -91,14 +91,14 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageReference(
 				"C#",
 				"User1",
-				"MyPackage",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C++",
 					"User1",
-					"MyPackage",
+					"my-package",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -110,14 +110,14 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageReference(
 				"C#",
 				"User1",
-				"MyPackage",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C#",
 					"User2",
-					"MyPackage",
+					"my-package",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -129,14 +129,14 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageReference(
 				"C#",
 				"User1",
-				"MyPackage",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C#",
 					"User1",
-					"MyPackage2",
+					"my-package2",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -148,14 +148,14 @@ namespace Soup::Core::UnitTests
 			auto uut = PackageReference(
 				"C#",
 				"User1",
-				"MyPackage",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C#",
 					"User1",
-					"MyPackage",
+					"my-package",
 					SemanticVersion(11, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -164,10 +164,10 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void OperatorNotEqualPath()
 		{
-			auto uut = PackageReference(Path("../MyPackage"));
+			auto uut = PackageReference(Path("../my-package"));
 
 			Assert::AreNotEqual(
-				PackageReference(Path("../MyPackage2")),
+				PackageReference(Path("../my-package2")),
 				uut,
 				"Verify are not equal.");
 		}

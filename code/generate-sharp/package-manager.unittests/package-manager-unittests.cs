@@ -41,7 +41,7 @@ public class PackageManagerUnitTests
 		var mockClosureManager = new Mock<IClosureManager>(MockBehavior.Strict);
 		_ = mockClosureManager
 			.Setup(manager => manager.GenerateAndRestoreRecursiveLocksAsync(
-				new Path("C:/Root/MyPackage/"),
+				new Path("C:/Root/my-package/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
@@ -53,7 +53,7 @@ public class PackageManagerUnitTests
 			httpClient,
 			mockClosureManager.Object);
 
-		var workingDirectory = new Path("C:/Root/MyPackage/");
+		var workingDirectory = new Path("C:/Root/my-package/");
 		await uut.RestorePackagesAsync(workingDirectory);
 
 		// Verify expected logs
@@ -82,7 +82,7 @@ public class PackageManagerUnitTests
 		// Verify closure manager requests
 		mockClosureManager.Verify(manager =>
 			manager.GenerateAndRestoreRecursiveLocksAsync(
-				new Path("C:/Root/MyPackage/"),
+				new Path("C:/Root/my-package/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
@@ -104,20 +104,20 @@ public class PackageManagerUnitTests
 		using var originalContent = new System.IO.MemoryStream();
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(
 			"""
-			Name: 'MyPackage'
+			Name: 'my-package'
 			Language: (C++@3.2)
 			Version: 1.0.0
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/recipe.sml"),
+			new Path("C:/Root/my-package/recipe.sml"),
 			new MockFile(originalContent));
 
 		mockFileSystem.CreateMockFile(
 			new Path("C:/Users/Me/.soup/packages/C++/OtherPackage/1.2.3/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
-				Name: 'Package1'
+				Name: 'package1'
 				Language: (C++@3.2)
 				Version: 1.2.3
 				"""))));
@@ -131,7 +131,7 @@ public class PackageManagerUnitTests
 		var mockClosureManager = new Mock<IClosureManager>(MockBehavior.Strict);
 		_ = mockClosureManager
 			.Setup(manager => manager.GenerateAndRestoreRecursiveLocksAsync(
-				new Path("C:/Root/MyPackage/"),
+				new Path("C:/Root/my-package/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
@@ -143,14 +143,14 @@ public class PackageManagerUnitTests
 			httpClient,
 			mockClosureManager.Object);
 
-		var workingDirectory = new Path("C:/Root/MyPackage/");
+		var workingDirectory = new Path("C:/Root/my-package/");
 		var packageReference = "User1|OtherPackage@1.2.3";
 		await uut.InstallPackageReferenceAsync(workingDirectory, packageReference);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"DIAG: Load Recipe: C:/Root/my-package/recipe.sml",
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
 				"DIAG: Using Artifact Store: C:/Users/Me/.soup/artifacts/",
@@ -162,10 +162,10 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/recipe.sml",
-				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"Exists: C:/Root/my-package/recipe.sml",
+				"OpenRead: C:/Root/my-package/recipe.sml",
 				"GetUserProfileDirectory",
-				"OpenWriteTruncate: C:/Root/MyPackage/recipe.sml",
+				"OpenWriteTruncate: C:/Root/my-package/recipe.sml",
 				"Exists: C:/Users/Me/.soup/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/.staging/",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
@@ -178,7 +178,7 @@ public class PackageManagerUnitTests
 		// Verify closure manager requests
 		mockClosureManager.Verify(manager =>
 			manager.GenerateAndRestoreRecursiveLocksAsync(
-				new Path("C:/Root/MyPackage/"),
+				new Path("C:/Root/my-package/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
@@ -186,13 +186,13 @@ public class PackageManagerUnitTests
 			Times.Once());
 
 		// Verify the contents of the recipe file
-		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/recipe.sml"));
+		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/my-package/recipe.sml"));
 		_ = recipeFile.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var recipeReader = new System.IO.StreamReader(recipeFile.Content);
 		var recipeContent = await recipeReader.ReadToEndAsync();
 		var expectedRecipe =
 			"""
-			Name: 'MyPackage'
+			Name: 'my-package'
 			Language: (C++@3.2)
 			Version: 1.0.0
 			Dependencies: {
@@ -219,20 +219,20 @@ public class PackageManagerUnitTests
 		using var originalContent = new System.IO.MemoryStream();
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(
 			"""
-			Name: 'MyPackage'
+			Name: 'my-package'
 			Language: (C++@3.2)
 			Version: 1.0.0
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/recipe.sml"),
+			new Path("C:/Root/my-package/recipe.sml"),
 			new MockFile(originalContent));
 
 		mockFileSystem.CreateMockFile(
 			new Path("C:/Users/Me/.soup/packages/C++/OtherPackage/1.2.3/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
-				Name: 'Package1'
+				Name: 'package1'
 				Language: (C++@3.2)
 				Version: 1.2.3
 				"""))));
@@ -246,7 +246,7 @@ public class PackageManagerUnitTests
 		var mockClosureManager = new Mock<IClosureManager>(MockBehavior.Strict);
 		_ = mockClosureManager
 			.Setup(manager => manager.GenerateAndRestoreRecursiveLocksAsync(
-				new Path("C:/Root/MyPackage/"),
+				new Path("C:/Root/my-package/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
@@ -281,14 +281,14 @@ public class PackageManagerUnitTests
 
 		mockMessageHandler.VerifyNoOtherCalls();
 
-		var workingDirectory = new Path("C:/Root/MyPackage/");
+		var workingDirectory = new Path("C:/Root/my-package/");
 		var packageReference = "User1|OtherPackage";
 		await uut.InstallPackageReferenceAsync(workingDirectory, packageReference);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"DIAG: Load Recipe: C:/Root/my-package/recipe.sml",
 				"DIAG: Using Package Store: C:/Users/Me/.soup/packages/",
 				"DIAG: Using Lock Store: C:/Users/Me/.soup/locks/",
 				"DIAG: Using Artifact Store: C:/Users/Me/.soup/artifacts/",
@@ -301,10 +301,10 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/recipe.sml",
-				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"Exists: C:/Root/my-package/recipe.sml",
+				"OpenRead: C:/Root/my-package/recipe.sml",
 				"GetUserProfileDirectory",
-				"OpenWriteTruncate: C:/Root/MyPackage/recipe.sml",
+				"OpenWriteTruncate: C:/Root/my-package/recipe.sml",
 				"Exists: C:/Users/Me/.soup/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/.staging/",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
@@ -323,7 +323,7 @@ public class PackageManagerUnitTests
 		// Verify closure manager requests
 		mockClosureManager.Verify(manager =>
 			manager.GenerateAndRestoreRecursiveLocksAsync(
-				new Path("C:/Root/MyPackage/"),
+				new Path("C:/Root/my-package/"),
 				new Path("C:/Users/Me/.soup/packages/"),
 				new Path("C:/Users/Me/.soup/locks/"),
 				new Path("C:/Users/Me/.soup/artifacts/"),
@@ -331,13 +331,13 @@ public class PackageManagerUnitTests
 			Times.Once());
 
 		// Verify the contents of the recipe file
-		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/MyPackage/recipe.sml"));
+		var recipeFile = mockFileSystem.GetMockFile(new Path("C:/Root/my-package/recipe.sml"));
 		_ = recipeFile.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var recipeReader = new System.IO.StreamReader(recipeFile.Content);
 		var recipeContent = await recipeReader.ReadToEndAsync();
 		var expectedRecipe =
 			"""
-			Name: 'MyPackage'
+			Name: 'my-package'
 			Language: (C++@3.2)
 			Version: 1.0.0
 			Dependencies: {
@@ -364,26 +364,26 @@ public class PackageManagerUnitTests
 		using var originalContent = new System.IO.MemoryStream();
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(
 			"""
-			Name: 'MyPackage'
+			Name: 'my-package'
 			Language: (C++@0.1)
 			Version: 1.0.0
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/recipe.sml"),
+			new Path("C:/Root/my-package/recipe.sml"),
 			new MockFile(originalContent));
 
 		// Pretend that there is a zip file created
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/.staging/MyPackage.zip"),
+			new Path("C:/Users/Me/.soup/.staging/my-package.zip"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("ZIP_FILE_CONTENT"))));
 
 		mockFileSystem.RegisterChildren(
-			new Path("C:/Root/MyPackage/"),
+			new Path("C:/Root/my-package/"),
 			[
 				new DirectoryEntry()
 				{
-					Path = new Path("C:/Root/MyPackage/recipe.sml"),
+					Path = new Path("C:/Root/my-package/recipe.sml"),
 					IsDirectory = false,
 				},
 			]);
@@ -415,33 +415,33 @@ public class PackageManagerUnitTests
 
 		var getPackageResponse = JsonSerializer.Serialize(new Api.Client.PackageModel()
 		{
-			Name = "MyPackage",
+			Name = "my-package",
 			Owner = "User1",
 			Latest = new Api.Client.SemanticVersion() { Major = 1, Minor = 2, Patch = 3, },
 		});
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage() { Content = new StringContent(getPackageResponse) });
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Put,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package/versions/1.0.0"),
 				It.IsAny<string>(),
 				It.IsAny<string>()))
 			.Returns(() => new HttpResponseMessage(HttpStatusCode.Created));
 
-		var workingDirectory = new Path("C:/Root/MyPackage/");
+		var workingDirectory = new Path("C:/Root/my-package/");
 		await uut.PublishPackageAsync(workingDirectory);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Publish Project: C:/Root/MyPackage/",
-				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"INFO: Publish Project: C:/Root/my-package/",
+				"DIAG: Load Recipe: C:/Root/my-package/recipe.sml",
 				"INFO: Using Package Store: C:/Users/Me/.soup/packages/",
 				"INFO: Request Authentication Token",
 				"INFO: Publish package",
@@ -453,13 +453,13 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/recipe.sml",
-				"OpenRead: C:/Root/MyPackage/recipe.sml",
+				"Exists: C:/Root/my-package/recipe.sml",
+				"OpenRead: C:/Root/my-package/recipe.sml",
 				"GetUserProfileDirectory",
 				"Exists: C:/Users/Me/.soup/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/.staging/",
-				"GetChildren: C:/Root/MyPackage/",
-				"OpenRead: C:/Users/Me/.soup/.staging/MyPackage.zip",
+				"GetChildren: C:/Root/my-package/",
+				"OpenRead: C:/Users/Me/.soup/.staging/my-package.zip",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
@@ -469,8 +469,8 @@ public class PackageManagerUnitTests
 		mockAuthenticationManager.VerifyNoOtherCalls();
 
 		// Verify zip requests
-		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/.staging/MyPackage.zip")), Times.Once());
-		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/MyPackage/recipe.sml"), "recipe.sml"), Times.Once());
+		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/.staging/my-package.zip")), Times.Once());
+		mockZipArchive.Verify(zip => zip.CreateEntryFromFile(new Path("C:/Root/my-package/recipe.sml"), "recipe.sml"), Times.Once());
 		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
 		mockZipManager.VerifyNoOtherCalls();
 
@@ -478,14 +478,14 @@ public class PackageManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Put,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package/versions/1.0.0"),
 				"",
 				"ZIP_FILE_CONTENT"),
 			Times.Once());
@@ -507,13 +507,13 @@ public class PackageManagerUnitTests
 		using var originalContent = new System.IO.MemoryStream();
 		await originalContent.WriteAsync(Encoding.UTF8.GetBytes(
 			"""
-			Name: 'MyPackage'
+			Name: 'my-package'
 			Language: (C++@0.1)
 			Version: 1.0.0
 			"""));
 		_ = originalContent.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/recipe.sml"),
+			new Path("C:/Root/my-package/recipe.sml"),
 			new MockFile(originalContent));
 
 		using var generateInput = new System.IO.MemoryStream();
@@ -530,8 +530,8 @@ public class PackageManagerUnitTests
 							new Value(new ValueTable(new Dictionary<string, Value>()
 							{
 								{ "HostPlatform", new Value("FakePlatform") },
-								{ "PackageDirectory", new Value("/(PACKAGE_MyPackage)/") },
-								{ "TargetDirectory", new Value("/(TARGET_MyPackage)/") },
+								{ "PackageDirectory", new Value("/(PACKAGE_my-package)/") },
+								{ "TargetDirectory", new Value("/(TARGET_my-package)/") },
 							}))
 						},
 						{
@@ -547,20 +547,20 @@ public class PackageManagerUnitTests
 			generateInputWriter);
 		_ = generateInput.Seek(0, System.IO.SeekOrigin.Begin);
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Root/MyPackage/target/.soup/generate-input.bvt"),
+			new Path("C:/Root/my-package/target/.soup/generate-input.bvt"),
 			new MockFile(generateInput));
 
 		// Pretend that there is a zip file created
 		mockFileSystem.CreateMockFile(
-			new Path("C:/Users/Me/.soup/.staging/MyPackage.zip"),
+			new Path("C:/Users/Me/.soup/.staging/my-package.zip"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("ZIP_FILE_CONTENT"))));
 
 		mockFileSystem.RegisterChildren(
-			new Path("C:/Root/MyPackage/"),
+			new Path("C:/Root/my-package/"),
 			[
 				new DirectoryEntry()
 				{
-					Path = new Path("C:/Root/MyPackage/recipe.sml"),
+					Path = new Path("C:/Root/my-package/recipe.sml"),
 					IsDirectory = false,
 				},
 			]);
@@ -596,27 +596,27 @@ public class PackageManagerUnitTests
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package/versions/1.0.0"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage() { Content = new StringContent(getPackageVersionResponse) });
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Put,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0/artifacts"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package/versions/1.0.0/artifacts"),
 				It.IsAny<string>(),
 				It.IsAny<string>()))
 			.Returns(() => new HttpResponseMessage(HttpStatusCode.Created));
 
-		var workingDirectory = new Path("C:/Root/MyPackage/");
-		var targetDirectory = new Path("C:/Root/MyPackage/target/");
+		var workingDirectory = new Path("C:/Root/my-package/");
+		var targetDirectory = new Path("C:/Root/my-package/target/");
 		await uut.PublishArtifactAsync(workingDirectory, targetDirectory);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
-				"INFO: Publish Artifact: C:/Root/MyPackage/ C:/Root/MyPackage/target/",
-				"DIAG: Load Recipe: C:/Root/MyPackage/recipe.sml",
+				"INFO: Publish Artifact: C:/Root/my-package/ C:/Root/my-package/target/",
+				"DIAG: Load Recipe: C:/Root/my-package/recipe.sml",
 				"INFO: Using Package Store: C:/Users/Me/.soup/packages/",
 				"INFO: Request Authentication Token",
 				"INFO: Publish artifact",
@@ -630,15 +630,15 @@ public class PackageManagerUnitTests
 		// Verify expected file system requests
 		Assert.Equal(
 			[
-				"Exists: C:/Root/MyPackage/recipe.sml",
-				"OpenRead: C:/Root/MyPackage/recipe.sml",
-				"Exists: C:/Root/MyPackage/target/.soup/generate-input.bvt",
-				"OpenRead: C:/Root/MyPackage/target/.soup/generate-input.bvt",
+				"Exists: C:/Root/my-package/recipe.sml",
+				"OpenRead: C:/Root/my-package/recipe.sml",
+				"Exists: C:/Root/my-package/target/.soup/generate-input.bvt",
+				"OpenRead: C:/Root/my-package/target/.soup/generate-input.bvt",
 				"GetUserProfileDirectory",
 				"Exists: C:/Users/Me/.soup/.staging/",
 				"CreateDirectory: C:/Users/Me/.soup/.staging/",
-				"GetChildren: C:/Root/MyPackage/target/",
-				"OpenRead: C:/Users/Me/.soup/.staging/MyPackage.zip",
+				"GetChildren: C:/Root/my-package/target/",
+				"OpenRead: C:/Users/Me/.soup/.staging/my-package.zip",
 				"DeleteDirectoryRecursive: C:/Users/Me/.soup/.staging/",
 			],
 			mockFileSystem.Requests);
@@ -648,7 +648,7 @@ public class PackageManagerUnitTests
 		mockAuthenticationManager.VerifyNoOtherCalls();
 
 		// Verify zip requests
-		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/.staging/MyPackage.zip")), Times.Once());
+		mockZipManager.Verify(zip => zip.OpenCreate(new Path("C:/Users/Me/.soup/.staging/my-package.zip")), Times.Once());
 		mockZipArchive.Verify(zip => zip.Dispose(), Times.Once());
 		mockZipManager.VerifyNoOtherCalls();
 
@@ -656,14 +656,14 @@ public class PackageManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package/versions/1.0.0"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Put,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/MyPackage/versions/1.0.0/artifacts"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/_/my-package/versions/1.0.0/artifacts"),
 				"",
 				It.IsAny<string>()), // Hard to verify multi-part content
 			Times.Once());
