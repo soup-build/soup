@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunRecipeBuildLocationManagerTests;
+export module Soup.Core:RunRecipeBuildLocationManagerTests;
 
 import :RecipeBuildLocationManagerTests;
 import Soup.Test.Assert;

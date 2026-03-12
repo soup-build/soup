@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunBuildHistoryCheckerTests;
+export module Soup.Core:RunBuildHistoryCheckerTests;
 
 import :BuildHistoryCheckerTests;
 import Soup.Test.Assert;
