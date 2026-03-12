@@ -35,11 +35,11 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageIdentifier(
 				"C#",
-				"User1",
+				"user1",
 				"my-package");
 
 			Assert::AreEqual("C#", uut.GetLanguage(), "Verify language matches expected.");
-			Assert::AreEqual("User1", uut.GetOwner(), "Verify owner matches expected.");
+			Assert::AreEqual("user1", uut.GetOwner(), "Verify owner matches expected.");
 			Assert::AreEqual("my-package", uut.GetName(), "Verify name matches expected.");
 		}
 
@@ -48,13 +48,13 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageIdentifier(
 				"C#",
-				"User1",
+				"user1",
 				"my-package");
 
 			Assert::AreEqual(
 				PackageIdentifier(
 					"C#",
-					"User1",
+					"user1",
 					"my-package"),
 				uut,
 				"Verify are equal.");
@@ -65,13 +65,13 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageIdentifier(
 				"C#",
-				"User1",
+				"user1",
 				"my-package");
 
 			Assert::AreNotEqual(
 				PackageIdentifier(
 					"C++",
-					"User1",
+					"user1",
 					"my-package"),
 				uut,
 				"Verify are not equal.");
@@ -82,7 +82,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageIdentifier(
 				"C#",
-				"User1",
+				"user1",
 				"my-package");
 
 			Assert::AreNotEqual(
@@ -99,23 +99,23 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageIdentifier(
 				"C#",
-				"User1",
+				"user1",
 				"my-package");
 
 			Assert::AreNotEqual(
 				PackageIdentifier(
 					"C#",
-					"User1",
+					"user1",
 					"my-package2"),
 				uut,
 				"Verify are not equal.");
 		}
 
 		// [[Theory]]
-		// [[InlineData("Name", std::nullopt, std::nullopt, "Name")]]
-		// [[InlineData("[C#]Name", "C#", std::nullopt, "Name")]]
-		// [[InlineData("User1|Name", std::nullopt, "User1", "Name")]]
-		// [[InlineData("[C#]User1|Name", "C#", "User1", "Name")]]
+		// [[InlineData("name", std::nullopt, std::nullopt, "name")]]
+		// [[InlineData("[C#]name", "C#", std::nullopt, "name")]]
+		// [[InlineData("user1|name", std::nullopt, "user1", "name")]]
+		// [[InlineData("[C#]user1|name", "C#", "user1", "name")]]
 		void ParseValues(std::string value, std::optional<std::string> language, std::optional<std::string> owner, std::string name)
 		{
 			auto uut = PackageIdentifier::Parse(value);
@@ -126,7 +126,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Theory]]
-		// [[InlineData("Package", true)]] // Success
+		// [[InlineData("package", true)]] // Success
 		void TryParseValues(std::string value, bool expectedResult)
 		{
 			PackageReference uut;
@@ -138,10 +138,10 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Theory]]
-		// [[InlineData(std::nullopt, std::nullopt, "Name", "Name")]]
-		// [[InlineData("C#", std::nullopt, "Name", "[C#]Name")]]
-		// [[InlineData(std::nullopt, "User1", "Name", "User1|Name")]]
-		// [[InlineData("C#", "User1", "Name", "[C#]User1|Name")]]
+		// [[InlineData(std::nullopt, std::nullopt, "name", "name")]]
+		// [[InlineData("C#", std::nullopt, "name", "[C#]name")]]
+		// [[InlineData(std::nullopt, "user1", "name", "user1|name")]]
+		// [[InlineData("C#", "user1", "name", "[C#]user1|name")]]
 		void ToStringValues(std::optional<std::string> language, std::optional<std::string> owner, std::string name, std::string expected)
 		{
 			auto uut = PackageIdentifier(language, owner, name);

@@ -38,7 +38,7 @@ namespace Soup::Core
 		static bool TryParse(const std::string& value, PackageReference& result)
 		{
 			// Reuse regex between runs
-			static auto nameRegex = std::regex(R"(^(?:\[([\w#+]+)\])?(?:([A-Za-z][\w.]*)\|)?([A-Za-z][\w.]*)(?:@(\d+(?:.\d+)?(?:.\d+)?))?$)");
+			static auto nameRegex = std::regex(R"(^(?:\[([A-Za-z#+]+)\])?(?:([a-z0-9]+(?:-[a-z0-9]+)*)\|)?([a-z0-9]+(?:-[a-z0-9]+)*)(?:@(\d+(?:.\d+)?(?:.\d+)?))?$)");
 
 			// Attempt to parse Named reference
 			auto nameMatch = std::smatch();

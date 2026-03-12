@@ -53,7 +53,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -73,7 +73,7 @@ namespace Soup::Core::UnitTests
 
 			Assert::AreEqual(
 				std::vector<PackageReference>({
-					PackageReference(Path(Path("../OtherPackage/"))),
+					PackageReference(Path(Path("../other-package/"))),
 				}),
 				uut.GetNamedDependencies("Runtime"),
 				"Verify runtime dependencies are correct.");
@@ -105,7 +105,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -121,7 +121,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 							{ "Build", RecipeList({ "../DevTask/" }) },
 						})
 					},
@@ -142,7 +142,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -158,7 +158,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 							{ "Build", RecipeList({ "../DevTask/" }) },
 						})
 					},
@@ -179,7 +179,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -195,7 +195,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 							{ "Build", RecipeList({ "../DevTask/" }) },
 						})
 					},
@@ -216,7 +216,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -232,7 +232,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 							{ "Build", RecipeList({ "../DevTask/" }) },
 						})
 					},
@@ -253,7 +253,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -268,7 +268,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 							{ "Build", RecipeList({ "../DevTask/" }) },
 						})
 					},
@@ -289,7 +289,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -305,7 +305,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage2/" }) },
+							{ "Runtime", RecipeList({ "../other-package2/" }) },
 							{ "Build", RecipeList({ "../DevTask/" }) },
 						})
 					},
@@ -326,7 +326,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -362,7 +362,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -378,7 +378,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 							{ "Build", RecipeList({ "../DevTask2/" }) },
 						})
 					},
@@ -399,7 +399,7 @@ namespace Soup::Core::UnitTests
 					"Dependencies",
 					RecipeTable(
 					{
-						{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+						{ "Runtime", RecipeList({ "../other-package/" }) },
 						{ "Build", RecipeList({ "../DevTask/" }) },
 					})
 				},
@@ -415,7 +415,7 @@ namespace Soup::Core::UnitTests
 						"Dependencies",
 						RecipeTable(
 						{
-							{ "Runtime", RecipeList({ "../OtherPackage/" }) },
+							{ "Runtime", RecipeList({ "../other-package/" }) },
 						})
 					},
 				})),
