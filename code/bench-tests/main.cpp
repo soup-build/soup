@@ -630,6 +630,21 @@ int main()
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
 
+			auto systemReadAccess = std::vector<Path>();
+
+			// Platform specific defaults
+			#if defined(_WIN32)
+				auto hostPlatform = "Windows";
+
+				// Allow read access from system directories
+				systemReadAccess.push_back(
+					Path("C:/Windows/"));
+			#elif defined(__linux__)
+				auto hostPlatform = "Linux";
+			#else
+				#error "Unknown Platform"
+			#endif
+
 			// Load user config state
 			auto userDataPath = BuildEngine::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
@@ -639,12 +654,14 @@ int main()
 				std::nullopt,
 				arguments.GlobalParameters,
 				userDataPath,
+				hostPlatform,
 				recipeCache);
 
 			BuildEngine::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
+				systemReadAccess,
 				recipeCache);
 		});
 	}
