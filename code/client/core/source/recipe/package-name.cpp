@@ -5,6 +5,7 @@
 module;
 
 #include <optional>
+#include <format>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -71,7 +72,7 @@ namespace Soup::Core
 			}
 			else
 			{
-				throw std::runtime_error("Invalid package name");
+				throw std::runtime_error(std::format("Invalid package name: {}", value));
 			}
 		}
 
