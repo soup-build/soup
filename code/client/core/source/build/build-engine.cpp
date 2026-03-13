@@ -54,7 +54,7 @@ namespace Soup::Core
 				},
 				{
 					"Wren",
-					KnownLanguage("soup", "wren")
+					KnownLanguage("Soup", "Wren")
 				},
 			});
 
