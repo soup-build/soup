@@ -125,6 +125,6 @@ public partial class LanguageReference : IEquatable<LanguageReference>
 		return $"{this.Name}|{this.Version}";
 	}
 
-	[GeneratedRegex(@"^(?<Name>[A-Za-z][\w#+.]*)(?:\|(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
+	[GeneratedRegex(@"^(?<Name>[A-Za-z][A-Za-z#]*)(?:\|(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
 	private static partial Regex ParseRegex();
 }

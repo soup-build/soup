@@ -47,7 +47,7 @@ public partial class PackageName : IEquatable<PackageName>, IComparable<PackageN
 		}
 		else
 		{
-			throw new ArgumentException("Invalid package name");
+			throw new ArgumentException($"Invalid package name {value}");
 		}
 	}
 
@@ -128,7 +128,8 @@ public partial class PackageName : IEquatable<PackageName>, IComparable<PackageN
 		}
 	}
 
-	[GeneratedRegex(@"^(?:(?<Owner>[A-Za-z][\w.]*)\|)?(?<Name>[A-Za-z][\w.]*)$")]
+	// [GeneratedRegex(@"^(?:(?<Owner>[a-z0-9]+(?:-[a-z0-9]+)*)\|)?(?<Name>[a-z0-9]+(?:-[a-z0-9]+)*)$")]
+	[GeneratedRegex(@"^(?:(?<Owner>[\w\.]+(?:-[a-z0-9]+)*)\|)?(?<Name>[a-z0-9]+(?:-[a-z0-9]+)*)$")]
 	private static partial Regex ParseRegex();
 
 	public static bool operator <(PackageName left, PackageName right)
