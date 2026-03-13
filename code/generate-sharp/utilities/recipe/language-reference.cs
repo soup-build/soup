@@ -26,8 +26,8 @@ public partial class LanguageReference : IEquatable<LanguageReference>
 			// The language is a published reference
 			var name = matchName.Groups["Name"].Value;
 			var version = matchName.Groups.ContainsKey("Version") && matchName.Groups["Version"].Success ?
-					SemanticVersion.Parse(matchName.Groups["Version"].Value) :
-					new SemanticVersion();
+				SemanticVersion.Parse(matchName.Groups["Version"].Value) :
+				new SemanticVersion();
 			result = new LanguageReference(name, version);
 			return true;
 		}
@@ -125,6 +125,6 @@ public partial class LanguageReference : IEquatable<LanguageReference>
 		return $"{this.Name}|{this.Version}";
 	}
 
-	[GeneratedRegex(@"^(?<Name>[A-Za-z][A-Za-z#]*)(?:\|(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
+	[GeneratedRegex(@"^(?<Name>[A-Za-z][A-Za-z#\+]*)(?:\|(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
 	private static partial Regex ParseRegex();
 }
