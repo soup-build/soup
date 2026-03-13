@@ -129,7 +129,7 @@ public partial class PackageName : IEquatable<PackageName>, IComparable<PackageN
 	}
 
 	// [GeneratedRegex(@"^(?:(?<Owner>[a-z0-9]+(?:-[a-z0-9]+)*)\|)?(?<Name>[a-z0-9]+(?:-[a-z0-9]+)*)$")]
-	[GeneratedRegex(@"^(?:(?<Owner>[\w\.]+(?:-[a-z0-9]+)*)\|)?(?<Name>[a-z0-9]+(?:-[a-z0-9]+)*)$")]
+	[GeneratedRegex(@"^(?:(?<Owner>[\w\.]+(?:-[a-z0-9]+)*)\|)?(?<Name>[\w\.]+(?:-[a-z0-9]+)*)$")]
 	private static partial Regex ParseRegex();
 
 	public static bool operator <(PackageName left, PackageName right)
