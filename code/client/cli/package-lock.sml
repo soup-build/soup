@@ -76,9 +76,12 @@ Tools: {
 					Windows: 'sha256:4d43a781ed25ae9a97fa6881da7c24425a3162703df19964d987fb2c7ae46ae3'
 				}
 			}
-			'soup|parse-modules': {
+			'mwasplund|parse-modules': {
 				Version: 1.2.1
 				Digest: 'sha256:30055cb849a20d3b6f0ec7c463a753e4854555860161ad1a0939e4e8c99da523'
+				Artifacts: {
+					Linux: 'sha256:70e0488a337429bcac6da222bb7483396e8248a3b666f7b49b258fb31be92dc6'
+				}
 			}
 		}
 	}
