@@ -1204,7 +1204,7 @@ public class ClosureManagerUnitTests
 			Builds: {
 				Build0: {
 					Wren: {
-						'Soup|Cpp': {
+						'soup|cpp': {
 							Version: 5.0.0
 							Digest: 'fake:wren-soup-cpp'
 						}
@@ -1267,7 +1267,7 @@ public class ClosureManagerUnitTests
 			Version: 6
 			Closure: {
 				Wren: {
-					'Soup|Cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+					'soup|cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 				}
 			}
 			Builds: {
@@ -1986,7 +1986,7 @@ public class ClosureManagerUnitTests
 			Builds: {
 				Build0: {
 					Wren: {
-						'Soup|Cpp': {
+						'soup|cpp': {
 							Version: 5.0.0
 							Digest: 'fake:wren-soup-cpp'
 						}
@@ -2060,7 +2060,7 @@ public class ClosureManagerUnitTests
 			Builds: {
 				Build0: {
 					Wren: {
-						'Soup|Cpp': {
+						'soup|cpp': {
 							Version: 5.0.0
 							Digest: 'fake:wren-soup-cpp'
 						}
@@ -2085,7 +2085,7 @@ public class ClosureManagerUnitTests
 			Version: 6
 			Closure: {
 				Wren: {
-					'Soup|Cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+					'soup|cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 				}
 			}
 			Builds: {

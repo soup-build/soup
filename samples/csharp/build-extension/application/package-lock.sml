@@ -8,7 +8,7 @@ Builds: {
 	'0': {
 		Wren: {
 			'Samples.CSharp.BuildExtension.Extension': { Version: '../extension/' }
-			'Soup|CSharp': {
+			'soup|CSharp': {
 				Version: 0.17.0
 				Digest: 'sha256:5f8a05aedfc9d1c6857213367c70febd008b3d5e8c98f510e898177676ebd65a'
 				Artifacts: {

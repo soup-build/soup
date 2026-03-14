@@ -270,7 +270,7 @@ int main()
 					}
 					Build0: {
 						Wren: {
-							'Soup|Cpp': { Version: 0.8.2 }
+							'soup|cpp': { Version: 0.8.2 }
 						}
 					}
 					Tool0: {}
@@ -284,12 +284,12 @@ int main()
 				Closures: {
 					Root: {
 						Wren: {
-							'Soup|Cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+							'soup|cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 						}
 					}
 					Build0: {
 						Wren: {
-							'Soup|Wren': { Version: 0.4.3 }
+							'soup|wren': { Version: 0.4.3 }
 						}
 					}
 					Tool0: {}
