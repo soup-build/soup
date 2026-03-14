@@ -39,8 +39,8 @@ Builds: {
 				}
 			}
 			'mwasplund|soup-test-cpp': {
-				Version: 0.15.2
-				Digest: 'sha256:75b5e9d0a88ab2305f143b0917613ba9f407ee31ac4db595e36f533e1763c6a2'
+				Version: 0.15.3
+				Digest: 'sha256:2c78af74d69b828d0ff0841d45183321576e5c38332f39bff4b753b7bb692ab0'
 			}
 		}
 	}
