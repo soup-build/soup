@@ -25,6 +25,7 @@ Builds: {
 				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
 					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
+					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
 				}
 			}
 		}
@@ -36,6 +37,7 @@ Builds: {
 				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
 					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
+					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
 				}
 			}
 			'mwasplund|soup-test-cpp': {
@@ -81,6 +83,7 @@ Tools: {
 				Digest: 'sha256:30055cb849a20d3b6f0ec7c463a753e4854555860161ad1a0939e4e8c99da523'
 				Artifacts: {
 					Linux: 'sha256:70e0488a337429bcac6da222bb7483396e8248a3b666f7b49b258fb31be92dc6'
+					Windows: 'sha256:39db272141c06a4a1e62ddac56e294afd3a9b9c983d2a00d94f7ce815b3fb50e'
 				}
 			}
 		}
