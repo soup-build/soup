@@ -2,7 +2,7 @@ Version: 6
 Closure: {
 	'C#': {
 		Migrate: { Version: './', Build: '0', Tool: '0' }
-		Opal: { Version: '../opal/', Build: '0', Tool: '0' }
+		opal: { Version: '../opal/', Build: '0', Tool: '0' }
 		'Soup.Utilities': { Version: '../utilities/', Build: '1', Tool: '0' }
 	}
 }

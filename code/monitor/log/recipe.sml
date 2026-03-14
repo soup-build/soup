@@ -6,7 +6,7 @@ Type: 'Executable'
 Dependencies: {
 	Runtime: [
 		'mwasplund|Detours@4'
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 		'../shared/'
 	]
 }

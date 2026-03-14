@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	'C++': {
-		'mwasplund|Opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.2, Digest: 'sha256:1b49b3cd0ff90bd4f9241f0d00464e8de92dc0454301b0c443297dfe02fac3e6', Build: '0', Tool: '0' }
 		'parse.modules': { Version: './', Build: '0', Tool: '0' }
 	}

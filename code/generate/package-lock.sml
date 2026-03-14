@@ -9,10 +9,10 @@ Closure: {
 		'Monitor.Shared': { Version: '../monitor/shared/', Build: '0', Tool: '0' }
 		'Soup.Core': { Version: '../client/core/', Build: '1', Tool: '0' }
 		'Soup.Generate': { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|CryptoPP': { Version: 1.2.7, Digest: 'sha256:354692b27aae43193129cf3607e3ced863f980083de84dddc0a7d6203f471e45', Build: '0', Tool: '0' }
+		'mwasplund|cryptopp': { Version: 1.2.7, Digest: 'sha256:354692b27aae43193129cf3607e3ced863f980083de84dddc0a7d6203f471e45', Build: '0', Tool: '0' }
 		'mwasplund|Detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '0', Tool: '0' }
-		'mwasplund|Opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
-		'mwasplund|Soup.Test.Assert': { Version: 0.5.0, Digest: 'sha256:54b1d3506ee764936c0ba81388853854bfd328b6e7292e2486212f5c8596b570', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
+		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:54b1d3506ee764936c0ba81388853854bfd328b6e7292e2486212f5c8596b570', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.2, Digest: 'sha256:1b49b3cd0ff90bd4f9241f0d00464e8de92dc0454301b0c443297dfe02fac3e6', Build: '0', Tool: '0' }
 	}
 }
@@ -39,7 +39,7 @@ Builds: {
 					Windows: 'sha256:8192aaa7ce904420b265d059c62775bd900dd4477b0d9718b8164a739d35bad7'
 				}
 			}
-			'mwasplund|Soup.Test.Cpp': {
+			'mwasplund|soup-test-cpp': {
 				Version: 0.15.2
 				Digest: 'sha256:7edd5e44357e50dd8a1ccc6f82d5d86f1d164f26810548b73cadbca91308fce1'
 			}

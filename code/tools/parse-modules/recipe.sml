@@ -7,7 +7,7 @@ Defines: [
 ]
 Dependencies: {
 	Runtime: [
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 		'mwasplund|reflex@5'
 	]
 }

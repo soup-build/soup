@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	'C#': {
-		Opal: { Version: '../opal/', Build: '0', Tool: '0' }
+		opal: { Version: '../opal/', Build: '0', Tool: '0' }
 		'Soup.PackageManager': { Version: './', Build: '0', Tool: '0' }
 		'Soup.Utilities': { Version: '../utilities/', Build: '0', Tool: '0' }
 	}
