@@ -21,10 +21,10 @@ Builds: {
 	'0': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.16.3
-				Digest: 'sha256:c0458565184b8a3051c6f638c60fe55be121d45f451726d0c3b79151973c6c70'
+				Version: 0.16.4
+				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
-					Linux: 'sha256:e7001b58a2a2b9b9cb8c8579f80b06bf5bf6c8f0ebd6df5b6906085b03bcfa43'
+					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
 				}
 			}
 		}
@@ -32,10 +32,10 @@ Builds: {
 	'1': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.16.3
-				Digest: 'sha256:c0458565184b8a3051c6f638c60fe55be121d45f451726d0c3b79151973c6c70'
+				Version: 0.16.4
+				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
-					Linux: 'sha256:e7001b58a2a2b9b9cb8c8579f80b06bf5bf6c8f0ebd6df5b6906085b03bcfa43'
+					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
 				}
 			}
 			'mwasplund|soup-test-cpp': {
