@@ -74,12 +74,12 @@ namespace Soup::Core::UnitTests
 				0,
 				std::unordered_map<FileId, Path>({}),
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+					Path("C:/WorkingDirectory/my-package/recipe.sml"),
 				}),
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			auto generateResult = GenerateResult(
@@ -91,7 +91,7 @@ namespace Soup::Core::UnitTests
 			auto generateResultContent = std::stringstream();
 			GenerateResultWriter::Serialize(generateResult, generateResultFiles, fileSystemState, generateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(generateResultContent)));
 
 			// Register the test process manager
@@ -100,17 +100,17 @@ namespace Soup::Core::UnitTests
 
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "FakePlatform";
-			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
 				Path("C:/FakeSystem/"),
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/recipe.sml",
+					"C:/WorkingDirectory/my-package/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "MyPackage" },
+						{ "Name", "my-package" },
 						{ "Language", "C++|1" },
 					}))
 				},
@@ -136,10 +136,10 @@ namespace Soup::Core::UnitTests
 						1,
 						PackageInfo(
 							1,
-							PackageName(std::nullopt, "MyPackage"),
+							PackageName(std::nullopt, "my-package"),
 							std::nullopt,
-							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
+							Path("C:/WorkingDirectory/my-package/"),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/my-package/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -148,7 +148,7 @@ namespace Soup::Core::UnitTests
 					{
 						1,
 						{
-							{ 1, Path("C:/WorkingDirectory/MyPackage/out/HASH1/") }
+							{ 1, Path("C:/WorkingDirectory/my-package/out/HASH1/") }
 						}
 					}
 				}));
@@ -166,28 +166,28 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: 1>Running Build: [C++]MyPackage",
-					"INFO: 1>Build 'MyPackage'",
+					"DIAG: 1>Running Build: [C++]my-package",
+					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>Phase1 no previous results found",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",       
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",       
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Done!",
 				}),
@@ -197,19 +197,19 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/HASH1/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/HASH1/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -225,15 +225,15 @@ namespace Soup::Core::UnitTests
 			// Verify expected evaluate requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 				}),
 				evaluateEngine.GetRequests(),
 				"Verify evaluate requests match expected.");
 
 			// Verify files
 			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -245,23 +245,23 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/") },
-							{ "/(TARGET_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/out/HASH1/") },
+							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
+							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_MyPackage)/"),
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(PACKAGE_my-package)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
@@ -281,8 +281,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
-									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
+									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
 								})
 							},
 							{ "Dependencies", ValueTable() },
@@ -303,7 +303,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/WorkingDirectory/MyPackage/")
+						std::string("C:/WorkingDirectory/my-package/")
 					},
 					{
 						"UserDataPath",
@@ -314,7 +314,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor"));
 			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
@@ -347,13 +347,13 @@ namespace Soup::Core::UnitTests
 				std::unordered_map<FileId, Path>({
 				}),
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+					Path("C:/WorkingDirectory/my-package/recipe.sml"),
 				}),
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
 				}));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			auto generateResultPhase1 = GenerateResult(
@@ -365,7 +365,7 @@ namespace Soup::Core::UnitTests
 			auto generateResultPhase1Content = std::stringstream();
 			GenerateResultWriter::Serialize(generateResultPhase1, generateResultPhase1Files, fileSystemState, generateResultPhase1Content);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(generateResultPhase1Content)));
 
 			auto generateResultPhase2 = OperationGraph(
@@ -375,7 +375,7 @@ namespace Soup::Core::UnitTests
 			auto generateResultPhase2Content = std::stringstream();
 			OperationGraphWriter::Serialize(generateResultPhase2, generateResultPhase2Files, fileSystemState, generateResultPhase2Content);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bog"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bog"),
 				std::make_shared<MockFile>(std::move(generateResultPhase2Content)));
 
 			// Register the test process manager
@@ -384,17 +384,17 @@ namespace Soup::Core::UnitTests
 
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "FakePlatform";
-			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
 				Path("C:/FakeSystem/"),
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/recipe.sml",
+					"C:/WorkingDirectory/my-package/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "MyPackage" },
+						{ "Name", "my-package" },
 						{ "Language", "C++|1" },
 					}))
 				},
@@ -420,10 +420,10 @@ namespace Soup::Core::UnitTests
 						1,
 						PackageInfo(
 							1,
-							PackageName(std::nullopt, "MyPackage"),
+							PackageName(std::nullopt, "my-package"),
 							std::nullopt,
-							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
+							Path("C:/WorkingDirectory/my-package/"),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/my-package/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -432,7 +432,7 @@ namespace Soup::Core::UnitTests
 					{
 						1,
 						{
-							{ 1, Path("C:/WorkingDirectory/MyPackage/out/HASH1/") }
+							{ 1, Path("C:/WorkingDirectory/my-package/out/HASH1/") }
 						}
 					}
 				}));
@@ -450,45 +450,45 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: 1>Running Build: [C++]MyPackage",
-					"INFO: 1>Build 'MyPackage'",
+					"DIAG: 1>Running Build: [C++]my-package",
+					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>Phase1 no previous results found",
 					"INFO: 1>Checking for existing Generate Phase 2 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bog",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bog",
 					"INFO: 1>Phase2 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase2.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase2.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>Phase2 no previous results found",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",       
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",       
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 					"INFO: 1>Save operation results",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",       
+					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",       
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Load update Generate Phase 2 Result",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Done!",
 				}),
@@ -498,28 +498,28 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/HASH1/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bog",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase2.bor",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase2.bog",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase2.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/HASH1/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bog",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase2.bor",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bor",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase2.bog",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase2.bor",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -536,17 +536,17 @@ namespace Soup::Core::UnitTests
 			// Verify expected evaluate requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 				}),
 				evaluateEngine.GetRequests(),
 				"Verify evaluate requests match expected.");
 
 			// Verify files
 			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -558,23 +558,23 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/") },
-							{ "/(TARGET_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/out/HASH1/") },
+							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
+							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_MyPackage)/"),
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(PACKAGE_my-package)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
@@ -594,8 +594,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
-									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
+									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
 								})
 							},
 							{ "Dependencies", ValueTable() },
@@ -616,7 +616,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/WorkingDirectory/MyPackage/")
+						std::string("C:/WorkingDirectory/my-package/")
 					},
 					{
 						"UserDataPath",
@@ -627,7 +627,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor"));
 			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
@@ -660,7 +660,7 @@ namespace Soup::Core::UnitTests
 				{},
 				TestHelpers::BuildDirectoryLookup({
 					Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/recipe.sml"),
-					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+					Path("C:/WorkingDirectory/my-package/recipe.sml"),
 				}),
 				{});
 
@@ -669,7 +669,7 @@ namespace Soup::Core::UnitTests
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			auto myProjectGenerateResult = GenerateResult(
@@ -681,7 +681,7 @@ namespace Soup::Core::UnitTests
 			auto myProjectGenerateResultContent = std::stringstream();
 			GenerateResultWriter::Serialize(myProjectGenerateResult, myProjectGenerateResultFiles, fileSystemState, myProjectGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(myProjectGenerateResultContent)));
 
 			auto testBuildGenerateResult = GenerateResult(
@@ -702,24 +702,24 @@ namespace Soup::Core::UnitTests
 
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "FakePlatform";
-			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
 				Path("C:/FakeSystem/"),
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/recipe.sml",
+					"C:/WorkingDirectory/my-package/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "MyPackage" },
+						{ "Name", "my-package" },
 						{ "Language", "C++|1" },
 						{ "Version", "1.0.0" },
 						{
 							"Dependencies",
 							RecipeTable(
 							{
-								{ "Build", RecipeList({ "User1|TestBuild@1.2.3" }) },
+								{ "Build", RecipeList({ "user1|TestBuild@1.2.3" }) },
 							})
 						},
 					}))
@@ -765,16 +765,16 @@ namespace Soup::Core::UnitTests
 						1,
 						PackageInfo(
 							1,
-							PackageName(std::nullopt, "MyPackage"),
+							PackageName(std::nullopt, "my-package"),
 							std::nullopt,
-							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
+							Path("C:/WorkingDirectory/my-package/"),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/my-package/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Build",
 									{
 										PackageChildInfo(
-											PackageReference(std::nullopt, "User1", "TestBuild", SemanticVersion(1, 2, 3)),
+											PackageReference(std::nullopt, "user1", "TestBuild", SemanticVersion(1, 2, 3)),
 											true,
 											-1,
 											2),
@@ -786,7 +786,7 @@ namespace Soup::Core::UnitTests
 						2,
 						PackageInfo(
 							2,
-							PackageName("User1", "TestBuild"),
+							PackageName("user1", "TestBuild"),
 							std::nullopt,
 							Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/"),
 							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/recipe.sml")),
@@ -798,7 +798,7 @@ namespace Soup::Core::UnitTests
 					{
 						1,
 						{
-							{ 1, Path("C:/WorkingDirectory/MyPackage/out/HASH1/") }
+							{ 1, Path("C:/WorkingDirectory/my-package/out/HASH1/") }
 						}
 					},
 					{
@@ -822,8 +822,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: 2>Running Build: [C#]User1|TestBuild",
-					"INFO: 2>Build 'User1|TestBuild'",
+					"DIAG: 2>Running Build: [C#]user1|TestBuild",
+					"INFO: 2>Build 'user1|TestBuild'",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
 					"DIAG: 2>C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/.soup/generate-phase1.bgr",
 					"INFO: 2>Phase1 previous graph found",
@@ -846,28 +846,28 @@ namespace Soup::Core::UnitTests
 					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/temp/",
 					"INFO: 2>Save operation results",
 					"INFO: 2>Done!",
-					"DIAG: 1>Running Build: [C++]MyPackage",
-					"INFO: 1>Build 'MyPackage'",
+					"DIAG: 1>Running Build: [C++]my-package",
+					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>Phase1 no previous results found",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",       
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",       
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Done!",
 				}),
@@ -890,19 +890,19 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/temp/",
 					"CreateDirectory: C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/temp/",
 					"OpenWriteBinary: C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/.soup/evaluate-phase1.bor",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/HASH1/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/HASH1/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -921,8 +921,8 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"Evaluate: C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/temp/",
 					"Evaluate: C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 				}),
 				evaluateEngine.GetRequests(),
 				"Verify evaluate requests match expected.");
@@ -941,23 +941,23 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_User1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/") },
-							{ "/(TARGET_User1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/") },
+							{ "/(PACKAGE_user1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/") },
+							{ "/(TARGET_user1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_User1|TestBuild)/"),
-							std::string("/(TARGET_User1|TestBuild)/"),
+							std::string("/(PACKAGE_user1|TestBuild)/"),
+							std::string("/(TARGET_user1|TestBuild)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_User1|TestBuild)/"),
+							std::string("/(TARGET_user1|TestBuild)/"),
 						})
 					},
 					{
@@ -977,8 +977,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_User1|TestBuild)/") },
-									{ "TargetDirectory", std::string("/(TARGET_User1|TestBuild)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_user1|TestBuild)/") },
+									{ "TargetDirectory", std::string("/(TARGET_user1|TestBuild)/") },
 								})
 							},
 							{ "Dependencies", ValueTable() },
@@ -1028,7 +1028,7 @@ namespace Soup::Core::UnitTests
 				"Verify test build generate results content match expected.");
 
 			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -1041,7 +1041,7 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{
-										"User1|TestBuild",
+										"user1|TestBuild",
 										ValueTable(
 										{
 											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/.soup/") },
@@ -1055,37 +1055,37 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/") },
-							{ "/(TARGET_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/out/HASH1/") },
+							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
+							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_MyPackage)/"),
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(PACKAGE_my-package)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(BUILD_TARGET_User1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/") },
+							{ "/(BUILD_TARGET_user1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.2.3/out/HASH2/") },
 						})
 					},
 					{
 						"GenerateSubGraphMacros",
 						ValueTable(
 						{
-							{ "/(TARGET_User1|TestBuild)/", std::string("/(BUILD_TARGET_User1|TestBuild)/") },
+							{ "/(TARGET_user1|TestBuild)/", std::string("/(BUILD_TARGET_user1|TestBuild)/") },
 						})
 					},
 					{
@@ -1097,8 +1097,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
-									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
+									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
 								})
 							},
 							{
@@ -1110,15 +1110,15 @@ namespace Soup::Core::UnitTests
 										ValueTable(
 										{
 											{
-												"User1|TestBuild",
+												"user1|TestBuild",
 												ValueTable(
 												{
 													{
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("User1|TestBuild@1.2.3") },
-															{ "TargetDirectory", std::string("/(TARGET_User1|TestBuild)/") },
+															{ "Reference", std::string("user1|TestBuild@1.2.3") },
+															{ "TargetDirectory", std::string("/(TARGET_user1|TestBuild)/") },
 														})
 													},
 												})
@@ -1144,7 +1144,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/WorkingDirectory/MyPackage/")
+						std::string("C:/WorkingDirectory/my-package/")
 					},
 					{
 						"UserDataPath",
@@ -1155,7 +1155,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor"));
 			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
@@ -1187,22 +1187,22 @@ namespace Soup::Core::UnitTests
 				0,
 				{},
 				TestHelpers::BuildDirectoryLookup({
-					Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml"),
-					Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml"),
-					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+					Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/recipe.sml"),
+					Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/recipe.sml"),
+					Path("C:/WorkingDirectory/my-package/recipe.sml"),
 				}),
 				{});
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/"),
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/"),
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			auto myProjectGenerateResult = GenerateResult(
@@ -1214,7 +1214,7 @@ namespace Soup::Core::UnitTests
 			auto myProjectGenerateResultContent = std::stringstream();
 			GenerateResultWriter::Serialize(myProjectGenerateResult, myProjectGenerateResultFiles, fileSystemState, myProjectGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(myProjectGenerateResultContent)));
 			auto packageAGenerateResult = GenerateResult(
 				OperationGraph(
@@ -1225,7 +1225,7 @@ namespace Soup::Core::UnitTests
 			auto packageAGenerateResultContent = std::stringstream();
 			GenerateResultWriter::Serialize(packageAGenerateResult, packageAGenerateResultFiles, fileSystemState, packageAGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(packageAGenerateResultContent)));
 			auto packageBGenerateResult = GenerateResult(
 				OperationGraph(
@@ -1236,7 +1236,7 @@ namespace Soup::Core::UnitTests
 			auto packageBGenerateResultContent = std::stringstream();
 			GenerateResultWriter::Serialize(packageBGenerateResult, packageBGenerateResultFiles, fileSystemState, packageBGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(packageBGenerateResultContent)));
 
 			// Register the test process manager
@@ -1245,49 +1245,49 @@ namespace Soup::Core::UnitTests
 
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "FakePlatform";
-			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
 				Path("C:/FakeSystem/"),
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/recipe.sml",
+					"C:/WorkingDirectory/my-package/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "MyPackage" },
+						{ "Name", "my-package" },
 						{ "Language", "C++|1" },
 						{ "Version", "1.0.0" },
 						{
 							"Dependencies",
 							RecipeTable(
 							{
-								{ "Runtime", RecipeList({ "User1|PackageA@1.2.3", "User1|PackageB@1.1.1" }) },
+								{ "Runtime", RecipeList({ "user1|package-a@1.2.3", "user1|package-b@1.1.1" }) },
 							})
 						},
 					}))
 				},
 				{
-					"C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml",
+					"C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "PackageA" },
+						{ "Name", "package-a" },
 						{ "Language", "C++|1" },
 						{ "Version", "1.2.3" },
 						{
 							"Dependencies",
 							RecipeTable(
 							{
-								{ "Runtime", RecipeList({ "User1|PackageB@1.1.1" }) },
+								{ "Runtime", RecipeList({ "user1|package-b@1.1.1" }) },
 							})
 						},
 					}))
 				},
 				{
-					"C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml",
+					"C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "PackageB" },
+						{ "Name", "package-b" },
 						{ "Language", "C++|1" },
 						{ "Version", "1.1.1" },
 					}))
@@ -1314,16 +1314,16 @@ namespace Soup::Core::UnitTests
 						1,
 						PackageInfo(
 							1,
-							PackageName(std::nullopt, "MyPackage"),
+							PackageName(std::nullopt, "my-package"),
 							std::nullopt,
-							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
+							Path("C:/WorkingDirectory/my-package/"),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/my-package/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Runtime",
 									{
-										PackageChildInfo(PackageReference(std::nullopt, "User1", "PackageA", SemanticVersion(1, 2, 3)), false, 2, -1),
-										PackageChildInfo(PackageReference(std::nullopt, "User1", "PackageB", SemanticVersion(1, 1, 1)), false, 3, -1),
+										PackageChildInfo(PackageReference(std::nullopt, "user1", "package-a", SemanticVersion(1, 2, 3)), false, 2, -1),
+										PackageChildInfo(PackageReference(std::nullopt, "user1", "package-b", SemanticVersion(1, 1, 1)), false, 3, -1),
 									}
 								},
 							}))
@@ -1332,15 +1332,15 @@ namespace Soup::Core::UnitTests
 						2,
 						PackageInfo(
 							2,
-							PackageName("User1", "PackageA"),
+							PackageName("user1", "package-a"),
 							std::nullopt,
-							Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/"),
-							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/recipe.sml")),
+							Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/"),
+							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Runtime",
 									{
-										PackageChildInfo(PackageReference(std::nullopt, "User1", "PackageB", SemanticVersion(1, 1, 1)), false, 3, -1),
+										PackageChildInfo(PackageReference(std::nullopt, "user1", "package-b", SemanticVersion(1, 1, 1)), false, 3, -1),
 									}
 								},
 							}))
@@ -1349,10 +1349,10 @@ namespace Soup::Core::UnitTests
 						3,
 						PackageInfo(
 							3,
-							PackageName("User1", "PackageB"),
+							PackageName("user1", "package-b"),
 							std::nullopt,
-							Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/"),
-							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/recipe.sml")),
+							Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/"),
+							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/recipe.sml")),
 							PackageChildrenMap())
 					},
 				}),
@@ -1361,9 +1361,9 @@ namespace Soup::Core::UnitTests
 					{
 						1,
 						{
-							{ 1, Path("C:/WorkingDirectory/MyPackage/out/HASH1/") },
-							{ 2, Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/") },
-							{ 3, Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/") },
+							{ 1, Path("C:/WorkingDirectory/my-package/out/HASH1/") },
+							{ 2, Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/") },
+							{ 3, Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/") },
 						}
 					},
 				}));
@@ -1381,78 +1381,78 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: 3>Running Build: [C++]User1|PackageB",
-					"INFO: 3>Build 'User1|PackageB'",
+					"DIAG: 3>Running Build: [C++]user1|package-b",
+					"INFO: 3>Build 'user1|package-b'",
 					"INFO: 3>Checking for existing Generate Phase 1 Result",
-					"DIAG: 3>C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 3>C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 3>Phase1 previous graph found",
 					"INFO: 3>Checking for existing Evaluate Operation Results",
-					"DIAG: 3>C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 3>C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 3>Operation results file does not exist",
 					"INFO: 3>Phase1 no previous results found",
-					"INFO: 3>Create Directory: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/",
-					"INFO: 3>Check outdated generate input file: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-input.bvt",
+					"INFO: 3>Create Directory: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/",
+					"INFO: 3>Check outdated generate input file: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-input.bvt",
 					"INFO: 3>Value Table file does not exist",
 					"INFO: 3>Save Generate Input file",
 					"INFO: 3>Checking for existing Generate Operation Results",
-					"DIAG: 3>C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 3>C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 3>Operation results file does not exist",
 					"INFO: 3>No previous results found",
 					"INFO: 3>Save operation results",
 					"INFO: 3>Loading updated Generate Phase 1 Result",
-					"DIAG: 3>C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 3>C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 3>Map previous operation graph observed results",
-					"INFO: 3>Create Directory: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/temp/",
+					"INFO: 3>Create Directory: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/temp/",
 					"INFO: 3>Save operation results",
 					"INFO: 3>Done!",
-					"DIAG: 2>Running Build: [C++]User1|PackageA",
-					"INFO: 2>Build 'User1|PackageA'",
+					"DIAG: 2>Running Build: [C++]user1|package-a",
+					"INFO: 2>Build 'user1|package-a'",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 2>C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 2>Phase1 previous graph found",
 					"INFO: 2>Checking for existing Evaluate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 2>C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 2>Operation results file does not exist",
 					"INFO: 2>Phase1 no previous results found",
-					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/",
-					"INFO: 2>Check outdated generate input file: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-input.bvt",
+					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/",
+					"INFO: 2>Check outdated generate input file: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-input.bvt",
 					"INFO: 2>Value Table file does not exist",
 					"INFO: 2>Save Generate Input file",
 					"INFO: 2>Checking for existing Generate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 2>C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 2>Operation results file does not exist",
 					"INFO: 2>No previous results found",
 					"INFO: 2>Save operation results",
 					"INFO: 2>Loading updated Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 2>C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 2>Map previous operation graph observed results",
-					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/temp/",
+					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/temp/",
 					"INFO: 2>Save operation results",
 					"INFO: 2>Done!",
-					"DIAG: 3>Running Build: [C++]User1|PackageB",
-					"DIAG: 3>Recipe already built: [C++]User1|PackageB",
-					"DIAG: 1>Running Build: [C++]MyPackage",
-					"INFO: 1>Build 'MyPackage'",
+					"DIAG: 3>Running Build: [C++]user1|package-b",
+					"DIAG: 3>Recipe already built: [C++]user1|package-b",
+					"DIAG: 1>Running Build: [C++]my-package",
+					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>Phase1 no previous results found",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",       
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",       
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Done!",
 				}),
@@ -1462,45 +1462,45 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/evaluate-phase1.bor",
-					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/temp/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/temp/",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/evaluate-phase1.bor",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/evaluate-phase1.bor",
-					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/temp/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/temp/",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/evaluate-phase1.bor",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/HASH1/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/evaluate-phase1.bor",
+					"Exists: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/",
+					"CreateDirectory: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/temp/",
+					"CreateDirectory: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/temp/",
+					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/evaluate-phase1.bor",
+					"Exists: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/",
+					"CreateDirectory: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/temp/",
+					"CreateDirectory: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/temp/",
+					"OpenWriteBinary: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/HASH1/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -1518,19 +1518,19 @@ namespace Soup::Core::UnitTests
 			// Verify expected evaluate requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"Evaluate: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/temp/",
-					"Evaluate: C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/temp/",
-					"Evaluate: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/temp/",
-					"Evaluate: C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"Evaluate: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/temp/",
+					"Evaluate: C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/temp/",
+					"Evaluate: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/temp/",
+					"Evaluate: C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 				}),
 				evaluateEngine.GetRequests(),
 				"Verify evaluate requests match expected.");
 
 			// Verify files
 			auto packageAGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -1543,10 +1543,10 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{
-										"User1|PackageB",
+										"user1|package-b",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/") },
 										})
 									},
 								})
@@ -1557,32 +1557,32 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_User1|PackageA)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/") },
-							{ "/(TARGET_User1|PackageA)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/") },
-							{ "/(TARGET_User1|PackageB)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/") },
+							{ "/(PACKAGE_user1|package-a)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/") },
+							{ "/(TARGET_user1|package-a)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/") },
+							{ "/(TARGET_user1|package-b)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_User1|PackageA)/"),
-							std::string("/(TARGET_User1|PackageA)/"),
-							std::string("/(TARGET_User1|PackageB)/"),
+							std::string("/(PACKAGE_user1|package-a)/"),
+							std::string("/(TARGET_user1|package-a)/"),
+							std::string("/(TARGET_user1|package-b)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_User1|PackageA)/"),
+							std::string("/(TARGET_user1|package-a)/"),
 						})
 					},
 					{
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(TARGET_User1|PackageB)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/") },
+							{ "/(TARGET_user1|package-b)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/") },
 						})
 					},
 					{
@@ -1598,8 +1598,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_User1|PackageA)/") },
-									{ "TargetDirectory", std::string("/(TARGET_User1|PackageA)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_user1|package-a)/") },
+									{ "TargetDirectory", std::string("/(TARGET_user1|package-a)/") },
 								})
 							},
 							{
@@ -1611,15 +1611,15 @@ namespace Soup::Core::UnitTests
 										ValueTable(
 										{
 											{
-												"User1|PackageB",
+												"user1|package-b",
 												ValueTable(
 												{
 													{
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("User1|PackageB@1.1.1") },
-															{ "TargetDirectory", std::string("/(TARGET_User1|PackageB)/") },
+															{ "Reference", std::string("user1|package-b@1.1.1") },
+															{ "TargetDirectory", std::string("/(TARGET_user1|package-b)/") },
 														})
 													},
 												})
@@ -1645,7 +1645,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/")
+						std::string("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/")
 					},
 					{
 						"UserDataPath",
@@ -1656,7 +1656,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto packageAGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/generate-phase1.bor"));
 			auto packageAGenerateResults = OperationResultsReader::Deserialize(packageAGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
@@ -1674,7 +1674,7 @@ namespace Soup::Core::UnitTests
 				"Verify package A generate results content match expected.");
 
 			auto packageBGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -1686,23 +1686,23 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_User1|PackageB)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/") },
-							{ "/(TARGET_User1|PackageB)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/") },
+							{ "/(PACKAGE_user1|package-b)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/") },
+							{ "/(TARGET_user1|package-b)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_User1|PackageB)/"),
-							std::string("/(TARGET_User1|PackageB)/"),
+							std::string("/(PACKAGE_user1|package-b)/"),
+							std::string("/(TARGET_user1|package-b)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_User1|PackageB)/"),
+							std::string("/(TARGET_user1|package-b)/"),
 						})
 					},
 					{
@@ -1722,8 +1722,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_User1|PackageB)/") },
-									{ "TargetDirectory", std::string("/(TARGET_User1|PackageB)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_user1|package-b)/") },
+									{ "TargetDirectory", std::string("/(TARGET_user1|package-b)/") },
 								})
 							},
 							{ "Dependencies", ValueTable() },
@@ -1744,7 +1744,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/")
+						std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/")
 					},
 					{
 						"UserDataPath",
@@ -1755,7 +1755,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto packageBGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/generate-phase1.bor"));
 			auto packageBGenerateResults = OperationResultsReader::Deserialize(packageBGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
@@ -1773,7 +1773,7 @@ namespace Soup::Core::UnitTests
 				"Verify package B generate results content match expected.");
 
 			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -1786,17 +1786,17 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{
-										"User1|PackageA",
+										"user1|package-a",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/.soup/") },
 										})
 									},
 									{
-										"User1|PackageB",
+										"user1|package-b",
 										ValueTable(
 										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/.soup/") },
+											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/.soup/") },
 										})
 									},
 								})
@@ -1807,35 +1807,35 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/") },
-							{ "/(TARGET_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/out/HASH1/") },
-							{ "/(TARGET_User1|PackageA)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/") },
-							{ "/(TARGET_User1|PackageB)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/") },
+							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
+							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/HASH1/") },
+							{ "/(TARGET_user1|package-a)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/") },
+							{ "/(TARGET_user1|package-b)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_MyPackage)/"),
-							std::string("/(TARGET_MyPackage)/"),
-							std::string("/(TARGET_User1|PackageA)/"),
-							std::string("/(TARGET_User1|PackageB)/"),
+							std::string("/(PACKAGE_my-package)/"),
+							std::string("/(TARGET_my-package)/"),
+							std::string("/(TARGET_user1|package-a)/"),
+							std::string("/(TARGET_user1|package-b)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(TARGET_User1|PackageA)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageA/1.2.3/out/HASH1/") },
-							{ "/(TARGET_User1|PackageB)/", std::string("C:/Users/Me/.soup/packages/C++/User1/PackageB/1.1.1/out/HASH1/") },
+							{ "/(TARGET_user1|package-a)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-a/1.2.3/out/HASH1/") },
+							{ "/(TARGET_user1|package-b)/", std::string("C:/Users/Me/.soup/packages/C++/user1/package-b/1.1.1/out/HASH1/") },
 						})
 					},
 					{
@@ -1851,8 +1851,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
-									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
+									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
 								})
 							},
 							{
@@ -1864,29 +1864,29 @@ namespace Soup::Core::UnitTests
 										ValueTable(
 										{
 											{
-												"User1|PackageA",
+												"user1|package-a",
 												ValueTable(
 												{
 													{
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("User1|PackageA@1.2.3") },
-															{ "TargetDirectory", std::string("/(TARGET_User1|PackageA)/") },
+															{ "Reference", std::string("user1|package-a@1.2.3") },
+															{ "TargetDirectory", std::string("/(TARGET_user1|package-a)/") },
 														})
 													},
 												})
 											},
 											{
-												"User1|PackageB",
+												"user1|package-b",
 												ValueTable(
 												{
 													{
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("User1|PackageB@1.1.1") },
-															{ "TargetDirectory", std::string("/(TARGET_User1|PackageB)/") },
+															{ "Reference", std::string("user1|package-b@1.1.1") },
+															{ "TargetDirectory", std::string("/(TARGET_user1|package-b)/") },
 														})
 													},
 												})
@@ -1912,7 +1912,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/WorkingDirectory/MyPackage/")
+						std::string("C:/WorkingDirectory/my-package/")
 					},
 					{
 						"UserDataPath",
@@ -1923,7 +1923,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor"));
 			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
@@ -1956,7 +1956,7 @@ namespace Soup::Core::UnitTests
 				{},
 				TestHelpers::BuildDirectoryLookup({
 					Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/recipe.sml"),
-					Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+					Path("C:/WorkingDirectory/my-package/recipe.sml"),
 				}),
 				{});
 
@@ -1965,32 +1965,32 @@ namespace Soup::Core::UnitTests
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			// Create the package lock
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/package-lock.sml"),
+				Path("C:/WorkingDirectory/my-package/package-lock.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
 					Version: 6
 					Closure: {
 						"C#": {
-							"User1|TestBuild": { Version: "1.3.0", Build: "Build1" }
+							"user1|test-build": { Version: "1.3.0", Build: "Build1" }
 						}
 						"C++": {
-							MyPackage: { Version: "../MyPackage/", Build: "Build0" }
+							'my-package': { Version: "../my-package/", Build: "Build0" }
 						}
 					}
 					Builds: {
 						Build0: {
 							"C#": {
-								"User1|Cpp": { Version: "1.0.2" }
-								"User1|TestBuild": { Version: "1.3.0" }
+								"user1|cpp": { Version: "1.0.2" }
+								"user1|test-build": { Version: "1.3.0" }
 							}
 						}
 						Build1: {
 							"C#": {
-								"User1|Soup.CSharp": { Version: "1.0.1" }
+								"user1|csharp": { Version: "1.0.1" }
 							}
 						}
 					}
@@ -2005,7 +2005,7 @@ namespace Soup::Core::UnitTests
 			auto myProjectGenerateResultContent = std::stringstream();
 			GenerateResultWriter::Serialize(myProjectGenerateResult, myProjectGenerateResultFiles, fileSystemState, myProjectGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr"),
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(myProjectGenerateResultContent)));
 
 			auto testBuildGenerateResult = GenerateResult(
@@ -2026,24 +2026,24 @@ namespace Soup::Core::UnitTests
 
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "FakePlatform";
-			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
 			auto systemReadAccess = std::vector<Path>({
 				Path("C:/FakeSystem/"),
 			});
 			auto recipeCache = RecipeCache({
 				{
-					"C:/WorkingDirectory/MyPackage/recipe.sml",
+					"C:/WorkingDirectory/my-package/recipe.sml",
 					Recipe(RecipeTable(
 					{
-						{ "Name", "MyPackage" },
+						{ "Name", "my-package" },
 						{ "Language", "C++|1" },
 						{ "Version", "1.0.0" },
 						{
 							"Dependencies",
 							RecipeTable(
 							{
-								{ "Build", RecipeList({ "User1|TestBuild@1.2.3" }) },
+								{ "Build", RecipeList({ "user1|TestBuild@1.2.3" }) },
 							})
 						},
 					}))
@@ -2089,15 +2089,15 @@ namespace Soup::Core::UnitTests
 						1,
 						PackageInfo(
 							1,
-							PackageName(std::nullopt, "MyPackage"),
+							PackageName(std::nullopt, "my-package"),
 							std::nullopt,
-							Path("C:/WorkingDirectory/MyPackage/"),
-							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/MyPackage/recipe.sml")),
+							Path("C:/WorkingDirectory/my-package/"),
+							&recipeCache.GetRecipe(Path("C:/WorkingDirectory/my-package/recipe.sml")),
 							PackageChildrenMap({
 								{
 									"Build",
 									{
-										PackageChildInfo(PackageReference(std::nullopt, "User1", "TestBuild", SemanticVersion(1, 2, 3)), true, -1, 2),
+										PackageChildInfo(PackageReference(std::nullopt, "user1", "TestBuild", SemanticVersion(1, 2, 3)), true, -1, 2),
 									}
 								},
 							}))
@@ -2106,7 +2106,7 @@ namespace Soup::Core::UnitTests
 						2,
 						PackageInfo(
 							2,
-							PackageName("User1", "TestBuild"),
+							PackageName("user1", "TestBuild"),
 							std::nullopt,
 							Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/"),
 							&recipeCache.GetRecipe(Path("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/recipe.sml")),
@@ -2118,7 +2118,7 @@ namespace Soup::Core::UnitTests
 					{
 						1,
 						{
-							{ 1, Path("C:/WorkingDirectory/MyPackage/out/HASH1/") },
+							{ 1, Path("C:/WorkingDirectory/my-package/out/HASH1/") },
 						}
 					},
 					{
@@ -2142,8 +2142,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: 2>Running Build: [C#]User1|TestBuild",
-					"INFO: 2>Build 'User1|TestBuild'",
+					"DIAG: 2>Running Build: [C#]user1|TestBuild",
+					"INFO: 2>Build 'user1|TestBuild'",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
 					"DIAG: 2>C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/.soup/generate-phase1.bgr",
 					"INFO: 2>Phase1 previous graph found",
@@ -2166,28 +2166,28 @@ namespace Soup::Core::UnitTests
 					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/temp/",
 					"INFO: 2>Save operation results",
 					"INFO: 2>Done!",
-					"DIAG: 1>Running Build: [C++]MyPackage",
-					"INFO: 1>Build 'MyPackage'",
+					"DIAG: 1>Running Build: [C++]my-package",
+					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>Phase1 no previous results found",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",       
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",       
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
+					"DIAG: 1>C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Done!",
 				}),
@@ -2210,19 +2210,19 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/temp/",
 					"CreateDirectory: C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/temp/",
 					"OpenWriteBinary: C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/.soup/evaluate-phase1.bor",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/MyPackage/out/HASH1/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bgr",
-					"Exists: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"CreateDirectory: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"OpenWriteBinary: C:/WorkingDirectory/MyPackage/out/HASH1/.soup/evaluate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/HASH1/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/.soup/",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bgr",
+					"Exists: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"CreateDirectory: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/HASH1/.soup/evaluate-phase1.bor",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -2241,8 +2241,8 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"Evaluate: C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/temp/",
 					"Evaluate: C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
-					"Evaluate: C:/WorkingDirectory/MyPackage/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
+					"Evaluate: C:/WorkingDirectory/my-package/out/HASH1/temp/",
 				}),
 				evaluateEngine.GetRequests(),
 				"Verify evaluate requests match expected.");
@@ -2261,23 +2261,23 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_User1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/") },
-							{ "/(TARGET_User1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/") },
+							{ "/(PACKAGE_user1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/") },
+							{ "/(TARGET_user1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_User1|TestBuild)/"),
-							std::string("/(TARGET_User1|TestBuild)/"),
+							std::string("/(PACKAGE_user1|TestBuild)/"),
+							std::string("/(TARGET_user1|TestBuild)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_User1|TestBuild)/"),
+							std::string("/(TARGET_user1|TestBuild)/"),
 						})
 					},
 					{
@@ -2297,8 +2297,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_User1|TestBuild)/") },
-									{ "TargetDirectory", std::string("/(TARGET_User1|TestBuild)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_user1|TestBuild)/") },
+									{ "TargetDirectory", std::string("/(TARGET_user1|TestBuild)/") },
 								})
 							},
 							{ "Dependencies", ValueTable() },
@@ -2348,7 +2348,7 @@ namespace Soup::Core::UnitTests
 				"Verify test build generate results content match expected.");
 
 			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-input.bvt"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-input.bvt"));
 			Assert::AreEqual(
 				ValueTable(
 				{
@@ -2361,7 +2361,7 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{
-										"User1|TestBuild",
+										"user1|TestBuild",
 										ValueTable(
 										{
 											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/.soup/") },
@@ -2375,37 +2375,37 @@ namespace Soup::Core::UnitTests
 						"EvaluateMacros",
 						ValueTable(
 						{
-							{ "/(PACKAGE_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/") },
-							{ "/(TARGET_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/out/HASH1/") },
+							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
+							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/HASH1/") },
 						})
 					},
 					{
 						"EvaluateReadAccess",
 						ValueList(
 						{
-							std::string("/(PACKAGE_MyPackage)/"),
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(PACKAGE_my-package)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"EvaluateWriteAccess",
 						ValueList(
 						{
-							std::string("/(TARGET_MyPackage)/"),
+							std::string("/(TARGET_my-package)/"),
 						})
 					},
 					{
 						"GenerateMacros",
 						ValueTable(
 						{
-							{ "/(BUILD_TARGET_User1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/") },
+							{ "/(BUILD_TARGET_user1|TestBuild)/", std::string("C:/Users/Me/.soup/packages/C#/TestBuild/1.3.0/out/HASH2/") },
 						})
 					},
 					{
 						"GenerateSubGraphMacros",
 						ValueTable(
 						{
-							{ "/(TARGET_User1|TestBuild)/", std::string("/(BUILD_TARGET_User1|TestBuild)/") },
+							{ "/(TARGET_user1|TestBuild)/", std::string("/(BUILD_TARGET_user1|TestBuild)/") },
 						})
 					},
 					{
@@ -2417,8 +2417,8 @@ namespace Soup::Core::UnitTests
 								ValueTable(
 								{
 									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
-									{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
+									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
+									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
 								})
 							},
 							{
@@ -2430,15 +2430,15 @@ namespace Soup::Core::UnitTests
 										ValueTable(
 										{
 											{
-												"User1|TestBuild",
+												"user1|TestBuild",
 												ValueTable(
 												{
 													{
 														"Context",
 														ValueTable(
 														{
-															{ "Reference", std::string("User1|TestBuild@1.2.3") },
-															{ "TargetDirectory", std::string("/(TARGET_User1|TestBuild)/") },
+															{ "Reference", std::string("user1|TestBuild@1.2.3") },
+															{ "TargetDirectory", std::string("/(TARGET_user1|TestBuild)/") },
 														})
 													},
 												})
@@ -2464,7 +2464,7 @@ namespace Soup::Core::UnitTests
 					},
 					{
 						"PackageRoot",
-						std::string("C:/WorkingDirectory/MyPackage/")
+						std::string("C:/WorkingDirectory/my-package/")
 					},
 					{
 						"UserDataPath",
@@ -2475,7 +2475,7 @@ namespace Soup::Core::UnitTests
 				"Verify file content match expected.");
 
 			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/MyPackage/out/HASH1/.soup/generate-phase1.bor"));
+				Path("C:/WorkingDirectory/my-package/out/HASH1/.soup/generate-phase1.bor"));
 			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(

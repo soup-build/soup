@@ -29,7 +29,7 @@ The **Dependencies** property is a table of different dependency types that each
 ```
 Dependencies: {
    Runtime: [
-      "../MyOtherPackage/"
+      "../my-other-package/"
       "CoolPublicPackage@1.0.1"
       { Reference: "AnotherCoolPublicPackage@2.0.1" }
    ]

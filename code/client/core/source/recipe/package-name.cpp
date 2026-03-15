@@ -5,6 +5,7 @@
 module;
 
 #include <optional>
+#include <format>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -33,7 +34,8 @@ namespace Soup::Core
 		static bool TryParse(const std::string& value, PackageName& result)
 		{
 			// Reuse regex between runs
-			static auto nameRegex = std::regex(R"(^(?:([A-Za-z][\w.]*)\|)?([A-Za-z][\w.]*)$)");
+			// static auto nameRegex = std::regex(R"(^(?:([a-z0-9]+(?:-[a-z0-9]+)*)\|)?([a-z0-9]+(?:-[a-z0-9]+)*)$)");
+			static auto nameRegex = std::regex(R"(^(?:([\w\.]+(?:-[a-z0-9]+)*)\|)?([\w\.]+(?:-[a-z0-9]+)*)$)");
 
 			// Attempt to parse Named package
 			auto nameMatch = std::smatch();
@@ -49,7 +51,7 @@ namespace Soup::Core
 
 				auto name = nameMatch[2].str();
 
-				result = PackageName(std::move(owner), std::move(name));
+ 				result = PackageName(std::move(owner), std::move(name));
 				return true;
 			}
 			else
@@ -71,7 +73,7 @@ namespace Soup::Core
 			}
 			else
 			{
-				throw std::runtime_error("Invalid package name");
+				throw std::runtime_error(std::format("Invalid package name: {}", value));
 			}
 		}
 

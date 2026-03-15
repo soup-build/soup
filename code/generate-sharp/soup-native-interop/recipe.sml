@@ -5,7 +5,7 @@ TargetFramework: 'net10.0'
 AllowUnsafeBlocks: true
 Dependencies: {
 	Build: [
-		'Soup|CSharp.Nuget@0'
+		'soup|csharp-nuget@0'
 	]
 	Runtime: [
 		'../opal/'

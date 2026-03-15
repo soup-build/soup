@@ -9,7 +9,7 @@ Dependencies: {
 	Runtime: [
 		'mwasplund|Detours@4'
 		'[C]mwasplund|libseccomp@2.5'
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 		'../shared/'
 	]
 }

@@ -30,13 +30,6 @@ soup restore $TOOLS_DIR/mkdir
 echo soup build $TOOLS_DIR/mkdir -flavor $FLAVOR
 soup build $TOOLS_DIR/mkdir -flavor $FLAVOR
 
-# Parse Modules
-echo soup restore $TOOLS_DIR/parse-modules
-soup restore $TOOLS_DIR/parse-modules
-
-echo soup build $TOOLS_DIR/parse-modules -flavor $FLAVOR
-soup build $TOOLS_DIR/parse-modules -flavor $FLAVOR
-
 # Print
 echo soup restore $TOOLS_DIR/print
 soup restore $TOOLS_DIR/print
