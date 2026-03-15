@@ -4,14 +4,14 @@ This is a console application that has a custom build extension that alters the 
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/build-extension)
 
 ## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/build-extension/extension/recipe.sml)
-The Recipe file that defines the build extension dynamic library "Samples.C.BuildExtension.Extension" that will register new build tasks.
+The Recipe file that defines the build extension dynamic library "samples-build-extension-extension" that will register new build tasks.
 ```sml
-Name: 'Samples.C.BuildExtension.Extension'
+Name: 'samples-build-extension-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
   Runtime: [
-    'Soup|Build.Utils@0'
+    'soup|build-utils@0'
   ]
 }
 ```
@@ -27,8 +27,8 @@ A Wren file defining a custom build Task that will run before the build definiti
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./list-extensions" for ListExtensions
-import "Soup|Build.Utils:./map-extensions" for MapExtensions
+import "soup|build-utils:./list-extensions" for ListExtensions
+import "soup|build-utils:./map-extensions" for MapExtensions
 
 class CustomBuildTask is SoupTask {
   /// <summary>
@@ -68,7 +68,7 @@ class CustomBuildTask is SoupTask {
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/build-extension/application/recipe.sml)
 The Recipe file that defines the executable "Samples.C.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'Samples.C.SimpleBuildExtension.Application'
+Name: 'build-extension-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0

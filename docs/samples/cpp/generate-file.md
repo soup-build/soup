@@ -77,14 +77,14 @@ int main(int argc, char** argv)
 ```
 
 ## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/generate-file/extension/recipe.sml)
-The Recipe file that defines the build extension dynamic library "Samples.Cpp.BuildExtension.Extension" that will register new build tasks.
+The Recipe file that defines the build extension dynamic library "samples-build-extension-extension" that will register new build tasks.
 ```sml
-Name: 'Samples.Cpp.BuildExtension.Extension'
+Name: 'samples-build-extension-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
   Runtime: [
-    'Soup|Build.Utils@0'
+    'soup|build-utils@0'
   ]
   Tool: [
     '../tool/'
@@ -103,10 +103,10 @@ A Wren file defining a custom build Task that will run before the build definiti
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./path" for Path
-import "Soup|Build.Utils:./list-extensions" for ListExtensions
-import "Soup|Build.Utils:./map-extensions" for MapExtensions
-import "Soup|Build.Utils:./shared-operations" for SharedOperations
+import "soup|build-utils:./path" for Path
+import "soup|build-utils:./list-extensions" for ListExtensions
+import "soup|build-utils:./map-extensions" for MapExtensions
+import "soup|build-utils:./shared-operations" for SharedOperations
 
 class GenerateBuildTask is SoupTask {
 	/// <summary>

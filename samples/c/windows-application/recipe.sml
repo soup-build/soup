@@ -1,4 +1,4 @@
-Name: 'Samples.C.WindowsApplication'
+Name: 'samples-windows-application'
 Language: 'C|0'
 Type: 'Windows'
 Version: 1.0.0

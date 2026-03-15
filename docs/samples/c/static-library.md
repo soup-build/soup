@@ -4,9 +4,9 @@ This is a console application that has a single static library dependency.
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/static-library)
 
 ## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/static-library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.C.StaticLibrary.Library".
+The Recipe file that defines the static library "samples-static-library-library".
 ```sml
-Name: 'Samples.C.StaticLibrary.Library'
+Name: 'samples-static-library-library'
 Language: 'C|0'
 Version: 1.0.0
 Type: 'StaticLibrary'
@@ -41,9 +41,9 @@ const char* GetName()
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/static-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.C.StaticLibrary.Application".
+The Recipe file that defines the executable "samples-static-library-application".
 ```sml
-Name: 'Samples.C.StaticLibrary.Application'
+Name: 'samples-static-library-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0

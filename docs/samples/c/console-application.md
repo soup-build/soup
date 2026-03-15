@@ -6,7 +6,7 @@ This is the smallest amount of code to get a console application building using 
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/console-application/recipe.sml)
 The Recipe file that sets the name, type, version and the single source file.
 ```sml
-Name: 'Samples.C.ConsoleApplication'
+Name: 'samples-console-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0

@@ -4,9 +4,9 @@ This is a console application that has a custom build extension that alters the 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/build-extension)
 
 ## [tool/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/tool/recipe.sml)
-The Recipe file that defines the executable "Samples.Cpp.SimpleBuildExtension.Tool" that will be run as part of the build.
+The Recipe file that defines the executable "samples-build-extension-tool" that will be run as part of the build.
 ```sml
-Name: 'Samples.Cpp.SimpleBuildExtension.Tool'
+Name: 'samples-build-extension-tool'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -28,14 +28,14 @@ int main()
 ```
 
 ## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/extension/recipe.sml)
-The Recipe file that defines the build extension dynamic library "Samples.Cpp.BuildExtension.Extension" that will register new build tasks.
+The Recipe file that defines the build extension dynamic library "samples-build-extension-extension" that will register new build tasks.
 ```sml
-Name: 'Samples.Cpp.BuildExtension.Extension'
+Name: 'samples-build-extension-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
   Runtime: [
-    'Soup|Build.Utils@0'
+    'soup|build-utils@0'
   ]
   Tool: [
     '../tool/'
@@ -54,10 +54,10 @@ A Wren file defining a custom build Task that will run before the build definiti
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./Path" for Path
-import "Soup|Build.Utils:./ListExtensions" for ListExtensions
-import "Soup|Build.Utils:./MapExtensions" for MapExtensions
-import "Soup|Build.Utils:./SharedOperations" for SharedOperations
+import "soup|build-utils:./Path" for Path
+import "soup|build-utils:./ListExtensions" for ListExtensions
+import "soup|build-utils:./MapExtensions" for MapExtensions
+import "soup|build-utils:./SharedOperations" for SharedOperations
 
 class CustomBuildTask is SoupTask {
   /// <summary>
@@ -102,7 +102,7 @@ class CustomBuildTask is SoupTask {
   /// </summary>
   static CreateCustomToolOperation(workingDirectory) {
     // Discover the dependency tool
-    var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExectable("Samples.Cpp.SimpleBuildExtension.Tool")
+    var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExectable("samples-build-extension-tool")
 
     var title = "Run Custom Tool"
 
@@ -127,7 +127,7 @@ class CustomBuildTask is SoupTask {
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/build-extension/application/recipe.sml)
 The Recipe file that defines the executable "Samples.Cpp.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'Samples.Cpp.SimpleBuildExtension.Application'
+Name: 'samples-build-extension-application'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0

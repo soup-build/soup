@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	C: {
-		'Samples.C.ConsoleApplication': { Version: './', Build: '0', Tool: '0' }
+		'samples-console-application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

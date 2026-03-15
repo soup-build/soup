@@ -4,9 +4,9 @@ This is a console application with the minimal amount of code to get up and runn
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/console-application)
 
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/console-application/recipe.sml)
-The Recipe file that defines the static library "Samples.CSharp.ConsoleApplication".
+The Recipe file that defines the static library "samples-console-application".
 ```sml
-Name: 'Samples.CSharp.ConsoleApplication'
+Name: 'samples-console-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'
@@ -21,7 +21,7 @@ A C# Program file that implements the main method.
 ```C#
 using System;
 
-namespace Samples.CSharp.ConsoleApplication
+namespace samples-console-application
 {
   public class Program
   {

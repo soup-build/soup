@@ -4,14 +4,14 @@ This is a console application that has a custom build extension that alters the 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension)
 
 ## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/extension/recipe.sml)
-The Recipe file that defines the build extension dynamic library "Samples.CSharp.BuildExtension.Extension" that will register new build tasks.
+The Recipe file that defines the build extension dynamic library "samples-build-extension-extension" that will register new build tasks.
 ```sml
-Name: 'Samples.CSharp.BuildExtension.Extension'
+Name: 'samples-build-extension-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
   Runtime: [
-    'Soup|Build.Utils@0'
+    'soup|build-utils@0'
   ]
 }
 ```
@@ -27,8 +27,8 @@ A Wren file defining a custom build Task that will run before the build definiti
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./ListExtensions" for ListExtensions
-import "Soup|Build.Utils:./MapExtensions" for MapExtensions
+import "soup|build-utils:./ListExtensions" for ListExtensions
+import "soup|build-utils:./MapExtensions" for MapExtensions
 
 class CustomBuildTask is SoupTask {
   /// <summary>
@@ -66,9 +66,9 @@ class CustomBuildTask is SoupTask {
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/application/recipe.sml)
-The Recipe file that defines the executable "Samples.CSharp.BuildExtension.Application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
+The Recipe file that defines the executable "samples-build-extension-application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'Samples.CSharp.BuildExtension.Application'
+Name: 'samples-build-extension-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'
@@ -90,7 +90,7 @@ A simple C# Program method that prints our "Hello World, Soup Style!" only if th
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-namespace Samples.CSharp.BuildExtension.Application
+namespace samples-build-extension-application
 {
   using System;
 

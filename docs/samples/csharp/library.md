@@ -4,9 +4,9 @@ This is a console application and library with the minimal amount of code to get
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/library)
 
 ## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.CSharp.Library.Library".
+The Recipe file that defines the static library "samples-library-library".
 ```sml
-Name: 'Samples.CSharp.Library.Library'
+Name: 'samples-library-library'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Version: 1.0.0
@@ -28,9 +28,9 @@ namespace Samples.CSharp.Library
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/application/recipe.sml)
-The Recipe file that defines the static library "Samples.CSharp.Library.ConsoleApplication".
+The Recipe file that defines the static library "samples-library-application".
 ```sml
-Name: 'Samples.CSharp.Library.ConsoleApplication'
+Name: 'samples-library-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'

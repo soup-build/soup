@@ -1,8 +1,8 @@
 Version: 6
 Closure: {
 	'C#': {
-		'Samples.CSharp.Library.ConsoleApplication': { Version: './', Build: '0', Tool: '0' }
-		'Samples.CSharp.Library.Library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-library-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-library-library': { Version: '../library/', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

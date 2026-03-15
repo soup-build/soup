@@ -1,18 +1,19 @@
 Version: 6
 Closure: {
 	'C#': {
-		'Samples.CSharp.BuildExtension.Application': { Version: './', Build: '0', Tool: '0' }
+		'samples-build-extension-application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'Samples.CSharp.BuildExtension.Extension': { Version: '../extension/' }
-			'soup|CSharp': {
+			'samples-build-extension-extension': { Version: '../extension/' }
+			'soup|csharp': {
 				Version: 0.17.0
-				Digest: 'sha256:5f8a05aedfc9d1c6857213367c70febd008b3d5e8c98f510e898177676ebd65a'
+				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
 				Artifacts: {
-					Linux: 'sha256:ce00f1900d5493fc7210427f6c3efe0dfbeb09ce8a7429af845d7cf478f475b4'
+					Linux: 'sha256:a5fc23eb8bb1adccc7fc77f38d45bd36fedbe5993b931142d3652dc4a465ea71'
+					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
 				}
 			}
 		}
