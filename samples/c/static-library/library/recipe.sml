@@ -1,4 +1,4 @@
-Name: 'samples-static-library-library'
+Name: 'samples-c-static-library-library'
 Language: 'C|0'
 Version: 1.0.0
 Type: 'StaticLibrary'

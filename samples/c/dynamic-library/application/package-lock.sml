@@ -1,8 +1,8 @@
 Version: 6
 Closure: {
 	C: {
-		'samples-dynamic-library-application': { Version: './', Build: '0', Tool: '0' }
-		'samples-dynamic-library-library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-c-dynamic-library-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-c-dynamic-library-library': { Version: '../library/', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

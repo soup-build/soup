@@ -1,4 +1,4 @@
-Name: 'samples-static-library-application'
+Name: 'samples-c-static-library-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0

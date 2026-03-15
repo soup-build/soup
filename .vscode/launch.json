@@ -88,7 +88,7 @@
       "program": "${workspaceFolder}/out/run/lib/soup/generate",
       "args": [
         "true",
-        "${workspaceFolder}/out/cpp/local/Samples.Cpp.ConsoleApplication/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+        "${workspaceFolder}/out/cpp/local/samples-console-application/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

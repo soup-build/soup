@@ -1,13 +1,13 @@
 Version: 6
 Closure: {
 	C: {
-		'samples-build-extension-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-c-build-extension-application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'samples-build-extension-extension': { Version: '../extension/' }
+			'samples-c-build-extension-extension': { Version: '../extension/' }
 			'soup|c': {
 				Version: 0.6.1
 				Digest: 'sha256:5e0997c70030a04ea9fec123125f111cd51aee55861553fef8319f4742df7649'
