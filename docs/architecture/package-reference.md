@@ -11,5 +11,5 @@ A **Package Reference** is a special format string that can either be a director
 ```
 
 ```
-"OtherPackage@1.2.3"
+"other-package@1.2.3"
 ```

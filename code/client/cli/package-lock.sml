@@ -7,53 +7,53 @@ Closure: {
 	'C++': {
 		'Monitor.Host': { Version: '../../monitor/host/', Build: '0', Tool: '0' }
 		'Monitor.Shared': { Version: '../../monitor/shared/', Build: '0', Tool: '0' }
-		Soup: { Version: './', Build: '0', Tool: '0' }
 		'Soup.Core': { Version: '../core/', Build: '1', Tool: '0' }
 		'Soup.Generate': { Version: '../../generate/', Build: '0', Tool: '0' }
-		'mwasplund|CryptoPP': { Version: 1.2.7, Digest: 'sha256:354692b27aae43193129cf3607e3ced863f980083de84dddc0a7d6203f471e45', Build: '0', Tool: '0' }
 		'mwasplund|Detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '0', Tool: '0' }
-		'mwasplund|Opal': { Version: 0.12.4, Digest: 'sha256:434f3d48248033b798961c6047a48106d5a78407a9730958516a0090f7167e68', Build: '0', Tool: '0' }
-		'mwasplund|Soup.Test.Assert': { Version: 0.5.0, Digest: 'sha256:54b1d3506ee764936c0ba81388853854bfd328b6e7292e2486212f5c8596b570', Build: '0', Tool: '0' }
+		'mwasplund|cryptopp': { Version: 1.2.7, Digest: 'sha256:2590a7d8bc1a176c34c2b0ca77e016ecb2b49c156a3bf095a47f5a8063035c78', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.12.4, Digest: 'sha256:955cd93d5674b85346f21b517019f83b17463ed8f114402eb49134ea67054910', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.2, Digest: 'sha256:1b49b3cd0ff90bd4f9241f0d00464e8de92dc0454301b0c443297dfe02fac3e6', Build: '0', Tool: '0' }
+		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '0', Tool: '0' }
+		soup: { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'Soup|Cpp': {
-				Version: 0.16.1
-				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
+			'soup|cpp': {
+				Version: 0.16.4
+				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
-					Linux: 'sha256:7d2b760eab0c81e09cfbc592fc6e76123dbbfe697cdb39299d648fa3913649c6'
-					Windows: 'sha256:8192aaa7ce904420b265d059c62775bd900dd4477b0d9718b8164a739d35bad7'
+					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
+					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
 				}
 			}
 		}
 	}
 	'1': {
 		Wren: {
-			'Soup|Cpp': {
-				Version: 0.16.1
-				Digest: 'sha256:ce0560613b64d81758e0c3be4c8872da654940799eaa3b4c59ed2ef8e1700737'
+			'soup|cpp': {
+				Version: 0.16.4
+				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
-					Linux: 'sha256:7d2b760eab0c81e09cfbc592fc6e76123dbbfe697cdb39299d648fa3913649c6'
-					Windows: 'sha256:8192aaa7ce904420b265d059c62775bd900dd4477b0d9718b8164a739d35bad7'
+					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
+					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
 				}
 			}
-			'mwasplund|Soup.Test.Cpp': {
-				Version: 0.15.2
-				Digest: 'sha256:7edd5e44357e50dd8a1ccc6f82d5d86f1d164f26810548b73cadbca91308fce1'
+			'mwasplund|soup-test-cpp': {
+				Version: 0.15.3
+				Digest: 'sha256:2c78af74d69b828d0ff0841d45183321576e5c38332f39bff4b753b7bb692ab0'
 			}
 		}
 	}
 	'2': {
 		Wren: {
-			'Soup|C': {
+			'soup|c': {
 				Version: 0.6.1
-				Digest: 'sha256:aeef46ffb39aa3f46e39967b0762106e2554aacb299638b83198a812e5a818b0'
+				Digest: 'sha256:5e0997c70030a04ea9fec123125f111cd51aee55861553fef8319f4742df7649'
 				Artifacts: {
-					Linux: 'sha256:8c3b9a842cdc84a3a27ed8eff8258529eb8f78c215d82b4faf00bf1bda55a814'
-					Windows: 'sha256:90b01827af1092cacf8c86674925552a67c560a143e1b96e288ea2d7a08b523e'
+					Linux: 'sha256:9f4c6505fe79d0e46fa07ae9972ec2a405700b709b7b2de1f4caa269a47034df'
+					Windows: 'sha256:93f6c11fbb787cb9ad74300e6eafe379124b67608b45219cdf567dba9ed27570'
 				}
 			}
 		}
@@ -78,12 +78,12 @@ Tools: {
 					Windows: 'sha256:4d43a781ed25ae9a97fa6881da7c24425a3162703df19964d987fb2c7ae46ae3'
 				}
 			}
-			'mwasplund|parse.modules': {
+			'mwasplund|parse-modules': {
 				Version: 1.2.1
-				Digest: 'sha256:0e1d4505c320d846008976b9ad4e6e1144c495b08a97979be68c64379b0c4ae5'
+				Digest: 'sha256:30055cb849a20d3b6f0ec7c463a753e4854555860161ad1a0939e4e8c99da523'
 				Artifacts: {
-					Linux: 'sha256:b3670d71a95093b37fc76b4f8908bd03085de79481e14796aadfae43e67fad64'
-					Windows: 'sha256:74bbd90feaee02a24cb08d5056f6b9960b6b7ecdfb375d24e0bc27b14b2a6eae'
+					Linux: 'sha256:70e0488a337429bcac6da222bb7483396e8248a3b666f7b49b258fb31be92dc6'
+					Windows: 'sha256:39db272141c06a4a1e62ddac56e294afd3a9b9c983d2a00d94f7ce815b3fb50e'
 				}
 			}
 		}

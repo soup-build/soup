@@ -35,24 +35,24 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageReference(
 				"C#",
-				"User1",
-				"MyPackage",
+				"user1",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::IsFalse(uut.IsLocal(), "Verify is not local.");
 			Assert::AreEqual("C#", uut.GetLanguage(), "Verify language matches expected.");
-			Assert::AreEqual("User1", uut.GetOwner(), "Verify owner matches expected.");
-			Assert::AreEqual("MyPackage", uut.GetName(), "Verify name matches expected.");
+			Assert::AreEqual("user1", uut.GetOwner(), "Verify owner matches expected.");
+			Assert::AreEqual("my-package", uut.GetName(), "Verify name matches expected.");
 			Assert::AreEqual(SemanticVersion(1, 2, 3), uut.GetVersion(), "Verify version matches expected.");
 		}
 
 		// [[Fact]]
 		void InitializePath()
 		{
-			auto uut = PackageReference(Path("../MyPackage"));
+			auto uut = PackageReference(Path("../my-package"));
 
 			Assert::IsTrue(uut.IsLocal(), "Verify is local.");
-			Assert::AreEqual(Path("../MyPackage"), uut.GetPath(), "Verify path matches expected.");
+			Assert::AreEqual(Path("../my-package"), uut.GetPath(), "Verify path matches expected.");
 		}
 
 		// [[Fact]]
@@ -60,15 +60,15 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageReference(
 				"C#",
-				"User1",
-				"MyPackage",
+				"user1",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreEqual(
 				PackageReference(
 					"C#",
-					"User1",
-					"MyPackage",
+					"user1",
+					"my-package",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are equal.");
@@ -77,10 +77,10 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void OperatorEqualPath()
 		{
-			auto uut = PackageReference(Path("../MyPackage"));
+			auto uut = PackageReference(Path("../my-package"));
 
 			Assert::AreEqual(
-				PackageReference(Path("../MyPackage")),
+				PackageReference(Path("../my-package")),
 				uut,
 				"Verify are equal.");
 		}
@@ -90,15 +90,15 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageReference(
 				"C#",
-				"User1",
-				"MyPackage",
+				"user1",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C++",
-					"User1",
-					"MyPackage",
+					"user1",
+					"my-package",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -109,15 +109,15 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageReference(
 				"C#",
-				"User1",
-				"MyPackage",
+				"user1",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C#",
-					"User2",
-					"MyPackage",
+					"user2",
+					"my-package",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -128,15 +128,15 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageReference(
 				"C#",
-				"User1",
-				"MyPackage",
+				"user1",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C#",
-					"User1",
-					"MyPackage2",
+					"user1",
+					"my-package2",
 					SemanticVersion(1, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -147,15 +147,15 @@ namespace Soup::Core::UnitTests
 		{
 			auto uut = PackageReference(
 				"C#",
-				"User1",
-				"MyPackage",
+				"user1",
+				"my-package",
 				SemanticVersion(1, 2, 3));
 
 			Assert::AreNotEqual(
 				PackageReference(
 					"C#",
-					"User1",
-					"MyPackage",
+					"user1",
+					"my-package",
 					SemanticVersion(11, 2, 3)),
 				uut,
 				"Verify are not equal.");
@@ -164,23 +164,23 @@ namespace Soup::Core::UnitTests
 		// [[Fact]]
 		void OperatorNotEqualPath()
 		{
-			auto uut = PackageReference(Path("../MyPackage"));
+			auto uut = PackageReference(Path("../my-package"));
 
 			Assert::AreNotEqual(
-				PackageReference(Path("../MyPackage2")),
+				PackageReference(Path("../my-package2")),
 				uut,
 				"Verify are not equal.");
 		}
 
 		// [[Theory]]
-		// [[InlineData("Name", std::nullopt, std::nullopt, "Name", std::nullopt)]]
-		// [[InlineData("Name@1.2.3", std::nullopt, std::nullopt, "Name", Soup::SemanticVersion(1, 2, 3))]]
-		// [[InlineData("[C#]Name", "C#", std::nullopt, "Name", std::nullopt)]]
-		// [[InlineData("[C#]Name@1.2.3", "C#", std::nullopt, "Name", Soup::SemanticVersion(1, 2, 3))]]
-		// [[InlineData("User1|Name", std::nullopt, "User1", "Name", std::nullopt)]]
-		// [[InlineData("User1|Name@1.2.3", std::nullopt, "User1", "Name", Soup::SemanticVersion(1, 2, 3))]]
-		// [[InlineData("[C#]User1|Name", "C#", "User1", "Name", std::nullopt)]]
-		// [[InlineData("[C#]User1|Name@1.2.3", "C#", "User1", "Name", Soup::SemanticVersion(1, 2, 3))]]
+		// [[InlineData("name", std::nullopt, std::nullopt, "name", std::nullopt)]]
+		// [[InlineData("name@1.2.3", std::nullopt, std::nullopt, "name", Soup::SemanticVersion(1, 2, 3))]]
+		// [[InlineData("[C#]name", "C#", std::nullopt, "name", std::nullopt)]]
+		// [[InlineData("[C#]name@1.2.3", "C#", std::nullopt, "name", Soup::SemanticVersion(1, 2, 3))]]
+		// [[InlineData("user1|name", std::nullopt, "user1", "name", std::nullopt)]]
+		// [[InlineData("user1|name@1.2.3", std::nullopt, "user1", "name", Soup::SemanticVersion(1, 2, 3))]]
+		// [[InlineData("[C#]user1|name", "C#", "user1", "name", std::nullopt)]]
+		// [[InlineData("[C#]user1|name@1.2.3", "C#", "user1", "name", Soup::SemanticVersion(1, 2, 3))]]
 		void ParseNamedValues(std::string value, std::optional<std::string> language, std::optional<std::string> owner, std::string name, std::optional<SemanticVersion> version)
 		{
 			auto uut = PackageReference::Parse(value);
@@ -202,8 +202,8 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Theory]]
-		// [[InlineData("Package@1.2.3", true)]] // Success
-		// [[InlineData("Package@2", true)]] // Success
+		// [[InlineData("package@1.2.3", true)]] // Success
+		// [[InlineData("package@2", true)]] // Success
 		void TryParseValues(std::string value, bool expectedResult)
 		{
 			PackageReference uut;
@@ -215,14 +215,14 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Theory]]
-		// [[InlineData(std::nullopt, std::nullopt, "Name", std::nullopt, "Name")]]
-		// [[InlineData(std::nullopt, std::nullopt, "Name", Soup::SemanticVersion(1, 2, 3), "Name@1.2.3")]]
-		// [[InlineData("C#", std::nullopt, "Name", std::nullopt, "[C#]Name")]]
-		// [[InlineData("C#", std::nullopt, "Name", Soup::SemanticVersion(1, 2, 3), "[C#]Name@1.2.3")]]
-		// [[InlineData(std::nullopt, "User1", "Name", std::nullopt, "User1|Name")]]
-		// [[InlineData(std::nullopt, "User1", "Name", Soup::SemanticVersion(1, 2, 3), "User1|Name@1.2.3")]]
-		// [[InlineData("C#", "User1", "Name", std::nullopt, "[C#]User1|Name")]]
-		// [[InlineData("C#", "User1", "Name", Soup::SemanticVersion(1, 2, 3), "[C#]User1|Name@1.2.3")]]
+		// [[InlineData(std::nullopt, std::nullopt, "name", std::nullopt, "name")]]
+		// [[InlineData(std::nullopt, std::nullopt, "name", Soup::SemanticVersion(1, 2, 3), "name@1.2.3")]]
+		// [[InlineData("C#", std::nullopt, "name", std::nullopt, "[C#]name")]]
+		// [[InlineData("C#", std::nullopt, "name", Soup::SemanticVersion(1, 2, 3), "[C#]name@1.2.3")]]
+		// [[InlineData(std::nullopt, "user1", "name", std::nullopt, "user1|name")]]
+		// [[InlineData(std::nullopt, "user1", "name", Soup::SemanticVersion(1, 2, 3), "user1|name@1.2.3")]]
+		// [[InlineData("C#", "user1", "name", std::nullopt, "[C#]user1|name")]]
+		// [[InlineData("C#", "user1", "name", Soup::SemanticVersion(1, 2, 3), "[C#]user1|name@1.2.3")]]
 		void ToStringNamedValues(std::optional<std::string> language, std::optional<std::string> owner, std::string name, std::optional<SemanticVersion> version, std::string expected)
 		{
 			auto uut = PackageReference(language, owner, name, version);

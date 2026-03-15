@@ -26,7 +26,7 @@ public class SMLManagerUnitTests
 	public void Deserialize_Simple_Flat()
 	{
 		var recipe =
-			@"Name: 'MyPackage'
+			@"Name: 'my-package'
 			Language: (C++@1)";
 		var actual = SMLManager.Deserialize(recipe);
 
@@ -39,7 +39,7 @@ public class SMLManagerUnitTests
 						new SMLToken("Name"),
 						"Name",
 						new SMLToken(":"),
-						new SMLValue(new SMLStringValue("MyPackage")))
+						new SMLValue(new SMLStringValue("my-package")))
 				},
 				{
 					"Language",
@@ -88,7 +88,7 @@ public class SMLManagerUnitTests
 	public void Deserialize_Simple_Inline()
 	{
 		var recipe =
-			@"Name: 'MyPackage', Language: (C++@1)";
+			@"Name: 'my-package', Language: (C++@1)";
 		var actual = SMLManager.Deserialize(recipe);
 
 		var expected = new SMLDocument(
@@ -100,7 +100,7 @@ public class SMLManagerUnitTests
 						new SMLToken("Name"),
 						"Name",
 						new SMLToken(":"),
-						new SMLValue(new SMLStringValue("MyPackage")))
+						new SMLValue(new SMLStringValue("my-package")))
 				},
 				{
 					"Language",
@@ -126,7 +126,7 @@ public class SMLManagerUnitTests
 	public void Deserialize_AllProperties()
 	{
 		var recipe =
-			@"Name: 'MyPackage'
+			@"Name: 'my-package'
 
 			# A Comment in the file
 			Language: (C++@1)
@@ -155,7 +155,7 @@ public class SMLManagerUnitTests
 						new SMLToken("Name"),
 						"Name",
 						new SMLToken(":"),
-						new SMLValue(new SMLStringValue("MyPackage")))
+						new SMLValue(new SMLStringValue("my-package")))
 				},
 				{
 					"Language",
@@ -299,7 +299,7 @@ public class SMLManagerUnitTests
 	public async Task RoundTrip_AllProperties()
 	{
 		var expected =
-			@"Name: 'MyPackage'
+			@"Name: 'my-package'
 
 			# A Comment in the file
 			Language: (C++@1)

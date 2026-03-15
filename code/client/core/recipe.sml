@@ -13,17 +13,17 @@ Source: [
 ]
 Dependencies: {
 	Build: [
-		'mwasplund|Soup.Test.Cpp@0'
+		'mwasplund|soup-test-cpp@0'
 	]
 	Runtime: [
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 		'mwasplund|reflex@5'
 		'../../monitor/host/'
 		'[C]mwasplund|wren@1'
-		'mwasplund|CryptoPP@1'
+		'mwasplund|cryptopp@1'
 	]
 	Test: [
-		'mwasplund|Soup.Test.Assert@0'
+		'mwasplund|soup-test-assert@0'
 	]
 }
 Tests: {

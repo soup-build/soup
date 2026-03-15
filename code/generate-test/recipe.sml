@@ -6,6 +6,6 @@ Dependencies: {
 	Runtime: [
 		'../client/core/'
 		'[C]mwasplund|wren@1'
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 	]
 }

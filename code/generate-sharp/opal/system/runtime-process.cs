@@ -51,8 +51,7 @@ public class RuntimeProcess : IProcess
 			RedirectStandardError = true,
 		};
 
-		this.process = Process.Start(processInfo);
-		if (this.process is null)
+		this.process = Process.Start(processInfo) ??
 			throw new InvalidOperationException("Failed to start process");
 	}
 
