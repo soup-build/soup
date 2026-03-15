@@ -146,7 +146,6 @@ public partial class PackageIdentifier : IEquatable<PackageIdentifier>
 		}
 	}
 
-	// [GeneratedRegex(@"^(?:\[(?<Language>[A-Za-z][A-Za-z#\+]*)\])?(?:(?<Owner>[a-z0-9]+(?:-[a-z0-9]+)*)\|)?(?<Name>[a-z0-9]+(?:-[a-z0-9]+)*)(?:@(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
-	[GeneratedRegex(@"^(?:\[(?<Language>[A-Za-z][A-Za-z#\+]*)\])?(?:(?<Owner>[\w\.]+(?:-[a-z0-9]+)*)\|)?(?<Name>[\w\.]+(?:-[a-z0-9]+)*)(?:@(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
+	[GeneratedRegex(@"^(?:\[(?<Language>[A-Za-z][A-Za-z#\+]*)\])?(?:(?<Owner>[a-z0-9]+(?:-[a-z0-9]+)*)\|)?(?<Name>[a-z0-9]+(?:-[a-z0-9]+)*)(?:@(?<Version>\d+(?:.\d+)?(?:.\d+)?))?$")]
 	private static partial Regex ParseRegex();
 }
