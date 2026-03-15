@@ -146,7 +146,7 @@ public class ClosureManager : IClosureManager
 						}
 						else
 						{
-							var userFolder = projectName.Owner is not null ? new Path($"./{projectName.Owner}/") : new Path("./Local/");
+							var userFolder = projectName.Owner is not null ? new Path($"./{projectName.Owner}/") : new Path("./local/");
 							var packageLanguageNameVersionPath =
 								new Path($"./{languageName}/") +
 								userFolder +

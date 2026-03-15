@@ -23,8 +23,8 @@ mkdir -p $RUN_DIR
 mkdir -p $BIN_DIR
 mkdir -p $LIB_DIR
 
-cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.exe $BIN_DIR/soup
-cp -p $OUT_DIR/C++/Local/Soup/$SOUP_VERSION/$CONFIG_HASH/bin/Soup.Generate.exe $LIB_DIR/generate
+cp -p $OUT_DIR/cpp/local/soup/$SOUP_VERSION/$CONFIG_HASH/bin/soup.exe $BIN_DIR/soup
+cp -p $OUT_DIR/cpp/local/soup/$SOUP_VERSION/$CONFIG_HASH/bin/soup-generate.exe $LIB_DIR/generate
 
 cp -p -R $MSBUILD_DIR/bin/soup.build.package-manager/Release/net10.0/linux-x64/publish/ $LIB_DIR/package-manager
 
