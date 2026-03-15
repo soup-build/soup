@@ -1975,7 +1975,7 @@ namespace Soup::Core::UnitTests
 					Version: 6
 					Closure: {
 						"C#": {
-							"user1|TestBuild": { Version: "1.3.0", Build: "Build1" }
+							"user1|test-build": { Version: "1.3.0", Build: "Build1" }
 						}
 						"C++": {
 							'my-package': { Version: "../my-package/", Build: "Build0" }
@@ -1984,13 +1984,13 @@ namespace Soup::Core::UnitTests
 					Builds: {
 						Build0: {
 							"C#": {
-								"user1|Cpp": { Version: "1.0.2" }
-								"user1|TestBuild": { Version: "1.3.0" }
+								"user1|cpp": { Version: "1.0.2" }
+								"user1|test-build": { Version: "1.3.0" }
 							}
 						}
 						Build1: {
 							"C#": {
-								"user1|Soup.CSharp": { Version: "1.0.1" }
+								"user1|csharp": { Version: "1.0.1" }
 							}
 						}
 					}

@@ -26,27 +26,27 @@ Closure: {
 Builds: {
 	'0': {
 		Wren: {
-			'soup|CSharp': {
+			'soup|csharp': {
 				Version: 0.17.0
-				Digest: 'sha256:5f8a05aedfc9d1c6857213367c70febd008b3d5e8c98f510e898177676ebd65a'
+				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
 				Artifacts: {
-					Linux: 'sha256:ce00f1900d5493fc7210427f6c3efe0dfbeb09ce8a7429af845d7cf478f475b4'
+					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
 				}
 			}
 		}
 	}
 	'1': {
 		Wren: {
-			'soup|CSharp': {
+			'soup|csharp': {
 				Version: 0.17.0
-				Digest: 'sha256:5f8a05aedfc9d1c6857213367c70febd008b3d5e8c98f510e898177676ebd65a'
+				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
 				Artifacts: {
-					Linux: 'sha256:ce00f1900d5493fc7210427f6c3efe0dfbeb09ce8a7429af845d7cf478f475b4'
+					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
 				}
 			}
-			'Soup|CSharp.Nuget': {
+			'soup|csharp-nuget': {
 				Version: 0.7.0
-				Digest: 'sha256:36014a673aeb99acc53f46b25011f5859e36631d6a195ca887722093cd047c26'
+				Digest: 'sha256:0b5bb6797a2ff4e7fbefd6ef9c650f7baa4834dc4743589d30637841fc15511b'
 			}
 		}
 	}
