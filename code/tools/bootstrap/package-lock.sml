@@ -5,17 +5,17 @@ Closure: {
 		'mwasplund|wren': { Version: 1.2.0, Digest: 'sha256:6b867a0b48ad53165921bc734032dc245b045898683e744c4df74c2ee06faecc', Build: '4', Tool: '0' }
 	}
 	'C#': {
-		'Soup.Bootstrap': { Version: './', Build: '0', Tool: '0' }
-		'Soup.Native.Interop': { Version: '../../generate-sharp/soup-native-interop/', Build: '1', Tool: '0' }
-		'Soup.Utilities': { Version: '../../generate-sharp/utilities/', Build: '1', Tool: '0' }
+		'soup-bootstrap': { Version: './', Build: '0', Tool: '0' }
+		'soup-native-interop': { Version: '../../generate-sharp/soup-native-interop/', Build: '1', Tool: '0' }
+		'soup-utilities': { Version: '../../generate-sharp/utilities/', Build: '1', Tool: '0' }
 		opal: { Version: '../../generate-sharp/opal/', Build: '0', Tool: '0' }
 	}
 	'C++': {
-		'Monitor.Host': { Version: '../../monitor/host/', Build: '2', Tool: '1' }
-		'Monitor.Shared': { Version: '../../monitor/shared/', Build: '2', Tool: '1' }
-		'Soup.Core': { Version: '../../client/core/', Build: '3', Tool: '1' }
-		'Soup.Native': { Version: '../../client/native/', Build: '2', Tool: '1' }
-		'mwasplund|Detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '2', Tool: '1' }
+		'monitor-host': { Version: '../../monitor/host/', Build: '2', Tool: '1' }
+		'monitor-shared': { Version: '../../monitor/shared/', Build: '2', Tool: '1' }
+		'soup-core': { Version: '../../client/core/', Build: '3', Tool: '1' }
+		'soup-native': { Version: '../../client/native/', Build: '2', Tool: '1' }
+		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '2', Tool: '1' }
 		'mwasplund|cryptopp': { Version: 1.2.7, Digest: 'sha256:2590a7d8bc1a176c34c2b0ca77e016ecb2b49c156a3bf095a47f5a8063035c78', Build: '2', Tool: '1' }
 		'mwasplund|json11': { Version: 1.1.5, Digest: 'sha256:f646ce4a624262be6608142c1df17e72480ec413c36c100eb6b44257d09173da', Build: '2', Tool: '1' }
 		'mwasplund|opal': { Version: 0.12.4, Digest: 'sha256:955cd93d5674b85346f21b517019f83b17463ed8f114402eb49134ea67054910', Build: '2', Tool: '1' }

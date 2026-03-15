@@ -1,4 +1,4 @@
-Name: 'Soup.Core'
+Name: 'soup-core'
 Language: 'C++|0'
 Version: 0.1.1
 Defines: [

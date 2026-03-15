@@ -9,7 +9,7 @@ Defines: [
 ]
 Dependencies: {
 	Runtime: [
-		'mwasplund|Detours@4'
+		'mwasplund|detours@4'
 		'../shared/'
 		'mwasplund|opal@0'
 	]

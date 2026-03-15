@@ -1,4 +1,4 @@
-Name: 'Soup.Generate.Test'
+Name: 'soup-generate.Test'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0

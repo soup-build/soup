@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	'C#': {
-		'Soup.Utilities': { Version: '../utilities/', Build: '1', Tool: '0' }
+		'soup-utilities': { Version: '../utilities/', Build: '1', Tool: '0' }
 		Swhere: { Version: './', Build: '0', Tool: '0' }
 		opal: { Version: '../opal/', Build: '0', Tool: '0' }
 	}
