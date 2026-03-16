@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	'C++': {
-		'samples-build-extension-tool': { Version: './', Build: '0', Tool: '0' }
+		'samples-cpp-build-extension-tool': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

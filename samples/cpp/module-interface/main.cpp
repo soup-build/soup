@@ -1,6 +1,6 @@
 #include <iostream>
 
-import Samples.Cpp.ModuleInterface;
+import ModuleInterface;
 
 int main()
 {

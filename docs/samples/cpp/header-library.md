@@ -4,9 +4,9 @@ This is a console application that has a single header library dependency.
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/header-library)
 
 ## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/library/recipe.sml)
-The Recipe file that defines the header library "Samples.Cpp.HeaderLibrary.Library".
+The Recipe file that defines the header library "samples-cpp-header-library-library".
 ```sml
-Name: 'Samples.Cpp.HeaderLibrary.Library'
+Name: 'samples-cpp-header-library-library'
 Language: 'C++|0'
 Version: 1.0.0
 PublicHeaders: [
@@ -38,9 +38,9 @@ namespace Samples::Cpp::HeaderLibrary::Library
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/header-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.Cpp.HeaderLibrary.Application".
+The Recipe file that defines the executable "samples-cpp-header-library-application".
 ```sml
-Name: 'Samples.Cpp.HeaderLibrary.Application'
+Name: 'samples-cpp-header-library-application'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0

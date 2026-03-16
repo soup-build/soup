@@ -1,4 +1,4 @@
-Name: 'Samples.Cpp.GenerateFile.Extension'
+Name: 'samples-cpp-generate-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {

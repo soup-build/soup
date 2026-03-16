@@ -1,8 +1,8 @@
 Version: 6
 Closure: {
 	'C++': {
-		'Samples.Cpp.DynamicLibrary.Application': { Version: './', Build: '0', Tool: '0' }
-		'Samples.Cpp.DynamicLibrary.Library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-cpp-dynamic-library-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-cpp-dynamic-library-library': { Version: '../library/', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

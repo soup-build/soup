@@ -1,4 +1,4 @@
-Name: 'samples-console-application'
+Name: 'samples-cpp-console-application'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0

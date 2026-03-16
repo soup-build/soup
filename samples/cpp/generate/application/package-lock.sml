@@ -1,13 +1,13 @@
 Version: 6
 Closure: {
 	'C++': {
-		'samples-cpp-static-library-application': { Version: './', Build: '0', Tool: '0' }
-		'samples-cpp-static-library-library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-cpp-generate-application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
+			'samples-cpp-generate-extension': { Version: '../extension/' }
 			'soup|cpp': {
 				Version: 0.16.4
 				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
@@ -22,6 +22,7 @@ Builds: {
 Tools: {
 	'0': {
 		'C++': {
+			'samples-cpp-generate-tool': { Version: '../tool/' }
 			'mwasplund|copy': {
 				Version: 1.2.0
 				Digest: 'sha256:d493afdc0eba473a7f5a544cc196476a105556210bc18bd6c1ecfff81ba07290'

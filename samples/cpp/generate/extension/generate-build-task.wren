@@ -74,7 +74,7 @@ class GenerateBuildTask is SoupTask {
 	/// </summary>
 	static CreateGenerateFileOperation(workingDirectory, generateFile) {
 		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("Samples.Cpp.GenerateFile.Tool")
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-generate-file-tool")
 
 		var title = "Run Generate Tool"
 

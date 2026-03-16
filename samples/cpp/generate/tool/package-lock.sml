@@ -1,8 +1,7 @@
 Version: 6
 Closure: {
 	'C++': {
-		'samples-cpp-static-library-application': { Version: './', Build: '0', Tool: '0' }
-		'samples-cpp-static-library-library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-cpp-generate-tool': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

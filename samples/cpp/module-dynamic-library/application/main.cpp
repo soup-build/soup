@@ -1,6 +1,6 @@
 #include <iostream>
 
-import Samples.Cpp.ModuleDynamicLibrary.Library;
+import ModuleDynamicLibrary.Library;
 using namespace Samples::Cpp::DynamicLibrary::Library;
 
 int main()

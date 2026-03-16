@@ -17,7 +17,7 @@ graph TD;
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/recipe.sml)
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
-Name: 'Samples.Cpp.ModulePartitions'
+Name: 'samples-cpp-module-partitions'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -34,7 +34,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperA;
+export module ModulePartitions:HelperA;
 
 export std::string_view Truncate(std::string_view value, size_t length)
 {
@@ -50,7 +50,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperB;
+export module ModulePartitions:HelperB;
 import :HelperA;
 
 export std::string_view GetSourcePrefix()
@@ -67,7 +67,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperC;
+export module ModulePartitions:HelperC;
 import :HelperA;
 
 export std::string_view GetPackagesPostfix()
@@ -84,7 +84,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions;
+export module ModulePartitions;
 import :HelperB;
 import :HelperC;
 
@@ -106,7 +106,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.ModulePartitions;
+import ModulePartitions;
 
 int main()
 {
