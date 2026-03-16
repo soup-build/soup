@@ -44,7 +44,7 @@
       "name": "Debug Generate (VS)",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/out/run/Soup/Soup.Generate.exe",
+      "program": "${workspaceFolder}/out/run/Soup/soup-generate.exe",
       "args": [
         "false",
         "${workspaceFolder}/out/cpp/local/samples-cpp-module-interface/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"

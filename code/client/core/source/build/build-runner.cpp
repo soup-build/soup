@@ -583,7 +583,7 @@ namespace Soup::Core
 
 			#if defined(_WIN32)
 			auto generateFolder = moduleFolder;
-			auto generateExecutable = generateFolder + Path("./Soup.Generate.exe");
+			auto generateExecutable = generateFolder + Path("./soup-generate.exe");
 			#elif defined(__linux__)
 			auto generateFolder = moduleFolder + Path("../lib/soup/");
 			auto generateExecutable = generateFolder + Path("./generate");
