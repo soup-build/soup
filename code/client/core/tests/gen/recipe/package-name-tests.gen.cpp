@@ -3,7 +3,7 @@ module;
 #include <memory>
 #include <optional>
 
-export module Soup.Core.Tests:RunPackageNameTests;
+export module Soup.Core:RunPackageNameTests;
 
 import :PackageNameTests;
 import Soup.Test.Assert;

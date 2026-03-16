@@ -15,11 +15,27 @@ module;
 #include <vector>
 #include <iostream>
 
-export module Soup.Core.Tests:BuildEngineTests;
+export module Soup.Core:BuildEngineTests;
+
+import :BuildEngine;
+import :FileSystemState;
+import :GenerateResult;
+import :GenerateResultWriter;
+import :OperationGraph;
+import :OperationGraphWriter;
+import :OperationInfo;
+import :OperationResult;
+import :OperationResults;
+import :OperationResultsReader;
+import :OperationResultsWriter;
+import :RecipeBuildArguments;
+import :RecipeCache;
+import :Value;
+import :ValueTableReader;
+import :ValueTableWriter;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

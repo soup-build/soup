@@ -15,14 +15,32 @@ module;
 #include <unordered_map>
 #include <vector>
 
-export module Soup.Core.Tests:BuildRunnerTests;
+export module Soup.Core:BuildRunnerTests;
 
+import :BuildRunner;
+import :FileSystemState;
+import :GenerateResult;
+import :GenerateResultWriter;
 import :MockEvaluateEngine;
+import :OperationGraph;
+import :OperationGraphWriter;
+import :OperationInfo;
+import :OperationResult;
+import :OperationResults;
+import :OperationResultsReader;
+import :PackageName;
+import :PackageProvider;
+import :PackageReference;
+import :Recipe;
+import :RecipeBuildArguments;
+import :RecipeCache;
+import :RecipeValue;
 import :TestHelpers;
+import :Value;
+import :ValueTableReader;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;
