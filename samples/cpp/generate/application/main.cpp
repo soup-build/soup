@@ -1,6 +1,6 @@
 #include <iostream>
 
-import Samples.Cpp.GenerateFile;
+import Sample.Generate;
 
 int main()
 {

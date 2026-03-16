@@ -8,7 +8,7 @@
 	#define LIBRARY_API
 #endif
 
-namespace Samples::Cpp::DynamicLibrary::Library
+namespace Sample::DynamicLibrary::Library
 {
 	class Helper
 	{

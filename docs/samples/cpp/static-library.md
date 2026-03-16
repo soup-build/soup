@@ -20,10 +20,10 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module StaticLibrary.Library;
+export module Sample.StaticLibrary.Library;
 
 // Note: The namespace does not have to match the module name
-export namespace Samples::Cpp::StaticLibrary::Library
+export namespace Sample::StaticLibrary::Library
 {
   class Helper
   {
@@ -58,8 +58,8 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import StaticLibrary.Library;
-using namespace Samples::Cpp::StaticLibrary::Library;
+import Sample.StaticLibrary.Library;
+using namespace Sample::StaticLibrary::Library;
 
 int main()
 {

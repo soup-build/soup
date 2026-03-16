@@ -35,7 +35,7 @@ std::string_view GenerateContent()
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.GenerateFile;
+export module Sample.Generate;
 
 export class Helper
 {
@@ -218,7 +218,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.GenerateFile;
+import Sample.Generate;
 
 int main()
 {

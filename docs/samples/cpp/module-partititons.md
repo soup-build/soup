@@ -34,7 +34,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module ModulePartitions:HelperA;
+export module Sample.ModulePartitions:HelperA;
 
 export std::string_view Truncate(std::string_view value, size_t length)
 {
@@ -50,7 +50,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module ModulePartitions:HelperB;
+export module Sample.ModulePartitions:HelperB;
 import :HelperA;
 
 export std::string_view GetSourcePrefix()
@@ -67,7 +67,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module ModulePartitions:HelperC;
+export module Sample.ModulePartitions:HelperC;
 import :HelperA;
 
 export std::string_view GetPackagesPostfix()
@@ -84,7 +84,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module ModulePartitions;
+export module Sample.ModulePartitions;
 import :HelperB;
 import :HelperC;
 
@@ -106,7 +106,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import ModulePartitions;
+import Sample.ModulePartitions;
 
 int main()
 {

@@ -39,7 +39,7 @@ A module header file that declares a single sample class.
   #define LIBRARY_API
 #endif
 
-namespace Samples::Cpp::DynamicLibrary::Library
+namespace Sample::DynamicLibrary::Library
 {
   class Helper
   {
@@ -54,7 +54,7 @@ A library file implements a sample class.
 ```cpp
 #include "library.h"
 
-namespace Samples::Cpp::DynamicLibrary::Library
+namespace Sample::DynamicLibrary::Library
 {
   const char* Helper::GetName()
   {
@@ -86,7 +86,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 #include <iostream>
 #include <library.h>
 
-using namespace Samples::Cpp::DynamicLibrary::Library;
+using namespace Sample::DynamicLibrary::Library;
 
 int main()
 {

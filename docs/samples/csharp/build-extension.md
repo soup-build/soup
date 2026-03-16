@@ -4,9 +4,9 @@ This is a console application that has a custom build extension that alters the 
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/build-extension)
 
 ## [extension/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/extension/recipe.sml)
-The Recipe file that defines the build extension dynamic library "samples-build-extension-extension" that will register new build tasks.
+The Recipe file that defines the build extension dynamic library "samples-csharp-build-extension-extension" that will register new build tasks.
 ```sml
-Name: 'samples-build-extension-extension'
+Name: 'samples-csharp-build-extension-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
@@ -66,9 +66,9 @@ class CustomBuildTask is SoupTask {
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/build-extension/application/recipe.sml)
-The Recipe file that defines the executable "samples-build-extension-application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
+The Recipe file that defines the executable "samples-csharp-build-extension-application". The one interesting part is the relative path reference to the custom build extension through "Build" Dependencies.
 ```sml
-Name: 'samples-build-extension-application'
+Name: 'samples-csharp-build-extension-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'
@@ -90,7 +90,7 @@ A simple C# Program method that prints our "Hello World, Soup Style!" only if th
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-namespace samples-build-extension-application
+namespace Sample.BuildExtension.Application
 {
   using System;
 

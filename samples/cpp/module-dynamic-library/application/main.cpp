@@ -1,7 +1,7 @@
 #include <iostream>
 
-import ModuleDynamicLibrary.Library;
-using namespace Samples::Cpp::DynamicLibrary::Library;
+import Sample.ModuleDynamicLibrary.Library;
+using namespace Sample::ModuleDynamicLibrary::Library;
 
 int main()
 {

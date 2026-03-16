@@ -1,13 +1,13 @@
 Version: 6
 Closure: {
 	'C#': {
-		'samples-build-extension-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-csharp-build-extension-application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'samples-build-extension-extension': { Version: '../extension/' }
+			'samples-csharp-build-extension-extension': { Version: '../extension/' }
 			'soup|csharp': {
 				Version: 0.17.0
 				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'

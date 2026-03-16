@@ -24,7 +24,7 @@ The header file.
 ```cpp
 #include <string>
 
-namespace Samples::Cpp::HeaderLibrary::Library
+namespace Sample::HeaderLibrary::Library
 {
   class Helper
   {
@@ -60,7 +60,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the hea
 #include <iostream>
 #include <library.h>
 
-using namespace Samples::Cpp::HeaderLibrary::Library;
+using namespace Sample::HeaderLibrary::Library;
 
 int main()
 {

@@ -23,7 +23,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module ModuleInterface;
+export module Sample.ModuleInterface;
 
 export class Helper
 {
@@ -40,7 +40,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import ModuleInterface;
+import Sample.ModuleInterface;
 
 int main()
 {

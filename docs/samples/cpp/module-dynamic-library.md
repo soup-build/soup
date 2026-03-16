@@ -20,10 +20,10 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module ModuleDynamicLibrary.Library;
+export module Sample.ModuleDynamicLibrary.Library;
 
 // Note: The namespace does not have to match the module name
-export namespace Samples::Cpp::DynamicLibrary::Library
+export namespace Sample::ModuleDynamicLibrary::Library
 {
   class Helper
   {
@@ -61,8 +61,8 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import ModuleDynamicLibrary.Library;
-using namespace Samples::Cpp::DynamicLibrary::Library;
+import Sample.ModuleDynamicLibrary.Library;
+using namespace Sample::ModuleDynamicLibrary::Library;
 
 int main()
 {
