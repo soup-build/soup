@@ -1193,7 +1193,7 @@ public class ClosureManagerUnitTests
 		_ = myPackageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var myPackageLockReader = new System.IO.StreamReader(myPackageLock.Content);
 		var myPackageLockContent = await myPackageLockReader.ReadToEndAsync();
-		var expectedmy-packageLock =
+		var expectedMyPackageLock =
 			"""
 			Version: 6
 			Closure: {
@@ -1222,7 +1222,7 @@ public class ClosureManagerUnitTests
 			}
 			""";
 
-		Assert.Equal(expectedmy-packageLock, myPackageLockContent);
+		Assert.Equal(expectedMyPackageLock, myPackageLockContent);
 
 		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/user1/package1/1.2.3/package-lock.sml"));
 		_ = package1Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
@@ -1973,9 +1973,9 @@ public class ClosureManagerUnitTests
 		// Verify the contents of the package lock file
 		var myPackageLock = mockFileSystem.GetMockFile(new Path("C:/Root/my-package/package-lock.sml"));
 		_ = myPackageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
-		using var readermy-packageLock = new System.IO.StreamReader(myPackageLock.Content);
-		var myPackageLockContent = await readermy-packageLock.ReadToEndAsync();
-		var expectedmy-packageLock =
+		using var readerMyPackageLock = new System.IO.StreamReader(myPackageLock.Content);
+		var myPackageLockContent = await readerMyPackageLock.ReadToEndAsync();
+		var expectedMyPackageLock =
 			"""
 			Version: 6
 			Closure: {
@@ -2004,7 +2004,7 @@ public class ClosureManagerUnitTests
 			}
 			""";
 
-		Assert.Equal(expectedmy-packageLock, myPackageLockContent);
+		Assert.Equal(expectedMyPackageLock, myPackageLockContent);
 
 		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/user1/package1/1.2.3/package-lock.sml"));
 		_ = package1Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
@@ -2931,7 +2931,7 @@ public class ClosureManagerUnitTests
 		_ = myPackageLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var myPackageLockReader = new System.IO.StreamReader(myPackageLock.Content);
 		var myPackageLockContent = await myPackageLockReader.ReadToEndAsync();
-		var expectedmy-packageLock =
+		var expectedMyPackageLock =
 			"""
 			Version: 6
 			Closure: {
@@ -2955,7 +2955,7 @@ public class ClosureManagerUnitTests
 			}
 			""";
 
-		Assert.Equal(expectedmy-packageLock, myPackageLockContent);
+		Assert.Equal(expectedMyPackageLock, myPackageLockContent);
 
 		var package1Lock = mockFileSystem.GetMockFile(new Path("C:/Root/package1/package-lock.sml"));
 		_ = package1Lock.Content.Seek(0, System.IO.SeekOrigin.Begin);
