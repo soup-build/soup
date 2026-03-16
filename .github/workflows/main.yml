@@ -42,6 +42,8 @@ jobs:
       run: soup restore ./soup/code/generate-test/
     - name: Soup Build GenerateTest
       run: soup build ./soup/code/generate-test/ -flavor ${{matrix.config}}
+    - name: Soup Build BenchmarkTests
+      run: soup build ./soup/code/benchmark-tests/ -flavor ${{matrix.config}}
     # - name: Soup Restore SWhere
     #   run: soup restore ./soup/code/generate-sharp/swhere/
     # - name: Soup Build SWhere
