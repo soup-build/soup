@@ -29,8 +29,8 @@ A simple tool that writes a hard coded module interface unit to a provided sourc
 
 std::string_view GenerateContent()
 {
-	// Maybe do something more interesting here
-	return R"(module;
+  // Maybe do something more interesting here
+  return R"(module;
 
 // Include all standard library headers in the global module
 #include <string>
@@ -40,39 +40,39 @@ export module Sample.Generate;
 export class Helper
 {
 public:
-	static std::string_view GetName()
-	{
-		return "Soup";
-	}
+  static std::string_view GetName()
+  {
+    return "Soup";
+  }
 };)";
 }
 
 void PrintUsage()
 {
-	std::cout << "gen [path]" << std::endl;
+  std::cout << "gen [path]" << std::endl;
 }
 
 int main(int argc, char** argv)
 {
-	if (argc != 2)
-	{
-		PrintUsage();
-		return 1;
-	}
+  if (argc != 2)
+  {
+    PrintUsage();
+    return 1;
+  }
 
-	auto file = argv[1];
-	auto genFile = std::ofstream(file);
+  auto file = argv[1];
+  auto genFile = std::ofstream(file);
 
-	if (!genFile.is_open()) {
-		std::cerr << "Error opening file!" << std::endl;
-		return 1;
-	}
+  if (!genFile.is_open()) {
+    std::cerr << "Error opening file!" << std::endl;
+    return 1;
+  }
 
-	genFile << GenerateContent() << std::endl;
+  genFile << GenerateContent() << std::endl;
 
-	genFile.close();
+  genFile.close();
 
-	return 0;
+  return 0;
 }
 ```
 
@@ -109,90 +109,90 @@ import "soup|build-utils:./map-extensions" for MapExtensions
 import "soup|build-utils:./shared-operations" for SharedOperations
 
 class GenerateBuildTask is SoupTask {
-	/// <summary>
-	/// Get the run before list
-	/// </summary>
-	static runBefore { [
-		"BuildTask"
-	] }
+  /// <summary>
+  /// Get the run before list
+  /// </summary>
+  static runBefore { [
+    "BuildTask"
+  ] }
 
-	/// <summary>
-	/// Get the run after list
-	/// </summary>
-	static runAfter { [] }
+  /// <summary>
+  /// Get the run after list
+  /// </summary>
+  static runAfter { [] }
 
-	/// <summary>
-	/// Core Evaluate
-	/// </summary>
-	static evaluate() {
-		Soup.info("Running Before Build!")
+  /// <summary>
+  /// Core Evaluate
+  /// </summary>
+  static evaluate() {
+    Soup.info("Running Before Build!")
 
-		// Get the build table
-		var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
+    // Get the build table
+    var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
 
-		var contextTable = Soup.globalState["Context"]
-		var targetRoot = Path.new(contextTable["TargetDirectory"])
+    var contextTable = Soup.globalState["Context"]
+    var targetRoot = Path.new(contextTable["TargetDirectory"])
 
-		var generateDirectory = Path.new("gen/")
-		var generateFile = generateDirectory + Path.new("helper.cpp")
-		var generateFileAbsolute = targetRoot + generateFile
+    var generateDirectory = Path.new("gen/")
+    var generateFile = generateDirectory + Path.new("helper.cpp")
+    var generateFileAbsolute = targetRoot + generateFile
 
-		// Ensure the generate folder exists
-		var createGenerateDirectory = SharedOperations.CreateCreateDirectoryOperation(
-			targetRoot,
-			generateDirectory)
-		Soup.createOperation(
-			createGenerateDirectory.Title,
-			createGenerateDirectory.Executable.toString,
-			createGenerateDirectory.Arguments,
-			createGenerateDirectory.WorkingDirectory.toString,
-			ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredInput),
-			ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredOutput))
+    // Ensure the generate folder exists
+    var createGenerateDirectory = SharedOperations.CreateCreateDirectoryOperation(
+      targetRoot,
+      generateDirectory)
+    Soup.createOperation(
+      createGenerateDirectory.Title,
+      createGenerateDirectory.Executable.toString,
+      createGenerateDirectory.Arguments,
+      createGenerateDirectory.WorkingDirectory.toString,
+      ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredInput),
+      ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredOutput))
 
-		// Create the generate operation
-		GenerateBuildTask.CreateGenerateFileOperation(targetRoot, generateFile)
+    // Create the generate operation
+    GenerateBuildTask.CreateGenerateFileOperation(targetRoot, generateFile)
 
-		var generatedSourceInfo = {}
-		generatedSourceInfo["File"] = generateFileAbsolute.toString
-		generatedSourceInfo["IsInterface"] = true
-		generatedSourceInfo["Module"] = "Sample.Generate"
-		generatedSourceInfo["Imports"] = []
+    var generatedSourceInfo = {}
+    generatedSourceInfo["File"] = generateFileAbsolute.toString
+    generatedSourceInfo["IsInterface"] = true
+    generatedSourceInfo["Module"] = "Sample.Generate"
+    generatedSourceInfo["Imports"] = []
 
-		var sourceFiles = [
-			generatedSourceInfo
-		]
+    var sourceFiles = [
+      generatedSourceInfo
+    ]
 
-		// Add the explicit source info for the generated file so we treat it like a normal
-		// compiled translation unit
-		ListExtensions.Append(
-			MapExtensions.EnsureList(buildTable, "Source"),
-			sourceFiles)
-	}
+    // Add the explicit source info for the generated file so we treat it like a normal
+    // compiled translation unit
+    ListExtensions.Append(
+      MapExtensions.EnsureList(buildTable, "Source"),
+      sourceFiles)
+  }
 
-	/// <summary>
-	/// Create a build operation that will create a directory
-	/// </summary>
-	static CreateGenerateFileOperation(workingDirectory, generateFile) {
-		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-generate-tool")
+  /// <summary>
+  /// Create a build operation that will create a directory
+  /// </summary>
+  static CreateGenerateFileOperation(workingDirectory, generateFile) {
+    // Discover the dependency tool
+    var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-generate-tool")
 
-		var title = "Run Generate Tool"
+    var title = "Run Generate Tool"
 
-		var program = Path.new(toolExecutable)
-		var inputFiles = []
-		var outputFiles = [generateFile]
+    var program = Path.new(toolExecutable)
+    var inputFiles = []
+    var outputFiles = [generateFile]
 
-		// Build the arguments
-		var arguments = [generateFile.toString]
+    // Build the arguments
+    var arguments = [generateFile.toString]
 
-		Soup.createOperation(
-			title,
-			program.toString,
-			arguments,
-			workingDirectory.toString,
-			ListExtensions.ConvertFromPathList(inputFiles),
-			ListExtensions.ConvertFromPathList(outputFiles))
-	}
+    Soup.createOperation(
+      title,
+      program.toString,
+      arguments,
+      workingDirectory.toString,
+      ListExtensions.ConvertFromPathList(inputFiles),
+      ListExtensions.ConvertFromPathList(outputFiles))
+  }
 }
 ```
 
@@ -222,8 +222,8 @@ import Sample.Generate;
 
 int main()
 {
-	std::cout << "Hello World, " << Helper::GetName() << " Style!" << std::endl;
-	return 0;
+  std::cout << "Hello World, " << Helper::GetName() << " Style!" << std::endl;
+  return 0;
 }
 ```
 

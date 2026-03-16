@@ -38,7 +38,7 @@ export module Sample.ModulePartitions:HelperA;
 
 export std::string_view Truncate(std::string_view value, size_t length)
 {
-	return value.substr(0, length);
+  return value.substr(0, length);
 }
 ```
 
@@ -55,7 +55,7 @@ import :HelperA;
 
 export std::string_view GetSourcePrefix()
 {
-	return Truncate("Source", 3);
+  return Truncate("Source", 3);
 }
 ```
 
@@ -72,7 +72,7 @@ import :HelperA;
 
 export std::string_view GetPackagesPostfix()
 {
-	return Truncate("packages", 1);
+  return Truncate("packages", 1);
 }
 ```
 
@@ -91,13 +91,13 @@ import :HelperC;
 export class Helper
 {
 public:
-	static std::string GetName()
-	{
-		std::string result;
-		result += GetSourcePrefix();
-		result += GetPackagesPostfix();
-		return  result;
-	}
+  static std::string GetName()
+  {
+    std::string result;
+    result += GetSourcePrefix();
+    result += GetPackagesPostfix();
+    return  result;
+  }
 };
 ```
 
