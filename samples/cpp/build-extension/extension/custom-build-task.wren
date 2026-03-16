@@ -51,7 +51,7 @@ class CustomBuildTask is SoupTask {
 	/// </summary>
 	static CreateCustomToolOperation(workingDirectory) {
 		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-build-extension-tool")
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-build-extension-tool")
 
 		var title = "Run Custom Tool"
 

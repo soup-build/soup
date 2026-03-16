@@ -106,8 +106,8 @@ jobs:
       run: soup build ./soup/samples/cpp/directx/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DynamicLibrary
       run: soup build ./soup/samples/cpp/dynamic-library/application/ -flavor ${{matrix.config}}
-    - name: Soup Build C++ GenerateFile
-      run: soup build ./soup/samples/cpp/generate-file/application/ -flavor ${{matrix.config}}
+    - name: Soup Build C++ Generate
+      run: soup build ./soup/samples/cpp/generate/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ HeaderLibrary
       run: soup build ./soup/samples/cpp/header-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleDynamicLibrary

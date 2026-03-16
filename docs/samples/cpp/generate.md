@@ -155,7 +155,7 @@ class GenerateBuildTask is SoupTask {
 		var generatedSourceInfo = {}
 		generatedSourceInfo["File"] = generateFileAbsolute.toString
 		generatedSourceInfo["IsInterface"] = true
-		generatedSourceInfo["Module"] = "Samples.Cpp.GenerateFile"
+		generatedSourceInfo["Module"] = "Sample.Generate"
 		generatedSourceInfo["Imports"] = []
 
 		var sourceFiles = [

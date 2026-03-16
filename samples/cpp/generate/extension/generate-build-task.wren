@@ -55,7 +55,7 @@ class GenerateBuildTask is SoupTask {
 		var generatedSourceInfo = {}
 		generatedSourceInfo["File"] = generateFileAbsolute.toString
 		generatedSourceInfo["IsInterface"] = true
-		generatedSourceInfo["Module"] = "Samples.Cpp.GenerateFile"
+		generatedSourceInfo["Module"] = "Sample.Generate"
 		generatedSourceInfo["Imports"] = []
 
 		var sourceFiles = [
@@ -74,7 +74,7 @@ class GenerateBuildTask is SoupTask {
 	/// </summary>
 	static CreateGenerateFileOperation(workingDirectory, generateFile) {
 		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-generate-file-tool")
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-generate-tool")
 
 		var title = "Run Generate Tool"
 

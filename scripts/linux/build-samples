@@ -62,8 +62,8 @@ echo SKIP: soup build $SAMPLES_DIR/cpp/directx/ -flavor $FLAVOR
 echo soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
 
-echo soup build $SAMPLES_DIR/cpp/generate-file/application/ -flavor $FLAVOR
-soup build $SAMPLES_DIR/cpp/generate-file/application/ -flavor $FLAVOR
+echo soup build $SAMPLES_DIR/cpp/generate/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/generate/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
