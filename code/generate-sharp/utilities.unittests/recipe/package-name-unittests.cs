@@ -19,16 +19,16 @@ public class PackageNameUnitTests
 	[Fact]
 	public void Parse_Public()
 	{
-		var uut = PackageName.Parse("Other");
+		var uut = PackageName.Parse("other");
 		Assert.Null(uut.Owner);
-		Assert.Equal("Other", uut.Name);
+		Assert.Equal("other", uut.Name);
 	}
 
 	[Fact]
 	public void Parse_Public_Owner()
 	{
-		var uut = PackageName.Parse("User1|Other");
-		Assert.Equal("User1", uut.Owner);
-		Assert.Equal("Other", uut.Name);
+		var uut = PackageName.Parse("user1|other");
+		Assert.Equal("user1", uut.Owner);
+		Assert.Equal("other", uut.Name);
 	}
 }

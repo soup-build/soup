@@ -2,6 +2,7 @@
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
+using System;
 using Opal;
 using Xunit;
 
@@ -26,11 +27,12 @@ public class LanguageReferenceUnitTests
 	}
 
 	[Fact]
-	public void Parse_SimpleDot()
+	public void Parse_SimpleDot_Throws()
 	{
-		var uut = LanguageReference.Parse("Language.Test|1.2.3");
-		Assert.Equal("Language.Test", uut.Name);
-		Assert.Equal(new SemanticVersion(1, 2, 3), uut.Version);
+		_ = Assert.Throws<ArgumentException>(() =>
+		{
+			_ = LanguageReference.Parse("Language.Test|1.2.3");
+		});
 	}
 
 	[Fact]

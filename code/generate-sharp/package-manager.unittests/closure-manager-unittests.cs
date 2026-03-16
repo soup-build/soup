@@ -31,10 +31,10 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.RegisterChildren(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.6/"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.6/"),
 			[]);
 		mockFileSystem.RegisterChildren(
-			new Path("C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			new Path("C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/"),
 			[]);
 
 		mockFileSystem.CreateMockFile(
@@ -77,8 +77,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -114,7 +114,7 @@ public class ClosureManagerUnitTests
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
@@ -148,9 +148,9 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: my-package -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -164,8 +164,8 @@ public class ClosureManagerUnitTests
 				"Exists: C:/Root/my-package/recipe.sml",
 				"OpenRead: C:/Root/my-package/recipe.sml",
 				"OpenWriteTruncate: C:/Root/my-package/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 			],
 			mockFileSystem.Requests);
 
@@ -419,7 +419,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.6/recipe.sml"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.6/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'wren'
@@ -484,8 +484,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -534,14 +534,14 @@ public class ClosureManagerUnitTests
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
@@ -581,9 +581,9 @@ public class ClosureManagerUnitTests
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Downloading package",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Downloading artifact",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -611,20 +611,20 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/Wren/user1/package2/",
 				"CreateDirectory: C:/PackageStore/Wren/user1/package2/",
 				"Rename: [C:/Staging/Wren_package2_3.2.1/] -> [C:/PackageStore/Wren/user1/package2/3.2.1/]",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"OpenWriteTruncate: C:/Staging/Wren.zip",
-				"CreateDirectory: C:/Staging/Wren_Wren_4.5.6/",
-				"DeleteFile: C:/Staging/Wren.zip",
-				"Exists: C:/PackageStore/Wren/soup/Wren/",
-				"CreateDirectory: C:/PackageStore/Wren/soup/Wren/",
-				"Rename: [C:/Staging/Wren_Wren_4.5.6/] -> [C:/PackageStore/Wren/soup/Wren/4.5.6/]",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
-				"OpenWriteTruncate: C:/Staging/Wren.zip",
-				"CreateDirectory: C:/Staging/Wren_Wren_4.5.6/",
-				"DeleteFile: C:/Staging/Wren.zip",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/",
-				"CreateDirectory: C:/ArtifactStore/Wren/soup/Wren/4.5.6/",
-				"Rename: [C:/Staging/Wren_Wren_4.5.6/] -> [C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/]",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"OpenWriteTruncate: C:/Staging/wren.zip",
+				"CreateDirectory: C:/Staging/Wren_wren_4.5.6/",
+				"DeleteFile: C:/Staging/wren.zip",
+				"Exists: C:/PackageStore/Wren/soup/wren/",
+				"CreateDirectory: C:/PackageStore/Wren/soup/wren/",
+				"Rename: [C:/Staging/Wren_wren_4.5.6/] -> [C:/PackageStore/Wren/soup/wren/4.5.6/]",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
+				"OpenWriteTruncate: C:/Staging/wren.zip",
+				"CreateDirectory: C:/Staging/Wren_wren_4.5.6/",
+				"DeleteFile: C:/Staging/wren.zip",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/",
+				"CreateDirectory: C:/ArtifactStore/Wren/soup/wren/4.5.6/",
+				"Rename: [C:/Staging/Wren_wren_4.5.6/] -> [C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/]",
 			],
 			mockFileSystem.Requests);
 
@@ -639,8 +639,8 @@ public class ClosureManagerUnitTests
 			Times.Once());
 		// TODO: Show as existing so we do not download twice
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
-			new Path("C:/Staging/Wren.zip"),
-			new Path("C:/Staging/Wren_Wren_4.5.6/")),
+			new Path("C:/Staging/wren.zip"),
+			new Path("C:/Staging/Wren_wren_4.5.6/")),
 			Times.Exactly(2));
 		mockZipManager.VerifyNoOtherCalls();
 
@@ -716,14 +716,14 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
@@ -780,10 +780,10 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.RegisterChildren(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.6/"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.6/"),
 			[]);
 		mockFileSystem.RegisterChildren(
-			new Path("C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			new Path("C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/"),
 			[]);
 
 		mockFileSystem.CreateMockFile(
@@ -810,7 +810,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml"),
+			new Path("C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'cpp'
@@ -849,8 +849,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Cpp",
-								Owner = "Soup",
+								Name = "cpp",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 5, Minor = 0, Patch = 0, },
 								Digest = "fake:wren-soup-cpp",
@@ -900,8 +900,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -958,7 +958,7 @@ public class ClosureManagerUnitTests
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Cpp/versions/5.0.0/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/cpp/versions/5.0.0/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
@@ -993,35 +993,35 @@ public class ClosureManagerUnitTests
 				"DIAG: Load Recipe: C:/Root/my-package/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: C++ my-package -> C:/Root/my-package/",
-				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
+				"DIAG: Build0:Wren soup|cpp -> [Wren]soup|cpp@5.0.0",
 				"DIAG: Build0:Wren user1|package1 -> [Wren]user1|package1@1.2.3",
 				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: my-package -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Cpp@5.0.0",
+				"HIGH: Install Package: Wren soup cpp@5.0.0",
 				"HIGH: Downloading package",
 				"HIGH: Install Package: Wren user1 package1@1.2.3",
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Tool Closure Tool0",
-				"DIAG: Create Directory: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
+				"DIAG: Create Directory: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Wren Soup|Cpp -> C:/PackageStore/Wren/soup/Cpp/5.0.0/",
+				"DIAG: Wren soup|cpp -> C:/PackageStore/Wren/soup/cpp/5.0.0/",
 				"DIAG: Build0:Wren soup|wren -> [Wren]soup|wren@4.5.6",
 				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
-				"INFO: Skip Package: Soup|Cpp -> ./",
+				"INFO: Skip Package: soup|cpp -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -1039,9 +1039,9 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: user1|package1 -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -1055,13 +1055,13 @@ public class ClosureManagerUnitTests
 				"Exists: C:/Root/my-package/recipe.sml",
 				"OpenRead: C:/Root/my-package/recipe.sml",
 				"OpenWriteTruncate: C:/Root/my-package/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/5.0.0/",
-				"OpenWriteTruncate: C:/Staging/Cpp.zip",
-				"CreateDirectory: C:/Staging/Wren_Cpp_5.0.0/",
-				"DeleteFile: C:/Staging/Cpp.zip",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/",
-				"CreateDirectory: C:/PackageStore/Wren/soup/Cpp/",
-				"Rename: [C:/Staging/Wren_Cpp_5.0.0/] -> [C:/PackageStore/Wren/soup/Cpp/5.0.0/]",
+				"Exists: C:/PackageStore/Wren/soup/cpp/5.0.0/",
+				"OpenWriteTruncate: C:/Staging/cpp.zip",
+				"CreateDirectory: C:/Staging/Wren_cpp_5.0.0/",
+				"DeleteFile: C:/Staging/cpp.zip",
+				"Exists: C:/PackageStore/Wren/soup/cpp/",
+				"CreateDirectory: C:/PackageStore/Wren/soup/cpp/",
+				"Rename: [C:/Staging/Wren_cpp_5.0.0/] -> [C:/PackageStore/Wren/soup/cpp/5.0.0/]",
 				"Exists: C:/PackageStore/Wren/user1/package1/1.2.3/",
 				"OpenWriteTruncate: C:/Staging/package1.zip",
 				"CreateDirectory: C:/Staging/Wren_package1_1.2.3/",
@@ -1069,29 +1069,29 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/Wren/user1/package1/",
 				"CreateDirectory: C:/PackageStore/Wren/user1/package1/",
 				"Rename: [C:/Staging/Wren_package1_1.2.3/] -> [C:/PackageStore/Wren/user1/package1/1.2.3/]",
-				"Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"CreateDirectory: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"CreateDirectory: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"Exists: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/LockStore/Wren/user1/package1/1.2.3/",
 				"CreateDirectory: C:/LockStore/Wren/user1/package1/1.2.3/",
 				"Exists: C:/LockStore/Wren/user1/package1/1.2.3/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/user1/package1/1.2.3/recipe.sml",
 				"OpenRead: C:/PackageStore/Wren/user1/package1/1.2.3/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/Wren/user1/package1/1.2.3/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 			],
 			mockFileSystem.Requests);
 
 		// Verify zip requests
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
-			new Path("C:/Staging/Cpp.zip"),
-			new Path("C:/Staging/Wren_Cpp_5.0.0/")),
+			new Path("C:/Staging/cpp.zip"),
+			new Path("C:/Staging/Wren_cpp_5.0.0/")),
 			Times.Once());
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
 			new Path("C:/Staging/package1.zip"),
@@ -1181,7 +1181,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Cpp/versions/5.0.0/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/cpp/versions/5.0.0/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
@@ -1258,7 +1258,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedpackage1Lock, package1LockContent);
 
-		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml"));
+		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml"));
 		_ = soupCppLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerSoupCppLock = new System.IO.StreamReader(soupCppLock.Content);
 		var soupCppLockContent = await readerSoupCppLock.ReadToEndAsync();
@@ -1305,10 +1305,10 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.RegisterChildren(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.6/"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.6/"),
 			[]);
 		mockFileSystem.RegisterChildren(
-			new Path("C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			new Path("C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/"),
 			[]);
 
 		mockFileSystem.CreateMockFile(
@@ -1349,7 +1349,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml"),
+			new Path("C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'cpp'
@@ -1388,8 +1388,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Cpp",
-								Owner = "Soup",
+								Name = "cpp",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 5, Minor = 0, Patch = 0, },
 								Digest = "fake:wren-soup-cpp",
@@ -1439,8 +1439,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -1483,8 +1483,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -1540,8 +1540,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Cpp",
-								Owner = "Soup",
+								Name = "cpp",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 5, Minor = 0, Patch = 0, },
 								Digest = "fake:wren-soup-cpp",
@@ -1619,7 +1619,7 @@ public class ClosureManagerUnitTests
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Cpp/versions/5.0.0/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/cpp/versions/5.0.0/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
@@ -1654,35 +1654,35 @@ public class ClosureManagerUnitTests
 				"DIAG: Load Recipe: C:/Root/my-package/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: C++ my-package -> C:/Root/my-package/",
-				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
+				"DIAG: Build0:Wren soup|cpp -> [Wren]soup|cpp@5.0.0",
 				"DIAG: Build0:Wren user1|package1 -> [Wren]user1|package1@1.2.3",
 				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: my-package -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Cpp@5.0.0",
+				"HIGH: Install Package: Wren soup cpp@5.0.0",
 				"HIGH: Downloading package",
 				"HIGH: Install Package: Wren user1 package1@1.2.3",
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Tool Closure Tool0",
-				"DIAG: Create Directory: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
+				"DIAG: Create Directory: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Wren Soup|Cpp -> C:/PackageStore/Wren/soup/Cpp/5.0.0/",
+				"DIAG: Wren soup|cpp -> C:/PackageStore/Wren/soup/cpp/5.0.0/",
 				"DIAG: Build0:Wren soup|wren -> [Wren]soup|wren@4.5.6",
 				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
-				"INFO: Skip Package: Soup|Cpp -> ./",
+				"INFO: Skip Package: soup|cpp -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -1701,9 +1701,9 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: user1|package1 -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"INFO: Restore Packages for Language C++",
@@ -1718,16 +1718,16 @@ public class ClosureManagerUnitTests
 				"DIAG: Load Recipe: C:/PackageStore/C++/user1/package2/2.3.4/recipe.sml",
 				"INFO: Generate final service closure",
 				"DIAG: C++ user1|package2 -> C:/PackageStore/C++/user1/package2/2.3.4/",
-				"DIAG: Build0:Wren Soup|Cpp -> [Wren]Soup|Cpp@5.0.0",
+				"DIAG: Build0:Wren soup|cpp -> [Wren]soup|cpp@5.0.0",
 				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language C++",
 				"INFO: Skip Package: user1|package2 -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Cpp@5.0.0",
+				"HIGH: Install Package: Wren soup cpp@5.0.0",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
-				"DIAG: Create Directory: C:/LockStore/Wren/soup/Cpp/5.0.0/",
+				"DIAG: Create Directory: C:/LockStore/Wren/soup/cpp/5.0.0/",
 				"INFO: Root already processed",
 			],
 			testListener.Messages);
@@ -1739,13 +1739,13 @@ public class ClosureManagerUnitTests
 				"Exists: C:/Root/my-package/recipe.sml",
 				"OpenRead: C:/Root/my-package/recipe.sml",
 				"OpenWriteTruncate: C:/Root/my-package/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/5.0.0/",
-				"OpenWriteTruncate: C:/Staging/Cpp.zip",
-				"CreateDirectory: C:/Staging/Wren_Cpp_5.0.0/",
-				"DeleteFile: C:/Staging/Cpp.zip",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/",
-				"CreateDirectory: C:/PackageStore/Wren/soup/Cpp/",
-				"Rename: [C:/Staging/Wren_Cpp_5.0.0/] -> [C:/PackageStore/Wren/soup/Cpp/5.0.0/]",
+				"Exists: C:/PackageStore/Wren/soup/cpp/5.0.0/",
+				"OpenWriteTruncate: C:/Staging/cpp.zip",
+				"CreateDirectory: C:/Staging/Wren_cpp_5.0.0/",
+				"DeleteFile: C:/Staging/cpp.zip",
+				"Exists: C:/PackageStore/Wren/soup/cpp/",
+				"CreateDirectory: C:/PackageStore/Wren/soup/cpp/",
+				"Rename: [C:/Staging/Wren_cpp_5.0.0/] -> [C:/PackageStore/Wren/soup/cpp/5.0.0/]",
 				"Exists: C:/PackageStore/Wren/user1/package1/1.2.3/",
 				"OpenWriteTruncate: C:/Staging/package1.zip",
 				"CreateDirectory: C:/Staging/Wren_package1_1.2.3/",
@@ -1753,22 +1753,22 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/Wren/user1/package1/",
 				"CreateDirectory: C:/PackageStore/Wren/user1/package1/",
 				"Rename: [C:/Staging/Wren_package1_1.2.3/] -> [C:/PackageStore/Wren/user1/package1/1.2.3/]",
-				"Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"CreateDirectory: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"CreateDirectory: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"Exists: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/LockStore/Wren/user1/package1/1.2.3/",
 				"CreateDirectory: C:/LockStore/Wren/user1/package1/1.2.3/",
 				"Exists: C:/LockStore/Wren/user1/package1/1.2.3/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/user1/package1/1.2.3/recipe.sml",
 				"OpenRead: C:/PackageStore/Wren/user1/package1/1.2.3/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/Wren/user1/package1/1.2.3/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/PackageStore/C++/user1/package2/2.3.4/",
 				"OpenWriteTruncate: C:/Staging/package2.zip",
 				"CreateDirectory: C:/Staging/C++_package2_2.3.4/",
@@ -1782,16 +1782,16 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/C++/user1/package2/2.3.4/recipe.sml",
 				"OpenRead: C:/PackageStore/C++/user1/package2/2.3.4/recipe.sml",
 				"OpenWriteTruncate: C:/LockStore/C++/user1/package2/2.3.4/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Cpp/5.0.0/",
-				"Exists: C:/LockStore/Wren/soup/Cpp/5.0.0/",
-				"CreateDirectory: C:/LockStore/Wren/soup/Cpp/5.0.0/",
+				"Exists: C:/PackageStore/Wren/soup/cpp/5.0.0/",
+				"Exists: C:/LockStore/Wren/soup/cpp/5.0.0/",
+				"CreateDirectory: C:/LockStore/Wren/soup/cpp/5.0.0/",
 			],
 			mockFileSystem.Requests);
 
 		// Verify zip requests
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
-			new Path("C:/Staging/Cpp.zip"),
-			new Path("C:/Staging/Wren_Cpp_5.0.0/")),
+			new Path("C:/Staging/cpp.zip"),
+			new Path("C:/Staging/Wren_cpp_5.0.0/")),
 			Times.Once());
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
 			new Path("C:/Staging/package1.zip"),
@@ -1963,7 +1963,7 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Cpp/versions/5.0.0/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/cpp/versions/5.0.0/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
@@ -2076,7 +2076,7 @@ public class ClosureManagerUnitTests
 
 		Assert.Equal(expectedpackage2Lock, package2LockContent);
 
-		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/soup/Cpp/5.0.0/package-lock.sml"));
+		var soupCppLock = mockFileSystem.GetMockFile(new Path("C:/LockStore/Wren/soup/cpp/5.0.0/package-lock.sml"));
 		_ = soupCppLock.Content.Seek(0, System.IO.SeekOrigin.Begin);
 		using var readerSoupCppLock = new System.IO.StreamReader(soupCppLock.Content);
 		var soupCppLockContent = await readerSoupCppLock.ReadToEndAsync();
@@ -2123,10 +2123,10 @@ public class ClosureManagerUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockFileSystem.RegisterChildren(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.6/"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.6/"),
 			[]);
 		mockFileSystem.RegisterChildren(
-			new Path("C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			new Path("C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/"),
 			[]);
 
 		mockFileSystem.CreateMockFile(
@@ -2179,8 +2179,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -2227,8 +2227,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -2308,9 +2308,9 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: my-package -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Skip Package: package1 -> ../package1/",
 				"INFO: Restore Packages for Tool Closure Tool0",
@@ -2328,9 +2328,9 @@ public class ClosureManagerUnitTests
 				"INFO: Skip Package: package1 -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -2346,14 +2346,14 @@ public class ClosureManagerUnitTests
 				"Exists: C:/Root/package1/recipe.sml",
 				"OpenRead: C:/Root/package1/recipe.sml",
 				"OpenWriteTruncate: C:/Root/my-package/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 				"Exists: C:/Root/package1/package-lock.sml",
 				"Exists: C:/Root/package1/recipe.sml",
 				"OpenRead: C:/Root/package1/recipe.sml",
 				"OpenWriteTruncate: C:/Root/package1/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 			],
 			mockFileSystem.Requests);
 
@@ -2553,7 +2553,7 @@ public class ClosureManagerUnitTests
 				"""))));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/soup/Cpp/5.0.0/recipe.sml"),
+			new Path("C:/PackageStore/Wren/soup/cpp/5.0.0/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'cpp'
@@ -3052,7 +3052,7 @@ public class ClosureManagerUnitTests
 			new MockFile(originalContent));
 
 		mockFileSystem.CreateMockFile(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.5/recipe.sml"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.5/recipe.sml"),
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(
 				"""
 				Name: 'wren'
@@ -3086,21 +3086,21 @@ public class ClosureManagerUnitTests
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.5/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.5/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
@@ -3127,8 +3127,8 @@ public class ClosureManagerUnitTests
 						{
 							Public = new Api.Client.PackagePublicExactReferenceModel()
 							{
-								Name = "Wren",
-								Owner = "Soup",
+								Name = "wren",
+								Owner = "soup",
 								Language = "Wren",
 								Version = new Api.Client.SemanticVersionExactModel() { Major = 4, Minor = 5, Patch = 6, },
 								Digest = "fake:wren-soup-wren",
@@ -3189,26 +3189,26 @@ public class ClosureManagerUnitTests
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.5",
+				"HIGH: Install Package: Wren soup wren@4.5.5",
 				"HIGH: Downloading package",
 				"INFO: Restore Packages for Tool Closure Tool0",
-				"DIAG: Create Directory: C:/LockStore/Wren/soup/Wren/4.5.5/",
-				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/soup/Wren/4.5.5/package-lock.sml",
-				"DIAG: Load Package Lock: C:/LockStore/Wren/soup/Wren/4.5.5/package-lock.sml",
+				"DIAG: Create Directory: C:/LockStore/Wren/soup/wren/4.5.5/",
+				"INFO: Ensure Package Lock Exists: C:/LockStore/Wren/soup/wren/4.5.5/package-lock.sml",
+				"DIAG: Load Package Lock: C:/LockStore/Wren/soup/wren/4.5.5/package-lock.sml",
 				"INFO: Package Lock file does not exist.",
 				"INFO: Discovering full closure",
-				"DIAG: Load Recipe: C:/PackageStore/Wren/soup/Wren/4.5.5/recipe.sml",
+				"DIAG: Load Recipe: C:/PackageStore/Wren/soup/wren/4.5.5/recipe.sml",
 				"INFO: Generate final service closure",
-				"DIAG: Wren soup|wren -> C:/PackageStore/Wren/soup/Wren/4.5.5/",
+				"DIAG: Wren soup|wren -> C:/PackageStore/Wren/soup/wren/4.5.5/",
 				"DIAG: Build0:Wren soup|wren -> [Wren]soup|wren@4.5.6",
 				"INFO: Restore Packages for Closure",
 				"INFO: Restore Packages for Language Wren",
 				"INFO: Skip Package: soup|wren -> ./",
 				"INFO: Restore Packages for Build Closure Build0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Downloading package",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Downloading artifact",
 				"INFO: Restore Packages for Tool Closure Tool0",
 				"HIGH: Skip pre-built package in build closure",
@@ -3234,33 +3234,33 @@ public class ClosureManagerUnitTests
 				"Exists: C:/PackageStore/Wren/user1/package2/",
 				"CreateDirectory: C:/PackageStore/Wren/user1/package2/",
 				"Rename: [C:/Staging/Wren_package2_3.2.1/] -> [C:/PackageStore/Wren/user1/package2/3.2.1/]",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.5/",
-				"OpenWriteTruncate: C:/Staging/Wren.zip",
-				"CreateDirectory: C:/Staging/Wren_Wren_4.5.5/",
-				"DeleteFile: C:/Staging/Wren.zip",
-				"Exists: C:/PackageStore/Wren/soup/Wren/",
-				"CreateDirectory: C:/PackageStore/Wren/soup/Wren/",
-				"Rename: [C:/Staging/Wren_Wren_4.5.5/] -> [C:/PackageStore/Wren/soup/Wren/4.5.5/]",
-				"Exists: C:/LockStore/Wren/soup/Wren/4.5.5/",
-				"CreateDirectory: C:/LockStore/Wren/soup/Wren/4.5.5/",
-				"Exists: C:/LockStore/Wren/soup/Wren/4.5.5/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.5/recipe.sml",
-				"OpenRead: C:/PackageStore/Wren/soup/Wren/4.5.5/recipe.sml",
-				"OpenWriteTruncate: C:/LockStore/Wren/soup/Wren/4.5.5/package-lock.sml",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"OpenWriteTruncate: C:/Staging/Wren.zip",
-				"CreateDirectory: C:/Staging/Wren_Wren_4.5.6/",
-				"DeleteFile: C:/Staging/Wren.zip",
-				"Exists: C:/PackageStore/Wren/soup/Wren/",
-				"CreateDirectory: C:/PackageStore/Wren/soup/Wren/",
-				"Rename: [C:/Staging/Wren_Wren_4.5.6/] -> [C:/PackageStore/Wren/soup/Wren/4.5.6/]",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
-				"OpenWriteTruncate: C:/Staging/Wren.zip",
-				"CreateDirectory: C:/Staging/Wren_Wren_4.5.6/",
-				"DeleteFile: C:/Staging/Wren.zip",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/",
-				"CreateDirectory: C:/ArtifactStore/Wren/soup/Wren/4.5.6/",
-				"Rename: [C:/Staging/Wren_Wren_4.5.6/] -> [C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/]",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.5/",
+				"OpenWriteTruncate: C:/Staging/wren.zip",
+				"CreateDirectory: C:/Staging/Wren_wren_4.5.5/",
+				"DeleteFile: C:/Staging/wren.zip",
+				"Exists: C:/PackageStore/Wren/soup/wren/",
+				"CreateDirectory: C:/PackageStore/Wren/soup/wren/",
+				"Rename: [C:/Staging/Wren_wren_4.5.5/] -> [C:/PackageStore/Wren/soup/wren/4.5.5/]",
+				"Exists: C:/LockStore/Wren/soup/wren/4.5.5/",
+				"CreateDirectory: C:/LockStore/Wren/soup/wren/4.5.5/",
+				"Exists: C:/LockStore/Wren/soup/wren/4.5.5/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.5/recipe.sml",
+				"OpenRead: C:/PackageStore/Wren/soup/wren/4.5.5/recipe.sml",
+				"OpenWriteTruncate: C:/LockStore/Wren/soup/wren/4.5.5/package-lock.sml",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"OpenWriteTruncate: C:/Staging/wren.zip",
+				"CreateDirectory: C:/Staging/Wren_wren_4.5.6/",
+				"DeleteFile: C:/Staging/wren.zip",
+				"Exists: C:/PackageStore/Wren/soup/wren/",
+				"CreateDirectory: C:/PackageStore/Wren/soup/wren/",
+				"Rename: [C:/Staging/Wren_wren_4.5.6/] -> [C:/PackageStore/Wren/soup/wren/4.5.6/]",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
+				"OpenWriteTruncate: C:/Staging/wren.zip",
+				"CreateDirectory: C:/Staging/Wren_wren_4.5.6/",
+				"DeleteFile: C:/Staging/wren.zip",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/",
+				"CreateDirectory: C:/ArtifactStore/Wren/soup/wren/4.5.6/",
+				"Rename: [C:/Staging/Wren_wren_4.5.6/] -> [C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/]",
 			],
 			mockFileSystem.Requests);
 
@@ -3274,11 +3274,11 @@ public class ClosureManagerUnitTests
 			new Path("C:/Staging/Wren_package2_3.2.1/")),
 			Times.Once());
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
-			new Path("C:/Staging/Wren.zip"), new Path("C:/Staging/Wren_Wren_4.5.5/")),
+			new Path("C:/Staging/wren.zip"), new Path("C:/Staging/Wren_wren_4.5.5/")),
 			Times.Once());
 		// TODO: Show directory exists so we only request once
 		mockZipManager.Verify(zip => zip.ExtractToDirectory(
-			new Path("C:/Staging/Wren.zip"), new Path("C:/Staging/Wren_Wren_4.5.6/")),
+			new Path("C:/Staging/wren.zip"), new Path("C:/Staging/Wren_wren_4.5.6/")),
 			Times.Exactly(2));
 		mockZipManager.VerifyNoOtherCalls();
 
@@ -3326,21 +3326,21 @@ public class ClosureManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.5/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.5/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/Wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/Wren/soup/wren/versions/4.5.6/artifacts/fake:wren-soup-wren-artifact/download"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
@@ -3366,10 +3366,10 @@ public class ClosureManagerUnitTests
 			new Path("C:/PackageStore/Wren/user1/package2/3.2.1/"),
 			[]);
 		mockFileSystem.RegisterChildren(
-			new Path("C:/PackageStore/Wren/soup/Wren/4.5.6/"),
+			new Path("C:/PackageStore/Wren/soup/wren/4.5.6/"),
 			[]);
 		mockFileSystem.RegisterChildren(
-			new Path("C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/"),
+			new Path("C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/"),
 			[]);
 
 		// Create the original file
@@ -3439,9 +3439,9 @@ public class ClosureManagerUnitTests
 				"HIGH: Found local version",
 				"INFO: Restore Packages for Build Closure BuildSet0",
 				"INFO: Restore Packages for Language Wren",
-				"HIGH: Install Package: Wren Soup Wren@4.5.6",
+				"HIGH: Install Package: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
-				"HIGH: Install Artifact: Wren Soup Wren@4.5.6",
+				"HIGH: Install Artifact: Wren soup wren@4.5.6",
 				"HIGH: Found local version",
 				"HIGH: Skip pre-built package in build closure"
 			],
@@ -3454,8 +3454,8 @@ public class ClosureManagerUnitTests
 				"OpenRead: C:/Root/my-package/package-lock.sml",
 				"Exists: C:/PackageStore/Wren/user1/package1/1.2.4/",
 				"Exists: C:/PackageStore/Wren/user1/package2/3.2.1/",
-				"Exists: C:/PackageStore/Wren/soup/Wren/4.5.6/",
-				"Exists: C:/ArtifactStore/Wren/soup/Wren/4.5.6/wren-soup-wren-artifact/",
+				"Exists: C:/PackageStore/Wren/soup/wren/4.5.6/",
+				"Exists: C:/ArtifactStore/Wren/soup/wren/4.5.6/wren-soup-wren-artifact/",
 			],
 			mockFileSystem.Requests);
 
