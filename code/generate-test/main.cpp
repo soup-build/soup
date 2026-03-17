@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <map>
 #include <optional>
@@ -68,6 +69,8 @@ int main(int argc, char** argv)
 			std::move(scriptFile),
 			std::move(bundlesFile));
 		host->InterpretMain();
+
+		return 0;
 	}
 	catch (const std::exception& ex)
 	{
