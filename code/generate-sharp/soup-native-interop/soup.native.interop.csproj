@@ -16,7 +16,7 @@
 		<SoupNativeDll>soup-native.so</SoupNativeDll>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="../../../out/cpp/local/soup-native/1.0.0/$(SoupConfigHash)/bin/$(SoupNativeDll)" Link="$(SoupNativeDll)">
+		<None Include="../../../out/C++/Local/soup-native/1.0.0/$(SoupConfigHash)/bin/$(SoupNativeDll)" Link="$(SoupNativeDll)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
