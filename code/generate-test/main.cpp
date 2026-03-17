@@ -13,12 +13,12 @@
 #include <sstream>
 #include <vector>
 
+#include <wren/wren.hpp>
+
 import Opal;
 import Soup.Core;
 
 using namespace Opal;
-
-#include <wren/wren.hpp>
 
 #include "generate-test-host.h"
 
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 			static_cast<uint32_t>(TraceEventFlag::Error) |
 			static_cast<uint32_t>(TraceEventFlag::Critical);
 		auto filter = std::make_shared<EventTypeFilter>(
-				static_cast<TraceEventFlag>(defaultTypes));
+			static_cast<TraceEventFlag>(defaultTypes));
 
 		// Setup the console listener
 		Log::RegisterListener(
