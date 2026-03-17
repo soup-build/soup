@@ -6,7 +6,7 @@ A console application that uses a single module interface file used inside the s
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-interface/recipe.sml)
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
-Name: 'Samples.Cpp.ModuleInterface'
+Name: 'samples-cpp-module-interface'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -23,7 +23,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModuleInterface;
+export module Sample.ModuleInterface;
 
 export class Helper
 {
@@ -40,7 +40,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.ModuleInterface;
+import Sample.ModuleInterface;
 
 int main()
 {

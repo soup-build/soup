@@ -50,9 +50,9 @@ jobs:
     #   run: soup restore ./soup/code/generate-sharp/package-manager/
     # - name: Soup Build PackageManager
     #   run: soup build ./soup/code/generate-sharp/package-manager/ -flavor ${{matrix.config}}
-    - name: Soup Restore Tools
+    - name: Soup Restore Native
       run: soup restore ./soup/code/client/native/
-    - name: Soup Build Tools
+    - name: Soup Build Native
       run: soup build ./soup/code/client/native/ -flavor ${{matrix.config}}
 
     # Build DotNet
@@ -106,8 +106,8 @@ jobs:
       run: soup build ./soup/samples/cpp/directx/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DynamicLibrary
       run: soup build ./soup/samples/cpp/dynamic-library/application/ -flavor ${{matrix.config}}
-    - name: Soup Build C++ GenerateFile
-      run: soup build ./soup/samples/cpp/generate-file/application/ -flavor ${{matrix.config}}
+    - name: Soup Build C++ Generate
+      run: soup build ./soup/samples/cpp/generate/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ HeaderLibrary
       run: soup build ./soup/samples/cpp/header-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleDynamicLibrary

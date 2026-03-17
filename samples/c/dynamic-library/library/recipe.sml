@@ -1,4 +1,4 @@
-Name: 'Samples.C.DynamicLibrary.Library'
+Name: 'samples-c-dynamic-library-library'
 Language: 'C|0'
 Version: 1.0.0
 Type: 'DynamicLibrary'

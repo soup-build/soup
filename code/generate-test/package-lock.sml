@@ -5,15 +5,15 @@ Closure: {
 		'mwasplund|wren': { Version: 1.2.0, Digest: 'sha256:6b867a0b48ad53165921bc734032dc245b045898683e744c4df74c2ee06faecc', Build: '2', Tool: '0' }
 	}
 	'C++': {
-		'Monitor.Host': { Version: '../monitor/host/', Build: '0', Tool: '0' }
-		'Monitor.Shared': { Version: '../monitor/shared/', Build: '0', Tool: '0' }
-		'Soup.Core': { Version: '../client/core/', Build: '1', Tool: '0' }
-		'Soup.Generate.Test': { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|Detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '0', Tool: '0' }
+		'monitor-host': { Version: '../monitor/host/', Build: '0', Tool: '0' }
+		'monitor-shared': { Version: '../monitor/shared/', Build: '0', Tool: '0' }
 		'mwasplund|cryptopp': { Version: 1.2.7, Digest: 'sha256:2590a7d8bc1a176c34c2b0ca77e016ecb2b49c156a3bf095a47f5a8063035c78', Build: '0', Tool: '0' }
+		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:042d256bb8aecc3c5b58ff5be26c3f21a3ba24de5885663fb7d6a928c18ebfc4', Build: '0', Tool: '0' }
 		'mwasplund|opal': { Version: 0.12.4, Digest: 'sha256:955cd93d5674b85346f21b517019f83b17463ed8f114402eb49134ea67054910', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.2, Digest: 'sha256:1b49b3cd0ff90bd4f9241f0d00464e8de92dc0454301b0c443297dfe02fac3e6', Build: '0', Tool: '0' }
 		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '0', Tool: '0' }
+		'soup-core': { Version: '../client/core/', Build: '1', Tool: '0' }
+		'soup-generate-test': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

@@ -4,9 +4,9 @@ This is a console application that has a single dynamic library dependency.
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library)
 
 ## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.C.DynamicLibrary.Library".
+The Recipe file that defines the static library "dynamic-library-library".
 ```sml
-Name: 'Samples.C.DynamicLibrary.Library'
+Name: 'dynamic-library-library'
 Language: 'C|0'
 Version: 1.0.0
 Type: 'DynamicLibrary'
@@ -44,9 +44,9 @@ const char* GetName()
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.C.DynamicLibrary.Application".
+The Recipe file that defines the executable "dynamic-library-application".
 ```sml
-Name: 'Samples.C.DynamicLibrary.Application'
+Name: 'samples-dynamic-library-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0

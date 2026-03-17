@@ -17,7 +17,7 @@ graph TD;
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-partitions/recipe.sml)
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
-Name: 'Samples.Cpp.ModulePartitions'
+Name: 'samples-cpp-module-partitions'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -34,11 +34,11 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperA;
+export module Sample.ModulePartitions:HelperA;
 
 export std::string_view Truncate(std::string_view value, size_t length)
 {
-	return value.substr(0, length);
+  return value.substr(0, length);
 }
 ```
 
@@ -50,12 +50,12 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperB;
+export module Sample.ModulePartitions:HelperB;
 import :HelperA;
 
 export std::string_view GetSourcePrefix()
 {
-	return Truncate("Source", 3);
+  return Truncate("Source", 3);
 }
 ```
 
@@ -67,12 +67,12 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperC;
+export module Sample.ModulePartitions:HelperC;
 import :HelperA;
 
 export std::string_view GetPackagesPostfix()
 {
-	return Truncate("packages", 1);
+  return Truncate("packages", 1);
 }
 ```
 
@@ -84,20 +84,20 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions;
+export module Sample.ModulePartitions;
 import :HelperB;
 import :HelperC;
 
 export class Helper
 {
 public:
-	static std::string GetName()
-	{
-		std::string result;
-		result += GetSourcePrefix();
-		result += GetPackagesPostfix();
-		return  result;
-	}
+  static std::string GetName()
+  {
+    std::string result;
+    result += GetSourcePrefix();
+    result += GetPackagesPostfix();
+    return  result;
+  }
 };
 ```
 
@@ -106,7 +106,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.ModulePartitions;
+import Sample.ModulePartitions;
 
 int main()
 {

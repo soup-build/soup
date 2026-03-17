@@ -1,7 +1,7 @@
 Version: 6
 Closure: {
 	'C#': {
-		'Samples.CSharp.ConsoleApplication': { Version: './', Build: '0', Tool: '0' }
+		'samples-csharp-console-application': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
@@ -11,6 +11,7 @@ Builds: {
 				Version: 0.17.0
 				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
 				Artifacts: {
+					Linux: 'sha256:a5fc23eb8bb1adccc7fc77f38d45bd36fedbe5993b931142d3652dc4a465ea71'
 					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
 				}
 			}

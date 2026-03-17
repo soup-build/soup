@@ -190,7 +190,7 @@ int main()
 		auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
 		fileSystem->CreateMockFile(
-			Path("C:/testlocation/Soup.Generate.exe"),
+			Path("C:/testlocation/soup-generate.exe"),
 			std::make_shared<MockFile>());
 
 		fileSystem->CreateMockDirectory(

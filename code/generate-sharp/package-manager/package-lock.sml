@@ -2,7 +2,7 @@ Version: 6
 Closure: {
 	'C#': {
 		'Soup.PackageManager': { Version: './', Build: '0', Tool: '0' }
-		'Soup.Utilities': { Version: '../utilities/', Build: '0', Tool: '0' }
+		'soup-utilities': { Version: '../utilities/', Build: '0', Tool: '0' }
 		opal: { Version: '../opal/', Build: '0', Tool: '0' }
 	}
 }

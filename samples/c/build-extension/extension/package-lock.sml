@@ -1,8 +1,8 @@
 Version: 6
 Closure: {
 	Wren: {
-		'Samples.C.BuildExtension.Extension': { Version: './', Build: '0', Tool: '0' }
-		'Soup|Build.Utils': { Version: 0.9.2, Digest: 'sha256:0b70e1c4392ee591b06e64b00fc3b267fad1f32ced90e7b2d61c01c2780e4096', Build: '0', Tool: '0' }
+		'samples-c-build-extension-extension': { Version: './', Build: '0', Tool: '0' }
+		'soup|build-utils': { Version: 0.9.2, Digest: 'sha256:5350668c3d273aeeb1718ac1520ad24c24b0c8640785286bbca788e7efa7da3c', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

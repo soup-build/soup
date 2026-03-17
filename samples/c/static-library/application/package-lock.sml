@@ -1,8 +1,8 @@
 Version: 6
 Closure: {
 	C: {
-		'Samples.C.StaticLibrary.Application': { Version: './', Build: '0', Tool: '0' }
-		'Samples.C.StaticLibrary.Library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-c-static-library-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-c-static-library-library': { Version: '../library/', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

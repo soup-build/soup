@@ -9,7 +9,7 @@ std::string_view GenerateContent()
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.GenerateFile;
+export module Sample.Generate;
 
 export class Helper
 {

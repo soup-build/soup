@@ -2649,7 +2649,7 @@ namespace Soup::Core::UnitTests
 		std::string_view GetGenerateExePath()
 		{
 			#ifdef _WIN32
-				return "C:/testlocation/Soup.Generate.exe";
+				return "C:/testlocation/soup-generate.exe";
 			#elif defined(__linux__)
 				return "C:/lib/soup/generate";
 			#else

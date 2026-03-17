@@ -13,7 +13,7 @@ This is a console application that demonstrates a more complex graphics applicat
 ## [Dynamic Library](cpp/dynamic-library.md)
 This is a console application that has a single dynamic library dependency.
 
-## [Generate File](cpp/generate-file.md)
+## [Generate](cpp/generate.md)
 Sample build tool and extension that generates a translation unit and injects it into the normal build process.
 
 ## [Header Library](cpp/header-library.md)

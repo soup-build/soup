@@ -4,9 +4,9 @@ This is a console application and library with the minimal amount of code to get
 [Source](https://github.com/soup-build/soup/tree/main/samples/csharp/library)
 
 ## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.CSharp.Library.Library".
+The Recipe file that defines the static library "samples-csharp-library-library".
 ```sml
-Name: 'Samples.CSharp.Library.Library'
+Name: 'samples-csharp-library-library'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Version: 1.0.0
@@ -15,7 +15,7 @@ Version: 1.0.0
 ## [library/helper.cs](https://github.com/soup-build/soup/blob/main/samples/csharp/library/library/helper.cs)
 A C# file that implements the helper function.
 ```C#
-namespace Samples.CSharp.Library
+namespace Sample.Library
 {
   public class Helper
   {
@@ -28,9 +28,9 @@ namespace Samples.CSharp.Library
 ```
 
 ## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/csharp/library/application/recipe.sml)
-The Recipe file that defines the static library "Samples.CSharp.Library.ConsoleApplication".
+The Recipe file that defines the static library "samples-csharp-library-application".
 ```sml
-Name: 'Samples.CSharp.Library.ConsoleApplication'
+Name: 'samples-csharp-library-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'
@@ -50,7 +50,7 @@ A C# Program file that implements the main method.
 ```C#
 using System;
 
-namespace Samples.CSharp.Library.Application
+namespace Sample.Library.Application
 {
   public class Program
   {

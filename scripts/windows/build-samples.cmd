@@ -77,8 +77,8 @@ echo soup build %SamplesDir%/cpp/dynamic-library/application/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/dynamic-library/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-echo soup build %SamplesDir%/cpp/generate-file/application/ -flavor %Flavor%
-call soup build %SamplesDir%/cpp/generate-file/application/ -flavor %Flavor%
+echo soup build %SamplesDir%/cpp/generate/application/ -flavor %Flavor%
+call soup build %SamplesDir%/cpp/generate/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/cpp/header-library/application/ -flavor %Flavor%

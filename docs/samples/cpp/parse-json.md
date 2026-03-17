@@ -6,7 +6,7 @@ A console application that reads in a json file using the an external module and
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/parse-json/recipe.sml)
 The Recipe file that sets the standard name, type, version, as well as the single external dependency of the [json11](https://github.com/dropbox/json11) project.
 ```sml
-Name: 'Samples.Cpp.ParseJson'
+Name: 'samples-cpp-parse-json'
 Language: 'C++|0'
 Version: 1.0.0
 Type: 'Executable'

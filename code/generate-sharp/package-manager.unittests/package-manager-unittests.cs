@@ -144,7 +144,7 @@ public class PackageManagerUnitTests
 			mockClosureManager.Object);
 
 		var workingDirectory = new Path("C:/Root/my-package/");
-		var packageReference = "User1|other-package@1.2.3";
+		var packageReference = "user1|other-package@1.2.3";
 		await uut.InstallPackageReferenceAsync(workingDirectory, packageReference);
 
 		// Verify expected logs
@@ -261,20 +261,20 @@ public class PackageManagerUnitTests
 		var getPackageResponse = JsonSerializer.Serialize(new Api.Client.PackageModel()
 		{
 			Name = "other-package",
-			Owner = "User1",
+			Owner = "user1",
 			Latest = new Api.Client.SemanticVersion() { Major = 1, Minor = 2, Patch = 3, },
 		});
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/User1/other-package"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/user1/other-package"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage() { Content = new StringContent(getPackageResponse) });
 		_ = mockMessageHandler
 			.Setup(messageHandler => messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/User1/other-package/versions/1.2.3/download"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/user1/other-package/versions/1.2.3/download"),
 				It.IsAny<string>(),
 				null))
 			.Returns(() => new HttpResponseMessage());
@@ -282,7 +282,7 @@ public class PackageManagerUnitTests
 		mockMessageHandler.VerifyNoOtherCalls();
 
 		var workingDirectory = new Path("C:/Root/my-package/");
-		var packageReference = "User1|other-package";
+		var packageReference = "user1|other-package";
 		await uut.InstallPackageReferenceAsync(workingDirectory, packageReference);
 
 		// Verify expected logs
@@ -315,7 +315,7 @@ public class PackageManagerUnitTests
 		mockMessageHandler.Verify(messageHandler =>
 			messageHandler.SendAsync(
 				HttpMethod.Get,
-				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/User1/other-package"),
+				new Uri("https://test.api.soupbuild.com/v1/packages/C%2B%2B/user1/other-package"),
 				"{Accept: [application/json]}",
 				null),
 			Times.Once());
@@ -342,7 +342,7 @@ public class PackageManagerUnitTests
 			Version: 1.0.0
 			Dependencies: {
 				Runtime: [
-					'User1|other-package@1.2.3'
+					'user1|other-package@1.2.3'
 				]
 			}
 			""";
@@ -416,7 +416,7 @@ public class PackageManagerUnitTests
 		var getPackageResponse = JsonSerializer.Serialize(new Api.Client.PackageModel()
 		{
 			Name = "my-package",
-			Owner = "User1",
+			Owner = "user1",
 			Latest = new Api.Client.SemanticVersion() { Major = 1, Minor = 2, Patch = 3, },
 		});
 		_ = mockMessageHandler

@@ -119,7 +119,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			Assert::AreEqual(
-				Path("C:/BuildOut/C++/Local/my-package/1.2.3/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+				Path("C:/BuildOut/cpp/local/my-package/1.2.3/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
 				targetDirectory,
 				"Verify target directory matches expected.");
 
@@ -128,7 +128,7 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"INFO: Found Root Recipe: 'C:/root-recipe.sml'",
 					"DIAG: Load Root Recipe: C:/root-recipe.sml",
-					"INFO: Override root output: C:/BuildOut/C++/Local/my-package/1.2.3/",
+					"INFO: Override root output: C:/BuildOut/cpp/local/my-package/1.2.3/",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");

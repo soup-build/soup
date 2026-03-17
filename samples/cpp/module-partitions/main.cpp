@@ -1,6 +1,6 @@
 #include <iostream>
 
-import Samples.Cpp.ModulePartitions;
+import Sample.ModulePartitions;
 
 int main()
 {

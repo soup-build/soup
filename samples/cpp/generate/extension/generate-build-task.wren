@@ -3,10 +3,10 @@
 // </copyright>
 
 import "soup" for Soup, SoupTask
-import "Soup|Build.Utils:./path" for Path
-import "Soup|Build.Utils:./list-extensions" for ListExtensions
-import "Soup|Build.Utils:./map-extensions" for MapExtensions
-import "Soup|Build.Utils:./shared-operations" for SharedOperations
+import "soup|build-utils:./path" for Path
+import "soup|build-utils:./list-extensions" for ListExtensions
+import "soup|build-utils:./map-extensions" for MapExtensions
+import "soup|build-utils:./shared-operations" for SharedOperations
 
 class GenerateBuildTask is SoupTask {
 	/// <summary>
@@ -55,7 +55,7 @@ class GenerateBuildTask is SoupTask {
 		var generatedSourceInfo = {}
 		generatedSourceInfo["File"] = generateFileAbsolute.toString
 		generatedSourceInfo["IsInterface"] = true
-		generatedSourceInfo["Module"] = "Samples.Cpp.GenerateFile"
+		generatedSourceInfo["Module"] = "Sample.Generate"
 		generatedSourceInfo["Imports"] = []
 
 		var sourceFiles = [
@@ -74,7 +74,7 @@ class GenerateBuildTask is SoupTask {
 	/// </summary>
 	static CreateGenerateFileOperation(workingDirectory, generateFile) {
 		// Discover the dependency tool
-		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("Samples.Cpp.GenerateFile.Tool")
+		var toolExecutable = SharedOperations.ResolveRuntimeDependencyRunExecutable("samples-cpp-generate-tool")
 
 		var title = "Run Generate Tool"
 

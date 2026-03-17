@@ -1,9 +1,9 @@
 Version: 6
 Closure: {
 	'C++': {
-		'Monitor.Client': { Version: './', Build: '0', Tool: '0' }
-		'Monitor.Shared': { Version: '../shared/', Build: '0', Tool: '0' }
-		'mwasplund|Detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '0', Tool: '0' }
+		'monitor-client': { Version: './', Build: '0', Tool: '0' }
+		'monitor-shared': { Version: '../shared/', Build: '0', Tool: '0' }
+		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '0', Tool: '0' }
 		'mwasplund|opal': { Version: 0.12.4, Digest: 'sha256:955cd93d5674b85346f21b517019f83b17463ed8f114402eb49134ea67054910', Build: '0', Tool: '0' }
 	}
 }

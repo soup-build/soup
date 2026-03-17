@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <map>
 #include <optional>
@@ -13,12 +14,12 @@
 #include <sstream>
 #include <vector>
 
+#include <wren/wren.hpp>
+
 import Opal;
 import Soup.Core;
 
 using namespace Opal;
-
-#include <wren/wren.hpp>
 
 #include "generate-test-host.h"
 
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
 			static_cast<uint32_t>(TraceEventFlag::Error) |
 			static_cast<uint32_t>(TraceEventFlag::Critical);
 		auto filter = std::make_shared<EventTypeFilter>(
-				static_cast<TraceEventFlag>(defaultTypes));
+			static_cast<TraceEventFlag>(defaultTypes));
 
 		// Setup the console listener
 		Log::RegisterListener(
@@ -68,6 +69,8 @@ int main(int argc, char** argv)
 			std::move(scriptFile),
 			std::move(bundlesFile));
 		host->InterpretMain();
+
+		return 0;
 	}
 	catch (const std::exception& ex)
 	{

@@ -1,4 +1,4 @@
-Name: 'Monitor.Client'
+Name: 'monitor-client'
 Description: 'The Detours dynamic library that is injected into a child process to intercept system calls.'
 Language: 'C++|0'
 Version: 1.0.0
@@ -9,7 +9,7 @@ Defines: [
 ]
 Dependencies: {
 	Runtime: [
-		'mwasplund|Detours@4'
+		'mwasplund|detours@4'
 		'../shared/'
 		'mwasplund|opal@0'
 	]

@@ -1,4 +1,4 @@
-Name: 'Soup.Utilities'
+Name: 'soup-utilities'
 Language: 'C#|0'
 Version: 1.0.0
 TargetFramework: 'net10.0'

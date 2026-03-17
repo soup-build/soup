@@ -6,7 +6,7 @@ This is a desktop application that demonstrates creating a complex graphics wind
 ## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/directx/recipe.sml)
 The Recipe file that defines the directX sample application. Note the special module partition hierarchy that explicitly sets the references for partition units. The application also copies over the shader files that will be compiled at runtime.
 ```sml
-Name: 'Samples.Cpp.DirectX'
+Name: 'samples-cpp-directx'
 Language: 'C++|0'
 Type: 'Windows'
 Version: 1.0.0

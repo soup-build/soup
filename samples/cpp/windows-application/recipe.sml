@@ -1,4 +1,4 @@
-Name: 'Samples.Cpp.WindowsApplication'
+Name: 'samples-cpp-windows-application'
 Language: 'C++|0'
 Type: 'Windows'
 Version: 1.0.0

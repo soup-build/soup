@@ -189,7 +189,7 @@ namespace Monitor::Windows
 			// Build up the Monitor dlls absolute path
 			auto moduleName = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto moduleFolder = moduleName.GetParent();
-			auto dllPath = moduleFolder + Path("./Monitor.Client.64.dll");
+			auto dllPath = moduleFolder + Path("./monitor-client.64.dll");
 			auto dllPathString = dllPath.ToAlternateString();
 
 			// Build up the new environment

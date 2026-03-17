@@ -1,4 +1,4 @@
-Name: 'Samples.CSharp.BuildExtension.Application'
+Name: 'samples-csharp-build-extension-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'

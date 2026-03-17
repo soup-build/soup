@@ -3,7 +3,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModulePartitions:HelperC;
+export module Sample.ModulePartitions:HelperC;
 import :HelperA;
 
 export std::string_view GetPackagesPostfix()
