@@ -49,7 +49,7 @@ namespace Soup::Client
 
 			auto recipePath =
 				workingDirectory +
-				Core::BuildConstants::RecipeFileName();
+				Core::Build::Constants::RecipeFileName();
 
 			auto arguments = std::vector<std::string>({
 				recipePath.ToString(),

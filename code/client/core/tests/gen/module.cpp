@@ -2,7 +2,7 @@
 export module Soup.Core.Tests;
 
 // build
-export import :BuildEngineTests;
+export import :BuildTests;
 export import :BuildEvaluateEngineTests;
 export import :BuildHistoryCheckerTests;
 export import :BuildLoadEngineTests;
@@ -42,7 +42,7 @@ export import :ValueTableReaderTests;
 export import :ValueTableWriterTests;
 
 // build
-export import :RunBuildEngineTests;
+export import :RunBuildTests;
 export import :RunBuildEvaluateEngineTests;
 export import :RunBuildHistoryCheckerTests;
 export import :RunBuildLoadEngineTests;

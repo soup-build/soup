@@ -194,11 +194,11 @@ std::string LoadBuildGraphContent(
 		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 
 		// Load user config state
-		auto userDataPath = BuildEngine::GetSoupUserDataPath();
+		auto userDataPath = Build::Constants::GetSoupUserDataPath();
 		
 		auto recipeCache = RecipeCache();
 
-		auto packageProvider = BuildEngine::LoadBuildGraph(
+		auto packageProvider = Build::LoadBuildGraph(
 			workingDirectory,
 			std::nullopt,
 			globalParameters,

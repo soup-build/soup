@@ -229,7 +229,7 @@ namespace Soup::Core
 					didAnyEvaluate |= CheckExecuteOperation(
 						evaluateState,
 						operationInfo);
-					
+
 					// Recursively build all of the operation children
 					didAnyEvaluate |= CheckExecuteOperations(
 						evaluateState,

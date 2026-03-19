@@ -1,4 +1,4 @@
-// <copyright file="build-engine-tests.cpp" company="Soup">
+// <copyright file="build-tests.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -15,7 +15,7 @@ module;
 #include <vector>
 #include <iostream>
 
-export module Soup.Core.Tests:BuildEngineTests;
+export module Soup.Core.Tests:BuildTests;
 
 import Monitor.Host;
 import Opal;
@@ -30,7 +30,7 @@ using namespace std::chrono_literals;
 
 namespace Soup::Core::UnitTests
 {
-	export class BuildEngineTests
+	export class BuildTests
 	{
 	public:
 		// [[Fact]]
@@ -198,10 +198,10 @@ namespace Soup::Core::UnitTests
 			});
 
 			// Load user config state
-			auto userDataPath = BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
 
-			auto packageProvider = BuildEngine::LoadBuildGraph(
+			auto packageProvider = Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
@@ -209,7 +209,7 @@ namespace Soup::Core::UnitTests
 				hostPlatform,
 				recipeCache);
 
-			BuildEngine::Execute(
+			Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
@@ -1158,10 +1158,10 @@ namespace Soup::Core::UnitTests
 			});
 	
 			// Load user config state
-			auto userDataPath = BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
 
-			auto packageProvider = BuildEngine::LoadBuildGraph(
+			auto packageProvider = Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
@@ -1169,7 +1169,7 @@ namespace Soup::Core::UnitTests
 				hostPlatform,
 				recipeCache);
 
-			BuildEngine::Execute(
+			Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
@@ -1470,10 +1470,10 @@ namespace Soup::Core::UnitTests
 			});
 
 			// Load user config state
-			auto userDataPath = BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
 
-			auto packageProvider = BuildEngine::LoadBuildGraph(
+			auto packageProvider = Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
@@ -1481,7 +1481,7 @@ namespace Soup::Core::UnitTests
 				hostPlatform,
 				recipeCache);
 
-			BuildEngine::Execute(
+			Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
@@ -2478,10 +2478,10 @@ namespace Soup::Core::UnitTests
 			});
 
 			// Load user config state
-			auto userDataPath = BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
 
-			auto packageProvider = BuildEngine::LoadBuildGraph(
+			auto packageProvider = Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
@@ -2489,7 +2489,7 @@ namespace Soup::Core::UnitTests
 				hostPlatform,
 				recipeCache);
 
-			BuildEngine::Execute(
+			Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,

@@ -2,15 +2,15 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunBuildEngineTests;
+export module Soup.Core.Tests:RunBuildTests;
 
-import :BuildEngineTests;
+import :BuildTests;
 import Soup.Test.Assert;
 
-export TestState RunBuildEngineTests() 
+export TestState RunBuildTests() 
 {
-	auto className = "BuildEngineTests";
-	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildEngineTests>();
+	auto className = "BuildTests";
+	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildTests>();
 	TestState state = { 0, 0 };
 	state += Soup::Test::RunTest(className, "Execute_NoDependencies", [&testClass]() { testClass->Execute_NoDependencies(); });
 	state += Soup::Test::RunTest(className, "Execute_NoDependencies_UpToDate", [&testClass]() { testClass->Execute_NoDependencies_UpToDate(); });

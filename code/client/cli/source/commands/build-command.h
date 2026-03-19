@@ -89,11 +89,11 @@ namespace Soup::Client
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
-			auto userDataPath = Core::BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
 			
 			auto recipeCache = Core::RecipeCache();
 
-			auto packageProvider = Core::BuildEngine::LoadBuildGraph(
+			auto packageProvider = Core::Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
@@ -101,7 +101,7 @@ namespace Soup::Client
 				hostPlatform,
 				recipeCache);
 
-			Core::BuildEngine::Execute(
+			Core::Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
