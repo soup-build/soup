@@ -10,7 +10,7 @@ import Soup.Test.Assert;
 export TestState RunBuildLoadEngineTests() 
 {
 	auto className = "BuildLoadEngineTests";
-	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildLoadEngineTests>();
+	auto testClass = std::make_shared<Soup::Core::Build::UnitTests::BuildLoadEngineTests>();
 	TestState state = { 0, 0 };
 	state += Soup::Test::RunTest(className, "Initialize", [&testClass]() { testClass->Initialize(); });
 	state += Soup::Test::RunTest(className, "Load_MissingPackageLock_Throws", [&testClass]() { testClass->Load_MissingPackageLock_Throws(); });

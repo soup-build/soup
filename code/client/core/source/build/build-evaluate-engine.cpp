@@ -17,6 +17,7 @@ module;
 
 export module Soup.Core:BuildEvaluateEngine;
 
+import :BuildEvaluateGraphState;
 import :BuildFailedException;
 import :BuildHistoryChecker;
 import :FileSystemState;
@@ -33,109 +34,6 @@ using namespace Opal;
 
 namespace Soup::Core
 {
-	class BuildEvaluateState
-	{
-	public:
-		BuildEvaluateState(
-			const OperationGraph& operationGraph,
-			OperationResults& operationResults,
-			const Path& temporaryDirectory,
-			const std::vector<Path>& globalAllowedReadAccess,
-			const std::vector<Path>& globalAllowedWriteAccess) :
-			OperationGraph(operationGraph),
-			OperationResults(operationResults),
-			TemporaryDirectory(temporaryDirectory),
-			GlobalAllowedReadAccess(globalAllowedReadAccess),
-			GlobalAllowedWriteAccess(globalAllowedWriteAccess),
-			RemainingDependencyCounts(),
-			LookupLoaded(false),
-			InputFileLookup(),
-			OutputFileLookup()
-		{
-		}
-
-		const ::Soup::Core::OperationGraph& OperationGraph;
-		::Soup::Core::OperationResults& OperationResults;
-
-		const Path& TemporaryDirectory;
-
-		const std::vector<Path>& GlobalAllowedReadAccess;
-		const std::vector<Path>& GlobalAllowedWriteAccess;
-
-		// Running State
-		std::unordered_map<OperationId, int32_t> RemainingDependencyCounts;
-
-		bool LookupLoaded;
-		std::unordered_map<FileId, std::set<OperationId>> InputFileLookup;
-		std::unordered_map<FileId, OperationId> OutputFileLookup;
-
-		void EnsureOperationLookupLoaded()
-		{
-			if (LookupLoaded)
-				return;
-
-			for (auto& operation : OperationGraph.GetOperations())
-			{
-				auto& operationInfo = operation.second;
-
-				for (auto fileId : operationInfo.DeclaredInput)
-				{
-					auto findResult = InputFileLookup.find(fileId);
-					if (findResult != InputFileLookup.end())
-					{
-						findResult->second.insert(operationInfo.Id);
-					}
-					else
-					{
-						auto [insertIterator, wasInserted] = InputFileLookup.emplace(
-							fileId,
-							std::set<OperationId>());
-						insertIterator->second.insert(operationInfo.Id);
-					}
-				}
-
-				for (auto fileId : operationInfo.DeclaredOutput)
-				{
-					OutputFileLookup.emplace(fileId, operationInfo.Id);
-				}
-			}
-
-			LookupLoaded = true;
-		}
-
-		bool TryGetInputFileOperations(
-			FileId fileId,
-			const std::set<OperationId>*& result)
-		{
-			auto findResult = InputFileLookup.find(fileId);
-			if (findResult != InputFileLookup.end())
-			{
-				result = &findResult->second;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		bool TryGetOutputFileOperation(
-			FileId fileId,
-			OperationId& result)
-		{
-			auto findResult = OutputFileLookup.find(fileId);
-			if (findResult != OutputFileLookup.end())
-			{
-				result = findResult->second;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	};
-
 	/// <summary>
 	/// The core build evaluation engine that knows how to perform a build from a provided Operation Graph.
 	/// </summary>
@@ -179,7 +77,7 @@ namespace Soup::Core
 		{
 			// Run all build operations in the correct order with incremental build checks
 			Log::Diag("Build evaluation start");
-			auto evaluateState = BuildEvaluateState(
+			auto evaluateState = BuildEvaluateGraphState(
 				operationGraph,
 				operationResults,
 				temporaryDirectory,
@@ -199,7 +97,7 @@ namespace Soup::Core
 		/// Execute the collection of build operations
 		/// </summary>
 		bool CheckExecuteOperations(
-			BuildEvaluateState& evaluateState,
+			BuildEvaluateGraphState& evaluateState,
 			const std::vector<OperationId>& operations)
 		{
 			bool didAnyEvaluate = false;
@@ -252,7 +150,7 @@ namespace Soup::Core
 		/// Check if an individual operation has been run and execute if required
 		/// </summary>
 		bool CheckExecuteOperation(
-			BuildEvaluateState& evaluateState,
+			BuildEvaluateGraphState& evaluateState,
 			const OperationInfo& operationInfo)
 		{
 			// Check if each source file is out of date and requires a rebuild
@@ -522,7 +420,7 @@ namespace Soup::Core
 		}
 
 		void VerifyObservedState(
-			BuildEvaluateState& evaluateState,
+			BuildEvaluateGraphState& evaluateState,
 			const OperationInfo& operationInfo,
 			OperationResult& operationResult)
 		{

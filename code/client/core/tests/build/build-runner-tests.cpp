@@ -31,7 +31,7 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
+namespace Soup::Core::Build::UnitTests
 {
 	export class BuildRunnerTests
 	{

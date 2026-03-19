@@ -56,6 +56,7 @@ import Opal;
 // Build
 export import :BuildConstants;
 export import :BuildEvaluateEngine;
+import :BuildEvaluateGraphState;
 export import :BuildFailedException;
 export import :BuildHistoryChecker;
 export import :BuildLoadEngine;
