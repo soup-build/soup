@@ -626,6 +626,8 @@ int main()
 
 		ankerl::nanobench::Bench().minEpochIterations(3000).run("BuildEngine Execute NoDependencies UpToDate", [&]
 		{
+			auto systemReadAccess = std::vector<Path>();
+
 			auto arguments = RecipeBuildArguments();
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
@@ -639,12 +641,14 @@ int main()
 				std::nullopt,
 				arguments.GlobalParameters,
 				userDataPath,
+				arguments.HostPlatform,
 				recipeCache);
 
 			BuildEngine::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
+				systemReadAccess,
 				recipeCache);
 		});
 	}

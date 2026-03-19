@@ -72,17 +72,17 @@ namespace Soup::Core
 			std::string_view hostPlatform,
 			RecipeCache& recipeCache)
 		{
-			auto startTime = std::chrono::high_resolution_clock::now();
+			// auto startTime = std::chrono::high_resolution_clock::now();
 
 			// Load the system specific state
 			auto hostGlobalParameters = LoadHostSystemState(hostPlatform);
 
-			auto endTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+			// auto endTime = std::chrono::high_resolution_clock::now();
+			// auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 			// Log::Info("LoadSystemState: {} seconds", duration.count());
 
-			startTime = std::chrono::high_resolution_clock::now();
+			// startTime = std::chrono::high_resolution_clock::now();
 
 			// Generate the package build graph
 			auto knownLanguages = GetKnownLanguages();
@@ -97,8 +97,8 @@ namespace Soup::Core
 				recipeCache);
 			auto packageProvider = loadEngine.Load(workingDirectory, std::move(owner));
 
-			endTime = std::chrono::high_resolution_clock::now();
-			duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+			// endTime = std::chrono::high_resolution_clock::now();
+			// duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 			// Log::Info("BuildLoadEngine: {} seconds", duration.count());
 
@@ -111,7 +111,7 @@ namespace Soup::Core
 		static FileSystemState PreloadFileSystemState(
 			PackageProvider& packageProvider)
 		{
-			auto startTime = std::chrono::high_resolution_clock::now();
+			// auto startTime = std::chrono::high_resolution_clock::now();
 
 			// Initialize a shared File System State to cache file system access
 			auto fileSystemState = FileSystemState();
@@ -122,12 +122,10 @@ namespace Soup::Core
 				// TODO: fileSystemState.PreloadDirectory(package.second.TargetDirectory, false);
 			}
 
-			auto endTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+			// auto endTime = std::chrono::high_resolution_clock::now();
+			// auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 			// Log::Info("PreloadFileSystemState: {} seconds", duration.count());
-
-			startTime = std::chrono::high_resolution_clock::now();
 
 			return fileSystemState;
 		}
@@ -139,7 +137,7 @@ namespace Soup::Core
 			const std::vector<Path>& systemReadAccess,
 			RecipeCache& recipeCache)
 		{
-			auto startTime = std::chrono::high_resolution_clock::now();
+			// auto startTime = std::chrono::high_resolution_clock::now();
 
 			// Load the file system state
 			auto fileSystemState = PreloadFileSystemState(packageProvider);
@@ -163,8 +161,8 @@ namespace Soup::Core
 				fileSystemState);
 			buildRunner.Execute();
 
-			auto endTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+			// auto endTime = std::chrono::high_resolution_clock::now();
+			// auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 			// Log::Info("BuildRunner: {} seconds", duration.count());
 		}
