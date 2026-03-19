@@ -8,6 +8,7 @@ module;
 #include <format>
 #include <map>
 #include <memory>
+#include <queue>
 #include <set>
 #include <sstream>
 #include <stdexcept>
@@ -61,6 +62,7 @@ namespace Soup::Core
 
 		// Running State
 		std::unordered_map<OperationId, int32_t> RemainingDependencyCounts;
+		std::queue<OperationId> ReadyOperations;
 
 		bool LookupLoaded;
 		std::unordered_map<FileId, std::set<OperationId>> InputFileLookup;

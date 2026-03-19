@@ -8,6 +8,7 @@ module;
 #include <format>
 #include <map>
 #include <memory>
+#include <queue>
 #include <set>
 #include <sstream>
 #include <stdexcept>
@@ -84,68 +85,30 @@ namespace Soup::Core
 				globalAllowedReadAccess,
 				globalAllowedWriteAccess);
 
-			auto result = CheckExecuteOperations(
-				evaluateState,
-				operationGraph.GetRootOperationIds());
-			Log::Diag("Build evaluation end");
+			// Initialize the ready set from the root operations
+			for (auto operationId : operationGraph.GetRootOperationIds())
+				evaluateState.ReadyOperations.push(operationId);
 
-			return result;
-		}
-
-	private:
-		/// <summary>
-		/// Execute the collection of build operations
-		/// </summary>
-		bool CheckExecuteOperations(
-			BuildEvaluateGraphState& evaluateState,
-			const std::vector<OperationId>& operations)
-		{
+			// Process all operations until non are available
 			bool didAnyEvaluate = false;
-			for (auto operationId : operations)
+			while (!evaluateState.ReadyOperations.empty())
 			{
-				// Check if the operation was already a child from a different path
-				// Only run the operation when all of its dependencies have completed
-				auto& operationInfo = evaluateState.OperationGraph.GetOperationInfo(operationId);
-				auto currentOperationSearch = evaluateState.RemainingDependencyCounts.find(operationId);
-				int32_t remainingCount = -1;
-				if (currentOperationSearch != evaluateState.RemainingDependencyCounts.end())
-				{
-					remainingCount = --currentOperationSearch->second;
-				}
-				else
-				{
-					// Get the cached total count and store the active count in the lookup
-					remainingCount = operationInfo.DependencyCount - 1;
-					auto insertResult = evaluateState.RemainingDependencyCounts.emplace(operationId, remainingCount);
-					if (!insertResult.second)
-						throw std::runtime_error("The operation id already existed in the remaining count lookup");
-				}
+				auto currentOperationId = evaluateState.ReadyOperations.front();
+				evaluateState.ReadyOperations.pop();
 
-				if (remainingCount == 0)
-				{
-					// Run the single operation
-					didAnyEvaluate |= CheckExecuteOperation(
-						evaluateState,
-						operationInfo);
+				// Evaluate the current operation
+				auto& operationInfo = evaluateState.OperationGraph.GetOperationInfo(currentOperationId);
+				didAnyEvaluate |= CheckExecuteOperation(evaluateState, operationInfo);
 
-					// Recursively build all of the operation children
-					didAnyEvaluate |= CheckExecuteOperations(
-						evaluateState,
-						operationInfo.Children);
-				}
-				else if (remainingCount < 0)
-				{
-					throw std::runtime_error("Remaining dependency count less than zero");
-				}
-				else
-				{
-					// This operation will be executed from a different path
-				}
+				RegisterReadyChildren(evaluateState, operationInfo);
 			}
+
+			Log::Diag("Build evaluation end");
 
 			return didAnyEvaluate;
 		}
 
+	private:
 		/// <summary>
 		/// Check if an individual operation has been run and execute if required
 		/// </summary>
@@ -246,6 +209,47 @@ namespace Soup::Core
 			}
 
 			return buildRequired;
+		}
+
+		/// <summary>
+		/// Execute the collection of build operations
+		/// </summary>
+		void RegisterReadyChildren(
+			BuildEvaluateGraphState& evaluateState,
+			const OperationInfo& operationInfo)
+		{
+			for (auto operationId : operationInfo.Children)
+			{
+				// Only register the operation when all of its dependencies have completed
+				auto currentOperationSearch = evaluateState.RemainingDependencyCounts.find(operationId);
+				int32_t remainingCount = -1;
+				if (currentOperationSearch != evaluateState.RemainingDependencyCounts.end())
+				{
+					remainingCount = --currentOperationSearch->second;
+				}
+				else
+				{
+					// Get the cached total count and store the active count in the lookup
+					auto& childOperationInfo = evaluateState.OperationGraph.GetOperationInfo(operationId);
+					remainingCount = childOperationInfo.DependencyCount - 1;
+					auto insertResult = evaluateState.RemainingDependencyCounts.emplace(operationId, remainingCount);
+					if (!insertResult.second)
+						throw std::runtime_error("The operation id already existed in the remaining count lookup");
+				}
+
+				if (remainingCount == 0)
+				{
+					evaluateState.ReadyOperations.push(operationId);
+				}
+				else if (remainingCount < 0)
+				{
+					throw std::runtime_error("Remaining dependency count less than zero");
+				}
+				else
+				{
+					// This operation still has dependencies that have not finished
+				}
+			}
 		}
 
 		/// <summary>
