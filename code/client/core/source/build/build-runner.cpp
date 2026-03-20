@@ -1077,7 +1077,7 @@ namespace Soup::Core::Build
 			return result;
 		}
 
-		void BuildDirectoryStructure(DirectoryState& activeDirectory, ValueList& result)
+		void BuildDirectoryStructure(const DirectoryState& activeDirectory, ValueList& result)
 		{
 			for (auto& file : activeDirectory.Files)
 			{

@@ -6,8 +6,10 @@ module;
 
 #include <chrono>
 #include <functional>
+#include <mutex>
 #include <optional>
 #include <set>
+#include <shared_mutex>
 #include <string>
 #include <unordered_map>
 
@@ -54,6 +56,9 @@ export namespace Soup::Core
 
 		std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>> _writeCache;
 
+		// Thread safe hammer
+		mutable std::shared_mutex _mutex;
+		
 	public:
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileSystemState"/> class.
@@ -63,7 +68,8 @@ export namespace Soup::Core
 			_files(),
 			_fileLookup(),
 			_directoryLookup(),
-			_writeCache()
+			_writeCache(),
+			_mutex()
 		{
 		}
 
@@ -89,7 +95,8 @@ export namespace Soup::Core
 			_files(std::move(files)),
 			_fileLookup(),
 			_directoryLookup(std::move(directoryLookup)),
-			_writeCache(std::move(writeCache))
+			_writeCache(std::move(writeCache)),
+			_mutex()
 		{
 			// Build up the reverse lookup for new files
 			for (const auto& [key, value] : _files)
@@ -102,6 +109,7 @@ export namespace Soup::Core
 
 		/// <summary>
 		/// Get Files
+		/// Note: Used to write state at end
 		/// </summary>
 		const std::unordered_map<FileId, Path>& GetFiles() const
 		{
@@ -110,6 +118,7 @@ export namespace Soup::Core
 
 		/// <summary>
 		/// Get the max unique file id
+		/// Note: Used to write state at end
 		/// </summary>
 		FileId GetMaxFileId() const
 		{
@@ -121,6 +130,7 @@ export namespace Soup::Core
 		/// </summary>
 		void InvalidateFileWriteTimes(const std::vector<FileId>& files)
 		{
+			auto lock = std::unique_lock<std::shared_mutex>(_mutex);
 			for (auto file : files)
 			{
 				InvalidateFileWriteTime(file);
@@ -132,15 +142,17 @@ export namespace Soup::Core
 		/// </summary>
 		std::optional<std::chrono::time_point<std::chrono::file_clock>> GetLastWriteTime(FileId file)
 		{
-			auto findResult = _writeCache.find(file);
-			if (findResult != _writeCache.end())
 			{
-				return findResult->second;
+				// Attempt read only check for existing entry
+				auto lock = std::shared_lock<std::shared_mutex>(_mutex);
+				auto findResult = _writeCache.find(file);
+				if (findResult != _writeCache.end())
+				{
+					return findResult->second;
+				}
 			}
-			else
-			{
-				return CheckFileWriteTime(file);
-			}
+
+			return CheckFileWriteTime(file);
 		}
 
 		/// <summary>
@@ -175,6 +187,8 @@ export namespace Soup::Core
 			FileId result;
 			if (!TryFindFileId(file, result))
 			{
+				auto lock = std::unique_lock<std::shared_mutex>(_mutex);
+
 				// Insert the new file
 				result = ++_maxFileId;
 				auto insertResult = _files.emplace(result, file);
@@ -194,16 +208,9 @@ export namespace Soup::Core
 		/// </summary>
 		bool TryFindFileId(const Path& file, FileId& fileId) const
 		{
-			auto findResult = _fileLookup.find(file.ToString());
-			if (findResult != _fileLookup.end())
-			{
-				fileId = findResult->second;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			auto lock = std::shared_lock<std::shared_mutex>(_mutex);
+
+			return TryFindFileIdUnsafe(file, fileId);
 		}
 
 		/// <summary>
@@ -211,10 +218,12 @@ export namespace Soup::Core
 		/// </summary>
 		std::vector<Path> GetFilePaths(const std::vector<FileId>& fileIds) const
 		{
+			auto lock = std::shared_lock<std::shared_mutex>(_mutex);
+
 			auto result = std::vector<Path>();
 			for (auto& fileId : fileIds)
 			{
-				result.push_back(GetFilePath(fileId));
+				result.push_back(GetFilePathUnsafe(fileId));
 			}
 
 			return result;
@@ -225,17 +234,14 @@ export namespace Soup::Core
 		/// </summary>
 		const Path& GetFilePath(FileId fileId) const
 		{
-			auto findResult = _files.find(fileId);
-			if (findResult != _files.end())
-			{
-				return findResult->second;
-			}
-			else
-			{
-				throw std::runtime_error("The provided file id does not exist in the files set.");
-			}
+			auto lock = std::shared_lock<std::shared_mutex>(_mutex);
+
+			return GetFilePathUnsafe(fileId);
 		}
 
+		/// <summary>
+		/// Not thread safe
+		/// </summary>
 		void PreloadDirectory(const Path& directory, bool trackDirectories)
 		{
 			#ifdef TRACE_FILE_SYSTEM_STATE
@@ -287,8 +293,10 @@ export namespace Soup::Core
 			}
 		}
 
-		DirectoryState& GetDirectoryState(const Path& directory)
+		const DirectoryState& GetDirectoryState(const Path& directory) const
 		{
+			auto lock = std::shared_lock<std::shared_mutex>(_mutex);
+
 			auto activeDirectory = GetDirectoryState(_directoryLookup, directory.GetRoot());
 			const auto directories = directory.DecomposeDirectories();
 			for (auto currentDirectory : directories)
@@ -300,9 +308,43 @@ export namespace Soup::Core
 		}
 
 	private:
-		DirectoryState* GetDirectoryState(
-			std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>& activeDirectory,
-			const std::string_view name)
+
+		/// <summary>
+		/// Find an file id
+		/// </summary>
+		bool TryFindFileIdUnsafe(const Path& file, FileId& fileId) const
+		{
+			auto findResult = _fileLookup.find(file.ToString());
+			if (findResult != _fileLookup.end())
+			{
+				fileId = findResult->second;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Find a file path
+		/// </summary>
+		const Path& GetFilePathUnsafe(FileId fileId) const
+		{
+			auto findResult = _files.find(fileId);
+			if (findResult != _files.end())
+			{
+				return findResult->second;
+			}
+			else
+			{
+				throw std::runtime_error("The provided file id does not exist in the files set.");
+			}
+		}
+
+		const DirectoryState* GetDirectoryState(
+			const std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>& activeDirectory,
+			const std::string_view name) const
 		{
 			auto findResult = activeDirectory.find(name);
 			if (findResult != activeDirectory.end())
@@ -376,7 +418,10 @@ export namespace Soup::Core
 		/// </summary>
 		std::optional<std::chrono::time_point<std::chrono::file_clock>> CheckFileWriteTime(FileId fileId)
 		{
-			auto& filePath = GetFilePath(fileId);
+			// Acquire exclusive lock to update cache
+			auto lock = std::unique_lock<std::shared_mutex>(_mutex);
+
+			auto& filePath = GetFilePathUnsafe(fileId);
 
 			// The file does not exist in the cache
 			// Load the actual value and save it for later

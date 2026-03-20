@@ -13,6 +13,7 @@ module;
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -89,8 +90,30 @@ namespace Soup::Core
 			for (auto operationId : operationGraph.GetRootOperationIds())
 				evaluateState.ReadyOperations.push(operationId);
 
+			auto workerThreads = std::vector<std::thread>();
+			for (auto i = 0; i < 1; i++)
+			{
+				workerThreads.push_back(
+					std::thread(&BuildEvaluateEngine::WorkerThread, this, std::ref(evaluateState)));
+			}
+
+			// Ensure all other workers have finished
+			for (auto& worker : workerThreads)
+			{
+				worker.join();
+			}
+
+			Log::Diag("Build evaluation end");
+
+			return evaluateState.DidAnyEvaluate;
+		}
+
+	private:
+		void WorkerThread(BuildEvaluateGraphState& evaluateState)
+		{
+			Log::HighPriority("Worker thread");
+
 			// Process all operations until non are available
-			bool didAnyEvaluate = false;
 			while (!evaluateState.ReadyOperations.empty())
 			{
 				auto currentOperationId = evaluateState.ReadyOperations.front();
@@ -98,17 +121,12 @@ namespace Soup::Core
 
 				// Evaluate the current operation
 				auto& operationInfo = evaluateState.OperationGraph.GetOperationInfo(currentOperationId);
-				didAnyEvaluate |= CheckExecuteOperation(evaluateState, operationInfo);
+				evaluateState.DidAnyEvaluate |= CheckExecuteOperation(evaluateState, operationInfo);
 
 				RegisterReadyChildren(evaluateState, operationInfo);
 			}
-
-			Log::Diag("Build evaluation end");
-
-			return didAnyEvaluate;
 		}
 
-	private:
 		/// <summary>
 		/// Check if an individual operation has been run and execute if required
 		/// </summary>

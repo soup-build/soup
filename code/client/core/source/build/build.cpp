@@ -106,13 +106,11 @@ namespace Soup::Core::Build
 	/// <summary>
 	/// Preload the file system
 	/// </summary>
-	FileSystemState PreloadFileSystemState(
-		PackageProvider& packageProvider)
+	void PreloadFileSystemState(
+		PackageProvider& packageProvider,
+		FileSystemState& fileSystemState)
 	{
 		// auto startTime = std::chrono::high_resolution_clock::now();
-
-		// Initialize a shared File System State to cache file system access
-		auto fileSystemState = FileSystemState();
 
 		for (auto package : packageProvider.GetPackageLookup())
 		{
@@ -124,8 +122,6 @@ namespace Soup::Core::Build
 		// auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 		// Log::Info("PreloadFileSystemState: {} seconds", duration.count());
-
-		return fileSystemState;
 	}
 
 	export void Execute(
@@ -138,7 +134,8 @@ namespace Soup::Core::Build
 		// auto startTime = std::chrono::high_resolution_clock::now();
 
 		// Load the file system state
-		auto fileSystemState = PreloadFileSystemState(packageProvider);
+		auto fileSystemState = FileSystemState();
+		PreloadFileSystemState(packageProvider, fileSystemState);
 
 		// Initialize a shared Evaluate Engine
 		auto evaluateEngine = BuildEvaluateEngine(

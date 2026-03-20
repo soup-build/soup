@@ -46,6 +46,8 @@ namespace Soup::Core
 			GlobalAllowedReadAccess(globalAllowedReadAccess),
 			GlobalAllowedWriteAccess(globalAllowedWriteAccess),
 			RemainingDependencyCounts(),
+			ReadyOperations(),
+			DidAnyEvaluate(false),
 			LookupLoaded(false),
 			InputFileLookup(),
 			OutputFileLookup()
@@ -63,6 +65,7 @@ namespace Soup::Core
 		// Running State
 		std::unordered_map<OperationId, int32_t> RemainingDependencyCounts;
 		std::queue<OperationId> ReadyOperations;
+		bool DidAnyEvaluate;
 
 		bool LookupLoaded;
 		std::unordered_map<FileId, std::set<OperationId>> InputFileLookup;
