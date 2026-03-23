@@ -8,6 +8,7 @@ module;
 #include <format>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <queue>
 #include <set>
 #include <sstream>
@@ -29,54 +30,211 @@ using namespace Opal;
 namespace Soup::Core
 {
 	/// <summary>
+	/// Immutable operation state information used during evaluation
+	/// </summary>
+	export struct CurrentOperationState
+	{
+		OperationInfo& Info;
+		OperationResult* PreviousResult;
+
+		CurrentOperationState& operator=(CurrentOperationState other)
+		{
+			Info = other.Info;
+			PreviousResult = other.PreviousResult;
+			return *this;
+		}
+	};
+
+	/// <summary>
 	/// The core runtime state for tracking evaluation runtime state for an individual graph
 	/// </summary>
 	export class BuildEvaluateGraphState
 	{
+	private:
+		std::mutex _mutex;
+		std::exception_ptr _error;
+
+		::Soup::Core::OperationResults& Results;
+
+		// Running State
+		std::unordered_map<OperationId, int32_t> RemainingDependencyCounts;
+		std::queue<OperationId> ReadyOperations;
+		bool _didAnyEvaluate;
+
+		std::unordered_map<FileId, std::set<OperationId>> InputFileLookup;
+		std::unordered_map<FileId, OperationId> OutputFileLookup;
+
+	public:
+		// TODO: Verify operation graph is an immutable initial state
+		::Soup::Core::OperationGraph& Graph;
+		const Path& TemporaryDirectory;
+		const std::vector<Path>& GlobalAllowedReadAccess;
+		const std::vector<Path>& GlobalAllowedWriteAccess;
+
 	public:
 		BuildEvaluateGraphState(
-			const OperationGraph& operationGraph,
-			OperationResults& operationResults,
+			OperationGraph& graph,
+			OperationResults& results,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,
 			const std::vector<Path>& globalAllowedWriteAccess) :
-			OperationGraph(operationGraph),
-			OperationResults(operationResults),
+			_mutex(),
+			Graph(graph),
+			Results(results),
 			TemporaryDirectory(temporaryDirectory),
 			GlobalAllowedReadAccess(globalAllowedReadAccess),
 			GlobalAllowedWriteAccess(globalAllowedWriteAccess),
 			RemainingDependencyCounts(),
 			ReadyOperations(),
-			DidAnyEvaluate(false),
-			LookupLoaded(false),
+			_didAnyEvaluate(false),
 			InputFileLookup(),
 			OutputFileLookup()
 		{
+			LoadOperationLookup();
 		}
 
-		const ::Soup::Core::OperationGraph& OperationGraph;
-		::Soup::Core::OperationResults& OperationResults;
-
-		const Path& TemporaryDirectory;
-
-		const std::vector<Path>& GlobalAllowedReadAccess;
-		const std::vector<Path>& GlobalAllowedWriteAccess;
-
-		// Running State
-		std::unordered_map<OperationId, int32_t> RemainingDependencyCounts;
-		std::queue<OperationId> ReadyOperations;
-		bool DidAnyEvaluate;
-
-		bool LookupLoaded;
-		std::unordered_map<FileId, std::set<OperationId>> InputFileLookup;
-		std::unordered_map<FileId, OperationId> OutputFileLookup;
-
-		void EnsureOperationLookupLoaded()
+	public:
+		void AddReadyOperations(const std::vector<OperationId>& operations)
 		{
-			if (LookupLoaded)
-				return;
+			std::unique_lock lock(_mutex);
 
-			for (auto& operation : OperationGraph.GetOperations())
+			for (auto operationId : operations)
+				ReadyOperations.push(operationId);
+		}
+
+		bool DidAnyEvaluate()
+		{
+			std::unique_lock lock(_mutex);
+
+			if (_error)
+				std::rethrow_exception(_error);
+
+			return _didAnyEvaluate;
+		}
+
+		std::optional<CurrentOperationState> WaitNextOperation()
+		{
+			std::unique_lock lock(_mutex);
+
+			if (ReadyOperations.empty())
+			{
+				return std::nullopt;
+			}
+			else
+			{
+				auto currentOperationId = ReadyOperations.front();
+				ReadyOperations.pop();
+
+				auto& operationInfo = Graph.GetOperationInfo(currentOperationId);
+
+				OperationResult* previousResult;
+				if (!Results.TryFindResult(operationInfo.Id, previousResult))
+				{
+					previousResult = nullptr;
+				}
+
+				CurrentOperationState operationState = { operationInfo, previousResult };
+				return operationState;
+			}
+		}
+
+		void SetError(std::exception_ptr exception)
+		{
+			std::unique_lock lock(_mutex);
+			_error = exception;
+		}
+
+		void UpdateOperationResult(
+			OperationId operationId,
+			OperationResult&& operationResult)
+		{
+			std::unique_lock lock(_mutex);
+
+			// This is only called when an operation was built
+			_didAnyEvaluate |= true;
+
+			Results.AddOrUpdateOperationResult(
+				operationId,
+				std::move(operationResult));
+		}
+
+		/// <summary>
+		/// Execute the collection of build operations
+		/// </summary>
+		void RegisterReadyChildren(const OperationInfo& operationInfo)
+		{
+			std::unique_lock lock(_mutex);
+
+			for (auto operationId : operationInfo.Children)
+			{
+				// Only register the operation when all of its dependencies have completed
+				auto currentOperationSearch = RemainingDependencyCounts.find(operationId);
+				int32_t remainingCount = -1;
+				if (currentOperationSearch != RemainingDependencyCounts.end())
+				{
+					remainingCount = --currentOperationSearch->second;
+				}
+				else
+				{
+					// Get the cached total count and store the active count in the lookup
+					auto& childOperationInfo = Graph.GetOperationInfo(operationId);
+					remainingCount = childOperationInfo.DependencyCount - 1;
+					auto insertResult = RemainingDependencyCounts.emplace(operationId, remainingCount);
+					if (!insertResult.second)
+						throw std::runtime_error("The operation id already existed in the remaining count lookup");
+				}
+
+				if (remainingCount == 0)
+				{
+					ReadyOperations.push(operationId);
+				}
+				else if (remainingCount < 0)
+				{
+					throw std::runtime_error("Remaining dependency count less than zero");
+				}
+				else
+				{
+					// This operation still has dependencies that have not finished
+				}
+			}
+		}
+
+		bool TryGetInputFileOperations(
+			FileId fileId,
+			const std::set<OperationId>*& result) const
+		{
+			auto findResult = InputFileLookup.find(fileId);
+			if (findResult != InputFileLookup.end())
+			{
+				result = &findResult->second;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		bool TryGetOutputFileOperation(
+			FileId fileId,
+			OperationId& result) const
+		{
+			auto findResult = OutputFileLookup.find(fileId);
+			if (findResult != OutputFileLookup.end())
+			{
+				result = findResult->second;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+	private:
+		void LoadOperationLookup()
+		{
+			for (auto& operation : Graph.GetOperations())
 			{
 				auto& operationInfo = operation.second;
 
@@ -100,40 +258,6 @@ namespace Soup::Core
 				{
 					OutputFileLookup.emplace(fileId, operationInfo.Id);
 				}
-			}
-
-			LookupLoaded = true;
-		}
-
-		bool TryGetInputFileOperations(
-			FileId fileId,
-			const std::set<OperationId>*& result)
-		{
-			auto findResult = InputFileLookup.find(fileId);
-			if (findResult != InputFileLookup.end())
-			{
-				result = &findResult->second;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		bool TryGetOutputFileOperation(
-			FileId fileId,
-			OperationId& result)
-		{
-			auto findResult = OutputFileLookup.find(fileId);
-			if (findResult != OutputFileLookup.end())
-			{
-				result = findResult->second;
-				return true;
-			}
-			else
-			{
-				return false;
 			}
 		}
 	};

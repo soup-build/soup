@@ -27,7 +27,7 @@ namespace Soup::Core
 		/// Returns true if any of the operations were evaluated
 		/// </summary>
 		virtual bool Evaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,

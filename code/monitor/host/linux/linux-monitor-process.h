@@ -28,9 +28,7 @@ namespace Monitor::Linux
 		int m_stdOutReadHandle;
 		int m_stdErrReadHandle;
 
-		std::thread m_workerThread;
-		std::atomic<bool> m_processRunning;
-		std::atomic<bool> m_workerFailed;
+		bool m_workerFailed;
 		std::exception_ptr m_workerException = nullptr;
 
 		// Result
@@ -63,8 +61,6 @@ namespace Monitor::Linux
 			m_processId(),
 			m_stdOutReadHandle(),
 			m_stdErrReadHandle(),
-			m_workerThread(),
-			m_processRunning(),
 			m_workerFailed(),
 			m_isFinished(false),
 			m_exitCode(-1)
@@ -116,11 +112,8 @@ namespace Monitor::Linux
 				m_stdErrReadHandle = stdErrPipe[0];
 
 				// Create the worker thread that will monitor the child process
-				m_processRunning = true;
 				m_workerFailed = false;
-				DebugTrace("Thread");
-				// m_workerThread = std::thread(&LinuxMonitorProcess::WorkerThread, std::ref(*this));
-				
+
 				WorkerThread();
 
 				DebugTrace("Parent done");
@@ -132,11 +125,6 @@ namespace Monitor::Linux
 		/// </summary>
 		void WaitForExit() override final
 		{
-			// Wait until child process exits.
-			// m_workerThread.join();
-
-			m_processRunning = false;
-
 			ReadAvailableStdOut();
 			m_stdOut << std::flush;
 			close(m_stdOutReadHandle);
@@ -443,7 +431,7 @@ namespace Monitor::Linux
 			{
 				eventCount++;
 				DebugTrace("Waiting...");
-				currentProcessId = waitpid(-1, &status, __WALL);
+				currentProcessId = waitpid(-1, &status, __WALL | __WNOTHREAD);
 				int wait_errno = errno;
 
 				DebugTrace("Wait:", currentProcessId);
@@ -631,7 +619,6 @@ namespace Monitor::Linux
 					if (eventCount > 100)
 					{
 						// Read std out so the child does not fill the buffer
-						// TODO: Move to background thread so we do not block the child
 						ReadAvailableStdOut();
 						ReadAvailableStdErr();
 

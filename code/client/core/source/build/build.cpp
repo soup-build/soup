@@ -139,6 +139,7 @@ namespace Soup::Core::Build
 
 		// Initialize a shared Evaluate Engine
 		auto evaluateEngine = BuildEvaluateEngine(
+			arguments.Parallelization,
 			arguments.ForceRebuild,
 			arguments.DisableMonitor,
 			arguments.PartialMonitor,

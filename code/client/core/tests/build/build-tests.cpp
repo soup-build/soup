@@ -190,6 +190,7 @@ namespace Soup::Core::UnitTests
 			auto hostPlatform = "FakePlatform";
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = hostPlatform;
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
@@ -244,6 +245,7 @@ namespace Soup::Core::UnitTests
 					"INFO: 2>Operation results file does not exist",
 					"INFO: 2>No previous results found",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Operation has no successful previous invocation",
 					"HIGH: 2>Generate Core: [Wren]soup|cpp",
@@ -265,6 +267,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Map previous operation graph observed results",
 					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Build evaluation end",
 					"INFO: 2>Nothing to do.",
 					"DIAG: 1>Running Build: [C++]my-package",
@@ -283,6 +286,7 @@ namespace Soup::Core::UnitTests
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]my-package",
@@ -304,6 +308,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Map previous operation graph observed results",
 					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Nothing to do.",
 				}),
@@ -1150,6 +1155,7 @@ namespace Soup::Core::UnitTests
 			auto hostPlatform = "FakePlatform";
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = hostPlatform;
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
@@ -1201,11 +1207,13 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					"INFO: 2>Previous results found",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Up to date",
 					"INFO: 2>Generate Core: [Wren]soup|cpp",
 					"DIAG: 2>Build evaluation end",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Build evaluation end",
 					"INFO: 2>Nothing to do.",
 					"DIAG: 1>Running Build: [C++]my-package",
@@ -1221,11 +1229,13 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
 					"INFO: 1>Previous results found",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Up to date",
 					"INFO: 1>Generate Core: [C++]my-package",
 					"DIAG: 1>Build evaluation end",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Nothing to do.",
 				}),
@@ -1462,6 +1472,7 @@ namespace Soup::Core::UnitTests
 			auto hostPlatform = "FakePlatform";
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = hostPlatform;
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
@@ -1516,6 +1527,7 @@ namespace Soup::Core::UnitTests
 					"INFO: 2>Operation results file does not exist",
 					"INFO: 2>No previous results found",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Operation has no successful previous invocation",
 					"HIGH: 2>Generate Core: [Wren]soup|cpp",
@@ -1537,6 +1549,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Map previous operation graph observed results",
 					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Build evaluation end",
 					"INFO: 2>Nothing to do.",
 					"DIAG: 1>Running Build: [C++]my-package",
@@ -1555,6 +1568,7 @@ namespace Soup::Core::UnitTests
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]my-package",
@@ -1576,6 +1590,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Map previous operation graph observed results",
 					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
 					"INFO: 1>Checking for existing Generate Operation Results",
@@ -1583,6 +1598,7 @@ namespace Soup::Core::UnitTests
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]my-package",
@@ -1603,6 +1619,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Map previous operation graph observed results",
 					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Nothing to do.",
 				}),
@@ -2470,6 +2487,7 @@ namespace Soup::Core::UnitTests
 			auto hostPlatform = "FakePlatform";
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = hostPlatform;
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
@@ -2521,11 +2539,13 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					"INFO: 2>Previous results found",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Up to date",
 					"INFO: 2>Generate Core: [Wren]soup|cpp",
 					"DIAG: 2>Build evaluation end",
 					"DIAG: 2>Build evaluation start",
+					"DIAG: 2>Worker thread",
 					"DIAG: 2>Build evaluation end",
 					"INFO: 2>Nothing to do.",
 					"DIAG: 1>Running Build: [C++]my-package",
@@ -2545,22 +2565,26 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
 					"INFO: 1>Previous results found",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Up to date",
 					"INFO: 1>Generate Core: [C++]my-package",
 					"DIAG: 1>Build evaluation end",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
 					"INFO: 1>Checking for existing Generate Operation Results",
 					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor",
 					"INFO: 1>Previous results found",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Up to date",
 					"INFO: 1>Generate Core: [C++]my-package",
 					"DIAG: 1>Build evaluation end",
 					"DIAG: 1>Build evaluation start",
+					"DIAG: 1>Worker thread",
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Nothing to do.",
 				}),

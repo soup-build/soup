@@ -99,6 +99,7 @@ namespace Soup::Core::Build::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -383,6 +384,7 @@ namespace Soup::Core::Build::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -701,6 +703,7 @@ namespace Soup::Core::Build::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -1244,6 +1247,7 @@ namespace Soup::Core::Build::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -2025,6 +2029,7 @@ namespace Soup::Core::Build::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");

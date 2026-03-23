@@ -76,6 +76,7 @@ namespace Soup::Client
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
+			arguments.Parallelization = 4;
 			arguments.WorkingDirectory = std::move(workingDirectory);
 			arguments.ForceRebuild = false;
 			arguments.SkipGenerate = false;

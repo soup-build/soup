@@ -670,7 +670,7 @@ namespace Soup::Core::Build
 		}
 
 		bool RunPreprocessorOperations(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& realTargetDirectory,
 			const Path& soupTargetDirectory)
@@ -711,7 +711,7 @@ namespace Soup::Core::Build
 		}
 
 		void RunEvaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& operationResultsFile,
 			const Path& realTargetDirectory)
@@ -763,7 +763,7 @@ namespace Soup::Core::Build
 		/// Run incremental evaluation
 		/// </summary>
 		bool RunIncrementalEvaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& resultsFile,
 			const Path& temporaryDirectory,

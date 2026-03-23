@@ -6,6 +6,7 @@ module;
 
 #include <algorithm>
 #include <format>
+#include <future>
 #include <map>
 #include <memory>
 #include <queue>
@@ -42,6 +43,7 @@ namespace Soup::Core
 	export class BuildEvaluateEngine : public IEvaluateEngine
 	{
 	private:
+		size_t _threadCount;
 		bool _forceRebuild;
 		bool _disableMonitor;
 		bool _partialMonitor;
@@ -55,10 +57,12 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="BuildEvaluateEngine"/> class.
 		/// </summary>
 		BuildEvaluateEngine(
+			size_t threadCount,
 			bool forceRebuild,
 			bool disableMonitor,
 			bool partialMonitor,
 			FileSystemState& fileSystemState) :
+			_threadCount(threadCount),
 			_forceRebuild(forceRebuild),
 			_disableMonitor(disableMonitor),
 			_partialMonitor(partialMonitor),
@@ -71,7 +75,7 @@ namespace Soup::Core
 		/// Execute the entire operation graph that is referenced by this build evaluate engine
 		/// </summary>
 		bool Evaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,
@@ -87,14 +91,16 @@ namespace Soup::Core
 				globalAllowedWriteAccess);
 
 			// Initialize the ready set from the root operations
-			for (auto operationId : operationGraph.GetRootOperationIds())
-				evaluateState.ReadyOperations.push(operationId);
+			evaluateState.AddReadyOperations(operationGraph.GetRootOperationIds());
 
 			auto workerThreads = std::vector<std::thread>();
-			for (auto i = 0; i < 1; i++)
+			for (auto i = 0; i < _threadCount; i++)
 			{
 				workerThreads.push_back(
-					std::thread(&BuildEvaluateEngine::WorkerThread, this, std::ref(evaluateState)));
+					std::thread(
+						&BuildEvaluateEngine::WorkerThread,
+						this,
+						std::ref(evaluateState)));
 			}
 
 			// Ensure all other workers have finished
@@ -105,53 +111,61 @@ namespace Soup::Core
 
 			Log::Diag("Build evaluation end");
 
-			return evaluateState.DidAnyEvaluate;
+			return evaluateState.DidAnyEvaluate();
 		}
 
 	private:
 		void WorkerThread(BuildEvaluateGraphState& evaluateState)
 		{
-			Log::HighPriority("Worker thread");
+			Log::Diag("Worker thread");
 
 			// Process all operations until non are available
-			while (!evaluateState.ReadyOperations.empty())
+			auto operationState = evaluateState.WaitNextOperation();
+			while (operationState.has_value())
 			{
-				auto currentOperationId = evaluateState.ReadyOperations.front();
-				evaluateState.ReadyOperations.pop();
+				try
+				{
+					// Evaluate the current operation
+					CheckExecuteOperation(evaluateState, operationState.value());
 
-				// Evaluate the current operation
-				auto& operationInfo = evaluateState.OperationGraph.GetOperationInfo(currentOperationId);
-				evaluateState.DidAnyEvaluate |= CheckExecuteOperation(evaluateState, operationInfo);
+					// Scan the children for those ready to be built
+					evaluateState.RegisterReadyChildren(operationState.value().Info);
 
-				RegisterReadyChildren(evaluateState, operationInfo);
+					// Pop the next operation available or wait for one to be queued up
+					operationState = evaluateState.WaitNextOperation();
+				}
+				catch (...)
+				{
+					evaluateState.SetError(std::current_exception());
+					return;
+				}
 			}
 		}
 
 		/// <summary>
 		/// Check if an individual operation has been run and execute if required
 		/// </summary>
-		bool CheckExecuteOperation(
+		void CheckExecuteOperation(
 			BuildEvaluateGraphState& evaluateState,
-			const OperationInfo& operationInfo)
+			const CurrentOperationState operationState)
 		{
 			// Check if each source file is out of date and requires a rebuild
 			Log::Diag("Check for previous operation invocation");
 
 			// Check if this operation was run before
 			auto buildRequired = false;
-			OperationResult* previousResult;
-			if (evaluateState.OperationResults.TryFindResult(operationInfo.Id, previousResult) &&
-				previousResult->WasSuccessfulRun)
+			if (operationState.PreviousResult &&
+				operationState.PreviousResult->WasSuccessfulRun)
 			{
 				// Check if the executable has changed since the last run
 				bool executableOutOfDate = false;
-				if (operationInfo.Command.Executable != Path("./writefile.exe"))
+				if (operationState.Info.Command.Executable != Path("./writefile.exe"))
 				{
 					// Only check for "real" executables
 					auto executableFileId = _fileSystemState.ToFileId(
-						operationInfo.Command.Executable,
-						operationInfo.Command.WorkingDirectory);
-					if (_stateChecker.IsOutdated(previousResult->EvaluateTime, executableFileId))
+						operationState.Info.Command.Executable,
+						operationState.Info.Command.WorkingDirectory);
+					if (_stateChecker.IsOutdated(operationState.PreviousResult->EvaluateTime, executableFileId))
 					{
 						Log::Diag("Executable out of date");
 						executableOutOfDate = true;
@@ -160,7 +174,9 @@ namespace Soup::Core
 
 				// Perform the incremental build checks
 				if (executableOutOfDate ||
-					_stateChecker.IsOutdated(previousResult->ObservedOutput, previousResult->ObservedInput))
+					_stateChecker.IsOutdated(
+						operationState.PreviousResult->ObservedOutput,
+						operationState.PreviousResult->ObservedInput))
 				{
 					buildRequired = true;
 				}
@@ -186,11 +202,11 @@ namespace Soup::Core
 
 			if (buildRequired)
 			{
-				Log::HighPriority(operationInfo.Title);
+				Log::HighPriority(operationState.Info.Title);
 				auto messageBuilder = std::stringstream();
-				messageBuilder << "Execute: [" << operationInfo.Command.WorkingDirectory.ToString() << "] ";
-				messageBuilder << operationInfo.Command.Executable.ToString();
-				for (auto& argument : operationInfo.Command.Arguments)
+				messageBuilder << "Execute: [" << operationState.Info.Command.WorkingDirectory.ToString() << "] ";
+				messageBuilder << operationState.Info.Command.Executable.ToString();
+				for (auto& argument : operationState.Info.Command.Arguments)
 					messageBuilder << " " << argument;
 
 				Log::Diag(messageBuilder.str());
@@ -198,10 +214,10 @@ namespace Soup::Core
 				auto operationResult = OperationResult();
 
 				// Check for special in-process write operations
-				if (operationInfo.Command.Executable == Path("./writefile.exe"))
+				if (operationState.Info.Command.Executable == Path("./writefile.exe"))
 				{
 					ExecuteWriteFileOperation(
-						operationInfo,
+						operationState.Info,
 						operationResult);
 				}
 				else
@@ -210,63 +226,20 @@ namespace Soup::Core
 						evaluateState.TemporaryDirectory,
 						evaluateState.GlobalAllowedReadAccess,
 						evaluateState.GlobalAllowedWriteAccess,
-						operationInfo,
+						operationState.Info,
 						operationResult);
 				}
 
 				// Ensure there are no new dependencies
-				VerifyObservedState(evaluateState, operationInfo, operationResult);
+				VerifyObservedState(evaluateState, operationState.Info, operationResult);
 
-				evaluateState.OperationResults.AddOrUpdateOperationResult(
-					operationInfo.Id,
+				evaluateState.UpdateOperationResult(
+					operationState.Info.Id,
 					std::move(operationResult));
 			}
 			else
 			{
-				Log::Info(operationInfo.Title);
-			}
-
-			return buildRequired;
-		}
-
-		/// <summary>
-		/// Execute the collection of build operations
-		/// </summary>
-		void RegisterReadyChildren(
-			BuildEvaluateGraphState& evaluateState,
-			const OperationInfo& operationInfo)
-		{
-			for (auto operationId : operationInfo.Children)
-			{
-				// Only register the operation when all of its dependencies have completed
-				auto currentOperationSearch = evaluateState.RemainingDependencyCounts.find(operationId);
-				int32_t remainingCount = -1;
-				if (currentOperationSearch != evaluateState.RemainingDependencyCounts.end())
-				{
-					remainingCount = --currentOperationSearch->second;
-				}
-				else
-				{
-					// Get the cached total count and store the active count in the lookup
-					auto& childOperationInfo = evaluateState.OperationGraph.GetOperationInfo(operationId);
-					remainingCount = childOperationInfo.DependencyCount - 1;
-					auto insertResult = evaluateState.RemainingDependencyCounts.emplace(operationId, remainingCount);
-					if (!insertResult.second)
-						throw std::runtime_error("The operation id already existed in the remaining count lookup");
-				}
-
-				if (remainingCount == 0)
-				{
-					evaluateState.ReadyOperations.push(operationId);
-				}
-				else if (remainingCount < 0)
-				{
-					throw std::runtime_error("Remaining dependency count less than zero");
-				}
-				else
-				{
-					// This operation still has dependencies that have not finished
-				}
+				Log::Info(operationState.Info.Title);
 			}
 		}
 
@@ -442,13 +415,11 @@ namespace Soup::Core
 		}
 
 		void VerifyObservedState(
-			BuildEvaluateGraphState& evaluateState,
+			const BuildEvaluateGraphState& evaluateState,
 			const OperationInfo& operationInfo,
 			OperationResult& operationResult)
 		{
 			// TODO: Should generate NEW input/output lookup to check for entirely observed dependencies
-
-			evaluateState.EnsureOperationLookupLoaded();
 
 			// Verify new inputs
 			for (auto fileId : operationResult.ObservedInput)
@@ -464,7 +435,7 @@ namespace Soup::Core
 						!matchedInputOperationIds->contains(operationInfo.Id))
 					{
 						auto filePath = _fileSystemState.GetFilePath(fileId);
-						auto& existingOperation = evaluateState.OperationGraph.GetOperationInfo(matchedOutputOperationId);
+						auto& existingOperation = evaluateState.Graph.GetOperationInfo(matchedOutputOperationId);
 						auto message = std::format(
 							"File \"{}\" observed as input for operation \"{}\" was written to by operation \"{}\" and must be declared as input",
 							filePath.ToString(),
@@ -495,7 +466,7 @@ namespace Soup::Core
 					if (matchedOutputOperationId != operationInfo.Id)
 					{
 						auto filePath = _fileSystemState.GetFilePath(fileId);
-						auto& existingOperation = evaluateState.OperationGraph.GetOperationInfo(matchedOutputOperationId);
+						auto& existingOperation = evaluateState.Graph.GetOperationInfo(matchedOutputOperationId);
 						auto message = std::format(
 							"File \"{}\" observed as output for operation \"{}\" was already written by operation \"{}\"",
 							filePath.ToString(),

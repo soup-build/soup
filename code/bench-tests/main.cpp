@@ -629,6 +629,7 @@ int main()
 			auto systemReadAccess = std::vector<Path>();
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
