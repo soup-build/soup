@@ -5,6 +5,7 @@
 module;
 
 #include <algorithm>
+#include <condition_variable>
 #include <format>
 #include <map>
 #include <memory>
@@ -52,6 +53,9 @@ namespace Soup::Core
 	{
 	private:
 		std::mutex _mutex;
+		bool _isComplete;
+		size_t _activeOperations;
+		std::condition_variable _conditionalVariable;
 		std::exception_ptr _error;
 
 		::Soup::Core::OperationResults& Results;
@@ -79,6 +83,9 @@ namespace Soup::Core
 			const std::vector<Path>& globalAllowedReadAccess,
 			const std::vector<Path>& globalAllowedWriteAccess) :
 			_mutex(),
+			_isComplete(false),
+			_activeOperations(0),
+			_conditionalVariable(),
 			Graph(graph),
 			Results(results),
 			TemporaryDirectory(temporaryDirectory),
@@ -116,14 +123,22 @@ namespace Soup::Core
 		{
 			std::unique_lock lock(_mutex);
 
-			if (ReadyOperations.empty())
+			// If nothing to do then wait
+			if (ReadyOperations.empty() && !_isComplete)
+			{
+				_conditionalVariable.wait(
+					lock, [&]{ return !ReadyOperations.empty() || _isComplete; });
+			}
+
+			if (_isComplete)
 			{
 				return std::nullopt;
 			}
-			else
+			else if (!ReadyOperations.empty())
 			{
 				auto currentOperationId = ReadyOperations.front();
 				ReadyOperations.pop();
+				_activeOperations++;
 
 				auto& operationInfo = Graph.GetOperationInfo(currentOperationId);
 
@@ -136,12 +151,19 @@ namespace Soup::Core
 				CurrentOperationState operationState = { operationInfo, previousResult };
 				return operationState;
 			}
+			else
+			{
+				throw std::runtime_error("No Operations and not complete");
+			}
 		}
 
 		void SetError(std::exception_ptr exception)
 		{
 			std::unique_lock lock(_mutex);
 			_error = exception;
+			_isComplete = true;
+			_activeOperations--;
+			_conditionalVariable.notify_all();
 		}
 
 		void UpdateOperationResult(
@@ -164,7 +186,9 @@ namespace Soup::Core
 		void RegisterReadyChildren(const OperationInfo& operationInfo)
 		{
 			std::unique_lock lock(_mutex);
+			_activeOperations--;
 
+			size_t countAdded = 0;
 			for (auto operationId : operationInfo.Children)
 			{
 				// Only register the operation when all of its dependencies have completed
@@ -187,6 +211,7 @@ namespace Soup::Core
 				if (remainingCount == 0)
 				{
 					ReadyOperations.push(operationId);
+					countAdded++;
 				}
 				else if (remainingCount < 0)
 				{
@@ -196,6 +221,18 @@ namespace Soup::Core
 				{
 					// This operation still has dependencies that have not finished
 				}
+			}
+
+			if (countAdded > 0)
+			{
+				// Notify more work added
+				_conditionalVariable.notify_all();
+			}
+			else if (_activeOperations == 0 && ReadyOperations.empty())
+			{
+				// We are the last operation
+				_isComplete = true;
+				_conditionalVariable.notify_all();
 			}
 		}
 

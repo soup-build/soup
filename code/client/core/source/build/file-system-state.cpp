@@ -180,15 +180,15 @@ export namespace Soup::Core
 
 		FileId ToFileId(const Path& file)
 		{
+			auto lock = std::unique_lock<std::shared_mutex>(_mutex);
+
 			if (!file.HasRoot())
 				throw std::runtime_error("File paths must be absolute to resolve to an id");
 
 			// Check if the file is already known
 			FileId result;
-			if (!TryFindFileId(file, result))
+			if (!TryFindFileIdUnsafe(file, result))
 			{
-				auto lock = std::unique_lock<std::shared_mutex>(_mutex);
-
 				// Insert the new file
 				result = ++_maxFileId;
 				auto insertResult = _files.emplace(result, file);

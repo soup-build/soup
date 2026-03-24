@@ -81,43 +81,53 @@ namespace Soup::Core
 			const std::vector<Path>& globalAllowedReadAccess,
 			const std::vector<Path>& globalAllowedWriteAccess) override
 		{
-			// Run all build operations in the correct order with incremental build checks
-			Log::Diag("Build evaluation start");
-			auto evaluateState = BuildEvaluateGraphState(
-				operationGraph,
-				operationResults,
-				temporaryDirectory,
-				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+			const auto& rootOperations = operationGraph.GetRootOperationIds();
 
-			// Initialize the ready set from the root operations
-			evaluateState.AddReadyOperations(operationGraph.GetRootOperationIds());
-
-			auto workerThreads = std::vector<std::thread>();
-			for (auto i = 0; i < _threadCount; i++)
+			if (!rootOperations.empty())
 			{
-				workerThreads.push_back(
-					std::thread(
-						&BuildEvaluateEngine::WorkerThread,
-						this,
-						std::ref(evaluateState)));
-			}
+				// Run all build operations in the correct order with incremental build checks
+				Log::Diag("Build evaluation start");
+				auto evaluateState = BuildEvaluateGraphState(
+					operationGraph,
+					operationResults,
+					temporaryDirectory,
+					globalAllowedReadAccess,
+					globalAllowedWriteAccess);
 
-			// Ensure all other workers have finished
-			for (auto& worker : workerThreads)
+				// Initialize the ready set from the root operations
+				evaluateState.AddReadyOperations(rootOperations);
+
+				auto workerThreads = std::vector<std::thread>();
+				for (auto i = 1; i <= _threadCount; i++)
+				{
+					workerThreads.push_back(
+						std::thread(
+							&BuildEvaluateEngine::WorkerThread,
+							this,
+							std::ref(evaluateState),
+							i));
+				}
+
+				// Ensure all other workers have finished
+				for (auto& worker : workerThreads)
+				{
+					worker.join();
+				}
+
+				Log::Diag("Build evaluation end");
+				return evaluateState.DidAnyEvaluate();
+			}
+			else
 			{
-				worker.join();
+				Log::Diag("Build evaluation skipped");
+				return false;
 			}
-
-			Log::Diag("Build evaluation end");
-
-			return evaluateState.DidAnyEvaluate();
 		}
 
 	private:
-		void WorkerThread(BuildEvaluateGraphState& evaluateState)
+		void WorkerThread(BuildEvaluateGraphState& evaluateState, size_t id)
 		{
-			Log::Diag("Worker thread");
+			Log::Diag("Worker thread start {}", id);
 
 			// Process all operations until non are available
 			auto operationState = evaluateState.WaitNextOperation();
@@ -137,9 +147,12 @@ namespace Soup::Core
 				catch (...)
 				{
 					evaluateState.SetError(std::current_exception());
+					Log::Diag("Worker thread error {}", id);
 					return;
 				}
 			}
+
+			Log::Diag("Worker thread end {}", id);
 		}
 
 		/// <summary>

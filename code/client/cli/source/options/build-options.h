@@ -21,6 +21,12 @@ namespace Soup::Client
 		std::string Path;
 
 		/// <summary>
+		/// Gets or sets a value for the count of parallel build operations
+		/// </summary>
+		// [[Args::Option("parallelization", Default = 0, HelpText = "Parallel build operations.")]]
+		size_t Parallelization;
+
+		/// <summary>
 		/// Gets or sets a value indicating whether to skip the build generate phase
 		/// </summary>
 		// [[Args::Option("skipGenerate", Default = false, HelpText = "Do not run the build generate phase.")]]

@@ -73,6 +73,15 @@ namespace Soup::Client
 					options->Architecture = std::move(architectureValue);
 				}
 
+				auto parallelizationValue = std::string();
+				options->Parallelization = 0;
+				if (TryGetValueArgument("p", unusedArgs, parallelizationValue))
+				{
+					options->Parallelization = std::stoi(parallelizationValue);
+					if (options->Parallelization > 20)
+						throw std::runtime_error("Invalid amount of parallelization");
+				}
+
 				result = std::move(options);
 			}
 			else if (commandType == "init")

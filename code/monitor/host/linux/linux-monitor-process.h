@@ -28,9 +28,6 @@ namespace Monitor::Linux
 		int m_stdOutReadHandle;
 		int m_stdErrReadHandle;
 
-		bool m_workerFailed;
-		std::exception_ptr m_workerException = nullptr;
-
 		// Result
 		bool m_isFinished;
 		std::stringstream m_stdOut;
@@ -61,7 +58,6 @@ namespace Monitor::Linux
 			m_processId(),
 			m_stdOutReadHandle(),
 			m_stdErrReadHandle(),
-			m_workerFailed(),
 			m_isFinished(false),
 			m_exitCode(-1)
 		{
@@ -72,11 +68,6 @@ namespace Monitor::Linux
 		/// </summary>
 		void Start() override final
 		{
-			// Set current working directory that will be inherited by the child process
-			auto currentWorkingDirectory = std::filesystem::current_path();
-			if (chdir(m_workingDirectory.ToString().c_str()) == -1)
-				throw std::runtime_error("Failed to set working directory");
-
 			// Create a pipe to send stdout to parent
 			int stdOutPipe[2];
 			if (pipe2(stdOutPipe, O_NONBLOCK) < 0)
@@ -99,10 +90,6 @@ namespace Monitor::Linux
 				// Parent process still
 				DebugTrace("Parent");
 
-				// Reset working directory
-				if (chdir(currentWorkingDirectory.string().c_str()) == -1)
-					throw std::runtime_error("Failed to reset working directory");
-
 				m_processId = processId;
 
 				// Close our handle on the write end
@@ -110,9 +97,6 @@ namespace Monitor::Linux
 				close(stdErrPipe[1]);
 				m_stdOutReadHandle = stdOutPipe[0];
 				m_stdErrReadHandle = stdErrPipe[0];
-
-				// Create the worker thread that will monitor the child process
-				m_workerFailed = false;
 
 				WorkerThread();
 
@@ -134,11 +118,6 @@ namespace Monitor::Linux
 			close(m_stdErrReadHandle);
 
 			m_isFinished = true;
-
-			if (m_workerFailed)
-			{
-				std::rethrow_exception(m_workerException);
-			}
 		}
 
 		/// <summary>
@@ -223,6 +202,10 @@ namespace Monitor::Linux
 				// Close the read pipe
 				close(stdOutPipe[0]);
 				close(stdErrPipe[0]);
+
+				// Set current working directory that will be inherited by the child process
+				if (chdir(m_workingDirectory.ToString().c_str()) == -1)
+					throw std::runtime_error("Failed to set working directory");
 
 				// Redirect stdout to the pipe write
 				if (dup2(stdOutPipe[1], STDOUT_FILENO) != STDOUT_FILENO)
