@@ -203,7 +203,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
@@ -337,7 +337,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
@@ -475,7 +475,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
@@ -622,7 +622,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Output target does not exist: C:/TestWorkingDirectory/OutputFile.out",
@@ -772,7 +772,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Output target does not exist: C:/TestWorkingDirectory/OutputFile.out",
@@ -930,7 +930,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Input altered after target [C:/TestWorkingDirectory/InputFile.in] -> [C:/TestWorkingDirectory/OutputFile.out]",
@@ -1080,7 +1080,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Input altered after last evaluate [C:/TestWorkingDirectory/Command.exe]",
@@ -1219,7 +1219,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Up to date",
@@ -1337,7 +1337,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
@@ -1479,7 +1479,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
@@ -1621,7 +1621,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",

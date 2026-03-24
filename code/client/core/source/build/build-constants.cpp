@@ -3,9 +3,9 @@
 // </copyright>
 
 module;
-
+#include <cmath>
+#include <thread>
 export module Soup.Core:BuildConstants;
-
 import Opal;
 
 using namespace Opal;
@@ -120,5 +120,20 @@ export namespace Soup::Core::Build::Constants
 		auto result = System::IFileSystem::Current().GetUserProfileDirectory() +
 			SoupLocalStoreDirectory();
 		return result;
+	}
+
+	unsigned int GetDefaultParallelization()
+	{
+		auto threadCount = std::thread::hardware_concurrency();
+		if (threadCount > 0)
+		{
+			// Leave a few cores so the system stays responsive
+			return std::floor(threadCount * 0.75);
+		}
+		else
+		{
+			// Safe small number
+			return 2;
+		}
 	}
 }

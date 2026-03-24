@@ -39,7 +39,7 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip running the build generate phase
 		/// </summary>
-		size_t Parallelization;
+		unsigned int Parallelization;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip running the build generate phase

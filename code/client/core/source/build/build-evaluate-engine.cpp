@@ -43,7 +43,7 @@ namespace Soup::Core
 	export class BuildEvaluateEngine : public IEvaluateEngine
 	{
 	private:
-		size_t _threadCount;
+		unsigned int _threadCount;
 		bool _forceRebuild;
 		bool _disableMonitor;
 		bool _partialMonitor;
@@ -57,7 +57,7 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="BuildEvaluateEngine"/> class.
 		/// </summary>
 		BuildEvaluateEngine(
-			size_t threadCount,
+			unsigned int threadCount,
 			bool forceRebuild,
 			bool disableMonitor,
 			bool partialMonitor,
@@ -86,7 +86,7 @@ namespace Soup::Core
 			if (!rootOperations.empty())
 			{
 				// Run all build operations in the correct order with incremental build checks
-				Log::Diag("Build evaluation start");
+				Log::Diag("Build evaluation start {}", _threadCount);
 				auto evaluateState = BuildEvaluateGraphState(
 					operationGraph,
 					operationResults,

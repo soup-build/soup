@@ -24,7 +24,7 @@ namespace Soup::Client
 		/// Gets or sets a value for the count of parallel build operations
 		/// </summary>
 		// [[Args::Option("parallelization", Default = 0, HelpText = "Parallel build operations.")]]
-		size_t Parallelization;
+		unsigned int Parallelization;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip the build generate phase
