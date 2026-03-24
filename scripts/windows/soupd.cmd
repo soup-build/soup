@@ -8,7 +8,7 @@ SET RunDir=%OutDir%\run
 
 SET ConfigHash=OZlIVjblazFuKXg-raWUNoGEnG4
 
-SET SOUP_VERSION=0.45.0
+SET SOUP_VERSION=0.45.1
 
 REM - Cleanup previous runs
 rmdir /S /Q %RunDir% > NUL
