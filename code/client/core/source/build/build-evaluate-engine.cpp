@@ -98,7 +98,7 @@ namespace Soup::Core
 				evaluateState.AddReadyOperations(rootOperations);
 
 				auto workerThreads = std::vector<std::thread>();
-				for (auto i = 1; i <= _threadCount; i++)
+				for (auto i = 1u; i <= _threadCount; i++)
 				{
 					workerThreads.push_back(
 						std::thread(

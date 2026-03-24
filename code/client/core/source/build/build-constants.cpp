@@ -128,7 +128,7 @@ export namespace Soup::Core::Build::Constants
 		if (threadCount > 0)
 		{
 			// Leave a few cores so the system stays responsive
-			return std::floor(threadCount * 0.75);
+			return  static_cast<unsigned int>(std::floor(threadCount * 0.75));
 		}
 		else
 		{
