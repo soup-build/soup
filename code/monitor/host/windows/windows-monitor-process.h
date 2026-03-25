@@ -30,6 +30,8 @@ namespace Monitor::Windows
 	class WindowsMonitorProcess : public Opal::System::IProcess
 	{
 	private:
+		static std::atomic<int32_t> s_uniqueChildId;
+
 		// Input
 		Path m_executable;
 		std::vector<std::string> m_arguments;
@@ -274,8 +276,9 @@ namespace Monitor::Windows
 			ZeroMemory(&payload, sizeof(payload));
 			payload.nParentProcessId = GetCurrentProcessId();
 			payload.nTraceProcessId = GetCurrentProcessId();
-			payload.nGeneology = 1;
-			payload.rGeneology[0] = 0;
+			payload.nTraceChildId = s_uniqueChildId++;
+			payload.nGenealogy = 1;
+			payload.rGenealogy[0] = 0;
 			payload.wzParents[0] = 0;
 
 			// Copy over the working directory
@@ -299,7 +302,7 @@ namespace Monitor::Windows
 			}
 
 			// Initialize the pipes so they are ready for the process and the worker thread
-			InitializePipes();
+			InitializePipes(payload.nTraceProcessId, payload.nTraceChildId);
 
 			// Create the worker thread that will act as the pipe server
 			m_processRunning = true;
@@ -534,7 +537,7 @@ namespace Monitor::Windows
 		/// <summary>
 		/// Initialize the default set of connections
 		/// </summary>
-		void InitializePipes()
+		void InitializePipes(int32_t traceProcessId, int32_t traceChildId)
 		{
 			DebugTrace("InitializePipes");
 			for (auto i = 0u; i < m_pipes.size(); i++)
@@ -563,7 +566,7 @@ namespace Monitor::Windows
 				m_pipes[i].Overlap.hEvent = m_pipes[i].EventHandle.Get();
 
 				// Create the new pipe object instance
-				m_pipes[i].PipeHandle = CreateNamedPipeInstance();
+				m_pipes[i].PipeHandle = CreateNamedPipeInstance(traceProcessId, traceChildId);
 
 				// Create the connection so the clients can connect
 				// Note: This call will either connect to a client or initialize the event to notify
@@ -576,12 +579,12 @@ namespace Monitor::Windows
 		/// Create a single instance of the named pipe that will allow a
 		/// single client to connect to the pipe server.
 		/// </summary>
-		Opal::System::SmartHandle CreateNamedPipeInstance()
+		Opal::System::SmartHandle CreateNamedPipeInstance(int32_t traceProcessId, int32_t traceChildId)
 		{
 			// Create a name for the pipe
 			DebugTrace("CreateNamedPipeInstance");
 			std::stringstream pipeName;
-			pipeName << TBLOG_PIPE_NAMEA << "." << GetCurrentProcessId();
+			pipeName << TBLOG_PIPE_NAMEA << "." << traceProcessId << "." << traceChildId;
 			std::string pipeNameString = pipeName.str();
 
 			// Open in Read-Only mode with overlapped operations enabled
@@ -827,4 +830,6 @@ namespace Monitor::Windows
 #endif
 		}
 	};
+
+	std::atomic<int32_t> WindowsMonitorProcess::s_uniqueChildId = 0;
 }
