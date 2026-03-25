@@ -24,7 +24,7 @@ namespace Soup::Core::Generate
 			Log::Diag("Build generate core: {}", soupTargetDirectory.ToString());
 
 			// Load the input file
-			auto inputFile = soupTargetDirectory + BuildConstants::GenerateInputFileName();
+			auto inputFile = soupTargetDirectory + Build::Constants::GenerateInputFileName();
 			auto inputTable = ValueTable();
 			if (!ValueTableManager::TryLoadState(inputFile, inputTable))
 			{
@@ -41,7 +41,7 @@ namespace Soup::Core::Generate
 			LoadLocalUserConfig(userDataPath, sdkParameters, sdkReadAccess);
 
 			// Load the recipe file
-			auto recipeFile = packageRoot + BuildConstants::RecipeFileName();
+			auto recipeFile = packageRoot + Build::Constants::RecipeFileName();
 			Recipe recipe;
 			if (!RecipeExtensions::TryLoadRecipeFromFile(recipeFile, recipe))
 			{
@@ -126,7 +126,7 @@ namespace Soup::Core::Generate
 			{
 				// Load up the preprocessor results
 				auto generatePhase1Result = GenerateResult();
-				auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+				auto generatePhase1ResultFile = soupTargetDirectory + Build::Constants::GeneratePhase1ResultFileName();
 				if (!GenerateResultManager::TryLoadState(generatePhase1ResultFile, generatePhase1Result, _fileSystemState))
 				{
 					Log::Error("Failed to load the result from phase 1: {}", generatePhase1ResultFile.ToString());
@@ -244,8 +244,8 @@ namespace Soup::Core::Generate
 
 			// Save the runtime information so Soup View can easily visualize runtime
 			auto generateInfoStateFile = isFirstRun ?
-				soupTargetDirectory + BuildConstants::GeneratePhase1InfoFileName()
-				: soupTargetDirectory + BuildConstants::GeneratePhase2InfoFileName();
+				soupTargetDirectory + Build::Constants::GeneratePhase1InfoFileName()
+				: soupTargetDirectory + Build::Constants::GeneratePhase2InfoFileName();
 			Log::Info("Save Generate Info State: {}", generateInfoStateFile.ToString());
 			ValueTableManager::SaveState(generateInfoStateFile, generateInfoTable);
 
@@ -256,14 +256,14 @@ namespace Soup::Core::Generate
 			if (isFirstRun)
 			{
 				// Save the operation graph so the evaluate phase can load it
-				auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
+				auto generatePhase1ResultFile = soupTargetDirectory + Build::Constants::GeneratePhase1ResultFileName();
 				Log::Info("Save Generate Phase 1 Result: {}", generatePhase1ResultFile.ToString());
 				GenerateResultManager::SaveState(generatePhase1ResultFile, generateResult, _fileSystemState);
 			}
 			else
 			{
 				// Save the operation graph so the evaluate phase can load it
-				auto generatePhase2ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase2ResultFileName();
+				auto generatePhase2ResultFile = soupTargetDirectory + Build::Constants::GeneratePhase2ResultFileName();
 				Log::Info("Save Generate Phase 2 Result: {}", generatePhase2ResultFile.ToString());
 				OperationGraphManager::SaveState(generatePhase2ResultFile, generateResult.GetGraph(), _fileSystemState);
 			}
@@ -271,7 +271,7 @@ namespace Soup::Core::Generate
 			if (!generateResult.IsPreprocessor())
 			{
 				// Save the shared state that is to be passed to the downstream builds
-				auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
+				auto sharedStateFile = soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
 				ValueTableManager::SaveState(sharedStateFile, sharedState);
 			}
 
@@ -288,7 +288,7 @@ namespace Soup::Core::Generate
 			std::vector<Path>& sdkReadAccess)
 		{
 			// Load the local user config
-			auto localUserConfigPath = userDataPath + BuildConstants::LocalUserConfigFileName();
+			auto localUserConfigPath = userDataPath + Build::Constants::LocalUserConfigFileName();
 			LocalUserConfig localUserConfig = {};
 			if (!LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(localUserConfigPath, localUserConfig))
 			{
@@ -358,7 +358,7 @@ namespace Soup::Core::Generate
 					{
 						auto& dependency = dependencyValue.AsTable();
 						auto soupTargetDirectory = Path(dependency.at("SoupTargetDirectory").AsString());
-						auto sharedStateFile = soupTargetDirectory + BuildConstants::GenerateSharedStateFileName();
+						auto sharedStateFile = soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
 
 						// Load the shared state file
 						auto sharedStateTable = ValueTable();

@@ -16,11 +16,11 @@ namespace Monitor::Windows
 		}
 
 	private:
-		virtual void Connect(int32_t traceProcessId)
+		virtual void Connect(int32_t traceProcessId, int32_t traceChildId)
 		{
 			DebugTrace("ConnectionManager::Connect");
 			std::stringstream pipeNameBuilder;
-			pipeNameBuilder << TBLOG_PIPE_NAMEA << "." << traceProcessId;
+			pipeNameBuilder << TBLOG_PIPE_NAMEA << "." << traceProcessId << "." << traceChildId;
 			auto pipeName = pipeNameBuilder.str();
 
 			for (int retries = 0; retries < 10; retries++)

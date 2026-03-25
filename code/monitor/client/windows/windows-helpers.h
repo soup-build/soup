@@ -8,8 +8,7 @@ static Monitor::Windows::ProcessPayload s_ChildPayload;
 static CRITICAL_SECTION s_csChildPayload;
 static LONG s_nChildCnt = 0;
 
-bool CreateProcessInternals(
-	HANDLE hProcess)
+bool CreateProcessInternals(HANDLE hProcess)
 {
 	EnterCriticalSection(&s_csChildPayload);
 
@@ -17,9 +16,9 @@ bool CreateProcessInternals(
 	CopyMemory(&s_ChildPayload, &s_Payload, sizeof(s_ChildPayload));
 
 	s_ChildPayload.nParentProcessId = GetCurrentProcessId();
-	s_ChildPayload.rGeneology[s_ChildPayload.nGeneology] =
+	s_ChildPayload.rGenealogy[s_ChildPayload.nGenealogy] =
 		(DWORD)InterlockedIncrement(&s_nChildCnt);
-	s_ChildPayload.nGeneology++;
+	s_ChildPayload.nGenealogy++;
 
 	DetourCopyPayloadToProcess(
 		hProcess,

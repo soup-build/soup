@@ -76,6 +76,7 @@ namespace Soup::Client
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
+			arguments.Parallelization = Core::Build::Constants::GetDefaultParallelization();
 			arguments.WorkingDirectory = std::move(workingDirectory);
 			arguments.ForceRebuild = false;
 			arguments.SkipGenerate = false;
@@ -100,11 +101,11 @@ namespace Soup::Client
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
-			auto userDataPath = Core::BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
 			
 			auto recipeCache = Core::RecipeCache();
 
-			auto packageProvider = Core::BuildEngine::LoadBuildGraph(
+			auto packageProvider = Core::Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				_options.Owner,
 				arguments.GlobalParameters,
@@ -112,7 +113,7 @@ namespace Soup::Client
 				hostPlatform,
 				recipeCache);
 
-			Core::BuildEngine::Execute(
+			Core::Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
@@ -148,7 +149,7 @@ namespace Soup::Client
 			auto recipeCache = Core::RecipeCache();
 			auto recipePath =
 				workingDirectory +
-				Core::BuildConstants::RecipeFileName();
+				Core::Build::Constants::RecipeFileName();
 			const Core::Recipe* recipe;
 			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
 			{
@@ -174,7 +175,7 @@ namespace Soup::Client
 			// TODO: Generic parameters
 
 			// Load the value table to get the exe path
-			auto knownLanguages = Core::BuildEngine::GetKnownLanguages();
+			auto knownLanguages = Core::Build::GetKnownLanguages();
 			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
 				packageName,

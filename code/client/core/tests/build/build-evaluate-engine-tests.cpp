@@ -40,6 +40,7 @@ namespace Soup::Core::UnitTests
 		{
 			auto fileSystemState = FileSystemState();
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -64,6 +65,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -144,6 +146,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -200,13 +203,15 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -274,6 +279,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -331,7 +337,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
 					"HIGH: TestCommand: 1",
@@ -340,6 +347,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Allowed Write Access:",
 					"WARN: File \"C:/TestWorkingDirectory/File.txt\" observed as both input and output for operation \"TestCommand: 1\"",
 					"WARN: Removing from input list for now. Will be treated as error in the future.",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -409,6 +417,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -466,7 +475,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
 					"HIGH: TestCommand: 1",
@@ -475,6 +485,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Allowed Write Access:",
 					"WARN: File \"C:/TestWorkingDirectory/File.txt\" observed as both input and output for operation \"TestCommand: 1\"",
 					"WARN: Removing from input list for now. Will be treated as error in the future.",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -544,6 +555,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -610,13 +622,15 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Output target does not exist: C:/TestWorkingDirectory/OutputFile.out",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -692,6 +706,7 @@ namespace Soup::Core::UnitTests
 
 			// Create the build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -757,13 +772,15 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Output target does not exist: C:/TestWorkingDirectory/OutputFile.out",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -839,6 +856,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -912,13 +930,15 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Input altered after target [C:/TestWorkingDirectory/InputFile.in] -> [C:/TestWorkingDirectory/OutputFile.out]",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -986,6 +1006,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -1059,7 +1080,8 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Input altered after last evaluate [C:/TestWorkingDirectory/Command.exe]",
 					"DIAG: Executable out of date",
@@ -1067,6 +1089,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -1130,6 +1153,7 @@ namespace Soup::Core::UnitTests
 
 			// Create the initial build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -1195,10 +1219,12 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Up to date",
 					"INFO: TestCommand: 1",
+					"DIAG: Worker thread end 1",
 					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
@@ -1244,6 +1270,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -1310,13 +1337,16 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command1.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread error 1",
+					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -1382,6 +1412,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -1448,13 +1479,16 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command1.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread error 1",
+					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -1520,6 +1554,7 @@ namespace Soup::Core::UnitTests
 
 			// Setup the input build state
 			auto uut = BuildEvaluateEngine(
+				1,
 				false,
 				false,
 				false,
@@ -1586,13 +1621,16 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Build evaluation start",
+					"DIAG: Build evaluation start 1",
+					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
 					"INFO: Operation has no successful previous invocation",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command1.exe Arguments",
 					"DIAG: Allowed Read Access:",
 					"DIAG: Allowed Write Access:",
+					"DIAG: Worker thread error 1",
+					"DIAG: Build evaluation end",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");

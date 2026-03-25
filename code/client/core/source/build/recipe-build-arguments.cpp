@@ -39,6 +39,11 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip running the build generate phase
 		/// </summary>
+		unsigned int Parallelization;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to skip running the build generate phase
+		/// </summary>
 		bool SkipGenerate;
 
 		/// <summary>
@@ -68,6 +73,7 @@ namespace Soup::Core
 		{
 			return GlobalParameters == rhs.GlobalParameters &&
 				WorkingDirectory == rhs.WorkingDirectory &&
+				Parallelization == rhs.Parallelization &&
 				SkipGenerate == rhs.SkipGenerate &&
 				SkipEvaluate == rhs.SkipEvaluate &&
 				ForceRebuild == rhs.ForceRebuild;

@@ -55,12 +55,13 @@ import Opal;
 
 // Build
 export import :BuildConstants;
-export import :BuildEngine;
 export import :BuildEvaluateEngine;
+import :BuildEvaluateGraphState;
 export import :BuildFailedException;
 export import :BuildHistoryChecker;
 export import :BuildLoadEngine;
 export import :BuildRunner;
+export import :Build;
 export import :DependencyTargetSet;
 export import :FileSystemState;
 export import :IEvaluateEngine;

@@ -8,14 +8,14 @@ SET RunDir=%OutDir%\run
 
 SET ConfigHash=Oltq7cGwk0Rbgy1I-3mCMDDE5yM
 
-SET SOUP_VERSION=0.45.0
+SET SOUP_VERSION=0.45.1
 
 REM - Cleanup previous runs
 rmdir /S /Q %RunDir% > NUL
 
 REM - Use a copy of the final binary in case we are re-building itself
 robocopy %ScriptsDir%\install\ %RunDir%\ /MIR /NJH /NJS /NDL > NUL
-robocopy %OutDir%\C++\local\soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\ /MIR /NJH /NJS /NDL > NUL
+robocopy %OutDir%\cpp\local\soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\ /MIR /NJH /NJS /NDL > NUL
 
 robocopy %MSBuildDir%\bin\soup.build.package-manager\Release\net10.0\win-x64\publish\ %RunDir%\Soup\package-manager\ /MIR /NJH /NJS /NDL > NUL
 

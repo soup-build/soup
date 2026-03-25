@@ -31,7 +31,7 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
+namespace Soup::Core::Build::UnitTests
 {
 	export class BuildRunnerTests
 	{
@@ -99,6 +99,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -383,6 +384,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -701,6 +703,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -1244,6 +1247,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");
@@ -2025,6 +2029,7 @@ namespace Soup::Core::UnitTests
 			auto scopedProcessManager = ScopedProcessManagerRegister(processManager);
 
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 			auto userDataPath = Path("C:/Users/Me/.soup/");

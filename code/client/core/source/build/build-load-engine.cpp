@@ -33,7 +33,7 @@ import Opal;
 
 using namespace Opal;
 
-namespace Soup::Core
+namespace Soup::Core::Build
 {
 	struct PackageLockState
 	{
@@ -125,7 +125,7 @@ namespace Soup::Core
 			// There is no parent, create empty state
 			auto parentPackageLockState = PackageLockState();
 
-			auto recipePath = projectRoot + BuildConstants::RecipeFileName();
+			auto recipePath = projectRoot + Build::Constants::RecipeFileName();
 			const Recipe* recipe;
 			if (!_recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
 			{
@@ -260,7 +260,7 @@ namespace Soup::Core
 
 		const PackageLockState& LoadPackageLock(const Path& projectRoot)
 		{
-			auto packageLockPath = projectRoot + BuildConstants::PackageLockFileName();
+			auto packageLockPath = projectRoot + Build::Constants::PackageLockFileName();
 
 			// Check if the package lock has already been processed from another graph
 			auto findKnownPackageLock = _knownPackageLocks.find(packageLockPath.ToString());
@@ -755,7 +755,7 @@ namespace Soup::Core
 					dependencyProjectRoot = projectRoot + dependencyProjectRoot;
 				}
 
-				auto packageRecipePath = dependencyProjectRoot + BuildConstants::RecipeFileName();
+				auto packageRecipePath = dependencyProjectRoot + Build::Constants::RecipeFileName();
 				if (!_recipeCache.TryGetOrLoadRecipe(packageRecipePath, dependencyRecipe))
 				{
 					Log::Error("The dependency Recipe does not exist: {}", packageRecipePath.ToString());
@@ -825,7 +825,7 @@ namespace Soup::Core
 				dependencyProjectRoot = GetPackageReferencePath(
 					activeReference,
 					packageLockState);
-				auto packageRecipePath = dependencyProjectRoot + BuildConstants::RecipeFileName();
+				auto packageRecipePath = dependencyProjectRoot + Constants::RecipeFileName();
 				if (!_recipeCache.TryGetOrLoadRecipe(packageRecipePath, dependencyRecipe))
 				{
 					Log::Error("The dependency Recipe version has not been installed: {} -> {} [{}]", activeReference.ToString(), dependencyProjectRoot.ToString(), projectRoot.ToString());
@@ -965,7 +965,7 @@ namespace Soup::Core
 					dependencyProjectRoot = projectRoot + dependencyProjectRoot;
 				}
 
-				auto packageRecipePath = dependencyProjectRoot + BuildConstants::RecipeFileName();
+				auto packageRecipePath = dependencyProjectRoot + Constants::RecipeFileName();
 				const Recipe* dependencyRecipe;
 				if (!_recipeCache.TryGetOrLoadRecipe(packageRecipePath, dependencyRecipe))
 				{
@@ -1065,7 +1065,7 @@ namespace Soup::Core
 					dependencyProjectRoot = projectRoot + dependencyProjectRoot;
 				}
 
-				auto packageRecipePath = dependencyProjectRoot + BuildConstants::RecipeFileName();
+				auto packageRecipePath = dependencyProjectRoot + Constants::RecipeFileName();
 				const Recipe* dependencyRecipe;
 				if (!_recipeCache.TryGetOrLoadRecipe(packageRecipePath, dependencyRecipe))
 				{
@@ -1197,7 +1197,7 @@ namespace Soup::Core
 			}
 			else
 			{
-				auto packageRecipePath = dependencyProjectRoot + BuildConstants::RecipeFileName();
+				auto packageRecipePath = dependencyProjectRoot + Constants::RecipeFileName();
 				const Recipe* dependencyRecipe = nullptr;
 				if (!_recipeCache.TryGetOrLoadRecipe(packageRecipePath, dependencyRecipe))
 				{

@@ -36,7 +36,7 @@ import Opal;
 
 using namespace Opal;
 
-namespace Soup::Core
+namespace Soup::Core::Build
 {
 	/// <summary>
 	/// The build runner that knows how to perform the correct build for a recipe
@@ -229,7 +229,7 @@ namespace Soup::Core
 				std::format("/(PACKAGE_{})/", packageInfo.Name.ToString()));
 			auto macroTargetDirectory = Path(
 				std::format("/(TARGET_{})/", packageInfo.Name.ToString()));
-			auto soupTargetDirectory = targetDirectory + BuildConstants::SoupTargetDirectory();
+			auto soupTargetDirectory = targetDirectory + Constants::SoupTargetDirectory();
 
 			// Build up the set of directories and macros that grant access to the generate/evaluate phases
 			auto packageAccessSet = GenerateAccessSet(
@@ -301,10 +301,10 @@ namespace Soup::Core
 			auto evaluatePhase1Results = OperationResults();
 			auto evaluatePhase2Results = OperationResults();
 
-			auto generatePhase1ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase1ResultFileName();
-			auto generatePhase2ResultFile = soupTargetDirectory + BuildConstants::GeneratePhase2ResultFileName();
-			auto evaluatePhase1ResultsFile = soupTargetDirectory + BuildConstants::EvaluatePhase1ResultsFileName();
-			auto evaluatePhase2ResultsFile = soupTargetDirectory + BuildConstants::EvaluatePhase2ResultsFileName();
+			auto generatePhase1ResultFile = soupTargetDirectory + Constants::GeneratePhase1ResultFileName();
+			auto generatePhase2ResultFile = soupTargetDirectory + Constants::GeneratePhase2ResultFileName();
+			auto evaluatePhase1ResultsFile = soupTargetDirectory + Constants::EvaluatePhase1ResultsFileName();
+			auto evaluatePhase2ResultsFile = soupTargetDirectory + Constants::EvaluatePhase2ResultsFileName();
 
 			//////////////////////////////////////////////
 			// Setup Generate
@@ -566,7 +566,7 @@ namespace Soup::Core
 			inputTable.emplace("EvaluateWriteAccess", std::move(evaluateAllowedWriteAccess));
 			inputTable.emplace("EvaluateMacros", std::move(evaluateMacros));
 
-			auto inputFile = soupTargetDirectory + BuildConstants::GenerateInputFileName();
+			auto inputFile = soupTargetDirectory + Constants::GenerateInputFileName();
 			Log::Info("Check outdated generate input file: {}", inputFile.ToString());
 			if (IsOutdated(inputTable, inputFile))
 			{
@@ -622,7 +622,7 @@ namespace Soup::Core
 			generateAllowedReadAccess.push_back(generateFolder);
 
 			// Allow read access to the local user config
-			auto localUserConfigPath = _userDataPath + BuildConstants::LocalUserConfigFileName();
+			auto localUserConfigPath = _userDataPath + Build::Constants::LocalUserConfigFileName();
 			generateAllowedReadAccess.push_back(std::move(localUserConfigPath));
 
 			// TODO: Windows specific
@@ -639,8 +639,8 @@ namespace Soup::Core
 
 			// Load the previous build results if it exists
 			auto generateResultFile = isFirstRun ?
-				soupTargetDirectory + BuildConstants::GeneratePhase1OperationResultFileName()
-				: soupTargetDirectory + BuildConstants::GeneratePhase2OperationResultFileName();
+				soupTargetDirectory + Constants::GeneratePhase1OperationResultFileName()
+				: soupTargetDirectory + Constants::GeneratePhase2OperationResultFileName();
 			Log::Info("Checking for existing Generate Operation Results");
 			Log::Diag(generateResultFile.ToString());
 			auto generateResults = OperationResults();
@@ -657,7 +657,7 @@ namespace Soup::Core
 			}
 
 			// Set the temporary folder under the target folder
-			auto temporaryDirectory = realTargetDirectory + BuildConstants::TemporaryFolderName();
+			auto temporaryDirectory = realTargetDirectory + Constants::TemporaryFolderName();
 
 			// Evaluate the Generate phase
 			return RunIncrementalEvaluate(
@@ -670,13 +670,13 @@ namespace Soup::Core
 		}
 
 		bool RunPreprocessorOperations(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& realTargetDirectory,
 			const Path& soupTargetDirectory)
 		{
 			// Set the temporary folder under the target folder
-			auto temporaryDirectory = realTargetDirectory + BuildConstants::TemporaryFolderName();
+			auto temporaryDirectory = realTargetDirectory + Constants::TemporaryFolderName();
 
 			// Initialize the read access with the shared global set
 			auto allowedReadAccess = std::vector<Path>();
@@ -700,7 +700,7 @@ namespace Soup::Core
 			}
 
 			// Evaluate the build
-			auto evaluatePhase1ResultsFile = soupTargetDirectory + BuildConstants::EvaluatePhase1ResultsFileName();
+			auto evaluatePhase1ResultsFile = soupTargetDirectory + Constants::EvaluatePhase1ResultsFileName();
 			return RunIncrementalEvaluate(
 				operationGraph,
 				operationResults,
@@ -711,13 +711,13 @@ namespace Soup::Core
 		}
 
 		void RunEvaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& operationResultsFile,
 			const Path& realTargetDirectory)
 		{
 			// Set the temporary folder under the target folder
-			auto temporaryDirectory = realTargetDirectory + BuildConstants::TemporaryFolderName();
+			auto temporaryDirectory = realTargetDirectory + Build::Constants::TemporaryFolderName();
 
 			// Initialize the read access with the shared global set
 			auto allowedReadAccess = std::vector<Path>();
@@ -763,7 +763,7 @@ namespace Soup::Core
 		/// Run incremental evaluation
 		/// </summary>
 		bool RunIncrementalEvaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& resultsFile,
 			const Path& temporaryDirectory,
@@ -1077,7 +1077,7 @@ namespace Soup::Core
 			return result;
 		}
 
-		void BuildDirectoryStructure(DirectoryState& activeDirectory, ValueList& result)
+		void BuildDirectoryStructure(const DirectoryState& activeDirectory, ValueList& result)
 		{
 			for (auto& file : activeDirectory.Files)
 			{

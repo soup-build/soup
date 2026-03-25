@@ -28,11 +28,6 @@ namespace Monitor::Linux
 		int m_stdOutReadHandle;
 		int m_stdErrReadHandle;
 
-		std::thread m_workerThread;
-		std::atomic<bool> m_processRunning;
-		std::atomic<bool> m_workerFailed;
-		std::exception_ptr m_workerException = nullptr;
-
 		// Result
 		bool m_isFinished;
 		std::stringstream m_stdOut;
@@ -63,9 +58,6 @@ namespace Monitor::Linux
 			m_processId(),
 			m_stdOutReadHandle(),
 			m_stdErrReadHandle(),
-			m_workerThread(),
-			m_processRunning(),
-			m_workerFailed(),
 			m_isFinished(false),
 			m_exitCode(-1)
 		{
@@ -76,11 +68,6 @@ namespace Monitor::Linux
 		/// </summary>
 		void Start() override final
 		{
-			// Set current working directory that will be inherited by the child process
-			auto currentWorkingDirectory = std::filesystem::current_path();
-			if (chdir(m_workingDirectory.ToString().c_str()) == -1)
-				throw std::runtime_error("Failed to set working directory");
-
 			// Create a pipe to send stdout to parent
 			int stdOutPipe[2];
 			if (pipe2(stdOutPipe, O_NONBLOCK) < 0)
@@ -103,10 +90,6 @@ namespace Monitor::Linux
 				// Parent process still
 				DebugTrace("Parent");
 
-				// Reset working directory
-				if (chdir(currentWorkingDirectory.string().c_str()) == -1)
-					throw std::runtime_error("Failed to reset working directory");
-
 				m_processId = processId;
 
 				// Close our handle on the write end
@@ -115,12 +98,6 @@ namespace Monitor::Linux
 				m_stdOutReadHandle = stdOutPipe[0];
 				m_stdErrReadHandle = stdErrPipe[0];
 
-				// Create the worker thread that will monitor the child process
-				m_processRunning = true;
-				m_workerFailed = false;
-				DebugTrace("Thread");
-				// m_workerThread = std::thread(&LinuxMonitorProcess::WorkerThread, std::ref(*this));
-				
 				WorkerThread();
 
 				DebugTrace("Parent done");
@@ -132,11 +109,6 @@ namespace Monitor::Linux
 		/// </summary>
 		void WaitForExit() override final
 		{
-			// Wait until child process exits.
-			// m_workerThread.join();
-
-			m_processRunning = false;
-
 			ReadAvailableStdOut();
 			m_stdOut << std::flush;
 			close(m_stdOutReadHandle);
@@ -146,11 +118,6 @@ namespace Monitor::Linux
 			close(m_stdErrReadHandle);
 
 			m_isFinished = true;
-
-			if (m_workerFailed)
-			{
-				std::rethrow_exception(m_workerException);
-			}
 		}
 
 		/// <summary>
@@ -235,6 +202,10 @@ namespace Monitor::Linux
 				// Close the read pipe
 				close(stdOutPipe[0]);
 				close(stdErrPipe[0]);
+
+				// Set current working directory that will be inherited by the child process
+				if (chdir(m_workingDirectory.ToString().c_str()) == -1)
+					throw std::runtime_error("Failed to set working directory");
 
 				// Redirect stdout to the pipe write
 				if (dup2(stdOutPipe[1], STDOUT_FILENO) != STDOUT_FILENO)
@@ -443,7 +414,7 @@ namespace Monitor::Linux
 			{
 				eventCount++;
 				DebugTrace("Waiting...");
-				currentProcessId = waitpid(-1, &status, __WALL);
+				currentProcessId = waitpid(-1, &status, __WALL | __WNOTHREAD);
 				int wait_errno = errno;
 
 				DebugTrace("Wait:", currentProcessId);
@@ -631,7 +602,6 @@ namespace Monitor::Linux
 					if (eventCount > 100)
 					{
 						// Read std out so the child does not fill the buffer
-						// TODO: Move to background thread so we do not block the child
 						ReadAvailableStdOut();
 						ReadAvailableStdErr();
 

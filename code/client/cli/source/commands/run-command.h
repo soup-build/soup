@@ -85,6 +85,7 @@ namespace Soup::Client
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
+			arguments.Parallelization = Core::Build::Constants::GetDefaultParallelization();
 			arguments.WorkingDirectory = workingDirectory;
 			arguments.ForceRebuild = false;
 			arguments.SkipGenerate = false;
@@ -104,9 +105,9 @@ namespace Soup::Client
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
-			auto userDataPath = Core::BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
 
-			auto packageProvider = Core::BuildEngine::LoadBuildGraph(
+			auto packageProvider = Core::Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
@@ -114,7 +115,7 @@ namespace Soup::Client
 				hostPlatform,
 				recipeCache);
 
-			Core::BuildEngine::Execute(
+			Core::Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
@@ -132,7 +133,7 @@ namespace Soup::Client
 			// Load the recipe
 			auto recipePath =
 				workingDirectory +
-				Core::BuildConstants::RecipeFileName();
+				Core::Build::Constants::RecipeFileName();
 			const Core::Recipe* recipe;
 			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
 			{
@@ -149,7 +150,7 @@ namespace Soup::Client
 			// TODO: Generic parameters
 
 			// Load the value table to get the exe path
-			auto knownLanguages = Core::BuildEngine::GetKnownLanguages();
+			auto knownLanguages = Core::Build::GetKnownLanguages();
 			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
 				packageName,
@@ -157,10 +158,10 @@ namespace Soup::Client
 				*recipe,
 				globalParameters,
 				recipeCache);
-			auto soupTargetDirectory = targetDirectory + Core::BuildConstants::SoupTargetDirectory();
+			auto soupTargetDirectory = targetDirectory + Core::Build::Constants::SoupTargetDirectory();
 
 			// Load the shared state file
-			auto generateInputFile = soupTargetDirectory + Core::BuildConstants::GenerateInputFileName();
+			auto generateInputFile = soupTargetDirectory + Core::Build::Constants::GenerateInputFileName();
 			auto generateInputTable = Core::ValueTable();
 			if (!Core::ValueTableManager::TryLoadState(generateInputFile, generateInputTable))
 			{
@@ -177,7 +178,7 @@ namespace Soup::Client
 			auto macroManager = Core::MacroManager( macros);
 
 			// Load the shared state file
-			auto sharedStateFile = soupTargetDirectory + Core::BuildConstants::GenerateSharedStateFileName();
+			auto sharedStateFile = soupTargetDirectory + Core::Build::Constants::GenerateSharedStateFileName();
 			auto sharedStateTable = Core::ValueTable();
 			if (!Core::ValueTableManager::TryLoadState(sharedStateFile, sharedStateTable))
 			{

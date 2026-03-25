@@ -58,7 +58,7 @@ namespace Soup::Core
 		/// Execute the entire operation graph that is referenced by this build evaluate engine
 		/// </summary>
 		bool Evaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& /*globalAllowedReadAccess*/,

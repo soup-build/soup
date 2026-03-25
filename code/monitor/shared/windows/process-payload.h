@@ -12,10 +12,14 @@ export namespace Monitor::Windows
 
 	struct ProcessPayload
 	{
+		// The direct parent process id
 		DWORD nParentProcessId;
+		// The root parent process id for unique ownership
 		DWORD nTraceProcessId;
-		DWORD nGeneology;
-		DWORD rGeneology[64];
+		// The unique id for the child process tree for concurrent monitoring
+		DWORD nTraceChildId;
+		DWORD nGenealogy;
+		DWORD rGenealogy[64];
 		WCHAR wzParents[256];
 		CHAR zWorkingDirectory[256];
 		DWORD EnableAccessChecks;

@@ -624,27 +624,32 @@ int main()
 		auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
 		auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
-		ankerl::nanobench::Bench().minEpochIterations(3000).run("BuildEngine Execute NoDependencies UpToDate", [&]
+		ankerl::nanobench::Bench().minEpochIterations(3000).run("Build Execute NoDependencies UpToDate", [&]
 		{
+			auto systemReadAccess = std::vector<Path>();
+
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
 			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
 			// Load user config state
-			auto userDataPath = BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
 
-			auto packageProvider = BuildEngine::LoadBuildGraph(
+			auto packageProvider = Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
 				userDataPath,
+				arguments.HostPlatform,
 				recipeCache);
 
-			BuildEngine::Execute(
+			Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
+				systemReadAccess,
 				recipeCache);
 		});
 	}
