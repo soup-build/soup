@@ -20,6 +20,7 @@ module;
 
 export module Soup.Core:BuildEvaluateGraphState;
 
+import :FileSystemState;
 import :OperationInfo;
 import :OperationGraph;
 import :OperationResult;
