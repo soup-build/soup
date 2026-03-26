@@ -2,7 +2,7 @@ Version: 6
 Closure: {
 	'C++': {
 		'samples-cpp-parse-json': { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|json11': { Version: 1.1.5, Digest: 'sha256:f646ce4a624262be6608142c1df17e72480ec413c36c100eb6b44257d09173da', Build: '0', Tool: '0' }
+		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
