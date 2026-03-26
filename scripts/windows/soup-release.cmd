@@ -15,7 +15,7 @@ rmdir /S /Q %RunDir% > NUL
 
 REM - Use a copy of the final binary in case we are re-building itself
 robocopy %ScriptsDir%\install\ %RunDir%\ /MIR /NJH /NJS /NDL > NUL
-robocopy %OutDir%\C++\Local\Soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\ /MIR /NJH /NJS /NDL > NUL
+robocopy %OutDir%\cpp\local\Soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\ /MIR /NJH /NJS /NDL > NUL
 
 robocopy %MSBuildDir%\bin\soup.build.package-manager\Release\net10.0\win-x64\publish\ %RunDir%\Soup\package-manager\ *.dll *.exe /MIR /NJH /NJS /NDL > NUL
 
