@@ -35,7 +35,7 @@ jobs:
     - name: Soup Restore Client
       run: soup restore ./soup/code/client/cli/ -v:d
     - name: Soup Build Client
-      run: soup build ./soup/code/client/cli/  -v:d -flavor ${{matrix.config}}
+      run: soup build ./soup/code/client/cli/ -p 2 -flavor ${{matrix.config}}
     - name: Soup Run Version
       run: soup run ./soup/code/client/cli/ -flavor ${{matrix.config}} -args version
     - name: Soup Restore GenerateTest
