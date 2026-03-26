@@ -35,6 +35,10 @@ jobs:
     - name: Soup Restore Client
       run: soup restore ./soup/code/client/cli/ -v:d
     - name: Soup Build Client
+      if: matrix.os == 'windows-2022'
+      run: soup build ./soup/code/client/cli/ -p 1 -flavor ${{matrix.config}}
+    - name: Soup Build Client
+      if: matrix.os != 'windows-2022'
       run: soup build ./soup/code/client/cli/ -flavor ${{matrix.config}}
     - name: Soup Run Version
       run: soup run ./soup/code/client/cli/ -flavor ${{matrix.config}} -args version
