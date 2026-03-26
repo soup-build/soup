@@ -43,11 +43,10 @@ module;
 
 # include <iostream>
 # include <chrono>
-#ifndef _WIN32 // TODO: MSVC BUG
 # include <optional>
+# include <string>
 # include <unordered_map>
 # include <vector>
-#endif
 
 module Soup.Core;
 import reflex;
@@ -505,7 +504,8 @@ private:
             return false;
 
         // Key token already matched
-        auto userName = str();
+        auto userName = std::optional<std::string>();
+        userName = str();
 
         // Check separator
         MoveNext();
