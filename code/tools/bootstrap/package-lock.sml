@@ -16,10 +16,10 @@ Closure: {
 		'soup-core': { Version: '../../client/core/', Build: '3', Tool: '1' }
 		'soup-native': { Version: '../../client/native/', Build: '2', Tool: '1' }
 		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '2', Tool: '1' }
-		'mwasplund|cryptopp': { Version: 1.2.7, Digest: 'sha256:2590a7d8bc1a176c34c2b0ca77e016ecb2b49c156a3bf095a47f5a8063035c78', Build: '2', Tool: '1' }
+		'mwasplund|cryptopp': { Version: 1.2.8, Digest: 'sha256:6d19806db25880437c805a616a3470ddb1b86cba2e6bfd83a378118e1f46e037', Build: '2', Tool: '1' }
 		'mwasplund|json11': { Version: 1.1.5, Digest: 'sha256:f646ce4a624262be6608142c1df17e72480ec413c36c100eb6b44257d09173da', Build: '2', Tool: '1' }
 		'mwasplund|opal': { Version: 0.12.6, Digest: 'sha256:eba7621f545cc3f679a72dd034b046e2d0307025342debd9a798f0bc7a45db5b', Build: '2', Tool: '1' }
-		'mwasplund|reflex': { Version: 5.5.3, Digest: 'sha256:4d9f2157e7c1316a8586c03f426af12e25568ad3eaa5627541ca9120b8b9b2b1', Build: '2', Tool: '1' }
+		'mwasplund|reflex': { Version: 5.5.4, Digest: 'sha256:09e879b8c200c6415543686cf81c710712d07286753cdcd77cec08eab8e81bbe', Build: '2', Tool: '1' }
 		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '2', Tool: '1' }
 	}
 }
