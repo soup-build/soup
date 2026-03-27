@@ -485,7 +485,7 @@ namespace Soup::Core::Build
 			{
 				throw std::runtime_error(
 					std::format(
-						"Buil closure [{}] not found in lock [{}]",
+						"Build closure [{}] not found in lock [{}]",
 						closureName,
 						packageLockState.RootDirectory.ToString()));
 			}
@@ -542,7 +542,7 @@ namespace Soup::Core::Build
 			{
 				throw std::runtime_error(
 					std::format(
-						"Buil closure [{}] not found in lock [{}]",
+						"Build closure [{}] not found in lock [{}]",
 						closureName,
 						packageLockState.RootDirectory.ToString()));
 			}
