@@ -2,7 +2,7 @@ Version: 6
 Closure: {
 	'C++': {
 		'samples-cpp-parse-json': { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|json11': { Version: 1.1.5, Digest: 'sha256:f646ce4a624262be6608142c1df17e72480ec413c36c100eb6b44257d09173da', Build: '0', Tool: '0' }
+		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
@@ -12,7 +12,7 @@ Builds: {
 				Version: 0.16.4
 				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
 				Artifacts: {
-					Linux: 'sha256:2f9a431c03aefe4098c5f9c3de3329a862cf5c38da219791c60d83f88cf76401'
+					Linux: 'sha256:29321540a556729e3a8f2485442dbbf6f00232124c748b08b03f369a24c75f65'
 					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
 				}
 			}
