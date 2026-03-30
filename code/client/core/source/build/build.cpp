@@ -6,6 +6,7 @@ module;
 
 #include <chrono>
 #include <map>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -63,7 +64,7 @@ namespace Soup::Core::Build
 	/// </summary>
 	export PackageProvider LoadBuildGraph(
 		const Path& workingDirectory,
-		std::optional<std::string> owner,
+		const std::optional<std::string>& owner,
 		const ValueTable& targetGlobalParameters,
 		const Path& userDataPath,
 		std::string_view hostPlatform,
