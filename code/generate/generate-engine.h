@@ -151,7 +151,7 @@ namespace Soup::Core::Generate
 							auto preprocessorOperationResult = ValueTable();
 
 							preprocessorOperationResult.emplace("Title", Value(operation.Title));
-							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable));
+							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable.ToString()));
 
 							auto operationArguments = ValueList();
 							for (auto& argument : operation.Command.Arguments)

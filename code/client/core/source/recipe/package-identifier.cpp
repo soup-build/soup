@@ -96,9 +96,17 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="PackageIdentifier"/> class.
 		/// </summary>
 		PackageIdentifier(
-			std::optional<std::string> language,
-			std::optional<std::string> owner,
-			std::string name) :
+			const std::optional<std::string>& language,
+			const std::optional<std::string>& owner,
+			const std::string& name) :
+			_language(language),
+			_name(owner, name)
+		{
+		}
+		PackageIdentifier(
+			std::optional<std::string>&& language,
+			std::optional<std::string>&& owner,
+			std::string&& name) :
 			_language(std::move(language)),
 			_name(std::move(owner), std::move(name))
 		{
