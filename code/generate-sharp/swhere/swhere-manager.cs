@@ -7,13 +7,15 @@ using Opal.System;
 using Soup.Build.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Versioning;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Path = Opal.Path;
 
 namespace Soup.Build.Discover;
 
-public static class SwhereManager
+public static partial class SwhereManager
 {
 	public static async Task DiscoverAsync(OSPlatform platform, bool includePrerelease)
 	{
@@ -157,33 +159,63 @@ public static class SwhereManager
 		}
 	}
 
-	private static async Task DiscoverClangAsync(OSPlatform platform, LocalUserConfig userConfig)
+	private static async Task DiscoverClangAsync(
+		OSPlatform platform,
+		LocalUserConfig userConfig)
 	{
-		Log.HighPriority("Discover Clang");
+		var clangSDK = userConfig.EnsureSDK("Clang");
+		clangSDK.SourceDirectories = [];
 
-		// Find the Clang SDKs
-		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "clang");
-		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "clang++");
-		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "ar");
+		var sdksTable = new SMLTable();
 
-		if (cCompilerPath is null || cppCompilerPath is null || archiverPath is null)
+		var clangMatches = LifetimeManager.Get<IFileSystem>().GetChildFiles(new Path("/bin/"));
+
+		var nameRegex = ParseExecutableVersionRegex();
+		var maxVersion = -1;
+		foreach (var file in clangMatches)
 		{
-			Log.HighPriority("Clang not installed");
+			var matchName = nameRegex.Match(file.Path.FileName);
+			if (matchName.Success && matchName.Groups["Name"].Value == "clang")
+			{
+				var version = int.Parse(matchName.Groups["Version"].Value, CultureInfo.InvariantCulture);
+				await DiscoverClangVersionAsync(platform, sdksTable, version);
+				maxVersion = Math.Max(version, maxVersion);
+			}
 		}
-		else
-		{
-			var clangSDK = userConfig.EnsureSDK("Clang");
-			clangSDK.SourceDirectories = [];
-			clangSDK.SetProperties(
-				new Dictionary<string, string>()
-				{
-					{ "CCompiler", cCompilerPath.ToString() },
-					{ "CppCompiler", cppCompilerPath.ToString() },
-					{ "Archiver", archiverPath.ToString() },
-				});
-		}
+
+		if (!clangSDK.Properties.Values.ContainsKey("Default"))
+			clangSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
+
+		var propertiesSDKs = clangSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
+		propertiesSDKs.Values.Clear();
+		foreach (var (key, value) in sdksTable.Values)
+			propertiesSDKs.Values.Add(key, value);
 	}
 
+	private static async Task DiscoverClangVersionAsync(
+		OSPlatform platform,
+		SMLTable sdksTable,
+		int version)
+	{
+		Log.HighPriority($"Discover Clang {version}");
+
+		// Find the Clang SDKs
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang-{version}");
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang++-{version}");
+		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang-scan-deps-{version}");
+		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "ar");
+
+		var versionTable = sdksTable.AddTableWithSyntax($"{version}", 4);
+
+		if (cCompilerPath is not null)
+			versionTable.AddItemWithSyntax("CCompiler", cCompilerPath.ToString(), 5);
+		if (cppCompilerPath is not null)
+			versionTable.AddItemWithSyntax("CppCompiler", cppCompilerPath.ToString(), 5);
+		if (cppScannerPath is not null)
+			versionTable.AddItemWithSyntax("CppScanner", cppScannerPath.ToString(), 5);
+		if (archiverPath is not null)
+			versionTable.AddItemWithSyntax("Archiver", archiverPath.ToString(), 5);
+	}
 
 	private static async Task DiscoverDotNetAsync(OSPlatform platform, LocalUserConfig userConfig)
 	{
@@ -257,8 +289,7 @@ public static class SwhereManager
 		if (hasNuget)
 		{
 			var nugetSDK = userConfig.EnsureSDK("Nuget");
-			nugetSDK.SourceDirectories =
-			[
+			nugetSDK.SourceDirectories = [
 				nugetPackagesPath,
 			];
 
@@ -308,4 +339,7 @@ public static class SwhereManager
 			}
 		}
 	}
+
+	[GeneratedRegex(@"^(?<Name>[A-Za-z]+)-(?<Version>\d+)?$")]
+	private static partial Regex ParseExecutableVersionRegex();
 }
