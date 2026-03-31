@@ -14,21 +14,17 @@ namespace Soup.Build.Discover;
 public static class VSWhereUtilities
 {
 	/// <summary>
-	/// Attempt to find MSVC compiler installation 
+	/// Attempt to find MSVC compiler installations
 	/// </summary>
-	public static async Task<(string Version, Path Path)?> TryFindMSVCInstallAsync(bool includePrerelease)
+	public static async Task<List<(string Version, Path Path)>> TryFindMSVCInstallsAsync(bool includePrerelease)
 	{
 		// Find the location of the Windows SDK
-		var visualStudioInstallRoot = await TryFindVSInstallRootAsync(
+		var visualStudioInstallRoots = await TryFindVSInstallRootsAsync(
 			"Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 			includePrerelease);
 
-		if (visualStudioInstallRoot is null)
-		{
-			Log.HighPriority("Could not find component");
-			return null;
-		}
-		else
+		var result = new List<(string Version, Path Path)>();
+		foreach (var visualStudioInstallRoot in visualStudioInstallRoots)
 		{
 			Log.HighPriority("Using VS Installation: " + visualStudioInstallRoot.ToString());
 
@@ -40,11 +36,13 @@ public static class VSWhereUtilities
 			var visualCompilerVersionFolder =
 				visualStudioInstallRoot + new Path($"./VC/Tools/MSVC/{visualCompilerVersion}/");
 
-			return (visualCompilerVersion, visualCompilerVersionFolder);
+			result.Add((visualCompilerVersion, visualCompilerVersionFolder));
 		}
+
+		return result;
 	}
 
-	private static async Task<Path?> TryFindVSInstallRootAsync(string requires, bool includePrerelease)
+	private static async Task<List<Path>> TryFindVSInstallRootsAsync(string requires, bool includePrerelease)
 	{
 		Log.HighPriority($"Discover VS Component: {requires}");
 
@@ -53,7 +51,6 @@ public static class VSWhereUtilities
 		var workingDirectory = new Path("./");
 		var argumentList = new List<string>()
 		{
-			"-latest",
 			"-products",
 			"*",
 			"-requires",
@@ -74,7 +71,7 @@ public static class VSWhereUtilities
 		if (!LifetimeManager.Get<IFileSystem>().Exists(executablePath))
 		{
 			Log.HighPriority("VSWhere is not installed on the host machine");
-			return null;
+			return [];
 		}
 
 		var process = LifetimeManager.Get<IProcessManager>().CreateProcess(
@@ -104,14 +101,20 @@ public static class VSWhereUtilities
 
 		// The first line is the path
 		using var reader = new System.IO.StringReader(stdOut);
-		var path = await reader.ReadLineAsync();
-		if (path is null)
+		var line = await reader.ReadLineAsync();
+		var result = new List<Path>();
+		while (line is not null)
 		{
-			Log.HighPriority("No results.");
-			return null;
+			result.Add(Path.Parse($"{line}\\"));
+			line = await reader.ReadLineAsync();
 		}
 
-		return Path.Parse($"{path}\\");
+		if (result.Count == 0)
+		{
+			Log.HighPriority("No results.");
+		}
+
+		return result;
 	}
 
 	private static async Task<string> FindDefaultVCToolsVersionAsync(
