@@ -104,10 +104,6 @@ export import :PackageLockExtensions;
 
 // Recipe 
 export import :Digest;
-export import :LanguageReference;
-export import :PackageIdentifier;
-export import :PackageName;
-export import :PackageReference;
 export import :Recipe;
 export import :RecipeBuildStateConverter;
 export import :RecipeCache;
@@ -117,12 +113,8 @@ export import :RecipeValue;
 export import :RootRecipe;
 export import :RootRecipeExtensions;
 
-// SML
-export import :SML;
-
 // Utilities
 export import :HandledException;
-export import :SequenceMap;
 
 // Value Table
 export import :Value;

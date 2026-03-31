@@ -12,6 +12,7 @@ Closure: {
 		'mwasplund|opal': { Version: 0.12.6, Digest: 'sha256:eba7621f545cc3f679a72dd034b046e2d0307025342debd9a798f0bc7a45db5b', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.4, Digest: 'sha256:09e879b8c200c6415543686cf81c710712d07286753cdcd77cec08eab8e81bbe', Build: '0', Tool: '0' }
 		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '0', Tool: '0' }
+		sml: { Version: '../../sml/', Build: '0', Tool: '0' }
 		soup: { Version: './', Build: '0', Tool: '0' }
 		'soup-core': { Version: '../core/', Build: '1', Tool: '0' }
 		'soup-generate': { Version: '../../generate/', Build: '0', Tool: '0' }

@@ -18,10 +18,11 @@ module;
 export module Soup.Core:WrenHost;
 
 import Opal;
-import :SML;
+import Soup.SML;
 import :WrenHelpers;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 export namespace Soup::Core
 {

@@ -14,10 +14,10 @@ module;
 export module Soup.Core:Value;
 
 import Opal;
-import :LanguageReference;
-import :PackageReference;
+import Soup.SML;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 export namespace Soup::Core
 {

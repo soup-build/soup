@@ -15,23 +15,22 @@ module;
 
 export module Soup.Core:BuildLoadEngine;
 
+import Opal;
+import Soup.SML;
 import :BuildConstants;
 import :KnownLanguage;
 import :HandledException;
-import :PackageIdentifier;
 import :PackageLock;
 import :PackageLockExtensions;
-import :PackageName;
 import :PackageProvider;
-import :PackageReference;
 import :PackageWithArtifactReference;
 import :Recipe;
 import :RecipeCache;
 import :RecipeBuildLocationManager;
 import :Value;
-import Opal;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core::Build
 {

@@ -13,8 +13,7 @@ module;
 export module Soup.Core:Recipe;
 
 import Opal;
-import :LanguageReference;
-import :PackageReference;
+import Soup.SML;
 import :RecipeValue;
 
 using namespace Opal;

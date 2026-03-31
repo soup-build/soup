@@ -48,6 +48,9 @@ module;
 module Soup.Core;
 import reflex;
 import Opal;
+import Soup.SML;
+
+using namespace Soup::SML;
 
 enum class LanguageReferenceToken : int
 {

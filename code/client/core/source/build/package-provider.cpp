@@ -13,13 +13,13 @@ module;
 export module Soup.Core:PackageProvider;
 
 import Opal;
+import Soup.SML;
 import :Digest;
-import :PackageName;
-import :PackageReference;
 import :Recipe;
 import :Value;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 export namespace Soup::Core
 {

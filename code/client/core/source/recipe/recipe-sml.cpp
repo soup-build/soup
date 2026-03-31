@@ -13,11 +13,8 @@ module;
 export module Soup.Core:RecipeSML;
 
 import Opal;
-import :LanguageReference;
-import :PackageReference;
+import Soup.SML;
 import :RecipeValue;
-import :SequenceMap;
-import :SML;
 
 using namespace Opal;
 

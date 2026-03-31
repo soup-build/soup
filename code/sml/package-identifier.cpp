@@ -9,14 +9,14 @@ module;
 #include <sstream>
 #include <string>
 
-export module Soup.Core:PackageIdentifier;
+export module Soup.SML:PackageIdentifier;
 
 import Opal;
 import :PackageName;
 
 using namespace Opal;
 
-namespace Soup::Core
+namespace Soup::SML
 {
 	/// <summary>
 	/// A package language/owner/name that uniquely identifies a package in a single build graph

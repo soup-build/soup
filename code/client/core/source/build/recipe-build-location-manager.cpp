@@ -13,9 +13,9 @@ export module Soup.Core:RecipeBuildLocationManager;
 
 import CryptoPP;
 import Opal;
+import Soup.SML;
 import :HandledException;
 import :KnownLanguage;
-import :PackageName;
 import :Recipe;
 import :RecipeCache;
 import :RootRecipe;
@@ -24,6 +24,7 @@ import :Value;
 import :ValueTableWriter;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core
 {

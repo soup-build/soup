@@ -14,11 +14,11 @@ module;
 export module Soup.Core:PackageWithArtifactReference;
 
 import Opal;
+import Soup.SML;
 import :Digest;
-import :PackageIdentifier;
-import :PackageReference;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core
 {
