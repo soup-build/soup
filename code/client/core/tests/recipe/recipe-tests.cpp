@@ -18,10 +18,12 @@ export module Soup.Core.Tests:RecipeTests;
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.SML;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
+using namespace Soup::SML;
 using namespace Soup::Test;
 
 namespace Soup::Core::UnitTests

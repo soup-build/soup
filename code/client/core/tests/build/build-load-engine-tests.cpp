@@ -1197,7 +1197,7 @@ namespace Soup::Core::Build::UnitTests
 									{
 										"Build",
 										{
-											PackageChildInfo(namespacePackageReference("Wren", "user1", "test-build", SemanticVersion(3, 3, 3)), true, -1, 3),
+											PackageChildInfo(PackageReference("Wren", "user1", "test-build", SemanticVersion(3, 3, 3)), true, -1, 3),
 											PackageChildInfo(PackageReference("Wren", "user1", "cpp", SemanticVersion(1, 1, 1)), true, -1, 4),
 										}
 									},
