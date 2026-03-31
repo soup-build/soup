@@ -71,19 +71,25 @@ public static partial class SwhereManager
 	{
 		Log.HighPriority("Discover Windows Platform");
 		var msvcSDK = userConfig.EnsureSDK("MSVC");
+		_ = msvcSDK.Properties.Values.Remove("Default");
 
 		var sourceDirectories = new List<Path>();
 		var sdks = msvcSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
 		sdks.Values.Clear();
 
+		var latestVersion = new SemanticVersion();
 		var msvcVersions = await VSWhereUtilities.TryFindMSVCInstallsAsync(includePrerelease);
 		foreach (var msvc in msvcVersions)
 		{
 			sourceDirectories.Add(msvc.Path);
-			var sdk = sdks.AddTableWithSyntax(msvc.Version, 4);
+			var sdk = sdks.AddTableWithSyntax(msvc.Version.ToString(), 4);
 			sdk.AddItemWithSyntax("VCToolsRoot", msvc.Path.ToString(), 5);
+
+			if (msvc.Version > latestVersion)
+				latestVersion = msvc.Version;
 		}
 
+		msvcSDK.Properties.AddItemWithSyntax("Default", latestVersion.ToString(), 3);
 		msvcSDK.SourceDirectories = sourceDirectories;
 
 		var windowsSDK = WindowsSDKUtilities.TryFindWindows10Kit();
@@ -139,6 +145,7 @@ public static partial class SwhereManager
 
 		var gccSDK = userConfig.EnsureSDK("GCC");
 		gccSDK.SourceDirectories = [];
+		_ = gccSDK.Properties.Values.Remove("Default");
 
 		var sdksTable = new SMLTable();
 
@@ -157,8 +164,7 @@ public static partial class SwhereManager
 			}
 		}
 
-		if (!gccSDK.Properties.Values.ContainsKey("Default"))
-			gccSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
+		gccSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
 
 		var propertiesSDKs = gccSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
 		propertiesSDKs.Values.Clear();
@@ -200,6 +206,7 @@ public static partial class SwhereManager
 
 		var clangSDK = userConfig.EnsureSDK("Clang");
 		clangSDK.SourceDirectories = [];
+		_ = clangSDK.Properties.Values.Remove("Default");
 
 		var sdksTable = new SMLTable();
 
@@ -218,8 +225,7 @@ public static partial class SwhereManager
 			}
 		}
 
-		if (!clangSDK.Properties.Values.ContainsKey("Default"))
-			clangSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
+		clangSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
 
 		var propertiesSDKs = clangSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
 		propertiesSDKs.Values.Clear();

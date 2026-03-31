@@ -16,14 +16,14 @@ public static class VSWhereUtilities
 	/// <summary>
 	/// Attempt to find MSVC compiler installations
 	/// </summary>
-	public static async Task<List<(string Version, Path Path)>> TryFindMSVCInstallsAsync(bool includePrerelease)
+	public static async Task<List<(SemanticVersion Version, Path Path)>> TryFindMSVCInstallsAsync(bool includePrerelease)
 	{
 		// Find the location of the Windows SDK
 		var visualStudioInstallRoots = await TryFindVSInstallRootsAsync(
 			"Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
 			includePrerelease);
 
-		var result = new List<(string Version, Path Path)>();
+		var result = new List<(SemanticVersion Version, Path Path)>();
 		foreach (var visualStudioInstallRoot in visualStudioInstallRoots)
 		{
 			Log.HighPriority("Using VS Installation: " + visualStudioInstallRoot.ToString());
@@ -117,7 +117,7 @@ public static class VSWhereUtilities
 		return result;
 	}
 
-	private static async Task<string> FindDefaultVCToolsVersionAsync(
+	private static async Task<SemanticVersion> FindDefaultVCToolsVersionAsync(
 		Path visualStudioInstallRoot)
 	{
 		// Check the default tools version
@@ -140,7 +140,7 @@ public static class VSWhereUtilities
 			throw new HandledException();
 		}
 
-		return version;
+		return SemanticVersion.Parse(version);
 	}
 
 	private static string CombineArguments(IList<string> args)
