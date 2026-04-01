@@ -5,22 +5,23 @@ Closure: {
 		'mwasplund|wren': { Version: 1.2.0, Digest: 'sha256:6b867a0b48ad53165921bc734032dc245b045898683e744c4df74c2ee06faecc', Build: '4', Tool: '0' }
 	}
 	'C#': {
+		opal: { Version: '../../generate-sharp/opal/', Build: '0', Tool: '0' }
 		'soup-bootstrap': { Version: './', Build: '0', Tool: '0' }
 		'soup-native-interop': { Version: '../../generate-sharp/soup-native-interop/', Build: '1', Tool: '0' }
 		'soup-utilities': { Version: '../../generate-sharp/utilities/', Build: '1', Tool: '0' }
-		opal: { Version: '../../generate-sharp/opal/', Build: '0', Tool: '0' }
 	}
 	'C++': {
 		'monitor-host': { Version: '../../monitor/host/', Build: '2', Tool: '1' }
 		'monitor-shared': { Version: '../../monitor/shared/', Build: '2', Tool: '1' }
-		'soup-core': { Version: '../../client/core/', Build: '3', Tool: '1' }
-		'soup-native': { Version: '../../client/native/', Build: '2', Tool: '1' }
-		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:21c5dcdc2b06bf8fdfb998035130d27debf060046e4fa0ed464a6d8aed3ba234', Build: '2', Tool: '1' }
 		'mwasplund|cryptopp': { Version: 1.2.8, Digest: 'sha256:6d19806db25880437c805a616a3470ddb1b86cba2e6bfd83a378118e1f46e037', Build: '2', Tool: '1' }
+		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:042d256bb8aecc3c5b58ff5be26c3f21a3ba24de5885663fb7d6a928c18ebfc4', Build: '2', Tool: '1' }
 		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '2', Tool: '1' }
 		'mwasplund|opal': { Version: 0.12.6, Digest: 'sha256:eba7621f545cc3f679a72dd034b046e2d0307025342debd9a798f0bc7a45db5b', Build: '2', Tool: '1' }
 		'mwasplund|reflex': { Version: 5.5.4, Digest: 'sha256:09e879b8c200c6415543686cf81c710712d07286753cdcd77cec08eab8e81bbe', Build: '2', Tool: '1' }
 		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '2', Tool: '1' }
+		sml: { Version: '../../sml/', Build: '2', Tool: '1' }
+		'soup-core': { Version: '../../client/core/', Build: '3', Tool: '1' }
+		'soup-native': { Version: '../../client/native/', Build: '2', Tool: '1' }
 	}
 }
 Builds: {
@@ -30,6 +31,7 @@ Builds: {
 				Version: 0.17.0
 				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
 				Artifacts: {
+					Linux: 'sha256:a5fc23eb8bb1adccc7fc77f38d45bd36fedbe5993b931142d3652dc4a465ea71'
 					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
 				}
 			}
@@ -41,6 +43,7 @@ Builds: {
 				Version: 0.17.0
 				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
 				Artifacts: {
+					Linux: 'sha256:a5fc23eb8bb1adccc7fc77f38d45bd36fedbe5993b931142d3652dc4a465ea71'
 					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
 				}
 			}
