@@ -120,7 +120,8 @@ export namespace Soup::Core
 					if (versionValue.IsVersion())
 					{
 						auto version = versionValue.AsVersion();
-						reference = PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
+						reference = PackageReference(
+							std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
 					}
 					else if (versionValue.IsString())
 					{

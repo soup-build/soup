@@ -68,7 +68,8 @@ namespace Soup::Core
 					version = SemanticVersion::Parse(versionMatch.str());
 				}
 
-				result = PackageReference(std::move(language), std::move(owner), std::move(name), version);
+				result = PackageReference(
+					std::move(language), std::move(owner), std::move(name), version);
 				return true;
 			}
 			else
@@ -119,9 +120,19 @@ namespace Soup::Core
 		/// Initializes a new instance of the <see cref="PackageReference"/> class.
 		/// </summary>
 		PackageReference(
-			std::optional<std::string> language,
-			std::optional<std::string> owner,
-			std::string name,
+			const std::optional<std::string>& language,
+			const std::optional<std::string>& owner,
+			const std::string& name,
+			std::optional<SemanticVersion> version) :
+			_identifier(PackageIdentifier(language, owner, name)),
+			_version(version),
+			_path(std::nullopt)
+		{
+		}
+		PackageReference(
+			std::optional<std::string>&& language,
+			std::optional<std::string>&& owner,
+			std::string&& name,
 			std::optional<SemanticVersion> version) :
 			_identifier(PackageIdentifier(std::move(language), std::move(owner), std::move(name))),
 			_version(version),
@@ -132,7 +143,7 @@ namespace Soup::Core
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PackageReference"/> class.
 		/// </summary>
-		PackageReference(Path path) :
+		PackageReference(Path&& path) :
 			_identifier(std::nullopt),
 			_version(std::nullopt),
 			_path(std::move(path))

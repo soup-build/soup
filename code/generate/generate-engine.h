@@ -151,7 +151,7 @@ namespace Soup::Core::Generate
 							auto preprocessorOperationResult = ValueTable();
 
 							preprocessorOperationResult.emplace("Title", Value(operation.Title));
-							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable));
+							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable.ToString()));
 
 							auto operationArguments = ValueList();
 							for (auto& argument : operation.Command.Arguments)
@@ -160,20 +160,12 @@ namespace Soup::Core::Generate
 							}
 							preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
 
-							auto preprocessorResult = ValueList();
-
 							// Read the results file as text
-							std::shared_ptr<System::IInputFile> file;
-							if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, file))
+							auto preprocessorResult = Core::ValueTable();
+							if (!Core::ValueTableManager::TryLoadState(resultFilePath, preprocessorResult))
 							{
-								Log::Error("Failed to open results file {}", resultFilePath.ToString());
-								throw std::runtime_error("Failed to open results file");
-							}
-
-							std::string line;
-							while (std::getline(file->GetInStream(), line))
-							{
-								preprocessorResult.push_back(Value(std::move(line)));
+								Log::Error("Failed to load the results file: {}", resultFilePath.ToString());
+								return;
 							}
 
 							preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
