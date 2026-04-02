@@ -334,7 +334,7 @@ namespace Soup::Core::Build
 					Log::Info("Phase1 no previous results found");
 				}
 
-				if (generatePhase1Result.IsPreprocessor())
+				if (generatePhase1Result.HasPreprocessor())
 				{
 					// Load the previous operation graph and result if they exist
 					Log::Info("Checking for existing Generate Phase 2 Result");
@@ -424,7 +424,7 @@ namespace Soup::Core::Build
 			//////////////////////////////////////////////
 			// Evaluate Optional Preprocessor
 			/////////////////////////////////////////////
-			if (generatePhase1Result.IsPreprocessor())
+			if (generatePhase1Result.HasPreprocessor())
 			{
 				auto ranPreprocessors = RunPreprocessorOperations(
 					generatePhase1Result.GetGraph(),
