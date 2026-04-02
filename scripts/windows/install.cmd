@@ -3,7 +3,7 @@ SET ScriptsDir=%~dp0
 SET RootDir=%ScriptsDir%..\..
 SET OutDir=%RootDir%\out
 
-SET SOUP_VERSION=0.45.1
+SET SOUP_VERSION=0.46.0
 
 pushd %OutDir%\release\%SOUP_VERSION%
 msiexec /package soup-build-windows-x64.msi /passive

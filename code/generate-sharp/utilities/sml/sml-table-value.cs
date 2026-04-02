@@ -12,7 +12,7 @@ public class SMLTableValue : IEquatable<SMLTableValue>
 	public SMLToken Key { get; init; }
 	public string KeyContent { get; init; }
 	public SMLToken Colon { get; init; }
-	public SMLValue Value { get; init; }
+	public SMLValue Value { get; set; }
 	public IList<SMLToken> Delimiter { get; init; }
 
 	public SMLTableValue(
