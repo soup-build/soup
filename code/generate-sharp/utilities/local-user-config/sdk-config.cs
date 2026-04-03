@@ -113,14 +113,7 @@ public class SDKConfig
 	{
 		get
 		{
-			if (this.Table.Values.TryGetValue(Property_Properties, out var propertiesValue))
-			{
-				return propertiesValue.Value.AsTable();
-			}
-			else
-			{
-				throw new InvalidOperationException("No Properties.");
-			}
+			return this.Table.EnsureTableWithSyntax(Property_Properties, 2);
 		}
 	}
 
