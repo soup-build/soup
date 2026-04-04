@@ -73,19 +73,19 @@ Builds: {
 				}
 			}
 			'mwasplund|soup-test-cpp': {
-				Version: 0.15.3
-				Digest: 'sha256:2c78af74d69b828d0ff0841d45183321576e5c38332f39bff4b753b7bb692ab0'
+				Version: 0.16.0
+				Digest: 'sha256:e2415551e273ee1e0becaf85d71c85a80ee9aa6b00a69c7f0495d9be26017350'
 			}
 		}
 	}
 	'4': {
 		Wren: {
 			'soup|c': {
-				Version: 0.6.1
-				Digest: 'sha256:5e0997c70030a04ea9fec123125f111cd51aee55861553fef8319f4742df7649'
+				Version: 0.7.0
+				Digest: 'sha256:c940077e1171eaecb60ca2138056622b084ea1d57ab4f28b73c24740f2443df7'
 				Artifacts: {
-					Linux: 'sha256:9f4c6505fe79d0e46fa07ae9972ec2a405700b709b7b2de1f4caa269a47034df'
-					Windows: 'sha256:93f6c11fbb787cb9ad74300e6eafe379124b67608b45219cdf567dba9ed27570'
+					Linux: 'sha256:f4b05202011eac3129322a273f29e0643eb86ae921196cd0b28028d1ea3d2e8d'
+					Windows: 'sha256:9450afd866f3c019e7a2ea61fe96a5e15707937a4ceb63ba07763838df830885'
 				}
 			}
 		}

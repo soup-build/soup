@@ -126,6 +126,7 @@ export import :SequenceMap;
 
 // Value Table
 export import :Value;
+export import :ValueSML;
 export import :ValueTableManager;
 export import :ValueTableReader;
 export import :ValueTableWriter;

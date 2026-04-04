@@ -45,7 +45,7 @@ namespace Soup::Core
 
 				auto contentBuffer = std::vector<char>(size);
 				stream.read(contentBuffer.data(), size);
-			
+
 				// Read the contents of the recipe file
 				auto root = SMLDocument::Parse(contentBuffer.data(), size);
 

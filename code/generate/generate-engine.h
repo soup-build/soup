@@ -133,7 +133,7 @@ namespace Soup::Core::Generate
 					throw std::runtime_error("Failed to load phase 1 result.");
 				}
 
-				if (!generatePhase1Result.IsPreprocessor())
+				if (!generatePhase1Result.HasPreprocessor())
 				{
 					Log::Error("Phase 1 was not for a preprocessor, why are you running a phase 2?");
 					throw std::runtime_error("Invalid phase 1 result.");
@@ -161,12 +161,15 @@ namespace Soup::Core::Generate
 							preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
 
 							// Read the results file as text
-							auto preprocessorResult = Core::ValueTable();
-							if (!Core::ValueTableManager::TryLoadState(resultFilePath, preprocessorResult))
+							std::shared_ptr<System::IInputFile> resultFile;
+							if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, resultFile))
 							{
-								Log::Error("Failed to load the results file: {}", resultFilePath.ToString());
-								return;
+								Log::Error("Failed to open results file {}", resultFilePath.ToString());
+								throw std::runtime_error("Failed to open results file");
 							}
+
+							// Read the contents of the results file
+							auto preprocessorResult = ValueSML::Deserialize(resultFilePath, resultFile->GetInStream());
 
 							preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
 
@@ -260,10 +263,11 @@ namespace Soup::Core::Generate
 				OperationGraphManager::SaveState(generatePhase2ResultFile, generateResult.GetGraph(), _fileSystemState);
 			}
 
-			if (!generateResult.IsPreprocessor())
+			if (!generateResult.HasPreprocessor() || !isFirstRun)
 			{
 				// Save the shared state that is to be passed to the downstream builds
 				auto sharedStateFile = soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
+				Log::Info("Save Generate Shared State: {}", sharedStateFile.ToString());
 				ValueTableManager::SaveState(sharedStateFile, sharedState);
 			}
 
