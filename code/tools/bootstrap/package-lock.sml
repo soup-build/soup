@@ -56,11 +56,11 @@ Builds: {
 	'2': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.16.4
-				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
+				Version: 0.17.0
+				Digest: 'sha256:157d4d471af98055222b09c3b425d42bbd2c27909c1be88186c50245bd6a2b8e'
 				Artifacts: {
-					Linux: 'sha256:29321540a556729e3a8f2485442dbbf6f00232124c748b08b03f369a24c75f65'
-					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
+					Linux: 'sha256:ee52ea68b4d3b3a910d882127b7cb486151f5b79a09e1fba24cca1a8300568da'
+					Windows: 'sha256:8cd8c940d941eb33fb5ed4985ed7a0597a5564595e5ef23fc58cb3648e1ebeb3'
 				}
 			}
 		}
@@ -68,27 +68,27 @@ Builds: {
 	'3': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.16.4
-				Digest: 'sha256:5b0ddace2b15dddd8b3135b1a55d44da5a5b341db64768887942bd1c9185d7ff'
+				Version: 0.17.0
+				Digest: 'sha256:157d4d471af98055222b09c3b425d42bbd2c27909c1be88186c50245bd6a2b8e'
 				Artifacts: {
-					Linux: 'sha256:29321540a556729e3a8f2485442dbbf6f00232124c748b08b03f369a24c75f65'
-					Windows: 'sha256:ffc24c64947947a7418a38a2cc93fd48475c9e50e1e1b890e5567e3d2fc6d138'
+					Linux: 'sha256:ee52ea68b4d3b3a910d882127b7cb486151f5b79a09e1fba24cca1a8300568da'
+					Windows: 'sha256:8cd8c940d941eb33fb5ed4985ed7a0597a5564595e5ef23fc58cb3648e1ebeb3'
 				}
 			}
 			'mwasplund|soup-test-cpp': {
-				Version: 0.15.3
-				Digest: 'sha256:2c78af74d69b828d0ff0841d45183321576e5c38332f39bff4b753b7bb692ab0'
+				Version: 0.16.0
+				Digest: 'sha256:e2415551e273ee1e0becaf85d71c85a80ee9aa6b00a69c7f0495d9be26017350'
 			}
 		}
 	}
 	'4': {
 		Wren: {
 			'soup|c': {
-				Version: 0.6.1
-				Digest: 'sha256:5e0997c70030a04ea9fec123125f111cd51aee55861553fef8319f4742df7649'
+				Version: 0.7.0
+				Digest: 'sha256:c940077e1171eaecb60ca2138056622b084ea1d57ab4f28b73c24740f2443df7'
 				Artifacts: {
-					Linux: 'sha256:9f4c6505fe79d0e46fa07ae9972ec2a405700b709b7b2de1f4caa269a47034df'
-					Windows: 'sha256:93f6c11fbb787cb9ad74300e6eafe379124b67608b45219cdf567dba9ed27570'
+					Linux: 'sha256:f4b05202011eac3129322a273f29e0643eb86ae921196cd0b28028d1ea3d2e8d'
+					Windows: 'sha256:9450afd866f3c019e7a2ea61fe96a5e15707937a4ceb63ba07763838df830885'
 				}
 			}
 		}
@@ -134,11 +134,11 @@ Tools: {
 				}
 			}
 			'mwasplund|parse-modules': {
-				Version: 1.2.1
-				Digest: 'sha256:30055cb849a20d3b6f0ec7c463a753e4854555860161ad1a0939e4e8c99da523'
+				Version: 2.0.0
+				Digest: 'sha256:41454c7aad2c86fd0ae0a238e7add396764661b344116af97f16a5d663a9b441'
 				Artifacts: {
-					Linux: 'sha256:70e0488a337429bcac6da222bb7483396e8248a3b666f7b49b258fb31be92dc6'
-					Windows: 'sha256:39db272141c06a4a1e62ddac56e294afd3a9b9c983d2a00d94f7ce815b3fb50e'
+					Linux: 'sha256:3e4731bb5f231c322b8d315977d966b695fcee0e2e17b0828ae975aa728235a7'
+					Windows: 'sha256:aaca663e0c951c1e0cbca59f2251d8fa7f53066f97b6ab3c479eb8e0c92daf0f'
 				}
 			}
 		}

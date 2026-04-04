@@ -129,7 +129,7 @@ namespace PrintGraph
 		PrintOperations(generateResult.GetGraph());
 		PrintGraph(generateResult.GetGraph());
 
-		std::cout << "IsPreprocessor: " << (generateResult.IsPreprocessor() ? "true" : "false") << std::endl;
+		std::cout << "HasPreprocessor: " << (generateResult.HasPreprocessor() ? "true" : "false") << std::endl;
 	}
 
 	export void LoadAndPrintOperationGraph(const Opal::Path& operationGraphFile)

@@ -59,17 +59,29 @@ export namespace Soup::Core
 		/// <summary>
 		/// Initializes a new instance of the Value class
 		/// </summary>
-		Value(ValueTable table) :
+		Value(const ValueTable& table) :
+			_value(table)
+		{
+		}
+		Value(ValueTable&& table) :
 			_value(std::move(table))
 		{
 		}
 
-		Value(ValueList list) :
+		Value(const ValueList& list) :
+			_value(list)
+		{
+		}
+		Value(ValueList&& list) :
 			_value(std::move(list))
 		{
 		}
 
-		Value(std::string value) :
+		Value(const std::string& value) :
+			_value(value)
+		{
+		}
+		Value(std::string&& value) :
 			_value(std::move(value))
 		{
 		}
@@ -94,12 +106,20 @@ export namespace Soup::Core
 		{
 		}
 
-		Value(LanguageReference value) :
+		Value(const LanguageReference& value) :
+			_value(value)
+		{
+		}
+		Value(LanguageReference&& value) :
 			_value(std::move(value))
 		{
 		}
 
-		Value(PackageReference value) :
+		Value(const PackageReference& value) :
+			_value(value)
+		{
+		}
+		Value(PackageReference&& value) :
 			_value(std::move(value))
 		{
 		}

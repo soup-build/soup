@@ -7,13 +7,15 @@ using Opal.System;
 using Soup.Build.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Versioning;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Path = Opal.Path;
 
 namespace Soup.Build.Discover;
 
-public static class SwhereManager
+public static partial class SwhereManager
 {
 	public static async Task DiscoverAsync(OSPlatform platform, bool includePrerelease)
 	{
@@ -68,22 +70,27 @@ public static class SwhereManager
 	private static async Task DiscoverWindowsPlatformAsync(bool includePrerelease, LocalUserConfig userConfig)
 	{
 		Log.HighPriority("Discover Windows Platform");
+		var msvcSDK = userConfig.EnsureSDK("MSVC");
+		_ = msvcSDK.Properties.Values.Remove("Default");
 
-		var msvc = await VSWhereUtilities.TryFindMSVCInstallAsync(includePrerelease);
-		if (msvc is not null)
+		var sourceDirectories = new List<Path>();
+		var sdks = msvcSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
+		sdks.Values.Clear();
+
+		var latestVersion = new SemanticVersion();
+		var msvcVersions = await VSWhereUtilities.TryFindMSVCInstallsAsync(includePrerelease);
+		foreach (var msvc in msvcVersions)
 		{
-			var msvcSDK = userConfig.EnsureSDK("MSVC");
-			msvcSDK.SourceDirectories =
-			[
-				msvc.Value.Path,
-			];
-			msvcSDK.SetProperties(
-				new Dictionary<string, string>()
-				{
-					{ "Version", msvc.Value.Version },
-					{ "VCToolsRoot", msvc.Value.Path.ToString() },
-				});
+			sourceDirectories.Add(msvc.Path);
+			var sdk = sdks.AddTableWithSyntax(msvc.Version.ToString(), 4);
+			sdk.AddItemWithSyntax("VCToolsRoot", msvc.Path.ToString(), 5);
+
+			if (msvc.Version > latestVersion)
+				latestVersion = msvc.Version;
 		}
+
+		msvcSDK.Properties.AddItemWithSyntax("Default", latestVersion.ToString(), 3);
+		msvcSDK.SourceDirectories = sourceDirectories;
 
 		var windowsSDK = WindowsSDKUtilities.TryFindWindows10Kit();
 
@@ -136,54 +143,120 @@ public static class SwhereManager
 	{
 		Log.HighPriority("Discover GCC");
 
-		// Find the GCC SDKs
-		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "gcc");
-		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "g++");
+		var gccSDK = userConfig.EnsureSDK("GCC");
+		gccSDK.SourceDirectories = [];
+		_ = gccSDK.Properties.Values.Remove("Default");
 
-		if (cCompilerPath is null || cppCompilerPath is null)
+		var sdksTable = new SMLTable();
+
+		var gccMatches = LifetimeManager.Get<IFileSystem>().GetChildFiles(new Path("/bin/"));
+
+		var nameRegex = ParseExecutableVersionRegex();
+		var maxVersion = -1;
+		foreach (var file in gccMatches)
 		{
-			Log.HighPriority("GCC not installed");
+			var matchName = nameRegex.Match(file.Path.FileName);
+			if (matchName.Success && matchName.Groups["Name"].Value == "gcc")
+			{
+				var version = int.Parse(matchName.Groups["Version"].Value, CultureInfo.InvariantCulture);
+				await DiscoverGCCVersionAsync(platform, sdksTable, version);
+				maxVersion = Math.Max(version, maxVersion);
+			}
 		}
-		else
-		{
-			var gccSDK = userConfig.EnsureSDK("GCC");
-			gccSDK.SourceDirectories = [];
-			gccSDK.SetProperties(
-				new Dictionary<string, string>()
-				{
-					{ "CCompiler", cCompilerPath.ToString() },
-					{ "CppCompiler", cppCompilerPath.ToString() },
-				});
-		}
+
+		gccSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
+
+		var propertiesSDKs = gccSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
+		propertiesSDKs.Values.Clear();
+		foreach (var (key, value) in sdksTable.Values)
+			propertiesSDKs.Values.Add(key, value);
 	}
 
-	private static async Task DiscoverClangAsync(OSPlatform platform, LocalUserConfig userConfig)
+
+	private static async Task DiscoverGCCVersionAsync(
+		OSPlatform platform,
+		SMLTable sdksTable,
+		int version)
+	{
+		Log.HighPriority($"Discover GCC {version}");
+
+		// Find the GCC SDKs
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"gcc-{version}");
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"g++-{version}");
+		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"gcc-scan-deps-{version}");
+		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"gcc-ar-{version}");
+
+		var versionTable = sdksTable.AddTableWithSyntax($"{version}", 4);
+
+		if (cCompilerPath is not null)
+			versionTable.AddItemWithSyntax("CCompiler", cCompilerPath.ToString(), 5);
+		if (cppCompilerPath is not null)
+			versionTable.AddItemWithSyntax("CppCompiler", cppCompilerPath.ToString(), 5);
+		if (cppScannerPath is not null)
+			versionTable.AddItemWithSyntax("CppScanner", cppScannerPath.ToString(), 5);
+		if (archiverPath is not null)
+			versionTable.AddItemWithSyntax("Archiver", archiverPath.ToString(), 5);
+	}
+
+	private static async Task DiscoverClangAsync(
+		OSPlatform platform,
+		LocalUserConfig userConfig)
 	{
 		Log.HighPriority("Discover Clang");
 
-		// Find the Clang SDKs
-		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "clang");
-		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "clang++");
-		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "ar");
+		var clangSDK = userConfig.EnsureSDK("Clang");
+		clangSDK.SourceDirectories = [];
+		_ = clangSDK.Properties.Values.Remove("Default");
 
-		if (cCompilerPath is null || cppCompilerPath is null || archiverPath is null)
+		var sdksTable = new SMLTable();
+
+		var clangMatches = LifetimeManager.Get<IFileSystem>().GetChildFiles(new Path("/bin/"));
+
+		var nameRegex = ParseExecutableVersionRegex();
+		var maxVersion = -1;
+		foreach (var file in clangMatches)
 		{
-			Log.HighPriority("Clang not installed");
+			var matchName = nameRegex.Match(file.Path.FileName);
+			if (matchName.Success && matchName.Groups["Name"].Value == "clang")
+			{
+				var version = int.Parse(matchName.Groups["Version"].Value, CultureInfo.InvariantCulture);
+				await DiscoverClangVersionAsync(platform, sdksTable, version);
+				maxVersion = Math.Max(version, maxVersion);
+			}
 		}
-		else
-		{
-			var clangSDK = userConfig.EnsureSDK("Clang");
-			clangSDK.SourceDirectories = [];
-			clangSDK.SetProperties(
-				new Dictionary<string, string>()
-				{
-					{ "CCompiler", cCompilerPath.ToString() },
-					{ "CppCompiler", cppCompilerPath.ToString() },
-					{ "Archiver", archiverPath.ToString() },
-				});
-		}
+
+		clangSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
+
+		var propertiesSDKs = clangSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
+		propertiesSDKs.Values.Clear();
+		foreach (var (key, value) in sdksTable.Values)
+			propertiesSDKs.Values.Add(key, value);
 	}
 
+	private static async Task DiscoverClangVersionAsync(
+		OSPlatform platform,
+		SMLTable sdksTable,
+		int version)
+	{
+		Log.HighPriority($"Discover Clang {version}");
+
+		// Find the Clang SDKs
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang-{version}");
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang++-{version}");
+		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang-scan-deps-{version}");
+		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "ar");
+
+		var versionTable = sdksTable.AddTableWithSyntax($"{version}", 4);
+
+		if (cCompilerPath is not null)
+			versionTable.AddItemWithSyntax("CCompiler", cCompilerPath.ToString(), 5);
+		if (cppCompilerPath is not null)
+			versionTable.AddItemWithSyntax("CppCompiler", cppCompilerPath.ToString(), 5);
+		if (cppScannerPath is not null)
+			versionTable.AddItemWithSyntax("CppScanner", cppScannerPath.ToString(), 5);
+		if (archiverPath is not null)
+			versionTable.AddItemWithSyntax("Archiver", archiverPath.ToString(), 5);
+	}
 
 	private static async Task DiscoverDotNetAsync(OSPlatform platform, LocalUserConfig userConfig)
 	{
@@ -257,8 +330,7 @@ public static class SwhereManager
 		if (hasNuget)
 		{
 			var nugetSDK = userConfig.EnsureSDK("Nuget");
-			nugetSDK.SourceDirectories =
-			[
+			nugetSDK.SourceDirectories = [
 				nugetPackagesPath,
 			];
 
@@ -308,4 +380,7 @@ public static class SwhereManager
 			}
 		}
 	}
+
+	[GeneratedRegex(@"^(?<Name>[A-Za-z]+)-(?<Version>\d+)?$")]
+	private static partial Regex ParseExecutableVersionRegex();
 }
