@@ -8,9 +8,9 @@ module;
 #include <utility>
 #include <vector>
 
-export module Soup.Core:SequenceMap;
+export module Soup.SML:SequenceMap;
 
-namespace Soup::Core
+namespace Soup::SML
 {
 	/// <summary>
 	/// A special map that is mutated as a vector

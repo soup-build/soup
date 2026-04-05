@@ -11,11 +11,12 @@ module;
 export module Soup.Core:RecipeExtensions;
 
 import Opal;
-import :PackageReference;
+import Soup.SML;
 import :Recipe;
 import :RecipeSML;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core
 {

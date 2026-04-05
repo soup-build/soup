@@ -145,7 +145,7 @@ namespace Soup::Client
 			}
 
 			// Build up the unique name
-			auto packageName = Core::PackageName(std::nullopt, recipe->GetName());
+			auto packageName = PackageName(std::nullopt, recipe->GetName());
 
 			// TODO: Generic parameters
 

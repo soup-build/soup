@@ -21,6 +21,7 @@ Dependencies: {
 		'../../monitor/host/'
 		'[C]mwasplund|wren@1'
 		'mwasplund|cryptopp@1'
+		'../../sml/'
 	]
 	Test: [
 		'mwasplund|soup-test-assert@0'

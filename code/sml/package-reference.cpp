@@ -11,14 +11,15 @@ module;
 #include <stdexcept>
 #include <string>
 
-export module Soup.Core:PackageReference;
+export module Soup.SML:PackageReference;
 
 import Opal;
 import :PackageIdentifier;
 
 using namespace Opal;
+using namespace Soup::SML;
 
-namespace Soup::Core
+namespace Soup::SML
 {
 	/// <summary>
 	/// A package reference object which will consist of a name version pair that

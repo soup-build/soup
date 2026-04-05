@@ -10,13 +10,13 @@ module;
 #include <sstream>
 #include <string>
 
-export module Soup.Core:PackageName;
+export module Soup.SML:PackageName;
 
 import Opal;
 
 using namespace Opal;
 
-namespace Soup::Core
+namespace Soup::SML
 {
 	/// <summary>
 	/// A package owner/name that uniquely identifies a package in a single language

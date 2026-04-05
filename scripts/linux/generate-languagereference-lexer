@@ -1,0 +1,15 @@
+#!/bin/bash
+echo "Generate LanguageReference Lexer!"
+
+# Stop on first error
+set -e
+
+FLAVOR="$1"
+SCRIPTS_DIR=$(dirname "$0")
+ROOT_DIR=$SCRIPTS_DIR/../..
+CODE_DIR=$ROOT_DIR/code
+SML_DIR=$CODE_DIR/sml
+REFLEX=~/repos/re-flex/bin/reflex
+
+echo $REFLEX $SML_DIR/language-reference-parser.l -o $SML_DIR/language-reference-parser.cpp
+$REFLEX $SML_DIR/language-reference-parser.l -o $SML_DIR/language-reference-parser.cpp

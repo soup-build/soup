@@ -19,10 +19,12 @@ export module Soup.Core.Tests:BuildLoadEngineTests;
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.SML;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
+using namespace Soup::SML;
 using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;

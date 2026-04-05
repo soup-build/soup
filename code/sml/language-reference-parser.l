@@ -1,17 +1,19 @@
 
 %top{
-module;
-
 // #define SHOW_TOKENS
 
 #pragma warning(disable:4102)
 #pragma warning(disable:4189)
 #pragma warning(disable:4702)
 
+#include <optional>
 #include <iostream>
 #include <string>
+#include <chrono>
 
-module Soup.Core;
+module Soup.SML;
+import reflex;
+import Opal;
 
 enum class LanguageReferenceToken : int
 {
@@ -25,7 +27,7 @@ enum class LanguageReferenceToken : int
 
 }
 
-%option fast unicode noline nodefault namespace=Soup::Core::LR
+%option fast unicode noline nodefault namespace=Soup::SML::LR
 
 name            [A-Za-z][\w#+.]*
 divider         \|
@@ -40,11 +42,16 @@ decimal         \.\d+
 .               return (int)LanguageReferenceToken::Unknown;
 %%
 
-namespace Soup::Core
+namespace Soup::SML
 {
 
 class LanguageReferenceParser : public LR::Lexer
 {
+private:
+    LanguageReferenceToken currentToken;
+    std::string name;
+    Opal::SemanticVersion version;
+
 public:
     LanguageReferenceParser(const reflex::Input& input) :
         Lexer(input),
@@ -56,7 +63,8 @@ public:
     bool TryParse()
     {
         // Parse the name
-        MoveNext();
+        if (!TryMoveNext())
+          return false;
         switch (currentToken)
         {
             case LanguageReferenceToken::Name:
@@ -67,7 +75,8 @@ public:
         }
 
         // Check for optional version
-        MoveNext();
+        if (!TryMoveNext())
+          return false;
         switch (currentToken)
         {
             case LanguageReferenceToken::Divider:
@@ -84,6 +93,7 @@ public:
         return LanguageReference(std::move(name), std::move(version));
     }
 
+  private:
     bool TryParseVersion()
     {
         int major;
@@ -91,7 +101,8 @@ public:
         std::optional<int> patch;
 
         // Parse the major version
-        MoveNext();
+        if (!TryMoveNext())
+          return false;
         switch (currentToken)
         {
             case LanguageReferenceToken::Integer:
@@ -102,12 +113,14 @@ public:
         }
 
         // Check for optional minor version
-        MoveNext();
+        if (!TryMoveNext())
+          return false;
         switch (currentToken)
         {
             case LanguageReferenceToken::Decimal:
                 // Skip the period
                 minor = std::stoi(text() + 1);
+                break;
             case LanguageReferenceToken::EndOfFile:
                 version = Opal::SemanticVersion(major, minor, patch);
                 return true;
@@ -116,12 +129,14 @@ public:
         }
 
         // Check for optional patch version
-        MoveNext();
+        if (!TryMoveNext())
+          return false;
         switch (currentToken)
         {
             case LanguageReferenceToken::Decimal:
                 // Skip the period
                 patch = std::stoi(text() + 1);
+                break;
             case LanguageReferenceToken::EndOfFile:
                 version = Opal::SemanticVersion(major, minor, patch);
                 return true;
@@ -130,7 +145,8 @@ public:
         }
 
         // Verify end of file
-        MoveNext();
+        if (!TryMoveNext())
+          return false;
         switch (currentToken)
         {
             case LanguageReferenceToken::EndOfFile:
@@ -141,8 +157,7 @@ public:
         }
     }
 
-private:
-    LanguageReferenceToken MoveNext()
+    bool TryMoveNext()
     {
         currentToken = (LanguageReferenceToken)lex();
 
@@ -173,12 +188,8 @@ private:
             }
         #endif
 
-        return currentToken;
+        return true;
     }
-
-    LanguageReferenceToken currentToken;
-    std::string name;
-    Opal::SemanticVersion version;
 };
 
 /*static*/ bool LanguageReference::TryParse(const std::string& value, LanguageReference& result)

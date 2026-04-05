@@ -12,6 +12,7 @@ module;
 
 export module Soup.Core:Build;
 
+import Opal;
 import :BuildConstants;
 import :BuildEvaluateEngine;
 import :BuildLoadEngine;
@@ -19,13 +20,11 @@ import :BuildRunner;
 import :FileSystemState;
 import :KnownLanguage;
 import :OperationGraph;
-import :PackageName;
 import :PackageProvider;
 import :RecipeBuildArguments;
 import :RecipeBuildLocationManager;
 import :RecipeCache;
 import :Value;
-import Opal;
 
 using namespace Opal;
 

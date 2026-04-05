@@ -1,7 +1,5 @@
 
 %top{
-module;
-
 // #define SHOW_TOKENS
 
 #pragma warning(disable:4102)
@@ -14,7 +12,7 @@ module;
 # include <unordered_map>
 # include <vector>
 
-module Soup.Core;
+module Soup.SML;
 import reflex;
 
 enum class SMLToken : int
@@ -76,7 +74,7 @@ private:
     }
 }
 
-%option fast unicode noline nodefault namespace=Soup::Core::SML
+%option fast unicode noline nodefault namespace=Soup::SML
 
 // BasicCharacter: 
 //      Tab Character, Letter, Number, Marks, Punctuation, Symbols, Separators
@@ -145,7 +143,7 @@ basic_string         {basic_char}+
 }
 %%
 
-namespace Soup::Core
+namespace Soup::SML
 {
 
 /// <summary>

@@ -9,13 +9,13 @@ module;
 #include <stdexcept>
 #include <string>
 
-export module Soup.Core:LanguageReference;
+export module Soup.SML:LanguageReference;
 
 import Opal;
 
 using namespace Opal;
 
-namespace Soup::Core
+namespace Soup::SML
 {
 	/// <summary>
 	/// A language reference object which will consist of a name version pair that

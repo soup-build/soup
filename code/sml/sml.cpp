@@ -11,7 +11,7 @@ module;
 #include <variant>
 #include <vector>
 
-export module Soup.Core:SML;
+export module Soup.SML:SML;
 
 import Opal;
 import :LanguageReference;
@@ -20,7 +20,7 @@ import :SequenceMap;
 
 using namespace Opal;
 
-export namespace Soup::Core
+export namespace Soup::SML
 {
 	class SMLValue;
 

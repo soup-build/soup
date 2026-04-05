@@ -19,10 +19,12 @@ export module Soup.Core.Tests:RecipeBuildLocationManagerTests;
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.SML;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
+using namespace Soup::SML;
 using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
@@ -39,7 +41,7 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto packageName = Core::PackageName(std::nullopt, "my-package");
+			auto packageName = PackageName(std::nullopt, "my-package");
 			auto workingDirectory = Path("C:/WorkingDirectory/");
 			auto recipe = Recipe(RecipeTable(
 			{
@@ -93,7 +95,7 @@ namespace Soup::Core::UnitTests
 					OutputRoot: './BuildOut/'
 				)")));
 
-			auto packageName = Core::PackageName(std::nullopt, "my-package");
+			auto packageName = PackageName(std::nullopt, "my-package");
 			auto workingDirectory = Path("C:/WorkingDirectory/");
 			auto recipe = Recipe(RecipeTable(
 			{
