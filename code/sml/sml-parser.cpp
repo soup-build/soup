@@ -48,6 +48,7 @@ module;
 
 module Soup.SML;
 import reflex;
+import Opal;
 
 enum class SMLToken : int
 {
