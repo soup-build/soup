@@ -15,7 +15,7 @@ namespace Soup.Build.Discover.UnitTests;
 public class VSWhereUtilitiesUnitTests
 {
 	[Fact]
-	public async Task FindMSVCInstallAsync()
+	public async Task TryFindMSVCInstallsAsync()
 	{
 		// Register the test listener
 		var testListener = new TestTraceListener();
@@ -28,7 +28,7 @@ public class VSWhereUtilitiesUnitTests
 		using var scopedFileSystem = new ScopedSingleton<IFileSystem>(mockFileSystem);
 
 		mockProcessManager.RegisterExecuteResult(
-			"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
+			"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\n");
 
 		mockFileSystem.CreateMockFile(
@@ -40,16 +40,17 @@ public class VSWhereUtilitiesUnitTests
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("14.33.31629\r\n"))));
 
 		bool includePrerelease = false;
-		var result = await VSWhereUtilities.TryFindMSVCInstallAsync(includePrerelease);
+		var result = await VSWhereUtilities.TryFindMSVCInstallsAsync(includePrerelease);
 
-		Assert.Equal("14.33.31629", result.Value.Version);
-		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/"), result.Value.Path);
+		var resultValue = Assert.Single(result);
+		Assert.Equal(new SemanticVersion(14, 33, 31629), resultValue.Version);
+		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/"), resultValue.Path);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
 				"HIGH: Discover VS Component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
-				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
+				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
 				"HIGH: Using VS Installation: C:/Program Files/Microsoft Visual Studio/2022/Community/",
 				"HIGH: Using VC Version: 14.33.31629",
 			],
@@ -67,7 +68,7 @@ public class VSWhereUtilitiesUnitTests
 		// Verify expected process requests
 		Assert.Equal(
 			[
-				"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
+				"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath",
 				"ProcessStart: 1",
 				"WaitForExit: 1",
 				"GetStandardOutput: 1",
@@ -78,7 +79,7 @@ public class VSWhereUtilitiesUnitTests
 	}
 
 	[Fact]
-	public async Task FindMSVCInstallAsync_Prerelease()
+	public async Task FindMSVCInstallsAsync_Prerelease()
 	{
 		// Register the test listener
 		var testListener = new TestTraceListener();
@@ -91,7 +92,7 @@ public class VSWhereUtilitiesUnitTests
 		using var scopedProcessManager = new ScopedSingleton<IProcessManager>(mockProcessManager);
 
 		mockProcessManager.RegisterExecuteResult(
-			"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
+			"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\n");
 
 		mockFileSystem.CreateMockFile(
@@ -103,16 +104,17 @@ public class VSWhereUtilitiesUnitTests
 			new MockFile(new System.IO.MemoryStream(Encoding.UTF8.GetBytes("14.34.31823\r\n"))));
 
 		bool includePrerelease = true;
-		var result = await VSWhereUtilities.TryFindMSVCInstallAsync(includePrerelease);
+		var result = await VSWhereUtilities.TryFindMSVCInstallsAsync(includePrerelease);
 
-		Assert.Equal("14.34.31823", result.Value.Version);
-		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.34.31823/"), result.Value.Path);
+		var resultValue = Assert.Single(result);
+		Assert.Equal(new SemanticVersion(14, 34, 31823), resultValue.Version);
+		Assert.Equal(new Path("C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Tools/MSVC/14.34.31823/"), resultValue.Path);
 
 		// Verify expected logs
 		Assert.Equal(
 			[
 				"HIGH: Discover VS Component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
-				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
+				"INFO: C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
 				"HIGH: Using VS Installation: C:/Program Files/Microsoft Visual Studio/2022/Preview/",
 				"HIGH: Using VC Version: 14.34.31823",
 			],
@@ -130,7 +132,7 @@ public class VSWhereUtilitiesUnitTests
 		// Verify expected process requests
 		Assert.Equal(
 			[
-				"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
+				"CreateProcess: 1 [./] C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -prerelease",
 				"ProcessStart: 1",
 				"WaitForExit: 1",
 				"GetStandardOutput: 1",

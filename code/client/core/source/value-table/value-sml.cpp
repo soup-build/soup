@@ -13,10 +13,6 @@ module;
 export module Soup.Core:ValueSML;
 
 import Opal;
-import :LanguageReference;
-import :PackageReference;
-import :SequenceMap;
-import :SML;
 import :Value;
 
 using namespace Opal;
