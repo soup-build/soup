@@ -260,4 +260,19 @@ extern "C"
 		result[value.size()] = 0;
 		return result;
 	}
+
+	SOUP_TOOLS_API const char* LoadBuildGraphSimple(
+		const char* workingDirectory)
+	{
+		auto globalParameters = ValueTable();
+		auto globalParametersStream = std::stringstream();
+		ValueTableWriter::Serialize(globalParameters, globalParametersStream);
+
+		auto value = LoadBuildGraphContent(workingDirectory, globalParametersStream);
+
+		auto result = (char*)CoTaskMemAlloc(value.size() + 1);
+		value.copy(result, value.size());
+		result[value.size()] = 0;
+		return result;
+	}
 }
