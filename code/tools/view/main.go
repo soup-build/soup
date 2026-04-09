@@ -9,7 +9,10 @@ import (
     "encoding/json"
     "fmt"
     "unsafe"
+    "os"
+    tea "charm.land/bubbletea/v2"
 )
+
 
 func main(){
     // let's call it
@@ -20,13 +23,17 @@ func main(){
     defer C.free(unsafe.Pointer(buildGraphValue))
 
     buildGraph := C.GoString(buildGraphValue)
-    // fmt.Println(buildGraph)
 
     res := LoadBuildGraphResult{}
     json.Unmarshal([]byte(buildGraph), &res)
-    if res.IsSuccess {
-        fmt.Println(res.Graph)
-    } else {
+    if !res.IsSuccess {
         fmt.Println(res.Message)
+        os.Exit(2)
+    }
+
+    p := tea.NewProgram(initialModel())
+    if _, err := p.Run(); err != nil {
+        fmt.Printf("Alas, there's been an error: %v", err)
+        os.Exit(1)
     }
 }
