@@ -1,48 +1,13 @@
 package main
 
-// #cgo LDFLAGS: -L/home/mwasplund/repos/soup/out/cpp/local/soup-native/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/bin/ -l:soup-native.so -Wl,-rpath,/home/mwasplund/repos/soup/out/cpp/local/soup-native/1.0.0/J_HqSstV55vlb-x6RWC_hLRFRDU/bin/
-// #include <stdlib.h>
-// #include "hello.h"
-import "C"
-
 import (
-    "encoding/json"
     "fmt"
-    "unsafe"
     "os"
     tea "charm.land/bubbletea/v2"
-	"charm.land/bubbles/v2/list"
 )
 
 func main(){
-    // let's call it
-    workingDirectory := C.CString("/home/mwasplund/repos/soup/code/tools/view/")
-    defer C.free(unsafe.Pointer(workingDirectory))
-
-    buildGraphValue := C.LoadBuildGraphSimple(workingDirectory)
-    defer C.free(unsafe.Pointer(buildGraphValue))
-
-    buildGraph := C.GoString(buildGraphValue)
-
-    res := LoadBuildGraphResult{}
-    json.Unmarshal([]byte(buildGraph), &res)
-    if !res.IsSuccess {
-        fmt.Println(res.Message)
-        os.Exit(2)
-    }
-
-	items := []list.Item{}
-
-    for _, element := range res.Graph.Packages {
-        items = append(items, item{title: element.Name, desc: element.PackageRoot})
-	}
-
-	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0)}
-	m.list.Title = "Build Graph"
-
-	p := tea.NewProgram(m)
-
-	if _, err := p.Run(); err != nil {
+	if _, err := tea.NewProgram(initialModel()).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
