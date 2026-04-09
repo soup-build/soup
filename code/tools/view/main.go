@@ -11,8 +11,8 @@ import (
     "unsafe"
     "os"
     tea "charm.land/bubbletea/v2"
+	"charm.land/bubbles/v2/list"
 )
-
 
 func main(){
     // let's call it
@@ -31,9 +31,19 @@ func main(){
         os.Exit(2)
     }
 
-    p := tea.NewProgram(initialModel())
-    if _, err := p.Run(); err != nil {
-        fmt.Printf("Alas, there's been an error: %v", err)
-        os.Exit(1)
-    }
+	items := []list.Item{}
+
+    for _, element := range res.Graph.Packages {
+        items = append(items, item{title: element.Name, desc: element.PackageRoot})
+	}
+
+	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0)}
+	m.list.Title = "Build Graph"
+
+	p := tea.NewProgram(m)
+
+	if _, err := p.Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
 }
