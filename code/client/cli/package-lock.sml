@@ -5,6 +5,7 @@ Closure: {
 		'mwasplund|wren': { Version: 1.2.0, Digest: 'sha256:6b867a0b48ad53165921bc734032dc245b045898683e744c4df74c2ee06faecc', Build: '2', Tool: '0' }
 	}
 	'C++': {
+		ftxui: { Version: '../../../../FTXUI/', Build: '0', Tool: '0' }
 		'monitor-host': { Version: '../../monitor/host/', Build: '0', Tool: '0' }
 		'monitor-shared': { Version: '../../monitor/shared/', Build: '0', Tool: '0' }
 		'mwasplund|cryptopp': { Version: 1.2.8, Digest: 'sha256:6d19806db25880437c805a616a3470ddb1b86cba2e6bfd83a378118e1f46e037', Build: '0', Tool: '0' }

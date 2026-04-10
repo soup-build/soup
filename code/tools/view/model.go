@@ -10,8 +10,8 @@ import (
 )
 
 type styles struct {
-	app           lipgloss.Style
-	title         lipgloss.Style
+	app lipgloss.Style
+	title lipgloss.Style
 	statusMessage lipgloss.Style
 }
 
@@ -31,11 +31,11 @@ func newStyles(darkBG bool) styles {
 }
 
 type item struct {
-	title       string
+	title string
 	description string
 }
 
-func (i item) Title() string       { return i.title }
+func (i item) Title() string { return i.title }
 func (i item) Description() string { return i.description }
 func (i item) FilterValue() string { return i.title }
 
@@ -58,13 +58,14 @@ func newListKeyMap() *listKeyMap {
 }
 
 type model struct {
-	styles        styles
-	darkBG        bool
+	styles styles
+	darkBG bool
 	width, height int
-	once          *sync.Once
-	list          list.Model
-	keys          *listKeyMap
-	delegateKeys  *delegateKeyMap
+	once *sync.Once
+	list list.Model
+	keys *listKeyMap
+	delegateKeys *delegateKeyMap
+	showDetails bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -124,7 +125,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() tea.View {
-	v := tea.NewView(m.styles.app.Render(m.list.View()))
+	listView := m.styles.app.Render(m.list.View())
+
+	var views []string
+	views = append(views, listView)
+	views = append(views, listView)
+	views = append(views, listView)
+
+	v := tea.NewView(lipgloss.JoinHorizontal(lipgloss.Top, views...))
 	v.AltScreen = true
 	return v
 }
@@ -160,6 +168,7 @@ func initialModel() model {
 	m.list = groceryList
 	m.keys = listKeys
 	m.delegateKeys = delegateKeys
+	m.showDetails = false
 
 	return m
 }
