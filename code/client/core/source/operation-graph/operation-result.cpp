@@ -11,6 +11,7 @@ export module Soup.Core:OperationResult;
 
 import Opal;
 import :FileSystemState;
+import :Value;
 
 using namespace Opal;
 using namespace std::chrono_literals;
@@ -28,24 +29,32 @@ namespace Soup::Core
 		std::vector<FileId> ObservedInput;
 		std::vector<FileId> ObservedOutput;
 
+		// Implementation dependent set of values that allows an operation to
+		// store intermediate state
+		// Note: Used for preprocessor results
+		std::optional<ValueTable> ObservedValues;
+
 	public:
 		OperationResult() :
 			WasSuccessfulRun(false),
 			EvaluateTime(std::chrono::time_point<std::chrono::file_clock>::min()),
 			ObservedInput(),
-			ObservedOutput()
+			ObservedOutput(),
+			ObservedValues(std::nullopt)
 		{
 		}
 
 		OperationResult(
 			bool wasSuccessfulRun,
 			std::chrono::time_point<std::chrono::file_clock> evaluateTime,
-			std::vector<FileId> observedInput,
-			std::vector<FileId> observedOutput) :
+			std::vector<FileId>&& observedInput,
+			std::vector<FileId>&& observedOutput,
+			std::optional<ValueTable>&& observedValues) :
 			WasSuccessfulRun(wasSuccessfulRun),
 			EvaluateTime(evaluateTime),
 			ObservedInput(std::move(observedInput)),
-			ObservedOutput(std::move(observedOutput))
+			ObservedOutput(std::move(observedOutput)),
+			ObservedValues(std::move(observedValues))
 		{
 		}
 
@@ -54,7 +63,8 @@ namespace Soup::Core
 			return WasSuccessfulRun == rhs.WasSuccessfulRun &&
 				EvaluateTime == rhs.EvaluateTime &&
 				ObservedInput == rhs.ObservedInput &&
-				ObservedOutput == rhs.ObservedOutput;
+				ObservedOutput == rhs.ObservedOutput &&
+				ObservedValues == rhs.ObservedValues;
 		}
 	};
 }

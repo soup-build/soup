@@ -105,7 +105,8 @@ internal static class OperationResultsReader
 			wasSuccessfulRun,
 			evaluateTime,
 			observedInput,
-			observedOutput));
+			observedOutput,
+			observedValues));
 	}
 
 	private static bool ReadBoolean(System.IO.BinaryReader reader)

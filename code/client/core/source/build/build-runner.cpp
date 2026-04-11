@@ -5,6 +5,7 @@
 module;
 
 #include <format>
+#include <functional>
 #include <map>
 #include <sstream>
 #include <string>
@@ -31,6 +32,7 @@ import :RecipeBuildArguments;
 import :RecipeBuildCacheState;
 import :RecipeCache;
 import :Value;
+import :ValueSML;
 import :ValueTableManager;
 import Opal;
 
@@ -38,6 +40,17 @@ using namespace Opal;
 
 namespace Soup::Core::Build
 {
+	/// <summary>
+	/// Function implementation for processing standard output for preprocessor operations
+	/// Knows how to read the SML values and convert them to a value table
+	/// </summary>
+	ValueTable ProcessPreprocessStdOut(std::string_view content)
+	{
+		// Read the contents of the result values
+		auto preprocessorResult = ValueSML::Deserialize(content);
+		return preprocessorResult;
+	}
+
 	/// <summary>
 	/// The build runner that knows how to perform the correct build for a recipe
 	/// and all of its development and runtime dependencies
@@ -666,7 +679,8 @@ namespace Soup::Core::Build
 				generateResultFile,
 				temporaryDirectory,
 				generateAllowedReadAccess,
-				generateAllowedWriteAccess);
+				generateAllowedWriteAccess,
+				std::nullopt);
 		}
 
 		bool RunPreprocessorOperations(
@@ -707,7 +721,8 @@ namespace Soup::Core::Build
 				evaluatePhase1ResultsFile,
 				temporaryDirectory,
 				allowedReadAccess,
-				allowedWriteAccess);
+				allowedWriteAccess,
+				ProcessPreprocessStdOut);
 		}
 
 		void RunEvaluate(
@@ -747,7 +762,8 @@ namespace Soup::Core::Build
 				operationResultsFile,
 				temporaryDirectory,
 				allowedReadAccess,
-				allowedWriteAccess);
+				allowedWriteAccess,
+				std::nullopt);
 
 			if (ranEvaluate)
 			{
@@ -768,7 +784,8 @@ namespace Soup::Core::Build
 			const Path& resultsFile,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& allowedReadAccess,
-			const std::vector<Path>& allowedWriteAccess)
+			const std::vector<Path>& allowedWriteAccess,
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut)
 		{
 			try
 			{
@@ -778,7 +795,8 @@ namespace Soup::Core::Build
 					operationResults,
 					temporaryDirectory,
 					allowedReadAccess,
-					allowedWriteAccess);
+					allowedWriteAccess,
+					processStdOut);
 
 				if (ranEvaluate)
 				{

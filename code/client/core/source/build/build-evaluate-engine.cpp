@@ -79,7 +79,8 @@ namespace Soup::Core
 			OperationResults& operationResults,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,
-			const std::vector<Path>& globalAllowedWriteAccess) override
+			const std::vector<Path>& globalAllowedWriteAccess,
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut) override
 		{
 			const auto& rootOperations = operationGraph.GetRootOperationIds();
 
@@ -92,7 +93,8 @@ namespace Soup::Core
 					operationResults,
 					temporaryDirectory,
 					globalAllowedReadAccess,
-					globalAllowedWriteAccess);
+					globalAllowedWriteAccess,
+					processStdOut);
 
 				// Initialize the ready set from the root operations
 				evaluateState.AddReadyOperations(rootOperations);
@@ -239,6 +241,7 @@ namespace Soup::Core
 						evaluateState.TemporaryDirectory,
 						evaluateState.GlobalAllowedReadAccess,
 						evaluateState.GlobalAllowedWriteAccess,
+						evaluateState.ProcessStdOut,
 						operationState.Info,
 						operationResult);
 				}
@@ -302,6 +305,7 @@ namespace Soup::Core
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,
 			const std::vector<Path>& globalAllowedWriteAccess,
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut,
 			const OperationInfo& operationInfo,
 			OperationResult& operationResult)
 		{
@@ -372,7 +376,7 @@ namespace Soup::Core
 				if (exitCode != 0)
 					Log::Warning(stdOut);
 				else
-					Log::Info(stdOut);
+					Log::Diag(stdOut);
 			}
 
 			// If there was any error output then the build failed
@@ -415,6 +419,11 @@ namespace Soup::Core
 				// Mark this operation as successful to enable future incremental builds
 				operationResult.WasSuccessfulRun = true;
 				operationResult.EvaluateTime = System::ISystem::Current().GetCurrentTime();
+
+				if (processStdOut.has_value())
+				{
+					operationResult.ObservedValues = processStdOut.value()(stdOut);
+				}
 
 				// Ensure the File System State is notified of any output files that have changed
 				_fileSystemState.InvalidateFileWriteTimes(operationResult.ObservedOutput);

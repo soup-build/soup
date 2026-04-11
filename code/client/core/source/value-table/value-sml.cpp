@@ -29,22 +29,12 @@ namespace Soup::Core
 		/// <summary>
 		/// Load from stream
 		/// </summary>
-		static ValueTable Deserialize(
-			const Path& valueFile,
-			std::istream& stream)
+		static ValueTable Deserialize(std::string_view content)
 		{
 			try
 			{
-				// Read the entire file for fastest read operation
-				stream.seekg(0, std::ios_base::end);
-				auto size = stream.tellg();
-				stream.seekg(0, std::ios_base::beg);
-
-				auto contentBuffer = std::vector<char>(size);
-				stream.read(contentBuffer.data(), size);
-
 				// Read the contents of the recipe file
-				auto root = SMLDocument::Parse(contentBuffer.data(), size);
+				auto root = SMLDocument::Parse(content.data(), content.size());
 
 				// Load the entire root table
 				auto table = ValueTable();
@@ -55,7 +45,7 @@ namespace Soup::Core
 			catch(const std::exception& ex)
 			{
 				throw std::runtime_error(
-					std::format("Parsing the Recipe SML failed: {} {}", ex.what(), valueFile.ToString()));
+					std::format("Parsing the SML failed: {}", ex.what()));
 			}
 		}
 

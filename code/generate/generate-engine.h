@@ -139,43 +139,46 @@ namespace Soup::Core::Generate
 					throw std::runtime_error("Invalid phase 1 result.");
 				}
 
+				auto evaluatePhase1Results = OperationResults();
+				auto evaluatePhase1ResultsFile = soupTargetDirectory + Build::Constants::EvaluatePhase1ResultsFileName();
+				if (!OperationResultsManager::TryLoadState(evaluatePhase1ResultsFile, evaluatePhase1Results, _fileSystemState))
+				{
+					Log::Error("Failed to load the evaluate results from phase 1: {}", evaluatePhase1ResultsFile.ToString());
+					throw std::runtime_error("Failed to load phase 1 evaluate results.");
+				}
+
 				auto preprocessorResults = ValueList();
 				for (auto& [_, operation] : generatePhase1Result.GetGraph().GetOperations())
 				{
-					if (operation.DeclaredOutput.size() > 0)
+					// Get the matching operation result
+					OperationResult* operationResult;
+					if (!evaluatePhase1Results.TryFindResult(operation.Id, operationResult))
 					{
-						// TODO: Need a way to indicate is a real preprocessor operation, not a normal one
-						auto resultFilePath = _fileSystemState.GetFilePath(operation.DeclaredOutput.at(0));
-						if (resultFilePath.HasFileName())
-						{
-							auto preprocessorOperationResult = ValueTable();
-
-							preprocessorOperationResult.emplace("Title", Value(operation.Title));
-							preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable.ToString()));
-
-							auto operationArguments = ValueList();
-							for (auto& argument : operation.Command.Arguments)
-							{
-								operationArguments.push_back(Value(std::move(argument)));
-							}
-							preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
-
-							// Read the results file as text
-							std::shared_ptr<System::IInputFile> resultFile;
-							if (!System::IFileSystem::Current().TryOpenRead(resultFilePath, true, resultFile))
-							{
-								Log::Error("Failed to open results file {}", resultFilePath.ToString());
-								throw std::runtime_error("Failed to open results file");
-							}
-
-							// Read the contents of the results file
-							auto preprocessorResult = ValueSML::Deserialize(resultFilePath, resultFile->GetInStream());
-
-							preprocessorOperationResult.emplace("Result", Value(std::move(preprocessorResult)));
-
-							preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
-						}
+						Log::Error("Failed to load the evaluate results from phase 1: {}", evaluatePhase1ResultsFile.ToString());
+						throw std::runtime_error("Failed to load phase 1 evaluate results.");
 					}
+
+					if (!operationResult->ObservedValues.has_value())
+					{
+						Log::Error("Preprocessor operation is missing observed values: {}", operation.Id);
+						throw std::runtime_error("Preprocessor operation is missing observed values.");
+					}
+
+					auto preprocessorOperationResult = ValueTable();
+
+					preprocessorOperationResult.emplace("Title", Value(operation.Title));
+					preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable.ToString()));
+
+					auto operationArguments = ValueList();
+					for (auto& argument : operation.Command.Arguments)
+					{
+						operationArguments.push_back(Value(std::move(argument)));
+					}
+
+					preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
+					preprocessorOperationResult.emplace("Result", Value(operationResult->ObservedValues.value()));
+
+					preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
 				}
 
 				globalState.emplace("Preprocessors", Value(std::move(preprocessorResults)));
