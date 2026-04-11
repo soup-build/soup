@@ -70,11 +70,10 @@ Tools: {
 				}
 			}
 			'mwasplund|parse-modules': {
-				Version: 2.0.0
-				Digest: 'sha256:41454c7aad2c86fd0ae0a238e7add396764661b344116af97f16a5d663a9b441'
+				Version: 2.1.0
+				Digest: 'sha256:9763feb1c23fd498b41be99533837554fd1376673b578bbf6969d996052b6180'
 				Artifacts: {
-					Linux: 'sha256:3e4731bb5f231c322b8d315977d966b695fcee0e2e17b0828ae975aa728235a7'
-					Windows: 'sha256:aaca663e0c951c1e0cbca59f2251d8fa7f53066f97b6ab3c479eb8e0c92daf0f'
+					Linux: 'sha256:6f1e61c8c2842ec1b54c85990dbbbae3ceac29967efa8093a42bc7c5097f4f10'
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 Name: 'sml'
-Version: 1.0.0
+Version: 1.0.1
 Language: 'C++|0'
 Dependencies: {
 	Runtime: [
