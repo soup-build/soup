@@ -14,7 +14,7 @@ namespace Soup.Build.Utilities;
 internal static class OperationResultsReader
 {
 	// Binary Operation Results file format
-	private static uint FileVersion => 2;
+	private static uint FileVersion => 3;
 
 	public static OperationResults Deserialize(System.IO.BinaryReader reader)
 	{
@@ -100,6 +100,14 @@ internal static class OperationResultsReader
 
 		// Read the observed output files
 		var observedOutput = ReadFileIdList(reader);
+
+		// Read the optional observed values
+		ValueTable? observedValues = null;
+		var hasObservedValues = ReadBoolean(reader);
+		if (hasObservedValues)
+		{
+			observedValues = ValueTableReader.ReadValueTable(reader);
+		}
 
 		return (id, new OperationResult(
 			wasSuccessfulRun,

@@ -327,8 +327,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,
@@ -641,8 +642,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,
@@ -1025,8 +1027,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				testBuildGenerateResults,
@@ -1170,8 +1173,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,
@@ -1672,8 +1676,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				packageAGenerateResults,
@@ -1771,8 +1776,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				packageBGenerateResults,
@@ -1939,8 +1945,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,
@@ -2347,8 +2354,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				testBuildGenerateResults,
@@ -2492,8 +2500,9 @@ namespace Soup::Core::Build::UnitTests
 						OperationResult(
 							true,
 							GetEpochTime(),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,

@@ -530,8 +530,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,
@@ -675,8 +676,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				soupCppGenerateResults,
@@ -1097,8 +1099,9 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::sys_days{January/9/2024} + 12h + 35min + 34s),
-						{},
-						{})
+						{ },
+						{ },
+						std::nullopt)
 				},
 			});
 			auto myPackageGenerateResultsContent = std::stringstream();
@@ -1115,8 +1118,9 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::sys_days{January/9/2024} + 12h + 13min + 23s),
-						{},
-						{})
+						{ },
+						{ },
+						std::nullopt)
 				},
 			});
 			auto soupCppGenerateResultsContent = std::stringstream();
@@ -1850,8 +1854,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				myPackageGenerateResults,
@@ -1995,8 +2000,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				soupCppGenerateResults,
@@ -2417,8 +2423,9 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::sys_days{January/9/2024} + 12h + 35min + 34s),
-						{},
-						{})
+						{ },
+						{ },
+						std::nullopt)
 				},
 			});
 			auto myPackageGeneratePhase1ResultsContent = std::stringstream();
@@ -2442,8 +2449,9 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::sys_days{January/9/2024} + 12h + 13min + 23s),
-						{},
-						{})
+						{ },
+						{ },
+						std::nullopt)
 				},
 			});
 			auto soupCppGenerateResultsContent = std::stringstream();
