@@ -4,6 +4,9 @@
 
 module;
 
+#include <functional>
+#include <optional>
+#include <string>
 #include <vector>
 
 export module Soup.Core:IEvaluateEngine;
@@ -31,6 +34,7 @@ namespace Soup::Core
 			OperationResults& operationResults,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,
-			const std::vector<Path>& globalAllowedWriteAccess) = 0;
+			const std::vector<Path>& globalAllowedWriteAccess,
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut) = 0;
 	};
 }

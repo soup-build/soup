@@ -7,6 +7,7 @@ module;
 #include <algorithm>
 #include <condition_variable>
 #include <format>
+#include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -75,6 +76,7 @@ namespace Soup::Core
 		const Path& TemporaryDirectory;
 		const std::vector<Path>& GlobalAllowedReadAccess;
 		const std::vector<Path>& GlobalAllowedWriteAccess;
+		std::optional<std::function<ValueTable(std::string_view)>> ProcessStdOut;
 
 	public:
 		BuildEvaluateGraphState(
@@ -82,7 +84,8 @@ namespace Soup::Core
 			OperationResults& results,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& globalAllowedReadAccess,
-			const std::vector<Path>& globalAllowedWriteAccess) :
+			const std::vector<Path>& globalAllowedWriteAccess,
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut) :
 			_mutex(),
 			_isComplete(false),
 			_activeOperations(0),
@@ -92,6 +95,7 @@ namespace Soup::Core
 			TemporaryDirectory(temporaryDirectory),
 			GlobalAllowedReadAccess(globalAllowedReadAccess),
 			GlobalAllowedWriteAccess(globalAllowedWriteAccess),
+			ProcessStdOut(processStdOut),
 			RemainingDependencyCounts(),
 			ReadyOperations(),
 			_didAnyEvaluate(false),
