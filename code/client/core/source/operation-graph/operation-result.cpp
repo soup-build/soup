@@ -5,6 +5,10 @@
 module;
 
 #include <chrono>
+#include <map>
+#include <optional>
+#include <string>
+#include <variant>
 #include <vector>
 
 export module Soup.Core:OperationResult;
