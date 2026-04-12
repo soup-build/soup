@@ -48,7 +48,7 @@ Builds: {
 				}
 			}
 			'soup|csharp-nuget': {
-				Version: 0.8.0
+				Version: 0.7.0
 				Digest: 'sha256:0b5bb6797a2ff4e7fbefd6ef9c650f7baa4834dc4743589d30637841fc15511b'
 			}
 		}
@@ -87,7 +87,6 @@ Builds: {
 				Version: 0.8.0
 				Digest: 'sha256:8e816fc36d390ea692f29d799dd2f803e8ef614e685ef33cd9c869019a80f9f2'
 				Artifacts: {
-					Linux: 'sha256:f4b05202011eac3129322a273f29e0643eb86ae921196cd0b28028d1ea3d2e8d'
 					Windows: 'sha256:ab62a89fe58c38b9805d6dc65a107e16aa16adb5033604800ff58a37623c77f9'
 				}
 			}
