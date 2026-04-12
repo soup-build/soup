@@ -14,6 +14,7 @@ import :FileSystemState;
 import :OperationInfo;
 import :OperationResult;
 import :OperationResults;
+import :ValueTableWriter;
 
 using namespace Opal;
 
@@ -26,7 +27,7 @@ namespace Soup::Core
 	{
 	private:
 		// Binary Operation results file format
-		static constexpr uint32_t FileVersion = 2;
+		static constexpr uint32_t FileVersion = 3;
 
 		// The time duration that represents how we store the values in the file using 64 bit integer with resolution of 100 nanoseconds
 		// Note: Unix Time, time since 00:00:00 Coordinated Universal Time (UTC), Thursday, 1 January 1970, not counting leap seconds
@@ -90,6 +91,13 @@ namespace Soup::Core
 
 			// Write out the observed output files
 			WriteValues(stream, result.ObservedOutput);
+
+			// Write out the optional observed values
+			WriteValue(stream, result.ObservedValues.has_value());
+			if (result.ObservedValues.has_value())
+			{
+				ValueTableWriter::WriteValueTable(stream, result.ObservedValues.value());
+			}
 		}
 
 		static void WriteValue(std::ostream& stream, uint32_t value)

@@ -82,7 +82,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsFalse(ranOperations, "Verify no operations ran");
 
@@ -179,7 +180,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -194,7 +196,8 @@ namespace Soup::Core::UnitTests
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
 							{ 4, },
-							{ 5, })
+							{ 5, },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -313,7 +316,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -328,7 +332,8 @@ namespace Soup::Core::UnitTests
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
 							{ },
-							{ 2, })
+							{ 2, },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -451,7 +456,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -466,7 +472,8 @@ namespace Soup::Core::UnitTests
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
 							{ },
-							{ 1, })
+							{ 1, },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -587,7 +594,8 @@ namespace Soup::Core::UnitTests
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::sys_days(May/22/2015) + 9h + 10min),
 						{ 1, },
-						{ 2, })
+						{ 2, },
+						std::nullopt)
 				},
 			});
 			auto temporaryDirectory = Path();
@@ -598,7 +606,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -612,8 +621,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -737,7 +747,8 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::sys_days(May/22/2015) + 9h + 10min),
 						{ 1, },
-						{ 2, })
+						{ 2, },
+						std::nullopt)
 				},
 			});
 			auto temporaryDirectory = Path();
@@ -748,7 +759,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -762,8 +774,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -887,7 +900,8 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::sys_days(May/22/2015) + 9h + 10min),
 						{ 1, },
-						{ 2, })
+						{ 2, },
+						std::nullopt)
 				},
 			});
 			auto temporaryDirectory = Path();
@@ -898,7 +912,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -912,8 +927,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -1037,7 +1053,8 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::sys_days(May/22/2015) + 9h + 0min),
 						{ 1, },
-						{ 2, })
+						{ 2, },
+						std::nullopt)
 				},
 			});
 			auto temporaryDirectory = Path();
@@ -1048,7 +1065,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsTrue(ranOperations, "Verify ran operations");
 
@@ -1062,8 +1080,9 @@ namespace Soup::Core::UnitTests
 							true,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{},
-							{})
+							{ },
+							{ },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -1184,7 +1203,8 @@ namespace Soup::Core::UnitTests
 						true,
 						std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::sys_days(May/22/2015) + 9h + 15min),
 						{ 1, },
-						{ 2, })
+						{ 2, },
+						std::nullopt)
 				},
 			});
 			auto temporaryDirectory = Path();
@@ -1195,7 +1215,8 @@ namespace Soup::Core::UnitTests
 				operationResults,
 				temporaryDirectory,
 				globalAllowedReadAccess,
-				globalAllowedWriteAccess);
+				globalAllowedWriteAccess,
+				std::nullopt);
 
 			Assert::IsFalse(ranOperations, "Verify did not run operations");
 
@@ -1210,7 +1231,8 @@ namespace Soup::Core::UnitTests
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::sys_days(May / 22 / 2015) + 9h + 15min),
 							{ 1, },
-							{ 2, })
+							{ 2, },
+							std::nullopt)
 					},
 				}),
 				operationResults.GetResults(),
@@ -1319,7 +1341,8 @@ namespace Soup::Core::UnitTests
 					operationResults,
 					temporaryDirectory,
 					globalAllowedReadAccess,
-					globalAllowedWriteAccess);
+					globalAllowedWriteAccess,
+					std::nullopt);
 				(void)ranOperations;
 			});
 
@@ -1461,7 +1484,8 @@ namespace Soup::Core::UnitTests
 					operationResults,
 					temporaryDirectory,
 					globalAllowedReadAccess,
-					globalAllowedWriteAccess);
+					globalAllowedWriteAccess,
+					std::nullopt);
 				(void)ranOperations;
 			});
 
@@ -1603,7 +1627,8 @@ namespace Soup::Core::UnitTests
 					operationResults,
 					temporaryDirectory,
 					globalAllowedReadAccess,
-					globalAllowedWriteAccess);
+					globalAllowedWriteAccess,
+					std::nullopt);
 				(void)ranOperations;
 			});
 

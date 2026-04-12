@@ -52,7 +52,8 @@ namespace Soup::Core::UnitTests
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::time_point<std::chrono::system_clock>()),
 						{ },
-						{ })
+						{ },
+						std::nullopt)
 				},
 			});
 
@@ -65,7 +66,8 @@ namespace Soup::Core::UnitTests
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
 							{ },
-							{ })
+							{ },
+							std::nullopt)
 					},
 				}),
 				uut.GetResults(),
@@ -95,7 +97,8 @@ namespace Soup::Core::UnitTests
 						std::chrono::clock_cast<std::chrono::file_clock>(
 							std::chrono::time_point<std::chrono::system_clock>()),
 						{ },
-						{ })
+						{ },
+						std::nullopt)
 				},
 			});
 
@@ -110,7 +113,8 @@ namespace Soup::Core::UnitTests
 					std::chrono::clock_cast<std::chrono::file_clock>(
 						std::chrono::time_point<std::chrono::system_clock>()),
 					{ },
-					{ }),
+					{ },
+					std::nullopt),
 				*operationResult,
 				"Verify operationResult is correct.");
 		}
@@ -127,7 +131,8 @@ namespace Soup::Core::UnitTests
 					std::chrono::clock_cast<std::chrono::file_clock>(
 						std::chrono::time_point<std::chrono::system_clock>()),
 					{ },
-					{ }));
+					{ },
+					std::nullopt));
 
 			Assert::AreEqual(
 				std::map<OperationId, OperationResult>({
@@ -138,7 +143,8 @@ namespace Soup::Core::UnitTests
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
 							{ },
-							{ }),
+							{ },
+							std::nullopt),
 					},
 				}),
 				uut.GetResults(),
