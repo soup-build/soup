@@ -30,7 +30,7 @@ Builds: {
 				}
 			}
 			'soup|csharp-nuget': {
-				Version: 0.8.0
+				Version: 0.7.0
 				Digest: 'sha256:0b5bb6797a2ff4e7fbefd6ef9c650f7baa4834dc4743589d30637841fc15511b'
 			}
 		}
