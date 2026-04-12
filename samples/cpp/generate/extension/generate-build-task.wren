@@ -33,9 +33,8 @@ class GenerateBuildTask is SoupTask {
 		var contextTable = Soup.globalState["Context"]
 		var targetRoot = Path.new(contextTable["TargetDirectory"])
 
-		var generateDirectory = Path.new("gen/")
+		var generateDirectory = Path.new("./gen/")
 		var generateFile = generateDirectory + Path.new("helper.cpp")
-		var generateFileAbsolute = targetRoot + generateFile
 
 		// Ensure the generate folder exists
 		var createGenerateDirectory = SharedOperations.CreateCreateDirectoryOperation(
@@ -53,7 +52,8 @@ class GenerateBuildTask is SoupTask {
 		GenerateBuildTask.CreateGenerateFileOperation(targetRoot, generateFile)
 
 		var generatedSourceInfo = {}
-		generatedSourceInfo["File"] = generateFileAbsolute.toString
+		generatedSourceInfo["File"] = generateFile.toString
+		generatedSourceInfo["Root"] = targetRoot.toString
 		generatedSourceInfo["IsInterface"] = true
 		generatedSourceInfo["Module"] = "Sample.Generate"
 		generatedSourceInfo["Imports"] = []

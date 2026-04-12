@@ -20,6 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 10.0.x
+    - name: Install Clang 22
+      if: matrix.os != 'windows-2022'
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 22
+        sudo apt-get install -y clang-22 lldb-22 lld-22
     - name: Setup Soup Build
       uses: soup-build/setup-soup@v1
       with:
