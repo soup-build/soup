@@ -1,6 +1,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 import ftxui;
 import Opal;
@@ -16,6 +17,8 @@ struct AppState
 	int right_size;
 	int top_size;
 	int bottom_size;
+
+	int tab_selected;
 };
 
 void InitializeState(AppState& state)
@@ -24,6 +27,8 @@ void InitializeState(AppState& state)
 	state.right_size = 20;
 	state.top_size = 10;
 	state.bottom_size = 10;
+
+	state.tab_selected = 0;
 }
 
 PackageProvider LoadGraph(const Path& workingDirectory, const ValueTable& globalParameters)
@@ -53,6 +58,30 @@ PackageProvider LoadGraph(const Path& workingDirectory, const ValueTable& global
 	return packageProvider;
 }
 
+Component RendererInfo(const std::string& name, int* size)
+{
+	return Renderer([name, size] {
+		return text(name + ": " + std::to_string(*size)) | center;
+	});
+}
+
+Component VMenu1(std::vector<std::string>* entries, int* selected) {
+	auto option = MenuOption::Vertical();
+	option.entries_option.transform = [](EntryState state) {
+		state.label = (state.active ? "| " : "  ") + state.label;
+		Element e = text(state.label);
+		if (state.focused) {
+			e = e | color(Color::HotPink);
+		}
+		if (state.active) {
+			e = e | bold;
+		}
+		return e;
+	};
+	return Menu(entries, selected, option);
+}
+
+
 int main()
 {
 	// Setup the filter
@@ -64,7 +93,7 @@ int main()
 		static_cast<uint32_t>(TraceEventFlag::Error) |
 		static_cast<uint32_t>(TraceEventFlag::Critical);
 	auto filter = std::make_shared<EventTypeFilter>(
-			static_cast<TraceEventFlag>(defaultTypes));
+		static_cast<TraceEventFlag>(defaultTypes));
 
 	// Setup the console listener
 	Log::RegisterListener(
@@ -78,41 +107,69 @@ int main()
 	System::ISystem::Register(std::make_shared<System::STLSystem>());
 	System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
+	auto workingDirectory = Path("/home/mwasplund/repos/soup/code/tools/view/");
+	auto globalParameters = ValueTable();
+	auto packageProvider = LoadGraph(workingDirectory, globalParameters);
+
 	auto state = AppState();
 	InitializeState(state);
 
 	auto app = App::Fullscreen();
-	
-	std::string label = "Click to quit";
-	auto slider = Slider("Value:", &state.top_size, 0, 100, 1);
-	auto button = Button(&label, app.ExitLoopClosure());
-	auto renderer2 = Renderer(button, [&] {
-		return hbox({
-		text("A button:"),
-		button->Render(),
-		slider->Render(),
-		});
+
+	std::vector<std::string> tab_values;
+
+	for (auto& [key, value] : packageProvider.GetPackageLookup())
+	{
+		tab_values.push_back(value.Name.ToString());
+	}
+
+	auto tab_menu = VMenu1(&tab_values, &state.tab_selected);
+	auto rendererMenu = Renderer(tab_menu, [&] {
+		return tab_menu->Render() | vscroll_indicator | frame;
 	});
 
-	// Renderers:
-	auto RendererInfo = [](const std::string& name, int* size) {
-		return Renderer([name, size] {
-		return text(name + ": " + std::to_string(*size)) | center;
-		});
+	std::vector<std::string> tab_1_entries{
+		"Forest",
+		"Water",
+		"I don't know",
 	};
-	auto middle = renderer2;//Renderer([] { return text("Middle") | center; });
-	auto left = RendererInfo("Left", &state.left_size);
-	auto right = RendererInfo("Right", &state.right_size);
-	auto top = RendererInfo("Top", &state.top_size);
-	auto bottom = RendererInfo("Bottom", &state.bottom_size);
+	int tab_1_selected = 0;
 
-	auto container = middle;
-	container = ResizableSplitLeft(left, container, &state.left_size);
-	container = ResizableSplitRight(right, container, &state.right_size);
-	container = ResizableSplitTop(top, container, &state.top_size);
-	container = ResizableSplitBottom(bottom, container, &state.bottom_size);
+	std::vector<std::string> tab_2_entries{
+		"Hello",
+		"Hi",
+		"Hay",
+	};
+	int tab_2_selected = 0;
 
-	auto renderer = Renderer(container, [&] { return container->Render() | border; });
+	std::vector<std::string> tab_3_entries{
+		"Table",
+		"Nothing",
+		"Is",
+		"Empty",
+	};
+	int tab_3_selected = 0;
+	auto tab_container = Container::Tab(
+		{
+			Radiobox(&tab_1_entries, &tab_1_selected),
+			Radiobox(&tab_2_entries, &tab_2_selected),
+			Radiobox(&tab_3_entries, &tab_3_selected),
+		},
+		&state.tab_selected);
 
-	app.Loop(renderer);
+	auto container2 = Container::Horizontal({
+		rendererMenu,
+		tab_container,
+	});
+
+	auto renderer2 = Renderer(container2, [&] {
+		return hbox({
+			rendererMenu->Render(),
+			separator(),
+			tab_container->Render(),
+		}) |
+		border;
+	});
+
+	app.Loop(renderer2);
 }

@@ -138,7 +138,7 @@ func (m model) View() tea.View {
 }
 
 func initialModel() model {
-    graph := loadGraph()
+	graph := loadGraph()
 
 	// Initialize the model and list.
 	m := model{}
