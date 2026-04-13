@@ -110,11 +110,9 @@ namespace Monitor::Linux
 		void WaitForExit() override final
 		{
 			ReadAvailableStdOut();
-			m_stdOut << std::flush;
 			close(m_stdOutReadHandle);
 
 			ReadAvailableStdErr();
-			m_stdErr << std::flush;
 			close(m_stdErrReadHandle);
 
 			m_isFinished = true;

@@ -64,12 +64,12 @@ namespace Monitor
 	#ifdef TRACE_DETOUR_CLIENT
 		void DebugError(std::string_view message, uint32_t value)
 		{
-			printf("DETOUR-CLIENT-ERROR: %s %u\n", message.data(), value);
+			std::cout << "DETOUR-CLIENT-ERROR: " << message << " " << value << std::endl;
 		}
 
 		void DebugError(std::string_view message)
 		{
-			printf("DETOUR-CLIENT-ERROR: %s\n", message.data());
+			std::cout << "DETOUR-CLIENT-ERROR: " << message << std::endl;
 		}
 	#else
 		void DebugError(std::string_view /*message*/, uint32_t /*value*/)
@@ -87,7 +87,7 @@ namespace Monitor
 		static void DebugTrace(std::string_view message, Args&&... args)
 		{
 			auto result = std::vformat(message, std::make_format_args(args...));
-			printf("DETOUR-CLIENT: %s\n", result.c_str());
+			std::cout <<  "DETOUR-CLIENT: " << result << std::endl;
 		}
 	#else
 		template<typename... Args>
