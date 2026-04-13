@@ -11,6 +11,12 @@ using namespace ftxui;
 using namespace Opal;
 using namespace Soup::Core;
 
+struct PackageState
+{
+	std::vector<std::string> PropertiesList;
+	int PropertiesListSelected;
+};
+
 struct AppState
 {
 	int left_size;
@@ -18,17 +24,39 @@ struct AppState
 	int top_size;
 	int bottom_size;
 
-	int tab_selected;
+	std::vector<std::string> PackagesList;
+	std::vector<PackageState> PackagePropertiesList;
+	int PackagesListSelected;
 };
 
-void InitializeState(AppState& state)
+void InitializeState(AppState& state, PackageProvider& packageProvider)
 {
 	state.left_size = 20;
 	state.right_size = 20;
 	state.top_size = 10;
 	state.bottom_size = 10;
 
-	state.tab_selected = 0;
+	for (auto& [key, value] : packageProvider.GetPackageLookup())
+	{
+		state.PackagesList.push_back(value.Name.ToString());
+
+		auto properties = std::vector<std::string>();
+		properties.push_back(std::to_string(value.Id));
+		properties.push_back(value.Name.ToString());
+		properties.push_back(value.PackageRoot.ToString());
+
+		for (auto& [dependency, dependencyInfo] : value.Dependencies)
+		{
+			properties.push_back(dependency);
+		}
+
+		state.PackagePropertiesList.push_back({
+			std::move(properties),
+			0,
+		});
+	}
+
+	state.PackagesListSelected = 0;
 }
 
 PackageProvider LoadGraph(const Path& workingDirectory, const ValueTable& globalParameters)
@@ -112,50 +140,25 @@ int main()
 	auto packageProvider = LoadGraph(workingDirectory, globalParameters);
 
 	auto state = AppState();
-	InitializeState(state);
+	InitializeState(state, packageProvider);
 
 	auto app = App::Fullscreen();
 
-	std::vector<std::string> tab_values;
-
-	for (auto& [key, value] : packageProvider.GetPackageLookup())
-	{
-		tab_values.push_back(value.Name.ToString());
-	}
-
-	auto tab_menu = VMenu1(&tab_values, &state.tab_selected);
+	auto tab_menu = VMenu1(&state.PackagesList, &state.PackagesListSelected);
 	auto rendererMenu = Renderer(tab_menu, [&] {
 		return tab_menu->Render() | vscroll_indicator | frame;
 	});
 
-	std::vector<std::string> tab_1_entries{
-		"Forest",
-		"Water",
-		"I don't know",
-	};
-	int tab_1_selected = 0;
+	auto tabComponents = Components();
+	for (auto& packageProperties : state.PackagePropertiesList)
+	{
+		tabComponents.push_back(
+			VMenu1(&packageProperties.PropertiesList, &packageProperties.PropertiesListSelected));
+	}
 
-	std::vector<std::string> tab_2_entries{
-		"Hello",
-		"Hi",
-		"Hay",
-	};
-	int tab_2_selected = 0;
-
-	std::vector<std::string> tab_3_entries{
-		"Table",
-		"Nothing",
-		"Is",
-		"Empty",
-	};
-	int tab_3_selected = 0;
 	auto tab_container = Container::Tab(
-		{
-			Radiobox(&tab_1_entries, &tab_1_selected),
-			Radiobox(&tab_2_entries, &tab_2_selected),
-			Radiobox(&tab_3_entries, &tab_3_selected),
-		},
-		&state.tab_selected);
+		std::move(tabComponents),
+		&state.PackagesListSelected);
 
 	auto container2 = Container::Horizontal({
 		rendererMenu,
