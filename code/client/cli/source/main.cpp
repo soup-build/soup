@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 
+import ftxui;
 import Monitor.Host;
 import Opal;
 import Soup.Core;

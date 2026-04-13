@@ -15,6 +15,7 @@ Dependencies: {
 		'../core/'
 		'../../generate/'
 		'../../monitor/host/'
+		'../../../../FTXUI/'
 	]
 	Build: [
 		# TODO: 'soup-test-cpp@0.4.0'
