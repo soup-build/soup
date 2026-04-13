@@ -190,9 +190,6 @@ std::string LoadBuildGraphContent(
 		auto workingDirectory = Path(workingDirectoryString);
 		auto globalParameters = ValueTableReader::Deserialize(globalParametersStream);
 
-		// Find the built in folder root
-		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-
 		// Load user config state
 		auto userDataPath = Build::Constants::GetSoupUserDataPath();
 		
