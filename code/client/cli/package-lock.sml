@@ -17,6 +17,7 @@ Closure: {
 		soup: { Version: './', Build: '0', Tool: '0' }
 		'soup-core': { Version: '../core/', Build: '1', Tool: '0' }
 		'soup-generate': { Version: '../../generate/', Build: '0', Tool: '0' }
+		'soup-view': { Version: '../view/', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

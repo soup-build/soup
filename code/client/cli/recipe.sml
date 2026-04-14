@@ -13,9 +13,9 @@ Dependencies: {
 	# Ensure the core build extensions are runtime dependencies
 	Runtime: [
 		'../core/'
+		'../view/'
 		'../../generate/'
 		'../../monitor/host/'
-		'../../../../FTXUI/'
 	]
 	Build: [
 		# TODO: 'soup-test-cpp@0.4.0'
