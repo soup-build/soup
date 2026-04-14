@@ -12,7 +12,7 @@ namespace Soup::Client
 
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
-	Component CustomCollapsible(ConstStringRef label, Component child, Ref<bool> show = true)
+	Component CustomCollapsible(ConstStringRef label, Component child, Ref<bool> show = false)
 	{
 		class Impl : public ComponentBase {
 		public:
@@ -44,12 +44,6 @@ namespace Soup::Client
 		return Make<Impl>(std::move(label), std::move(child), show);
 	}
 
-	struct PackageState
-	{
-		std::vector<std::string> PropertiesList;
-		int PropertiesListSelected;
-	};
-
 	struct AppState
 	{
 		int left_size;
@@ -58,7 +52,6 @@ namespace Soup::Client
 		int bottom_size;
 
 		std::vector<std::string> PackagesList;
-		std::vector<PackageState> PackagePropertiesList;
 		int PackagesListSelected;
 	};
 
@@ -143,16 +136,24 @@ namespace Soup::Client
 			});
 
 			auto tabComponents = Components();
-			for (auto& packageProperties : state.PackagePropertiesList)
+			for (auto& [key, value] : packageProvider.GetPackageLookup())
 			{
 				auto properties = Components();
 
-				for (auto& property : packageProperties.PropertiesList)
-				{
-					properties.push_back(CreateSingleItemMenuEntry(property));
-				}
+				properties.push_back(CreateSingleItemMenuEntry(std::to_string(value.Id)));
+				properties.push_back(CreateSingleItemMenuEntry(value.Name.ToString()));
+				properties.push_back(CreateSingleItemMenuEntry(value.PackageRoot.ToString()));
 
-				properties.push_back(CollapsableItems());
+				for (auto& [dependencyType, dependencies] : value.Dependencies)
+				{
+					auto dependencyItems = Components();
+					for (auto& dependency : dependencies)
+					{
+						dependencyItems.push_back(CreateSingleItemMenuEntry(dependency.OriginalReference.ToString()));
+					}
+
+					properties.push_back(Collapsible(dependencyType, Inner(dependencyItems)));
+				}
 
 				tabComponents.push_back(
 					Container::Vertical(std::move(properties)));
@@ -190,21 +191,6 @@ namespace Soup::Client
 			for (auto& [key, value] : packageProvider.GetPackageLookup())
 			{
 				state.PackagesList.push_back(value.Name.ToString());
-
-				auto properties = std::vector<std::string>();
-				properties.push_back(std::to_string(value.Id));
-				properties.push_back(value.Name.ToString());
-				properties.push_back(value.PackageRoot.ToString());
-
-				for (auto& [dependency, dependencyInfo] : value.Dependencies)
-				{
-					properties.push_back(dependency);
-				}
-
-				state.PackagePropertiesList.push_back({
-					std::move(properties),
-					0,
-				});
 			}
 
 			state.PackagesListSelected = 0;
