@@ -22,42 +22,42 @@ namespace Soup::View
 	/// </summary>
 	export class TUI
 	{
+	private:
+		AppState _state;
+
 	public:
 		/// <summary>
 		/// Main entry point for a unique command
 		/// </summary>
-		static void Run(Core::PackageProvider& packageProvider)
+		void Run(Core::PackageProvider& packageProvider)
 		{
-			auto state = AppState();
-			InitializeState(state, packageProvider);
+			_state = AppState();
+			InitializeState(packageProvider);
 
 			auto app = ftxui::App::Fullscreen();
 
-			auto tab_menu = SingleItemMenu(&state.PackagesList, &state.PackagesListSelected);
-			auto rendererMenu = ftxui::Renderer(tab_menu, [&] {
-				return tab_menu->Render() | ftxui::vscroll_indicator | ftxui::frame;
-			});
+			auto packagesMenu = CreateSingleItemMenu(&_state.PackagesList, &_state.PackagesListSelected);
 
 			auto tabComponents = CreateAllPackageTabs(packageProvider);
 
 			auto packagesPropertiesView = ftxui::Container::Tab(
 				std::move(tabComponents),
-				&state.PackagesListSelected);
+				&_state.PackagesListSelected);
 
 			auto rendererProperties = ftxui::Renderer(packagesPropertiesView, [&] {
 				return packagesPropertiesView->Render() | ftxui::vscroll_indicator | ftxui::xflex_grow | ftxui::frame;
 			});
 
-			auto container2 = ftxui::Container::Horizontal({
-				rendererMenu,
+			auto packagesView = ftxui::Container::Horizontal({
+				packagesMenu,
 				rendererProperties,
 			});
 
-			auto packagesView = ftxui::Renderer(container2, [&] {
+			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
 				return ftxui::vbox({
 					AppAsciiArt(),
 					ftxui::hbox({
-						rendererMenu->Render(),
+						packagesMenu->Render(),
 						ftxui::separator(),
 						rendererProperties->Render(),
 					}) |
@@ -65,18 +65,18 @@ namespace Soup::View
 				});
 			});
 
-			app.Loop(packagesView);
+			app.Loop(packagesViewRenderer);
 		}
 
 	private:
-		static void InitializeState(AppState& state, Core::PackageProvider& packageProvider)
+		void InitializeState(Core::PackageProvider& packageProvider)
 		{
 			for (auto& [key, value] : packageProvider.GetPackageLookup())
 			{
-				state.PackagesList.push_back(value.Name.ToString());
+				_state.PackagesList.push_back(value.Name.ToString());
 			}
 
-			state.PackagesListSelected = 0;
+			_state.PackagesListSelected = 0;
 		}
 
 		static ftxui::Components CreateAllPackageTabs(Core::PackageProvider& packageProvider)

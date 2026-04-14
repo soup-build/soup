@@ -78,7 +78,8 @@ namespace Soup::Client
 				hostPlatform,
 				recipeCache);
 			
-			View::TUI::Run(packageProvider);
+			auto view = View::TUI();
+			view.Run(packageProvider);
 		}
 
 	private:

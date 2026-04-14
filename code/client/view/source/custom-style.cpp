@@ -57,7 +57,7 @@ namespace Soup::View
 		return MenuEntry(value, option);
 	}
 
-	export ftxui::Component SingleItemMenu(std::vector<std::string>* entries, int* selected) {
+	export ftxui::Component CreateSingleItemMenu(std::vector<std::string>* entries, int* selected) {
 		auto option = ftxui::MenuOption::Vertical();
 		option.entries_option.transform = [](ftxui::EntryState state) {
 			auto prefix = ftxui::text(state.active ? "│ " : "  ");
@@ -73,6 +73,13 @@ namespace Soup::View
 			return element;
 		};
 
-		return ftxui::Menu(entries, selected, option);
+		auto menu = ftxui::Menu(entries, selected, option);
+
+		// Wrap the menu in a renderer to add a frame and scroll indicator
+		auto rendererMenu = ftxui::Renderer(menu, [menu] {
+			return menu->Render() | ftxui::vscroll_indicator | ftxui::frame;
+		});
+
+		return rendererMenu;
 	}
 }
