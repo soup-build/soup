@@ -15,5 +15,8 @@ namespace Soup::View
 	{
 		std::vector<std::string> PackagesList;
 		int PackagesListSelected;
+
+		std::vector<std::string> PackageTabList;
+		int PackageTabSelected;
 	};
 }

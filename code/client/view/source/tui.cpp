@@ -77,9 +77,16 @@ namespace Soup::View
 			}
 
 			_state.PackagesListSelected = 0;
+
+			_state.PackageTabList = std::vector<std::string>({
+				"Properties",
+				"Tasks",
+				"Operations",
+			});
+			_state.PackageTabSelected = 0;
 		}
 
-		static ftxui::Components CreateAllPackageTabs(Core::PackageProvider& packageProvider)
+		ftxui::Components CreateAllPackageTabs(Core::PackageProvider& packageProvider)
 		{
 			auto tabComponents = ftxui::Components();
 			for (auto& [key, value] : packageProvider.GetPackageLookup())
@@ -101,8 +108,38 @@ namespace Soup::View
 					properties.push_back(ftxui::Collapsible(dependencyType, Inner(dependencyItems)));
 				}
 
-				tabComponents.push_back(
-					ftxui::Container::Vertical(std::move(properties)));
+				auto tab_toggle = ftxui::Toggle(&_state.PackageTabList, &_state.PackageTabSelected);
+
+				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
+				auto tasksList = ftxui::Container::Vertical({
+					CreateSingleItemMenuEntry("Tasks"),
+				});
+				auto operationsList = ftxui::Container::Vertical({
+					CreateSingleItemMenuEntry("Operations"),
+				});
+
+				auto tab_container = ftxui::Container::Tab({
+						propertiesList,
+						tasksList,
+						operationsList,
+					},
+					&_state.PackageTabSelected);
+
+				auto container = ftxui::Container::Vertical({
+					tab_toggle,
+					tab_container,
+				});
+
+				auto renderer = ftxui::Renderer(container, [tab_toggle, tab_container] {
+					return ftxui::vbox({
+							tab_toggle->Render(),
+							ftxui::separator(),
+							tab_container->Render(),
+						}) |
+						ftxui::border;
+				});
+
+				tabComponents.push_back(renderer);
 			}
 
 			return tabComponents;
