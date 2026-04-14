@@ -10,6 +10,40 @@ namespace Soup::Client
 {
 	using namespace ftxui;
 
+	// Create custom collapsible so we can style it
+	// TODO: Make collapsible extensible with options
+	Component CustomCollapsible(ConstStringRef label, Component child, Ref<bool> show = true)
+	{
+		class Impl : public ComponentBase {
+		public:
+			Impl(ConstStringRef label, Component child, Ref<bool> show) : show_(show)
+			{
+				CheckboxOption option;
+				option.transform = [](EntryState state)
+				{
+					auto prefix = text(state.state ? "  ▼ " : "  ▶ ");
+					auto label = text(state.label);
+					auto element = hbox({prefix, label});
+					if (state.active) {
+						element |= bold;
+					}
+					if (state.focused) {
+						element |= color(Color::HotPink);
+					}
+					return element;	
+				};
+				Add(Container::Vertical({
+					Checkbox(std::move(label), show_.operator->(), option),
+					Maybe(std::move(child), show_.operator->()),
+				}));
+			}
+
+			Ref<bool> show_;
+		};
+
+		return Make<Impl>(std::move(label), std::move(child), show);
+	}
+
 	struct PackageState
 	{
 		std::vector<std::string> PropertiesList;
@@ -67,7 +101,6 @@ namespace Soup::Client
 				}
 			}
 
-
 			// Platform specific defaults
 			#if defined(_WIN32)
 				auto hostPlatform = "Windows";
@@ -104,7 +137,7 @@ namespace Soup::Client
 
 			auto app = App::Fullscreen();
 
-			auto tab_menu = VMenu1(&state.PackagesList, &state.PackagesListSelected);
+			auto tab_menu = SingleItemMenu(&state.PackagesList, &state.PackagesListSelected);
 			auto rendererMenu = Renderer(tab_menu, [&] {
 				return tab_menu->Render() | vscroll_indicator | frame;
 			});
@@ -112,29 +145,38 @@ namespace Soup::Client
 			auto tabComponents = Components();
 			for (auto& packageProperties : state.PackagePropertiesList)
 			{
+				auto properties = Components();
+
+				for (auto& property : packageProperties.PropertiesList)
+				{
+					properties.push_back(CreateSingleItemMenuEntry(property));
+				}
+
+				properties.push_back(CollapsableItems());
+
 				tabComponents.push_back(
-					VMenu1(&packageProperties.PropertiesList, &packageProperties.PropertiesListSelected));
+					Container::Vertical(std::move(properties)));
 			}
 
-			auto tab_container = Container::Tab(
+			auto packagesPropertiesView = Container::Tab(
 				std::move(tabComponents),
 				&state.PackagesListSelected);
 
 			auto container2 = Container::Horizontal({
 				rendererMenu,
-				tab_container,
+				packagesPropertiesView,
 			});
 
-			auto renderer2 = Renderer(container2, [&] {
+			auto packagesView = Renderer(container2, [&] {
 				return hbox({
 					rendererMenu->Render(),
 					separator(),
-					tab_container->Render(),
+					packagesPropertiesView->Render(),
 				}) |
 				border;
 			});
 
-			app.Loop(renderer2);
+			app.Loop(packagesView);
 		}
 
 	private:
@@ -175,19 +217,91 @@ namespace Soup::Client
 			});
 		}
 
-		Component VMenu1(std::vector<std::string>* entries, int* selected) {
-			auto option = MenuOption::Vertical();
-			option.entries_option.transform = [](EntryState state) {
-				state.label = (state.active ? "| " : "  ") + state.label;
-				Element e = text(state.label);
+		// Take a list of component, display them vertically, one column shifted to the
+		// right.
+		Component Inner(std::vector<Component> children) {
+			auto vlist = Container::Vertical(std::move(children));
+			return Renderer(vlist, [vlist] {
+				return hbox({
+					text(" "),
+					vlist->Render(),
+				});
+			});
+		}
+
+		Component Empty()
+		{
+			return Inner({
+				CreateSingleItemMenuEntry("EMPTY"),
+				CreateSingleItemMenuEntry("EMPTY"),
+			});
+		}
+
+		Component CollapsableItems()
+		{
+			auto component = Collapsible("Collapsible 1",
+				Inner({
+					Collapsible(
+						"Collapsible 1.1",
+						Inner({
+							Collapsible("Collapsible 1.1.1", Empty()),
+							Collapsible("Collapsible 1.1.2", Empty()),
+							Collapsible("Collapsible 1.1.3", Empty()),
+						})),
+					Collapsible(
+						"Collapsible 1.2",
+						Inner({
+							Collapsible("Collapsible 1.2.1", Empty()),
+							Collapsible("Collapsible 1.2.2", Empty()),
+							Collapsible("Collapsible 1.2.3", Empty()),
+						})),
+					Collapsible(
+						"Collapsible 1.3",
+						Inner({
+							Collapsible("Collapsible 1.3.1", Empty()),
+							Collapsible("Collapsible 1.3.2", Empty()),
+							Collapsible("Collapsible 1.3.3", Empty()),
+						})),
+				}));
+
+			return component;
+		}
+
+		Component CreateSingleItemMenuEntry(std::string_view value)
+		{
+			auto option = MenuEntryOption();
+			option.transform = [](EntryState state) {
+				auto prefix = text("  ");
+				auto label = text(state.label);
+				auto element = hbox({prefix, label});
 				if (state.focused) {
-					e = e | color(Color::HotPink);
+					element |= color(Color::HotPink);
 				}
 				if (state.active) {
-					e = e | bold;
+					element |= bold;
 				}
-				return e;
+				return element;
 			};
+
+			return MenuEntry(value, option);
+		}
+
+		Component SingleItemMenu(std::vector<std::string>* entries, int* selected) {
+			auto option = MenuOption::Vertical();
+			option.entries_option.transform = [](EntryState state) {
+				auto prefix = text(state.active ? "│ " : "  ");
+				auto label = text(state.label);
+				auto element = hbox({prefix, label});
+				if (state.focused) {
+					element |= bold;
+				}
+				if (state.active) {
+					element |= color(Color::HotPink);
+				}
+
+				return element;
+			};
+
 			return Menu(entries, selected, option);
 		}
 
