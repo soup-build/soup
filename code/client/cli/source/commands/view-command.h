@@ -163,18 +163,30 @@ namespace Soup::Client
 				std::move(tabComponents),
 				&state.PackagesListSelected);
 
+			auto rendererProperties = Renderer(packagesPropertiesView, [&] {
+				return packagesPropertiesView->Render() | vscroll_indicator | xflex_grow | frame;
+			});
+
 			auto container2 = Container::Horizontal({
 				rendererMenu,
-				packagesPropertiesView,
+				rendererProperties,
 			});
 
 			auto packagesView = Renderer(container2, [&] {
-				return hbox({
-					rendererMenu->Render(),
-					separator(),
-					packagesPropertiesView->Render(),
-				}) |
-				border;
+				return vbox({
+					text(R"(  _________                     __________      .__.__       .___)") | color(Color::HotPink),
+					text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)") | color(Color::HotPink),
+					text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )") | color(Color::HotPink),
+					text(R"( /        (  <_> )  |  /  |_> >  |    |   \  |  /  |  |__/ /_/ | )") | color(Color::HotPink),
+					text(R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )") | color(Color::HotPink),
+					text(R"(        \/             |__|             \/                    \/ )") | color(Color::HotPink),
+					hbox({
+						rendererMenu->Render(),
+						separator(),
+						rendererProperties->Render(),
+					}) |
+					border,
+				});
 			});
 
 			app.Loop(packagesView);
