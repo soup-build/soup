@@ -133,36 +133,60 @@ namespace Soup::View
 
 					properties.push_back(ftxui::Collapsible(dependencyType, Inner(dependencyItems)));
 				}
-			
-				auto packageTabList = std::vector<std::string>({
-					"Properties",
-					"Tasks",
-					"Operations",
-				});
-
-				auto tab_toggle = ftxui::Toggle(packageTabList, &_state.PackageTabSelected);
 
 				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
 				auto tasksList = ftxui::Container::Vertical({
 					CreateSingleItemMenuEntry("Tasks"),
 				});
 
-				auto operationComponents = ftxui::Components();
+				auto packageTabList = std::vector<std::string>({
+					"Properties",
+					"Tasks",
+				});
+				auto packageTabComponents = ftxui::Components({
+					propertiesList,
+					tasksList,
+				});
+
 				if (packageLoadState.GeneratePhase1Result.has_value())
 				{
+					auto operationComponents = ftxui::Components();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase1Result.value().GetGraph().GetOperations())
 					{
 						operationComponents.push_back(CreateSingleItemMenuEntry(operation.Title));
 					}
+
+					auto operationsList = ftxui::Container::Vertical(std::move(operationComponents));
+					if (packageLoadState.GeneratePhase1Result.value().HasPreprocessor())
+					{
+						packageTabList.push_back("Preprocessors");
+					}
+					else
+					{
+						packageTabList.push_back("Operations");
+					}
+
+					packageTabComponents.push_back(std::move(operationsList));
 				}
 
-				auto operationsList = ftxui::Container::Vertical(std::move(operationComponents));
+				if (packageLoadState.GeneratePhase2Result.has_value())
+				{
+					auto operationComponents = ftxui::Components();
+					for (auto& [operationId, operation] : packageLoadState.GeneratePhase2Result.value().GetOperations())
+					{
+						operationComponents.push_back(CreateSingleItemMenuEntry(operation.Title));
+					}
 
-				auto tab_container = ftxui::Container::Tab({
-						propertiesList,
-						tasksList,
-						operationsList,
-					},
+					auto operationsList = ftxui::Container::Vertical(std::move(operationComponents));
+					
+					packageTabList.push_back("Operations");
+					packageTabComponents.push_back(std::move(operationsList));
+				}
+
+				auto tab_toggle = ftxui::Toggle(packageTabList, &_state.PackageTabSelected);
+
+				auto tab_container = ftxui::Container::Tab(
+					std::move(packageTabComponents),
 					&_state.PackageTabSelected);
 
 				auto container = ftxui::Container::Vertical({

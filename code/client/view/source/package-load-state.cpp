@@ -42,8 +42,10 @@ namespace Soup::View
 
 		auto generatePhase1ResultFile = soupTargetDirectory + Core::Build::Constants::GeneratePhase1ResultFileName();
 		auto generatePhase1Result = Core::GenerateResult();
+		bool generatePhase1IsPreprocessor = false;
 		if (Core::GenerateResultManager::TryLoadState(generatePhase1ResultFile, generatePhase1Result, fileSystemState))
 		{
+			generatePhase1IsPreprocessor = generatePhase1Result.HasPreprocessor();
 			result.GeneratePhase1Result = std::move(generatePhase1Result);
 		}
 
@@ -54,28 +56,28 @@ namespace Soup::View
 			evaluatePhase1Results,
 			fileSystemState))
 		{
-			result.EvaluatePhase1Results = evaluatePhase1Results;
+			result.EvaluatePhase1Results = std::move(evaluatePhase1Results);
 		}
 
 		auto generatePhase1InfoFile = soupTargetDirectory + Core::Build::Constants::GeneratePhase1InfoFileName();
 		auto generatePhase1Info = Core::ValueTable();
 		if (Core::ValueTableManager::TryLoadState(generatePhase1InfoFile, generatePhase1Info))
 		{
-			result.GeneratePhase1Info = generatePhase1Info;
+			result.GeneratePhase1Info = std::move(generatePhase1Info);
 		}
 
-		// // Check for the optional evaluate graph if the initial phase was preprocessor
-		// OperationGraph? generatePhase2Result = null;
-		// OperationResults? evaluatePhase2Results = null;
-		// ValueTable? generatePhase2Info = null;
-		// if (generatePhase1Result.IsPreprocessor)
-		// {
-		// 	var generatePhase2ResultFile = soupTargetDirectory + BuildConstants.GeneratePhase2ResultFileName;
-		// 	if (OperationGraphManager.TryLoadState(
-		// 		generatePhase2ResultFile, this.fileSystemState, out var loadGeneratePhase2Result))
-		// 	{
-		// 		generatePhase2Result = loadGeneratePhase2Result;
-		// 	}
+		// Check for the optional evaluate graph if the initial phase was preprocessor
+		if (generatePhase1IsPreprocessor)
+		{
+			auto generatePhase2ResultFile = soupTargetDirectory + Core::Build::Constants::GeneratePhase2ResultFileName();
+			auto generatePhase2Result = Core::OperationGraph();
+			if (Core::OperationGraphManager::TryLoadState(
+				generatePhase2ResultFile,
+				generatePhase2Result,
+				fileSystemState))
+			{
+				result.GeneratePhase2Result = std::move(generatePhase2Result);
+			}
 
 		// 	// Check for the optional phase2 results
 		// 	var evaluateResultsFile = soupTargetDirectory + BuildConstants.EvaluatePhase2ResultsFileName;
@@ -90,7 +92,7 @@ namespace Soup::View
 		// 	{
 		// 		generatePhase2Info = generatePhase2InfoTable;
 		// 	}
-		// }
+		}
 
 		return result;
 	}
