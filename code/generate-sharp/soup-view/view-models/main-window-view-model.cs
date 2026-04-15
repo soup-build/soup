@@ -152,7 +152,6 @@ public class MainWindowViewModel : ViewModelBase
 					generateBuildGraph = packageState.GeneratePhase1Result.EvaluateGraph;
 					evaluateBuildResults = packageState.EvaluatePhase1Results;
 					generateBuildInfo = packageState.GeneratePhase1Info;
-
 				}
 			}
 

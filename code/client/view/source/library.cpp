@@ -7,4 +7,5 @@ export module Soup.View;
 import :AppState;
 import :CustomCollapsible;
 import :CustomStyle;
+import :PackageLoadState;
 export import :TUI;

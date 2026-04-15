@@ -13,10 +13,10 @@ namespace Soup::View
 {
 	export struct AppState
 	{
+		std::vector<int> PackagesIdList;
 		std::vector<std::string> PackagesList;
 		int PackagesListSelected;
 
-		std::vector<std::string> PackageTabList;
 		int PackageTabSelected;
 	};
 }

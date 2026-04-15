@@ -14,6 +14,7 @@ import ftxui;
 import Soup.Core;
 import :AppState;
 import :CustomStyle;
+import :PackageLoadState;
 
 namespace Soup::View
 {
@@ -31,6 +32,8 @@ namespace Soup::View
 		/// </summary>
 		void Run(Core::PackageProvider& packageProvider)
 		{
+			auto fileSystemState = Core::FileSystemState();
+
 			_state = AppState();
 			InitializeState(packageProvider);
 
@@ -38,7 +41,7 @@ namespace Soup::View
 
 			auto packagesMenu = CreateSingleItemMenu(&_state.PackagesList, &_state.PackagesListSelected);
 
-			auto tabComponents = CreateAllPackageTabs(packageProvider);
+			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
 			auto packagesPropertiesView = ftxui::Container::Tab(
 				std::move(tabComponents),
@@ -69,35 +72,58 @@ namespace Soup::View
 		}
 
 	private:
+		void InitializeGraph(
+			Core::PackageProvider& packageProvider,
+			int packageId)
+		{
+			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
+			_state.PackagesList.push_back(packageInfo.Name.ToString());
+			_state.PackagesIdList.push_back(packageInfo.Id);
+
+			for (auto& [dependencyType, dependencyTypeSet] : packageInfo.Dependencies)
+			{
+				for (auto& dependency : dependencyTypeSet)
+				{
+					// Stop at the edge of the graph and ignore duplicates
+					if (!dependency.IsSubGraph &&
+						std::find(_state.PackagesIdList.begin(), _state.PackagesIdList.end(), dependency.PackageId) == _state.PackagesIdList.end())
+					{
+						InitializeGraph(packageProvider, dependency.PackageId);
+					}
+				}
+			}
+		}
+		
 		void InitializeState(Core::PackageProvider& packageProvider)
 		{
-			for (auto& [key, value] : packageProvider.GetPackageLookup())
-			{
-				_state.PackagesList.push_back(value.Name.ToString());
-			}
+			auto& packageGraph = packageProvider.GetRootPackageGraph();
+			InitializeGraph(packageProvider, packageGraph.RootPackageId);
 
 			_state.PackagesListSelected = 0;
 
-			_state.PackageTabList = std::vector<std::string>({
-				"Properties",
-				"Tasks",
-				"Operations",
-			});
 			_state.PackageTabSelected = 0;
 		}
 
-		ftxui::Components CreateAllPackageTabs(Core::PackageProvider& packageProvider)
+		ftxui::Components CreateAllPackageTabs(
+			Core::FileSystemState& fileSystemState,
+			Core::PackageProvider& packageProvider)
 		{
+			auto rootPackageGraphId = packageProvider.GetRootPackageGraphId();
+
 			auto tabComponents = ftxui::Components();
-			for (auto& [key, value] : packageProvider.GetPackageLookup())
+			for (auto& packageId : _state.PackagesIdList)
 			{
+				auto& packageInfo = packageProvider.GetPackageInfo(packageId);
+				auto packageLoadState = LoadPackage(
+					fileSystemState, packageProvider, rootPackageGraphId, packageId);
+
 				auto properties = ftxui::Components();
 
-				properties.push_back(CreateSingleItemMenuEntry(std::to_string(value.Id)));
-				properties.push_back(CreateSingleItemMenuEntry(value.Name.ToString()));
-				properties.push_back(CreateSingleItemMenuEntry(value.PackageRoot.ToString()));
+				properties.push_back(CreateSingleItemMenuEntry(std::to_string(packageInfo.Id)));
+				properties.push_back(CreateSingleItemMenuEntry(packageInfo.Name.ToString()));
+				properties.push_back(CreateSingleItemMenuEntry(packageInfo.PackageRoot.ToString()));
 
-				for (auto& [dependencyType, dependencies] : value.Dependencies)
+				for (auto& [dependencyType, dependencies] : packageInfo.Dependencies)
 				{
 					auto dependencyItems = ftxui::Components();
 					for (auto& dependency : dependencies)
@@ -107,16 +133,30 @@ namespace Soup::View
 
 					properties.push_back(ftxui::Collapsible(dependencyType, Inner(dependencyItems)));
 				}
+			
+				auto packageTabList = std::vector<std::string>({
+					"Properties",
+					"Tasks",
+					"Operations",
+				});
 
-				auto tab_toggle = ftxui::Toggle(&_state.PackageTabList, &_state.PackageTabSelected);
+				auto tab_toggle = ftxui::Toggle(packageTabList, &_state.PackageTabSelected);
 
 				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
 				auto tasksList = ftxui::Container::Vertical({
 					CreateSingleItemMenuEntry("Tasks"),
 				});
-				auto operationsList = ftxui::Container::Vertical({
-					CreateSingleItemMenuEntry("Operations"),
-				});
+
+				auto operationComponents = ftxui::Components();
+				if (packageLoadState.GeneratePhase1Result.has_value())
+				{
+					for (auto& [operationId, operation] : packageLoadState.GeneratePhase1Result.value().GetGraph().GetOperations())
+					{
+						operationComponents.push_back(CreateSingleItemMenuEntry(operation.Title));
+					}
+				}
+
+				auto operationsList = ftxui::Container::Vertical(std::move(operationComponents));
 
 				auto tab_container = ftxui::Container::Tab({
 						propertiesList,
