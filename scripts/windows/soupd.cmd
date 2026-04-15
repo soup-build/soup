@@ -19,8 +19,6 @@ robocopy %OutDir%\cpp\local\soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\
 
 robocopy %MSBuildDir%\bin\soup.build.package-manager\Debug\net10.0\win-x64\publish\ %RunDir%\Soup\package-manager\ /MIR /NJH /NJS /NDL > NUL
 
-robocopy %MSBuildDir%\bin\soup-view\Debug\net10.0\win-x64\publish\ %RunDir%\Soup\view\ /MIR /NJH /NJS /NDL > NUL
-
 robocopy %MSBuildDir%\bin\swhere\Debug\net10.0\win-x64\publish\ %RunDir%\ swhere.exe /NJH /NJS /NDL > NUL
 
 %RunDir%\soup.cmd %*
