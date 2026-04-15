@@ -136,18 +136,45 @@ namespace Soup::View
 				}
 
 				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
-				auto tasksList = CreateSingleItemMenu({
-					"Tasks",
-				}, 0);
 
 				auto packageTabList = std::vector<std::string>({
 					"Properties",
-					"Tasks",
 				});
 				auto packageTabComponents = ftxui::Components({
 					propertiesList,
-					tasksList,
 				});
+
+				auto hasPreprocessor = packageLoadState.GeneratePhase1Result.has_value() && 
+					packageLoadState.GeneratePhase1Result.value().HasPreprocessor();
+
+				if (packageLoadState.GeneratePhase1Info.has_value())
+				{
+					auto& generatePhase1Info = packageLoadState.GeneratePhase1Info.value();
+					auto findRuntimeOrderResult = generatePhase1Info.find("RuntimeOrder");
+					if (findRuntimeOrderResult == generatePhase1Info.end())
+					{
+						throw std::runtime_error("Generate Info Table missing RuntimeOrder List");
+					}
+
+					auto tasksComponents = std::vector<std::string>();
+					for (auto& taskName : findRuntimeOrderResult->second.AsList())
+					{
+						tasksComponents.push_back(taskName.AsString());
+					}
+
+					auto tasksList = CreateSingleItemMenu(std::move(tasksComponents), 0);
+					
+					if (hasPreprocessor)
+					{
+						packageTabList.push_back("Preprocessor Tasks");
+					}
+					else
+					{
+						packageTabList.push_back("Tasks");
+					}
+
+					packageTabComponents.push_back(std::move(tasksList));
+				}
 
 				if (packageLoadState.GeneratePhase1Result.has_value())
 				{
@@ -158,7 +185,7 @@ namespace Soup::View
 					}
 
 					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
-					if (packageLoadState.GeneratePhase1Result.value().HasPreprocessor())
+					if (hasPreprocessor)
 					{
 						packageTabList.push_back("Preprocessors");
 					}
@@ -168,6 +195,28 @@ namespace Soup::View
 					}
 
 					packageTabComponents.push_back(std::move(operationsList));
+				}
+
+
+				if (packageLoadState.GeneratePhase2Info.has_value())
+				{
+					auto& generatePhase2Info = packageLoadState.GeneratePhase2Info.value();
+					auto findRuntimeOrderResult = generatePhase2Info.find("RuntimeOrder");
+					if (findRuntimeOrderResult == generatePhase2Info.end())
+					{
+						throw std::runtime_error("Generate Info Table missing RuntimeOrder List");
+					}
+
+					auto tasksComponents = std::vector<std::string>();
+					for (auto& taskName : findRuntimeOrderResult->second.AsList())
+					{
+						tasksComponents.push_back(taskName.AsString());
+					}
+
+					auto tasksList = CreateSingleItemMenu(std::move(tasksComponents), 0);
+
+					packageTabList.push_back("Tasks");
+					packageTabComponents.push_back(std::move(tasksList));
 				}
 
 				if (packageLoadState.GeneratePhase2Result.has_value())

@@ -79,19 +79,23 @@ namespace Soup::View
 				result.GeneratePhase2Result = std::move(generatePhase2Result);
 			}
 
-		// 	// Check for the optional phase2 results
-		// 	var evaluateResultsFile = soupTargetDirectory + BuildConstants.EvaluatePhase2ResultsFileName;
-		// 	if (OperationResultsManager.TryLoadState(
-		// 		evaluateResultsFile, this.fileSystemState, out var loadEvaluatePreprocessorResults))
-		// 	{
-		// 		evaluatePhase2Results = loadEvaluatePreprocessorResults;
-		// 	}
+			// Check for the optional phase2 results
+			auto evaluatePhase2ResultsFile = soupTargetDirectory + Core::Build::Constants::EvaluatePhase2ResultsFileName();
+			auto evaluatePhase2Results = Core::OperationResults();
+			if (Core::OperationResultsManager::TryLoadState(
+				evaluatePhase2ResultsFile,
+				evaluatePhase2Results,
+				fileSystemState))
+			{
+				result.EvaluatePhase2Results = std::move(evaluatePhase2Results);
+			}
 
-		// 	var generatePhase2InfoFile = soupTargetDirectory + BuildConstants.GeneratePhase2InfoFileName;
-		// 	if (ValueTableManager.TryLoadState(generatePhase2InfoFile, out var generatePhase2InfoTable))
-		// 	{
-		// 		generatePhase2Info = generatePhase2InfoTable;
-		// 	}
+			auto generatePhase2InfoFile = soupTargetDirectory + Core::Build::Constants::GeneratePhase2InfoFileName();
+			auto generatePhase2Info = Core::ValueTable();
+			if (Core::ValueTableManager::TryLoadState(generatePhase2InfoFile, generatePhase2Info))
+			{
+				result.GeneratePhase2Info = std::move(generatePhase2Info);
+			}
 		}
 
 		return result;
