@@ -47,20 +47,16 @@ namespace Soup::View
 				std::move(tabComponents),
 				&_state.PackagesListSelected);
 
-			auto rendererProperties = ftxui::Renderer(packagesPropertiesView, [&] {
-				return packagesPropertiesView->Render();
-			});
-
 			auto packagesView = ftxui::Container::Horizontal({
 				packagesMenu,
-				rendererProperties,
+				packagesPropertiesView,
 			});
 
 			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
 				return ftxui::hbox({
 					packagesMenu->Render(),
 					ftxui::separator(),
-					rendererProperties->Render() | ftxui::flex,
+					packagesPropertiesView->Render() | ftxui::flex,
 				}) |
 				ftxui::border |
 				ftxui::flex;
@@ -204,8 +200,7 @@ namespace Soup::View
 							tab_toggle->Render(),
 							ftxui::separator(),
 							tab_container->Render(),
-						}) |
-						ftxui::border;
+						});
 				});
 
 				tabComponents.push_back(renderer);

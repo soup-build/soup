@@ -18,7 +18,7 @@ namespace Soup::View
 	{
 		return ftxui::Renderer([&] {
 			return ftxui::vbox({
-				ftxui::text(R"(  _________                     __________      .__.__       .___)"),
+				ftxui::text(R"(  _________                     __________       __ __        ___)"),
 				ftxui::text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
 				ftxui::text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
 				ftxui::text(R"( /        (  <_> )  |  /  |_> >  |    |   \  |  /  |  |__/ /_/ | )"),
