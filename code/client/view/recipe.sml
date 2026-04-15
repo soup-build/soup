@@ -6,7 +6,7 @@ Source: [
 ]
 Dependencies: {
 	Runtime: [
+		'mwasplund|ftxui@6'
 		'../core/'
-		'../../../../FTXUI/'
 	]
 }
