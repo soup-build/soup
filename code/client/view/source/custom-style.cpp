@@ -14,16 +14,18 @@ import ftxui;
 
 namespace Soup::View
 {
-	export ftxui::Element AppAsciiArt()
+	export ftxui::Component AppAsciiArt()
 	{
-		return ftxui::vbox({
-			ftxui::text(R"(  _________                     __________      .__.__       .___)"),
-			ftxui::text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
-			ftxui::text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
-			ftxui::text(R"( /        (  <_> )  |  /  |_> >  |    |   \  |  /  |  |__/ /_/ | )"),
-			ftxui::text(R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )"),
-			ftxui::text(R"(        \/             |__|             \/                    \/ )"),
-		}) | ftxui::color(ftxui::Color::HotPink);
+		return ftxui::Renderer([&] {
+			return ftxui::vbox({
+				ftxui::text(R"(  _________                     __________      .__.__       .___)"),
+				ftxui::text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
+				ftxui::text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
+				ftxui::text(R"( /        (  <_> )  |  /  |_> >  |    |   \  |  /  |  |__/ /_/ | )"),
+				ftxui::text(R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )"),
+				ftxui::text(R"(        \/             |__|             \/                    \/ )"),
+			}) | ftxui::color(ftxui::Color::HotPink);
+		});
 	}
 
 	// Take a list of component, display them vertically, one column shifted to the right.
@@ -57,7 +59,7 @@ namespace Soup::View
 		return MenuEntry(value, option);
 	}
 
-	export ftxui::Component CreateSingleItemMenu(std::vector<std::string>* entries, int* selected) {
+	export ftxui::Component CreateSingleItemMenu(std::vector<std::string> entries, ftxui::Ref<int> selected) {
 		auto option = ftxui::MenuOption::Vertical();
 		option.entries_option.transform = [](ftxui::EntryState state) {
 			auto prefix = ftxui::text(state.active ? "│ " : "  ");
@@ -73,7 +75,10 @@ namespace Soup::View
 			return element;
 		};
 
-		auto menu = ftxui::Menu(entries, selected, option);
+		option.entries = std::move(entries);
+		option.selected = selected;
+		
+		auto menu = ftxui::Menu(option);
 
 		// Wrap the menu in a renderer to add a frame and scroll indicator
 		auto rendererMenu = ftxui::Renderer(menu, [menu] {

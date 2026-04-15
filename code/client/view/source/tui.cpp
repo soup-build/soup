@@ -39,7 +39,7 @@ namespace Soup::View
 
 			auto app = ftxui::App::Fullscreen();
 
-			auto packagesMenu = CreateSingleItemMenu(&_state.PackagesList, &_state.PackagesListSelected);
+			auto packagesMenu = CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected);
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
@@ -48,7 +48,7 @@ namespace Soup::View
 				&_state.PackagesListSelected);
 
 			auto rendererProperties = ftxui::Renderer(packagesPropertiesView, [&] {
-				return packagesPropertiesView->Render() | ftxui::vscroll_indicator | ftxui::xflex_grow | ftxui::frame;
+				return packagesPropertiesView->Render();
 			});
 
 			auto packagesView = ftxui::Container::Horizontal({
@@ -57,18 +57,23 @@ namespace Soup::View
 			});
 
 			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
-				return ftxui::vbox({
-					AppAsciiArt(),
-					ftxui::hbox({
-						packagesMenu->Render(),
-						ftxui::separator(),
-						rendererProperties->Render(),
-					}) |
-					ftxui::border,
-				});
+				return ftxui::hbox({
+					packagesMenu->Render(),
+					ftxui::separator(),
+					rendererProperties->Render() | ftxui::flex,
+				}) |
+				ftxui::border |
+				ftxui::flex;
 			});
 
-			app.Loop(packagesViewRenderer);
+			auto appAsciiArt = AppAsciiArt();
+
+			auto appView = ftxui::Container::Vertical({
+				appAsciiArt,
+				packagesViewRenderer,
+			});
+
+			app.Loop(appView);
 		}
 
 	private:
@@ -135,9 +140,9 @@ namespace Soup::View
 				}
 
 				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
-				auto tasksList = ftxui::Container::Vertical({
-					CreateSingleItemMenuEntry("Tasks"),
-				});
+				auto tasksList = CreateSingleItemMenu({
+					"Tasks",
+				}, 0);
 
 				auto packageTabList = std::vector<std::string>({
 					"Properties",
@@ -150,13 +155,13 @@ namespace Soup::View
 
 				if (packageLoadState.GeneratePhase1Result.has_value())
 				{
-					auto operationComponents = ftxui::Components();
+					auto operationComponents = std::vector<std::string>();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase1Result.value().GetGraph().GetOperations())
 					{
-						operationComponents.push_back(CreateSingleItemMenuEntry(operation.Title));
+						operationComponents.push_back(operation.Title);
 					}
 
-					auto operationsList = ftxui::Container::Vertical(std::move(operationComponents));
+					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
 					if (packageLoadState.GeneratePhase1Result.value().HasPreprocessor())
 					{
 						packageTabList.push_back("Preprocessors");
@@ -171,13 +176,13 @@ namespace Soup::View
 
 				if (packageLoadState.GeneratePhase2Result.has_value())
 				{
-					auto operationComponents = ftxui::Components();
+					auto operationComponents = std::vector<std::string>();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase2Result.value().GetOperations())
 					{
-						operationComponents.push_back(CreateSingleItemMenuEntry(operation.Title));
+						operationComponents.push_back(operation.Title);
 					}
 
-					auto operationsList = ftxui::Container::Vertical(std::move(operationComponents));
+					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
 					
 					packageTabList.push_back("Operations");
 					packageTabComponents.push_back(std::move(operationsList));
