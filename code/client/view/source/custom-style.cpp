@@ -1,4 +1,4 @@
-﻿// <copyright file="custom-style.cpp" company="Soup">
+// <copyright file="custom-style.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -6,6 +6,7 @@ module;
 
 #include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 export module Soup.View:CustomStyle;

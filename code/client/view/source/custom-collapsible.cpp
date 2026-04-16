@@ -1,4 +1,4 @@
-﻿// <copyright file="custom-collapsible.cpp" company="Soup">
+// <copyright file="custom-collapsible.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 

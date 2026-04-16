@@ -6,6 +6,8 @@ module;
 
 #include <functional>
 #include <memory>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 export module Soup.View:TUI;

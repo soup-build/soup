@@ -9,8 +9,8 @@ Closure: {
 		'monitor-shared': { Version: '../../monitor/shared/', Build: '0', Tool: '0' }
 		'mwasplund|cryptopp': { Version: 1.2.8, Digest: 'sha256:6d19806db25880437c805a616a3470ddb1b86cba2e6bfd83a378118e1f46e037', Build: '0', Tool: '0' }
 		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:042d256bb8aecc3c5b58ff5be26c3f21a3ba24de5885663fb7d6a928c18ebfc4', Build: '0', Tool: '0' }
-		'mwasplund|ftxui': { Version: 6.1.9, Digest: 'sha256:c1bc52e0b56667f997757fc9d37bbe1509426661471ea086e1c963b56e210f99', Build: '0', Tool: '0' }
-		'mwasplund|opal': { Version: 0.12.6, Digest: 'sha256:eba7621f545cc3f679a72dd034b046e2d0307025342debd9a798f0bc7a45db5b', Build: '0', Tool: '0' }
+		'mwasplund|ftxui': { Version: 6.1.10, Digest: 'sha256:e3479e781f31bcd64231becc3ff3e33acd7edad78ea7807dfdff296448b75348', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.12.7, Digest: 'sha256:e31e854644945cee7be54c205c56592cc22b68247426f487de7dc96dce683805', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.4, Digest: 'sha256:09e879b8c200c6415543686cf81c710712d07286753cdcd77cec08eab8e81bbe', Build: '0', Tool: '0' }
 		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '0', Tool: '0' }
 		sml: { Version: '../../sml/', Build: '0', Tool: '0' }
@@ -28,7 +28,7 @@ Builds: {
 				Digest: 'sha256:ede3779beb101896e60039f1f3949a736e75bdcf690a01fe367f1ee6027f7da9'
 				Artifacts: {
 					Linux: 'sha256:acf24733c1b129417414fce37485e3ff22b5adb5c00af91de969feb4aecfc316'
-					Windows: 'sha256:902fe0658d6ce048daf2bb9952991dabeb83909197be73f1e0f29598184cbe1d'
+					Windows: 'sha256:ba56f2b3cf9dc2e439e48a16a04ec660c5122d87eb31a0959fd6718f38fa7e36'
 				}
 			}
 		}
@@ -40,7 +40,7 @@ Builds: {
 				Digest: 'sha256:ede3779beb101896e60039f1f3949a736e75bdcf690a01fe367f1ee6027f7da9'
 				Artifacts: {
 					Linux: 'sha256:acf24733c1b129417414fce37485e3ff22b5adb5c00af91de969feb4aecfc316'
-					Windows: 'sha256:902fe0658d6ce048daf2bb9952991dabeb83909197be73f1e0f29598184cbe1d'
+					Windows: 'sha256:ba56f2b3cf9dc2e439e48a16a04ec660c5122d87eb31a0959fd6718f38fa7e36'
 				}
 			}
 			'mwasplund|soup-test-cpp': {
