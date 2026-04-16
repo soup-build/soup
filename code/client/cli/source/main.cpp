@@ -19,6 +19,7 @@
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.View;
 import Soup.SML;
 
 using namespace Opal;

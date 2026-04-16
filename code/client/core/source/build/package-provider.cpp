@@ -256,7 +256,6 @@ export namespace Soup::Core
 			}
 		}
 
-
 		const Path& GetTargetDirectory(PackageGraphId packageGraphId, PackageId packageId)
 		{
 			// The PackageGraph must already be loaded

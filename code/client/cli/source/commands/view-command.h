@@ -47,45 +47,39 @@ namespace Soup::Client
 				}
 			}
 
-			auto recipePath =
-				workingDirectory +
-				Core::Build::Constants::RecipeFileName();
-
-			auto arguments = std::vector<std::string>({
-				recipePath.ToString(),
-			});
-
-			auto moduleName = System::IProcessManager::Current().GetCurrentProcessFileName();
-			auto moduleFolder = moduleName.GetParent();
+			// Platform specific defaults
 			#if defined(_WIN32)
-			auto soupViewFolder = moduleFolder + Path("./view/");
-			auto executable = soupViewFolder + Path("./soup-view.exe");
+				auto hostPlatform = "Windows";
 			#elif defined(__linux__)
-			auto soupViewFolder = moduleFolder + Path("../lib/soup/view/");
-			auto executable = soupViewFolder + Path("./soup-view");
+				auto hostPlatform = "Linux";
 			#else
-			#error "Unknown platform"
+				#error "Unknown Platform"
 			#endif
 
-			// Find the folder root
-			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
-			auto processDirectory = processFilename.GetParent();
+			// Load user config state
+			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
+			
+			auto recipeCache = Core::RecipeCache();
 
-			// Execute the requested target
-			Log::Info("CreateProcess");
-			Log::Diag(executable.ToString());
-			auto process = System::IProcessManager::Current().CreateProcess(
-				executable,
-				std::move(arguments),
-				processDirectory,
-				false);
-			process->Start();
-			process->WaitForExit();
+			// Setup the build parameters
+			auto globalParameters = Core::ValueTable();
 
-			auto exitCode = process->GetExitCode();
+			// Process well known parameters
+			if (!_options.Flavor.empty())
+				globalParameters.emplace("Flavor", Core::Value(_options.Flavor));
+			if (!_options.Architecture.empty())
+				globalParameters.emplace("Architecture", Core::Value(_options.Architecture));
 
-			if (exitCode != 0)
-				throw Core::HandledException(exitCode);
+			auto packageProvider = Core::Build::LoadBuildGraph(
+				workingDirectory,
+				_options.Owner,
+				globalParameters,
+				userDataPath,
+				hostPlatform,
+				recipeCache);
+			
+			auto view = View::TUI();
+			view.Run(packageProvider);
 		}
 
 	private:

@@ -235,17 +235,17 @@ export namespace Soup::Core
 			{
 				case WREN_ERROR_COMPILE:
 				{
-					printf("[%s(%d)] [Error] %s\n", moduleName.value().data(), line, message.data());
+					std::cout << "[" << moduleName.value() << "(" << line << ")] [Error] " << message << std::endl;
 					break;
 				}
 				case WREN_ERROR_STACK_TRACE:
 				{
-					printf("[%s(%d)] in %s\n", moduleName.value().data(), line, message.data());
+					std::cout << "[" << moduleName.value() << "(" << line << ")] in " << message << std::endl;
 					break;
 				}
 				case WREN_ERROR_RUNTIME:
 				{
-					printf("[Runtime Error] %s\n", message.data());
+					std::cout << "[Runtime Error] " << message << std::endl;
 					break;
 				}
 			}

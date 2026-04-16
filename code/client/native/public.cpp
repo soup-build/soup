@@ -157,9 +157,9 @@ std::string LoadBuildGraphContent(
 	{
 		// Setup the filter
 		auto defaultTypes =
-			static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
-			static_cast<uint32_t>(TraceEventFlag::Information) |
-			static_cast<uint32_t>(TraceEventFlag::HighPriority) |
+			// static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
+			// static_cast<uint32_t>(TraceEventFlag::Information) |
+			// static_cast<uint32_t>(TraceEventFlag::HighPriority) |
 			static_cast<uint32_t>(TraceEventFlag::Warning) |
 			static_cast<uint32_t>(TraceEventFlag::Error) |
 			static_cast<uint32_t>(TraceEventFlag::Critical);
@@ -189,9 +189,6 @@ std::string LoadBuildGraphContent(
 
 		auto workingDirectory = Path(workingDirectoryString);
 		auto globalParameters = ValueTableReader::Deserialize(globalParametersStream);
-
-		// Find the built in folder root
-		auto rootDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 
 		// Load user config state
 		auto userDataPath = Build::Constants::GetSoupUserDataPath();
@@ -254,6 +251,21 @@ extern "C"
 			std::span<char>(const_cast<char*>(globalParametersBuffer), globalParametersLength));
 
 		auto value = LoadBuildGraphContent(workingDirectory, globalParameters);
+
+		auto result = (char*)CoTaskMemAlloc(value.size() + 1);
+		value.copy(result, value.size());
+		result[value.size()] = 0;
+		return result;
+	}
+
+	SOUP_TOOLS_API const char* LoadBuildGraphSimple(
+		const char* workingDirectory)
+	{
+		auto globalParameters = ValueTable();
+		auto globalParametersStream = std::stringstream();
+		ValueTableWriter::Serialize(globalParameters, globalParametersStream);
+
+		auto value = LoadBuildGraphContent(workingDirectory, globalParametersStream);
 
 		auto result = (char*)CoTaskMemAlloc(value.size() + 1);
 		value.copy(result, value.size());

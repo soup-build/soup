@@ -4,11 +4,7 @@ export namespace Monitor::Windows
 {
 	constexpr const char* TBLOG_PIPE_NAMEA = "\\\\.\\pipe\\monitor";
 	constexpr const wchar_t* TBLOG_PIPE_NAMEW = L"\\\\.\\pipe\\monitor";
-	#ifdef UNICODE
-	constexpr const char* TBLOG_PIPE_NAME = TBLOG_PIPE_NAMEW;
-	#else
 	constexpr const char* TBLOG_PIPE_NAME = TBLOG_PIPE_NAMEA;
-	#endif
 
 	struct ProcessPayload
 	{
