@@ -5,14 +5,3 @@ Type: 'DynamicLibrary'
 Defines: [
 	'EXPORT_LIBRARY'
 ]
-IncludePaths: [
-	'public/'
-]
-PublicHeaders: [
-	{
-		Root: 'public/'
-		Files: [
-			'library.h'
-		]
-	}
-]
