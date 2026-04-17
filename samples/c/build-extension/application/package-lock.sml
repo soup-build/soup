@@ -9,11 +9,11 @@ Builds: {
 		Wren: {
 			'samples-c-build-extension-extension': { Version: '../extension/' }
 			'soup|c': {
-				Version: 0.8.0
-				Digest: 'sha256:8e816fc36d390ea692f29d799dd2f803e8ef614e685ef33cd9c869019a80f9f2'
+				Version: 0.9.0
+				Digest: 'sha256:080c2091ff9ae2ea2fd02866771ca68d4a0509106e6bd31a4a1a87f0f5e1a1c8'
 				Artifacts: {
-					Linux: 'sha256:7625f2e86e62c08279a7daf63ccc0638040f2b0eda3b508d375da6f974c509a0'
-					Windows: 'sha256:ab62a89fe58c38b9805d6dc65a107e16aa16adb5033604800ff58a37623c77f9'
+					Linux: 'sha256:8d1d85f9e24acb06e2e0eb7ad433d62970ec58058954d1e8e7bb7f363c5f6521'
+					Windows: 'sha256:6f60c4124aa5a0dc917f36a34027b03ac115f0ba533ca541ec30235fda2fa0cf'
 				}
 			}
 		}
