@@ -87,3 +87,15 @@ echo soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
 
 echo SKIP: soup build $SAMPLES_DIR/cpp/windows-application/ -flavor $FLAVOR
+
+########################################
+## Interop Samples
+########################################
+echo soup build $SAMPLES_DIR/interop/cpp-to-c/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/interop/cpp-to-c/application/ -flavor $FLAVOR
+
+echo soup build $SAMPLES_DIR/interop/csharp-to-c/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/interop/csharp-to-c/application/ -flavor $FLAVOR
+
+echo soup build $SAMPLES_DIR/interop/csharp-to-cpp/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/interop/csharp-to-cpp/application/ -flavor $FLAVOR

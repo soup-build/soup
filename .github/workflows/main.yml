@@ -136,3 +136,10 @@ jobs:
     - name: Soup Build C++ WindowsApplication
       if: matrix.os == 'windows-2022'
       run: soup build ./soup/samples/cpp/windows-application/ -flavor ${{matrix.config}}
+
+    - name: Soup Build Interop C++ to C
+      run: soup build ./soup/samples/interop/cpp-to-c/application/ -flavor ${{matrix.config}}
+    - name: Soup Build Interop C# to C
+      run: soup build ./soup/samples/interop/csharp-to-c/application/ -flavor ${{matrix.config}}
+    - name: Soup Build Interop C# to C++
+      run: soup build ./soup/samples/interop/csharp-to-cpp/application/ -flavor ${{matrix.config}}
