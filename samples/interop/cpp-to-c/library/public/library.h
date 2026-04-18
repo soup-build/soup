@@ -8,6 +8,8 @@
 	#define LIBRARY_API
 #endif
 
+// When the C++ code includes the shared header we need
+// to maintain the C ABI
 #ifdef __cplusplus
 extern "C"
 {

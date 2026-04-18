@@ -27,7 +27,7 @@ Builds: {
 				Digest: 'sha256:fbb82059675361bc31d6ce29fa17ec42320d173a1267230fbf35ad1b0dcb46d0'
 				Artifacts: {
 					Linux: 'sha256:eb5cc7691bff09688a568c3db9a21e549fd42cfb207500fcafd4fe4f3509ccc0'
-					Windows: 'sha256:ba56f2b3cf9dc2e439e48a16a04ec660c5122d87eb31a0959fd6718f38fa7e36'
+					Windows: 'sha256:f22dafea781c450c3e458cb585cee6a21d5622fab462ab9240ebb81295521edf'
 				}
 			}
 		}

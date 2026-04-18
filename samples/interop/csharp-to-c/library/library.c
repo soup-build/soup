@@ -1,5 +1,6 @@
+#include "library.h"
 
-const char* GetName()
+LIBRARY_API const char* GetName()
 {
 	return "Soup";
 }
