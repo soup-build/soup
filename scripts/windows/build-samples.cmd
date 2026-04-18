@@ -112,3 +112,19 @@ if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 echo soup build %SamplesDir%/cpp/windows-application/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/windows-application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+REM - ########################################
+REM - ## Interop Samples
+REM - ########################################
+
+echo soup build %SamplesDir%/interop/cpp-to-c/application/ -flavor %Flavor%
+call soup build %SamplesDir%/interop/cpp-to-c/application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+echo soup build %SamplesDir%/interop/csharp-to-c/application/ -flavor %Flavor%
+call soup build %SamplesDir%/interop/csharp-to-c/application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+echo soup build %SamplesDir%/interop/csharp-to-cpp/application/ -flavor %Flavor%
+call soup build %SamplesDir%/interop/csharp-to-cpp/application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
