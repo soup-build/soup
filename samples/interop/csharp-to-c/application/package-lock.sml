@@ -11,11 +11,11 @@ Builds: {
 	'0': {
 		Wren: {
 			'soup|csharp': {
-				Version: 0.17.0
-				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
+				Version: 0.18.1
+				Digest: 'sha256:473d683e9e0157cf695f47f54e5ded7549c0885effe51ad891aa4b9ff7bc63e0'
 				Artifacts: {
-					Linux: 'sha256:a5fc23eb8bb1adccc7fc77f38d45bd36fedbe5993b931142d3652dc4a465ea71'
-					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
+					Linux: 'sha256:8b9d8cd7aba4d4edbb0d2d8fb23344ba42d0db70b1ee792c69ae67a6e2ddadbe'
+					Windows: 'sha256:54465203300ca0a74c2bf311e51b2cb7c0740905bea4168a59e26f4653d36023'
 				}
 			}
 		}
