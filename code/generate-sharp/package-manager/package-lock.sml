@@ -10,14 +10,14 @@ Builds: {
 	'0': {
 		Wren: {
 			'soup|csharp': {
-				Version: 0.17.0
-				Digest: 'sha256:1099f12280724c982fb22b617d0b59e80eca0965ff312aca37d35ef50633fb27'
+				Version: 0.18.1
+				Digest: 'sha256:473d683e9e0157cf695f47f54e5ded7549c0885effe51ad891aa4b9ff7bc63e0'
 				Artifacts: {
-					Windows: 'sha256:e6855a2ebf3d7dbc0c359b6fc59263598f36c34fa31a6f5e3ab2bdef384a8be7'
+					Windows: 'sha256:54465203300ca0a74c2bf311e51b2cb7c0740905bea4168a59e26f4653d36023'
 				}
 			}
 			'Soup|CSharp.Nuget': {
-				Version: 0.8.0
+				Version: 0.9.1
 				Digest: 'sha256:36014a673aeb99acc53f46b25011f5859e36631d6a195ca887722093cd047c26'
 			}
 		}
