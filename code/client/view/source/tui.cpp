@@ -54,21 +54,17 @@ namespace Soup::View
 				packagesPropertiesView,
 			});
 
-			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
-				return ftxui::hbox({
-					packagesMenu->Render(),
-					ftxui::separator(),
-					packagesPropertiesView->Render() | ftxui::flex,
-				}) |
-				ftxui::border |
-				ftxui::flex;
-			});
-
-			auto appAsciiArt = AppAsciiArt();
-
-			auto appView = ftxui::Container::Vertical({
-				appAsciiArt,
-				packagesViewRenderer,
+			auto appView = ftxui::Renderer(packagesView, [packagesMenu, packagesPropertiesView] {
+				return ftxui::vbox({
+					AppAsciiArt(),
+					ftxui::hbox({
+						packagesMenu->Render(),
+						ftxui::separator(),
+						packagesPropertiesView->Render() | ftxui::flex,
+					}) |
+					ftxui::border |
+					ftxui::flex
+				});
 			});
 
 			app.Loop(appView);
@@ -139,11 +135,16 @@ namespace Soup::View
 
 				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
 
+				// Wrap the menu in a renderer to add a frame and scroll indicator
+				auto rendererPropertiesList = ftxui::Renderer(propertiesList, [propertiesList] {
+					return propertiesList->Render() | ftxui::vscroll_indicator | ftxui::frame;
+				});
+
 				auto packageTabList = std::vector<std::string>({
 					"Properties",
 				});
 				auto packageTabComponents = ftxui::Components({
-					propertiesList,
+					rendererPropertiesList,
 				});
 
 				auto hasPreprocessor = packageLoadState.GeneratePhase1Result.has_value() && 
@@ -235,7 +236,7 @@ namespace Soup::View
 					packageTabComponents.push_back(std::move(operationsList));
 				}
 
-				auto tab_toggle = ftxui::Toggle(packageTabList, &_state.PackageTabSelected);
+				auto tab_toggle = CustomToggle(std::move(packageTabList), &_state.PackageTabSelected);
 
 				auto tab_container = ftxui::Container::Tab(
 					std::move(packageTabComponents),
