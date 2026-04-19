@@ -13,6 +13,8 @@ namespace Soup::View
 {
 	export struct AppState
 	{
+		bool ShowAsciiArt;
+
 		std::vector<int> PackagesIdList;
 		std::vector<std::string> PackagesList;
 		int PackagesListSelected;

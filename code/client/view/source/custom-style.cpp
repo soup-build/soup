@@ -15,16 +15,22 @@ import ftxui;
 
 namespace Soup::View
 {
-	export ftxui::Element AppAsciiArt()
+	export ftxui::Component AppAsciiArt(bool* showAsciiArt)
 	{
-		return ftxui::vbox({
-			ftxui::text(R"(  _________                     __________       __ __        ___)"),
-			ftxui::text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
-			ftxui::text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
-			ftxui::text(R"( /        (  (_) )  |  /  |_) )  |    |   \  |  /  |  |__/ /_/ | )"),
-			ftxui::text(R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )"),
-			ftxui::text(R"(        \/             |__|             \/                    \/ )"),
-		}) | ftxui::color(ftxui::Color::HotPink);
+		auto asciiArt = ftxui::Renderer([] {
+			return ftxui::vbox({
+				ftxui::text(R"(  _________                     __________       __ __        ___)"),
+				ftxui::text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
+				ftxui::text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
+				ftxui::text(R"( /        (  (_) )  |  /  |_) )  |    |   \  |  /  |  |__/ /_/ | )"),
+				ftxui::text(R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )"),
+				ftxui::text(R"(        \/             |__|             \/                    \/ )"),
+			}) | ftxui::color(ftxui::Color::HotPink);
+		});
+
+		// Only show the art if there is plenty of room
+		auto conditionalView = ftxui::Maybe(asciiArt, showAsciiArt);
+		return conditionalView;
 	}
 
 	export ftxui::Component CustomToggle(std::vector<std::string>&& entries, ftxui::Ref<int> selected)

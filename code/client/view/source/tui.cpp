@@ -41,6 +41,8 @@ namespace Soup::View
 
 			auto app = ftxui::App::Fullscreen();
 
+			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
+
 			auto packagesMenu = CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected);
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
@@ -54,9 +56,13 @@ namespace Soup::View
 				packagesPropertiesView,
 			});
 
-			auto appView = ftxui::Renderer(packagesView, [packagesMenu, packagesPropertiesView] {
+			auto appView = ftxui::Renderer(packagesView, [&] {
+				// Allow for small screens to use optimal space
+				// Hide pretty artwork
+				_state.ShowAsciiArt = app.dimy() > 30;
+
 				return ftxui::vbox({
-					AppAsciiArt(),
+					asciiArt->Render(),
 					ftxui::hbox({
 						packagesMenu->Render(),
 						ftxui::separator(),
@@ -75,6 +81,8 @@ namespace Soup::View
 			Core::PackageProvider& packageProvider,
 			int packageId)
 		{
+			_state.ShowAsciiArt = true;
+
 			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
 			_state.PackagesList.push_back(packageInfo.Name.ToString());
 			_state.PackagesIdList.push_back(packageInfo.Id);
