@@ -635,7 +635,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
-					"INFO: Output target does not exist: C:/TestWorkingDirectory/OutputFile.out",
+					"INFO: File Missing [C:/TestWorkingDirectory/InputFile.in]",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
@@ -657,7 +657,7 @@ namespace Soup::Core::UnitTests
 			// Verify expected file system requests
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"TryGetLastWriteTime: C:/TestWorkingDirectory/OutputFile.out",
+					"TryGetLastWriteTime: C:/TestWorkingDirectory/InputFile.in",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -788,7 +788,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
-					"INFO: Output target does not exist: C:/TestWorkingDirectory/OutputFile.out",
+					"INFO: File altered after last evaluate [C:/TestWorkingDirectory/InputFile.in]",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
@@ -949,7 +949,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
-					"INFO: Input altered after target [C:/TestWorkingDirectory/InputFile.in] -> [C:/TestWorkingDirectory/OutputFile.out]",
+					"INFO: File altered after last evaluate [C:/TestWorkingDirectory/InputFile.in]",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",
 					"DIAG: Allowed Read Access:",
@@ -1102,7 +1102,7 @@ namespace Soup::Core::UnitTests
 					"DIAG: Build evaluation start 1",
 					"DIAG: Worker thread start 1",
 					"DIAG: Check for previous operation invocation",
-					"INFO: Input altered after last evaluate [C:/TestWorkingDirectory/Command.exe]",
+					"INFO: File altered after last evaluate [C:/TestWorkingDirectory/Command.exe]",
 					"DIAG: Executable out of date",
 					"HIGH: TestCommand: 1",
 					"DIAG: Execute: [C:/TestWorkingDirectory/] ./Command.exe Arguments",

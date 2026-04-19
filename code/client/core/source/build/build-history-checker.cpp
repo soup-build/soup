@@ -42,7 +42,7 @@ namespace Soup::Core
 			{
 				// The input was missing
 				auto targetFilePath = _fileSystemState.GetFilePath(inputFile);
-				Log::Info("Input Missing [{}]", targetFilePath.ToString());
+				Log::Info("File Missing [{}]", targetFilePath.ToString());
 				return true;
 			}
 			else
@@ -50,7 +50,7 @@ namespace Soup::Core
 				if (lastWriteTime.value() > lastEvaluateTime)
 				{
 					auto targetFilePath = _fileSystemState.GetFilePath(inputFile);
-					Log::Info("Input altered after last evaluate [{}]", targetFilePath.ToString());
+					Log::Info("File altered after last evaluate [{}]", targetFilePath.ToString());
 					return true;
 				}
 				else
@@ -61,90 +61,22 @@ namespace Soup::Core
 		}
 
 		/// <summary>
-		/// Perform a check if the requested target is outdated with
-		/// respect to the input files
+		/// Perform a check if the requested inputs are outdated with
+		/// respect to the last build time
 		/// </summary>
 		bool IsOutdated(
-			const std::vector<FileId>& targetFiles,
+			std::chrono::time_point<std::chrono::file_clock> lastEvaluateTime,
 			const std::vector<FileId>& inputFiles)
 		{
-			// If there are no input files then the output can never be outdated
-			if (inputFiles.empty())
-				return false;
-
-			for (auto& targetFile : targetFiles)
+			for (auto& file : inputFiles)
 			{
-				if (IsOutdated(targetFile, inputFiles))
+				if (IsOutdated(lastEvaluateTime, file))
 				{
 					return true;
 				}
 			}
 
 			return false;
-		}
-
-	private:
-		/// <summary>
-		/// Perform a check if the requested target is outdated with
-		/// respect to the input files
-		/// </summary>
-		bool IsOutdated(
-			FileId targetFile,
-			const std::vector<FileId>& inputFiles)
-		{
-			// Get the output file last write time
-			auto targetFileLastWriteTime = _fileSystemState.GetLastWriteTime(targetFile);
-
-			if (!targetFileLastWriteTime.has_value())
-			{
-				auto targetFilePath = _fileSystemState.GetFilePath(targetFile);
-				Log::Info("Output target does not exist: {}", targetFilePath.ToString());
-				return true;
-			}
-
-			// Note: No need to use cache here since target files should only be analyzed once
-			for (auto& inputFile : inputFiles)
-			{
-				// If the file is relative then combine it with the root path
-				if (IsOutdated(inputFile, targetFile, targetFileLastWriteTime.value()))
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		bool IsOutdated(
-			FileId inputFile,
-			FileId outputFile,
-			std::chrono::time_point<std::chrono::file_clock> outputFileLastWriteTime)
-		{
-			// Get the file state from the cache
-			auto lastWriteTime = _fileSystemState.GetLastWriteTime(inputFile);
-
-			// Perform the final check
-			if (!lastWriteTime.has_value())
-			{
-				// The input was missing
-				auto targetFilePath = _fileSystemState.GetFilePath(inputFile);
-				Log::Info("Input Missing [{}]", targetFilePath.ToString());
-				return true;
-			}
-			else
-			{
-				if (lastWriteTime.value() > outputFileLastWriteTime)
-				{
-					auto targetFilePath = _fileSystemState.GetFilePath(inputFile);
-					auto outputFilePath = _fileSystemState.GetFilePath(outputFile);
-					Log::Info("Input altered after target [{}] -> [{}]", targetFilePath.ToString(), outputFilePath.ToString());
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
 		}
 	};
 }
