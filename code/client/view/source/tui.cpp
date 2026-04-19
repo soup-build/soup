@@ -17,6 +17,8 @@ import Soup.Core;
 import :AppState;
 import :CustomStyle;
 import :PackageLoadState;
+import :TreeValue;
+import :TreeView;
 
 namespace Soup::View
 {
@@ -124,24 +126,24 @@ namespace Soup::View
 				auto packageLoadState = LoadPackage(
 					fileSystemState, packageProvider, rootPackageGraphId, packageId);
 
-				auto properties = ftxui::Components();
+				auto properties = TreeValueTable();
 
-				properties.push_back(CreateSingleItemMenuEntry(std::to_string(packageInfo.Id)));
-				properties.push_back(CreateSingleItemMenuEntry(packageInfo.Name.ToString()));
-				properties.push_back(CreateSingleItemMenuEntry(packageInfo.PackageRoot.ToString()));
+				properties.emplace("Id", TreeValue(std::to_string(packageInfo.Id)));
+				properties.emplace("Name", TreeValue(packageInfo.Name.ToString()));
+				properties.emplace("Root", TreeValue(packageInfo.PackageRoot.ToString()));
 
 				for (auto& [dependencyType, dependencies] : packageInfo.Dependencies)
 				{
-					auto dependencyItems = ftxui::Components();
+					auto dependencyItems = TreeValueList();
 					for (auto& dependency : dependencies)
 					{
-						dependencyItems.push_back(CreateSingleItemMenuEntry(dependency.OriginalReference.ToString()));
+						dependencyItems.push_back(TreeValue(dependency.OriginalReference.ToString()));
 					}
 
-					properties.push_back(ftxui::Collapsible(dependencyType, Inner(dependencyItems)));
+					properties.emplace(dependencyType, TreeValue(std::move(dependencyItems)));
 				}
 
-				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
+				auto propertiesList = TreeView(std::move(properties));
 
 				// Wrap the menu in a renderer to add a frame and scroll indicator
 				auto rendererPropertiesList = ftxui::Renderer(propertiesList, [propertiesList] {

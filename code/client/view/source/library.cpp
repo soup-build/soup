@@ -5,7 +5,8 @@
 export module Soup.View;
 
 import :AppState;
-import :CustomCollapsible;
 import :CustomStyle;
 import :PackageLoadState;
+import :TreeValue;
+import :TreeView;
 export import :TUI;
