@@ -180,7 +180,9 @@ namespace Soup::Core
 					auto executableFileId = _fileSystemState.ToFileId(
 						operationState.Info.Command.Executable,
 						operationState.Info.Command.WorkingDirectory);
-					if (_stateChecker.IsOutdated(operationState.PreviousResult->EvaluateTime, executableFileId))
+					if (_stateChecker.IsOutdated(
+						operationState.PreviousResult->EvaluateTime,
+						executableFileId))
 					{
 						Log::Diag("Executable out of date");
 						executableOutOfDate = true;
@@ -190,8 +192,11 @@ namespace Soup::Core
 				// Perform the incremental build checks
 				if (executableOutOfDate ||
 					_stateChecker.IsOutdated(
-						operationState.PreviousResult->ObservedOutput,
-						operationState.PreviousResult->ObservedInput))
+						operationState.PreviousResult->EvaluateTime,
+						operationState.PreviousResult->ObservedInput) ||
+					_stateChecker.IsOutdated(
+						operationState.PreviousResult->EvaluateTime,
+						operationState.PreviousResult->ObservedOutput))
 				{
 					buildRequired = true;
 				}
