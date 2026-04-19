@@ -778,13 +778,28 @@ namespace Monitor::Windows::Functions::Overrides::WinBase
 		return result;
 	}
 
-	BOOL WINAPI DeleteFile(
+	BOOL WINAPI DeleteFileA(
 		LPCSTR lpFileName)
 	{
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::DeleteFile));
 
-		BOOL result = Cache::WinBase::DeleteFile(lpFileName);
+		BOOL result = Cache::WinBase::DeleteFileA(lpFileName);
+
+		message.AppendValue(lpFileName);
+		message.AppendValue(result);
+
+		return result;
+	}
+	
+
+	BOOL WINAPI DeleteFileW(
+		LPCWSTR lpFileName)
+	{
+		auto message = MessageSender(MessageType::Detour);
+		message.AppendValue(static_cast<uint32_t>(DetourEventType::DeleteFile));
+
+		BOOL result = Cache::WinBase::DeleteFileW(lpFileName);
 
 		message.AppendValue(lpFileName);
 		message.AppendValue(result);
@@ -1104,8 +1119,8 @@ namespace Monitor::Windows::Functions::Overrides::WinBase
 	}
 
 	DWORD WINAPI GetEnvironmentVariableA(
-		LPCTSTR lpName,
-		LPTSTR lpBuffer,
+		LPCSTR lpName,
+		LPSTR lpBuffer,
 		DWORD nSize)
 	{
 		auto message = MessageSender(MessageType::Detour);
@@ -1472,8 +1487,8 @@ namespace Monitor::Windows::Functions::Overrides::WinBase
 	}
 
 	BOOL WINAPI MoveFileA(
-		LPCTSTR lpExistingFileName,
-		LPCTSTR lpNewFileName)
+		LPCSTR lpExistingFileName,
+		LPCSTR lpNewFileName)
 	{
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::MoveFileA));
@@ -2008,7 +2023,7 @@ namespace Monitor::Windows::Functions::Overrides::WinBase
 	}
 
 	BOOL WINAPI SetCurrentDirectoryA(
-		LPCTSTR lpPathName)
+		LPCSTR lpPathName)
 	{
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetCurrentDirectoryA));
