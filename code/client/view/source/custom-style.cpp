@@ -79,9 +79,12 @@ namespace Soup::View
 			auto element = ftxui::hbox({prefix, label});
 			if (state.focused) {
 				element |= ftxui::color(ftxui::Color::HotPink);
+
+				// TODO: Stop using this and handle menu active
+				element |= ftxui::inverted;
 			}
 			if (state.active) {
-				element |= ftxui::bold;
+				element |= ftxui::inverted;
 			}
 			return element;
 		};

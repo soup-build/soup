@@ -17,6 +17,7 @@ import Soup.Core;
 import :AppState;
 import :CustomStyle;
 import :PackageLoadState;
+import :RecipeTreeConverter;
 import :TreeValue;
 import :TreeView;
 
@@ -113,6 +114,23 @@ namespace Soup::View
 			_state.PackageTabSelected = 0;
 		}
 
+		TreeValueTable ToTreeValue(const Core::PackageChildrenMap& children)
+		{
+			auto dependencyProperties = TreeValueTable();
+			for (auto& [dependencyType, dependencies] : children)
+			{
+				auto dependencyItems = TreeValueList();
+				for (auto& dependency : dependencies)
+				{
+					dependencyItems.push_back(TreeValue(dependency.OriginalReference.ToString()));
+				}
+
+				dependencyProperties.Insert(dependencyType, TreeValue(std::move(dependencyItems)));
+			}
+
+			return dependencyProperties;
+		}
+
 		ftxui::Components CreateAllPackageTabs(
 			Core::FileSystemState& fileSystemState,
 			Core::PackageProvider& packageProvider)
@@ -128,20 +146,15 @@ namespace Soup::View
 
 				auto properties = TreeValueTable();
 
-				properties.emplace("Id", TreeValue(std::to_string(packageInfo.Id)));
-				properties.emplace("Name", TreeValue(packageInfo.Name.ToString()));
-				properties.emplace("Root", TreeValue(packageInfo.PackageRoot.ToString()));
+				properties.Insert("Id", TreeValue(std::to_string(packageInfo.Id)));
+				properties.Insert("Name", TreeValue(packageInfo.Name.ToString()));
+				properties.Insert("Root", TreeValue(packageInfo.PackageRoot.ToString()));
 
-				for (auto& [dependencyType, dependencies] : packageInfo.Dependencies)
-				{
-					auto dependencyItems = TreeValueList();
-					for (auto& dependency : dependencies)
-					{
-						dependencyItems.push_back(TreeValue(dependency.OriginalReference.ToString()));
-					}
+				auto dependencyProperties = ToTreeValue(packageInfo.Dependencies);
+				properties.Insert("Dependencies", TreeValue(std::move(dependencyProperties)));
 
-					properties.emplace(dependencyType, TreeValue(std::move(dependencyItems)));
-				}
+				auto recipeProperties = RecipeTreeConverter::ToTreeValue(packageInfo.Recipe->GetTable());
+				properties.Insert("Recipe", TreeValue(std::move(recipeProperties)));
 
 				auto propertiesList = TreeView(std::move(properties));
 

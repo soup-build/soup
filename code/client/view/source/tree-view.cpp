@@ -27,28 +27,29 @@ namespace Soup::View
 			{
 				auto components = ftxui::Components();
 
-				BuildTree(root_, components);
+				BuildTree("", root_, components);
 
 				Add(ftxui::Container::Vertical(std::move(components)));
 			}
 
 		private:
-			static void BuildTree(const TreeValueTable& table, ftxui::Components& components)
+			static void BuildTree(std::string prefix, const TreeValueTable& table, ftxui::Components& components)
 			{
+				auto childPrefix = prefix + "  ";
 				for (const auto& [key, value] : table)
 				{
 					switch (value.GetType())
 					{
 						case TreeValueType::Table:
-							components.push_back(CreateSingleItemMenuEntry("▼ " + key));
-							BuildTree(value.AsTable(), components);
+							components.push_back(CreateSingleItemMenuEntry(prefix + "▼ " + key));
+							BuildTree(childPrefix, value.AsTable(), components);
 							break;
 						case TreeValueType::List:
-							components.push_back(CreateSingleItemMenuEntry("▼ " + key));
-							BuildTree(value.AsList(), components);
+							components.push_back(CreateSingleItemMenuEntry(prefix + "▼ " + key));
+							BuildTree(childPrefix, value.AsList(), components);
 							break;
 						case TreeValueType::String:
-							components.push_back(CreateSingleItemMenuEntry(key + ": " + value.AsString()));
+							components.push_back(CreateSingleItemMenuEntry(prefix + key + ": " + value.AsString()));
 							break;
 						default:
 							throw std::runtime_error("Unkown TreeValueType for comparison.");
@@ -56,22 +57,23 @@ namespace Soup::View
 				}
 			}
 
-			static void BuildTree(const TreeValueList& list, ftxui::Components& components)
+			static void BuildTree(std::string prefix, const TreeValueList& list, ftxui::Components& components)
 			{
+				auto childPrefix = prefix + "  ";
 				for (const auto& value : list)
 				{
 					switch (value.GetType())
 					{
 						case TreeValueType::Table:
-							components.push_back(CreateSingleItemMenuEntry("▼ "));
-							BuildTree(value.AsTable(), components);
+							components.push_back(CreateSingleItemMenuEntry(prefix + "▼ "));
+							BuildTree(childPrefix, value.AsTable(), components);
 							break;
 						case TreeValueType::List:
-							components.push_back(CreateSingleItemMenuEntry("▼ "));
-							BuildTree(value.AsList(), components);
+							components.push_back(CreateSingleItemMenuEntry(prefix + "▼ "));
+							BuildTree(childPrefix, value.AsList(), components);
 							break;
 						case TreeValueType::String:
-							components.push_back(CreateSingleItemMenuEntry(value.AsString()));
+							components.push_back(CreateSingleItemMenuEntry(prefix + value.AsString()));
 							break;
 						default:
 							throw std::runtime_error("Unkown TreeValueType for comparison.");

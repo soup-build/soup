@@ -5,7 +5,6 @@
 module;
 
 #include <cstdint>
-#include <map>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -13,11 +12,13 @@ module;
 
 export module Soup.View:TreeValue;
 
+import Opal;
+
 export namespace Soup::View
 {
 	class TreeValue;
 	using TreeValueList = std::vector<TreeValue>;
-	using TreeValueTable = std::map<std::string, TreeValue>;
+	using TreeValueTable = Opal::SequenceMap<std::string, TreeValue>;
 
 	enum class TreeValueType : uint64_t
 	{

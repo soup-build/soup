@@ -193,6 +193,11 @@ namespace Soup::Core
 		/// <summary>
 		/// Raw access
 		/// </summary>
+		const RecipeTable& GetTable() const
+		{
+			return _table;
+		}
+
 		RecipeTable& GetTable()
 		{
 			return _table;
