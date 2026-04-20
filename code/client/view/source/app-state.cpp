@@ -15,6 +15,8 @@ namespace Soup::View
 	{
 		int SelectedPreprocessorTask;
 		int SelectedTask;
+		int SelectedPreprocessor;
+		int SelectedOperation;
 	};
 
 	export struct AppState

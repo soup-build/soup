@@ -237,8 +237,8 @@ namespace Soup::View
 						return ftxui::hbox({
 							tasksList->Render(),
 							ftxui::separator(),
-							tasksPropertiesView->Render() | ftxui::flex,
-						}) | ftxui::flex;
+							tasksPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
 					});
 
 					packageTabComponents.push_back(tasksViewRenderer);
@@ -247,12 +247,41 @@ namespace Soup::View
 				if (packageLoadState.GeneratePhase1Result.has_value())
 				{
 					auto operationComponents = std::vector<std::string>();
+					auto operationPropertiesComponents = ftxui::Components();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase1Result.value().GetGraph().GetOperations())
 					{
 						operationComponents.push_back(operation.Title);
+
+						auto operationInfo = TreeValueTable();
+
+						operationInfo.Insert("Id", TreeValue(std::to_string(operation.Id)));
+						operationInfo.Insert("Title", TreeValue(operation.Title));
+
+						auto commandInfo = TreeValueTable();
+						commandInfo.Insert("WorkingDirectory", operation.Command.WorkingDirectory.ToString());
+						commandInfo.Insert("Executable", operation.Command.Executable.ToString());
+						
+						auto arguments = TreeValueList();
+						for (auto& argument : operation.Command.Arguments)
+						{
+							arguments.push_back(TreeValue(argument));
+						}
+
+						commandInfo.Insert("Arguments", std::move(arguments));
+						operationInfo.Insert("Command", TreeValue(std::move(commandInfo)));
+
+						// std::vector<FileId> DeclaredInput;
+						// std::vector<FileId> DeclaredOutput;
+
+						operationPropertiesComponents.push_back(
+							ScrollFrame(TreeView(std::move(operationInfo))));
 					}
 
-					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
+					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessor : &packageState.SelectedOperation;
+
+					auto operationsList = ScrollFrame(
+						CreateSingleItemMenu(std::move(operationComponents), selected));
+
 					if (hasPreprocessor)
 					{
 						packageTabList.push_back("Preprocessors");
@@ -262,9 +291,25 @@ namespace Soup::View
 						packageTabList.push_back("Operations");
 					}
 
-					packageTabComponents.push_back(std::move(operationsList));
-				}
+					auto operationsPropertiesView = ftxui::Container::Tab(
+						std::move(operationPropertiesComponents),
+						selected);
 
+					auto operationsView = ftxui::Container::Horizontal({
+						operationsList,
+						operationsPropertiesView,
+					});
+
+					auto operationsViewRenderer = ftxui::Renderer(operationsView, [operationsList, operationsPropertiesView] {
+						return ftxui::hbox({
+							operationsList->Render(),
+							ftxui::separator(),
+							operationsPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
+					});
+
+					packageTabComponents.push_back(operationsViewRenderer);
+				}
 
 				if (packageLoadState.GeneratePhase2Info.has_value())
 				{
@@ -320,8 +365,8 @@ namespace Soup::View
 						return ftxui::hbox({
 							tasksList->Render(),
 							ftxui::separator(),
-							tasksPropertiesView->Render() | ftxui::flex,
-						}) | ftxui::flex;
+							tasksPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
 					});
 
 					packageTabComponents.push_back(tasksViewRenderer);
@@ -330,15 +375,61 @@ namespace Soup::View
 				if (packageLoadState.GeneratePhase2Result.has_value())
 				{
 					auto operationComponents = std::vector<std::string>();
+					auto operationPropertiesComponents = ftxui::Components();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase2Result.value().GetOperations())
 					{
 						operationComponents.push_back(operation.Title);
+
+						auto operationInfo = TreeValueTable();
+
+						operationInfo.Insert("Id", TreeValue(std::to_string(operation.Id)));
+						operationInfo.Insert("Title", TreeValue(operation.Title));
+
+						auto commandInfo = TreeValueTable();
+						commandInfo.Insert("WorkingDirectory", operation.Command.WorkingDirectory.ToString());
+						commandInfo.Insert("Executable", operation.Command.Executable.ToString());
+						
+						auto arguments = TreeValueList();
+						for (auto& argument : operation.Command.Arguments)
+						{
+							arguments.push_back(TreeValue(argument));
+						}
+
+						commandInfo.Insert("Arguments", std::move(arguments));
+						operationInfo.Insert("Command", TreeValue(std::move(commandInfo)));
+
+						// std::vector<FileId> DeclaredInput;
+						// std::vector<FileId> DeclaredOutput;
+
+						operationPropertiesComponents.push_back(
+							ScrollFrame(TreeView(std::move(operationInfo))));
 					}
 
-					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
-					
+					auto selected = &packageState.SelectedOperation;
+
+					auto operationsList = ScrollFrame(
+						CreateSingleItemMenu(std::move(operationComponents), selected));
+
 					packageTabList.push_back("Operations");
-					packageTabComponents.push_back(std::move(operationsList));
+
+					auto operationsPropertiesView = ftxui::Container::Tab(
+						std::move(operationPropertiesComponents),
+						selected);
+
+					auto operationsView = ftxui::Container::Horizontal({
+						operationsList,
+						operationsPropertiesView,
+					});
+
+					auto operationsViewRenderer = ftxui::Renderer(operationsView, [operationsList, operationsPropertiesView] {
+						return ftxui::hbox({
+							operationsList->Render(),
+							ftxui::separator(),
+							operationsPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
+					});
+
+					packageTabComponents.push_back(operationsViewRenderer);
 				}
 
 				auto tab_toggle = CustomToggle(std::move(packageTabList), &_state.PackageTabSelected);
