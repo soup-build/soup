@@ -111,13 +111,17 @@ namespace Soup::View
 		option.entries = std::move(entries);
 		option.selected = selected;
 		
-		auto menu = ftxui::Menu(option);
+		auto menu = ftxui::Menu(std::move(option));
+		return menu;
+	}
 
+	ftxui::Component ScrollFrame(ftxui::Component component)
+	{
 		// Wrap the menu in a renderer to add a frame and scroll indicator
-		auto rendererMenu = ftxui::Renderer(menu, [menu] {
-			return menu->Render() | ftxui::vscroll_indicator | ftxui::frame;
+		auto scrollFrame = ftxui::Renderer(component, [component] {
+			return component->Render() | ftxui::vscroll_indicator | ftxui::frame;
 		});
 
-		return rendererMenu;
+		return scrollFrame;
 	}
 }
