@@ -90,9 +90,9 @@ A simple main method that prints our "Hello World, Soup Style!" only if the buil
 int main()
 {
 #ifdef SPECIAL_BUILD
-  printf("Hello World, Soup Style!");
+  printf("Hello World, Soup Style!\n");
 #else
-  printf("Hello World...");
+  printf("Hello World...\n");
 #endif
   return 0;
 }

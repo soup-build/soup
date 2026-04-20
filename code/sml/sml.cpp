@@ -16,7 +16,6 @@ export module Soup.SML:SML;
 import Opal;
 import :LanguageReference;
 import :PackageReference;
-import :SequenceMap;
 
 using namespace Opal;
 

@@ -65,7 +65,7 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 
 int main()
 {
-  printf("Hello World, %s Style!", GetName());
+  printf("Hello World, %s Style!\n", GetName());
   return 0;
 }
 ```

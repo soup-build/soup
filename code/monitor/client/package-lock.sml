@@ -4,18 +4,18 @@ Closure: {
 		'monitor-client': { Version: './', Build: '0', Tool: '0' }
 		'monitor-shared': { Version: '../shared/', Build: '0', Tool: '0' }
 		'mwasplund|detours': { Version: 4.0.14, Digest: 'sha256:042d256bb8aecc3c5b58ff5be26c3f21a3ba24de5885663fb7d6a928c18ebfc4', Build: '0', Tool: '0' }
-		'mwasplund|opal': { Version: 0.12.7, Digest: 'sha256:e31e854644945cee7be54c205c56592cc22b68247426f487de7dc96dce683805', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.13.0, Digest: 'sha256:7aefec36342b2f3112e3ebf4f1fd1e11153b1a72742506d3b96ac569b03df9cb', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.19.2
-				Digest: 'sha256:fbb82059675361bc31d6ce29fa17ec42320d173a1267230fbf35ad1b0dcb46d0'
+				Version: 0.19.3
+				Digest: 'sha256:bfd69b0e925fb5b64d9196773dba03cbdac25c798650d044850afbc17e07027a'
 				Artifacts: {
-					Linux: 'sha256:eb5cc7691bff09688a568c3db9a21e549fd42cfb207500fcafd4fe4f3509ccc0'
-					Windows: 'sha256:f22dafea781c450c3e458cb585cee6a21d5622fab462ab9240ebb81295521edf'
+					Linux: 'sha256:af3aee7288b994644274b390df52a6613ef5df15153b434d814afc8ca1201463'
+					Windows: 'sha256:a2c71a322ec5f01b500cd2581cb11345cbf4217a04977f35167828088597c6d3'
 				}
 			}
 		}

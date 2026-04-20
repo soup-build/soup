@@ -6,5 +6,4 @@ export import :LanguageReference;
 export import :PackageIdentifier;
 export import :PackageName;
 export import :PackageReference;
-export import :SequenceMap;
 export import :SML;

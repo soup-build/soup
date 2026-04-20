@@ -4,6 +4,7 @@
 
 module;
 
+#include <format>
 #include <functional>
 #include <memory>
 #include <stdexcept>
@@ -17,6 +18,10 @@ import Soup.Core;
 import :AppState;
 import :CustomStyle;
 import :PackageLoadState;
+import :RecipeTreeConverter;
+import :TreeValue;
+import :TreeView;
+import :ValueTreeConverter;
 
 namespace Soup::View
 {
@@ -41,7 +46,10 @@ namespace Soup::View
 
 			auto app = ftxui::App::Fullscreen();
 
-			auto packagesMenu = CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected);
+			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
+
+			auto packagesMenu = ScrollFrame(
+				CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
@@ -54,21 +62,21 @@ namespace Soup::View
 				packagesPropertiesView,
 			});
 
-			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
-				return ftxui::hbox({
-					packagesMenu->Render(),
-					ftxui::separator(),
-					packagesPropertiesView->Render() | ftxui::flex,
-				}) |
-				ftxui::border |
-				ftxui::flex;
-			});
+			auto appView = ftxui::Renderer(packagesView, [&] {
+				// Allow for small screens to use optimal space
+				// Hide pretty artwork
+				_state.ShowAsciiArt = app.dimy() > 30;
 
-			auto appAsciiArt = AppAsciiArt();
-
-			auto appView = ftxui::Container::Vertical({
-				appAsciiArt,
-				packagesViewRenderer,
+				return ftxui::vbox({
+					asciiArt->Render(),
+					ftxui::hbox({
+						packagesMenu->Render(),
+						ftxui::separator(),
+						packagesPropertiesView->Render() | ftxui::flex,
+					}) |
+					ftxui::border |
+					ftxui::flex
+				});
 			});
 
 			app.Loop(appView);
@@ -79,6 +87,8 @@ namespace Soup::View
 			Core::PackageProvider& packageProvider,
 			int packageId)
 		{
+			_state.ShowAsciiArt = true;
+
 			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
 			_state.PackagesList.push_back(packageInfo.Name.ToString());
 			_state.PackagesIdList.push_back(packageInfo.Id);
@@ -107,37 +117,54 @@ namespace Soup::View
 			_state.PackageTabSelected = 0;
 		}
 
+		TreeValueTable ToTreeValue(const Core::PackageChildrenMap& children)
+		{
+			auto dependencyProperties = TreeValueTable();
+			for (auto& [dependencyType, dependencies] : children)
+			{
+				auto dependencyItems = TreeValueList();
+				for (auto& dependency : dependencies)
+				{
+					dependencyItems.push_back(TreeValue(dependency.OriginalReference.ToString()));
+				}
+
+				dependencyProperties.Insert(dependencyType, TreeValue(std::move(dependencyItems)));
+			}
+
+			return dependencyProperties;
+		}
+
 		ftxui::Components CreateAllPackageTabs(
 			Core::FileSystemState& fileSystemState,
 			Core::PackageProvider& packageProvider)
 		{
 			auto rootPackageGraphId = packageProvider.GetRootPackageGraphId();
 
+			_state.PackagesState.resize(_state.PackagesIdList.size());
+
 			auto tabComponents = ftxui::Components();
-			for (auto& packageId : _state.PackagesIdList)
+			for (auto i = 0u; i < _state.PackagesIdList.size(); i++)
 			{
+				auto packageId = _state.PackagesIdList[i];
+				auto& packageState = _state.PackagesState[i];
+
 				auto& packageInfo = packageProvider.GetPackageInfo(packageId);
 				auto packageLoadState = LoadPackage(
 					fileSystemState, packageProvider, rootPackageGraphId, packageId);
 
-				auto properties = ftxui::Components();
+				auto properties = TreeValueTable();
 
-				properties.push_back(CreateSingleItemMenuEntry(std::to_string(packageInfo.Id)));
-				properties.push_back(CreateSingleItemMenuEntry(packageInfo.Name.ToString()));
-				properties.push_back(CreateSingleItemMenuEntry(packageInfo.PackageRoot.ToString()));
+				properties.Insert("Id", TreeValue(std::to_string(packageInfo.Id)));
+				properties.Insert("Name", TreeValue(packageInfo.Name.ToString()));
+				properties.Insert("Root", TreeValue(packageInfo.PackageRoot.ToString()));
 
-				for (auto& [dependencyType, dependencies] : packageInfo.Dependencies)
-				{
-					auto dependencyItems = ftxui::Components();
-					for (auto& dependency : dependencies)
-					{
-						dependencyItems.push_back(CreateSingleItemMenuEntry(dependency.OriginalReference.ToString()));
-					}
+				auto dependencyProperties = ToTreeValue(packageInfo.Dependencies);
+				properties.Insert("Dependencies", TreeValue(std::move(dependencyProperties)));
 
-					properties.push_back(ftxui::Collapsible(dependencyType, Inner(dependencyItems)));
-				}
+				auto recipeProperties = RecipeTreeConverter::ToTreeValue(packageInfo.Recipe->GetTable());
+				properties.Insert("Recipe", TreeValue(std::move(recipeProperties)));
 
-				auto propertiesList = ftxui::Container::Vertical(std::move(properties));
+				auto propertiesList = ScrollFrame(TreeView(std::move(properties)));
 
 				auto packageTabList = std::vector<std::string>({
 					"Properties",
@@ -158,14 +185,36 @@ namespace Soup::View
 						throw std::runtime_error("Generate Info Table missing RuntimeOrder List");
 					}
 
-					auto tasksComponents = std::vector<std::string>();
-					for (auto& taskName : findRuntimeOrderResult->second.AsList())
+					auto findTaskInfoTableResult = generatePhase1Info.find("TaskInfo");
+					if (findTaskInfoTableResult == generatePhase1Info.end())
 					{
-						tasksComponents.push_back(taskName.AsString());
+						throw std::runtime_error("Generate Info Table missing TaskInfo List");
+					}
+					auto& taskInfoTable = findTaskInfoTableResult->second.AsTable();
+
+					auto tasksComponents = std::vector<std::string>();
+					auto tasksPropertiesComponents = ftxui::Components();
+					for (auto& taskNameValue : findRuntimeOrderResult->second.AsList())
+					{
+						auto taskName = taskNameValue.AsString();
+						tasksComponents.push_back(taskName);
+
+						auto findTaskInfoResult = taskInfoTable.find(taskName);
+						if (findTaskInfoResult == taskInfoTable.end())
+						{
+							throw std::runtime_error(std::format("TaskInfo missing task {}", taskName));
+						}
+
+						auto taskInfo = ValueTreeConverter::ToTreeValue(findTaskInfoResult->second.AsTable());
+						tasksPropertiesComponents.push_back(
+							ScrollFrame(TreeView(std::move(taskInfo))));
 					}
 
-					auto tasksList = CreateSingleItemMenu(std::move(tasksComponents), 0);
-					
+					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessorTask : &packageState.SelectedTask;
+
+					auto tasksList = ScrollFrame(
+						CreateSingleItemMenu(std::move(tasksComponents), selected));
+
 					if (hasPreprocessor)
 					{
 						packageTabList.push_back("Preprocessor Tasks");
@@ -175,18 +224,64 @@ namespace Soup::View
 						packageTabList.push_back("Tasks");
 					}
 
-					packageTabComponents.push_back(std::move(tasksList));
+					auto tasksPropertiesView = ftxui::Container::Tab(
+						std::move(tasksPropertiesComponents),
+						selected);
+
+					auto tasksView = ftxui::Container::Horizontal({
+						tasksList,
+						tasksPropertiesView,
+					});
+
+					auto tasksViewRenderer = ftxui::Renderer(tasksView, [tasksList, tasksPropertiesView] {
+						return ftxui::hbox({
+							tasksList->Render(),
+							ftxui::separator(),
+							tasksPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
+					});
+
+					packageTabComponents.push_back(tasksViewRenderer);
 				}
 
 				if (packageLoadState.GeneratePhase1Result.has_value())
 				{
 					auto operationComponents = std::vector<std::string>();
+					auto operationPropertiesComponents = ftxui::Components();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase1Result.value().GetGraph().GetOperations())
 					{
 						operationComponents.push_back(operation.Title);
+
+						auto operationInfo = TreeValueTable();
+
+						operationInfo.Insert("Id", TreeValue(std::to_string(operation.Id)));
+						operationInfo.Insert("Title", TreeValue(operation.Title));
+
+						auto commandInfo = TreeValueTable();
+						commandInfo.Insert("WorkingDirectory", operation.Command.WorkingDirectory.ToString());
+						commandInfo.Insert("Executable", operation.Command.Executable.ToString());
+						
+						auto arguments = TreeValueList();
+						for (auto& argument : operation.Command.Arguments)
+						{
+							arguments.push_back(TreeValue(argument));
+						}
+
+						commandInfo.Insert("Arguments", std::move(arguments));
+						operationInfo.Insert("Command", TreeValue(std::move(commandInfo)));
+
+						// std::vector<FileId> DeclaredInput;
+						// std::vector<FileId> DeclaredOutput;
+
+						operationPropertiesComponents.push_back(
+							ScrollFrame(TreeView(std::move(operationInfo))));
 					}
 
-					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
+					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessor : &packageState.SelectedOperation;
+
+					auto operationsList = ScrollFrame(
+						CreateSingleItemMenu(std::move(operationComponents), selected));
+
 					if (hasPreprocessor)
 					{
 						packageTabList.push_back("Preprocessors");
@@ -196,9 +291,25 @@ namespace Soup::View
 						packageTabList.push_back("Operations");
 					}
 
-					packageTabComponents.push_back(std::move(operationsList));
-				}
+					auto operationsPropertiesView = ftxui::Container::Tab(
+						std::move(operationPropertiesComponents),
+						selected);
 
+					auto operationsView = ftxui::Container::Horizontal({
+						operationsList,
+						operationsPropertiesView,
+					});
+
+					auto operationsViewRenderer = ftxui::Renderer(operationsView, [operationsList, operationsPropertiesView] {
+						return ftxui::hbox({
+							operationsList->Render(),
+							ftxui::separator(),
+							operationsPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
+					});
+
+					packageTabComponents.push_back(operationsViewRenderer);
+				}
 
 				if (packageLoadState.GeneratePhase2Info.has_value())
 				{
@@ -209,33 +320,119 @@ namespace Soup::View
 						throw std::runtime_error("Generate Info Table missing RuntimeOrder List");
 					}
 
-					auto tasksComponents = std::vector<std::string>();
-					for (auto& taskName : findRuntimeOrderResult->second.AsList())
+					auto findTaskInfoTableResult = generatePhase2Info.find("TaskInfo");
+					if (findTaskInfoTableResult == generatePhase2Info.end())
 					{
-						tasksComponents.push_back(taskName.AsString());
+						throw std::runtime_error("Generate Info Table missing TaskInfo List");
+					}
+					auto& taskInfoTable = findTaskInfoTableResult->second.AsTable();
+
+					auto tasksComponents = std::vector<std::string>();
+					auto tasksPropertiesComponents = ftxui::Components();
+					for (auto& taskNameValue : findRuntimeOrderResult->second.AsList())
+					{
+						auto taskName = taskNameValue.AsString();
+						tasksComponents.push_back(taskName);
+
+						auto findTaskInfoResult = taskInfoTable.find(taskName);
+						if (findTaskInfoResult == taskInfoTable.end())
+						{
+							throw std::runtime_error(std::format("TaskInfo missing task {}", taskName));
+						}
+
+						auto taskInfo = ValueTreeConverter::ToTreeValue(findTaskInfoResult->second.AsTable());
+						tasksPropertiesComponents.push_back(
+							ScrollFrame(TreeView(std::move(taskInfo))));
 					}
 
-					auto tasksList = CreateSingleItemMenu(std::move(tasksComponents), 0);
+					auto selected = &packageState.SelectedTask;
+
+					auto tasksList = ScrollFrame(
+						CreateSingleItemMenu(std::move(tasksComponents), selected));
 
 					packageTabList.push_back("Tasks");
-					packageTabComponents.push_back(std::move(tasksList));
+
+					auto tasksPropertiesView = ftxui::Container::Tab(
+						std::move(tasksPropertiesComponents),
+						selected);
+
+					auto tasksView = ftxui::Container::Horizontal({
+						tasksList,
+						tasksPropertiesView,
+					});
+
+					auto tasksViewRenderer = ftxui::Renderer(tasksView, [tasksList, tasksPropertiesView] {
+						return ftxui::hbox({
+							tasksList->Render(),
+							ftxui::separator(),
+							tasksPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
+					});
+
+					packageTabComponents.push_back(tasksViewRenderer);
 				}
 
 				if (packageLoadState.GeneratePhase2Result.has_value())
 				{
 					auto operationComponents = std::vector<std::string>();
+					auto operationPropertiesComponents = ftxui::Components();
 					for (auto& [operationId, operation] : packageLoadState.GeneratePhase2Result.value().GetOperations())
 					{
 						operationComponents.push_back(operation.Title);
+
+						auto operationInfo = TreeValueTable();
+
+						operationInfo.Insert("Id", TreeValue(std::to_string(operation.Id)));
+						operationInfo.Insert("Title", TreeValue(operation.Title));
+
+						auto commandInfo = TreeValueTable();
+						commandInfo.Insert("WorkingDirectory", operation.Command.WorkingDirectory.ToString());
+						commandInfo.Insert("Executable", operation.Command.Executable.ToString());
+						
+						auto arguments = TreeValueList();
+						for (auto& argument : operation.Command.Arguments)
+						{
+							arguments.push_back(TreeValue(argument));
+						}
+
+						commandInfo.Insert("Arguments", std::move(arguments));
+						operationInfo.Insert("Command", TreeValue(std::move(commandInfo)));
+
+						// std::vector<FileId> DeclaredInput;
+						// std::vector<FileId> DeclaredOutput;
+
+						operationPropertiesComponents.push_back(
+							ScrollFrame(TreeView(std::move(operationInfo))));
 					}
 
-					auto operationsList = CreateSingleItemMenu(std::move(operationComponents), 0);
-					
+					auto selected = &packageState.SelectedOperation;
+
+					auto operationsList = ScrollFrame(
+						CreateSingleItemMenu(std::move(operationComponents), selected));
+
 					packageTabList.push_back("Operations");
-					packageTabComponents.push_back(std::move(operationsList));
+
+					auto operationsPropertiesView = ftxui::Container::Tab(
+						std::move(operationPropertiesComponents),
+						selected);
+
+					auto operationsView = ftxui::Container::Horizontal({
+						operationsList,
+						operationsPropertiesView,
+					});
+
+					auto operationsViewRenderer = ftxui::Renderer(operationsView, [operationsList, operationsPropertiesView] {
+						return ftxui::hbox({
+							operationsList->Render(),
+							ftxui::separator(),
+							operationsPropertiesView->Render() | ftxui::xflex,
+						}) | ftxui::yflex;
+					});
+
+					packageTabComponents.push_back(operationsViewRenderer);
 				}
 
-				auto tab_toggle = ftxui::Toggle(packageTabList, &_state.PackageTabSelected);
+				auto tab_toggle = CustomToggle(std::move(packageTabList), &_state.PackageTabSelected);
 
 				auto tab_container = ftxui::Container::Tab(
 					std::move(packageTabComponents),
