@@ -22,7 +22,7 @@ A simple main method that prints our "Hello World, Soup Style!" and returns a su
 
 int main()
 {
-  printf("Hello World, Soup Style!");
+  printf("Hello World, Soup Style!\n");
   return 0;
 }
 ```
