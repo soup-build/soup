@@ -36,20 +36,19 @@ namespace Soup::Core
 			FileId inputFile)
 		{
 			auto lastWriteTime = _fileSystemState.GetLastWriteTime(inputFile);
+			const auto& targetFilePath = _fileSystemState.GetFilePath(inputFile);
 
 			// Perform the final check
 			if (!lastWriteTime.has_value())
 			{
 				// The input was missing
-				auto targetFilePath = _fileSystemState.GetFilePath(inputFile);
 				Log::Info("File Missing [{}]", targetFilePath.ToString());
 				return true;
 			}
-			else
+			else if (targetFilePath.HasFileName())
 			{
 				if (lastWriteTime.value() > lastEvaluateTime)
 				{
-					auto targetFilePath = _fileSystemState.GetFilePath(inputFile);
 					Log::Info("File altered after last evaluate [{}]", targetFilePath.ToString());
 					return true;
 				}
@@ -57,6 +56,11 @@ namespace Soup::Core
 				{
 					return false;
 				}
+			}
+			else
+			{
+				// Only check existence for directories
+				return false;
 			}
 		}
 
