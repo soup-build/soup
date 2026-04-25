@@ -10,29 +10,13 @@ module;
 
 export module Soup.View:GraphLayout;
 
+import :GraphValue;
+
 namespace Soup::View
 {
-	export struct Edge
-	{
-		size_t Source;
-		size_t Target;
-	};
-
-	export struct Graph
-	{
-		size_t Vertices;
-		std::vector<Edge> Edges;
-	};
-
-	export struct Point
-	{
-		size_t X;
-		size_t Y;
-	};
-
 	void RecursiveInitialLayers(
 		const Graph& graph,
-		std::vector<Point>& positions,
+		std::vector<GraphPoint>& positions,
 		std::vector<std::vector<int>>& layers,
 		size_t vertex)
 	{
@@ -61,10 +45,10 @@ namespace Soup::View
 	/// Sugiyama Layout
 	/// Note: We skip the cycle breaking as we assume a DAG
 	/// </summary>
-	export std::vector<Point> LayoutDAG(const Graph& graph)
+	export std::vector<GraphPoint> LayoutDAG(const Graph& graph)
 	{
 		// Set 1: Level setting
-		auto positions = std::vector<Point>(graph.Vertices);
+		auto positions = std::vector<GraphPoint>(graph.Vertices);
 		auto layers = std::vector<std::vector<int>>();
 
 		// Find all source nodes with no incoming edges
