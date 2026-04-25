@@ -9,10 +9,5 @@ IncludePaths: [
 	'public/'
 ]
 PublicHeaders: [
-	{
-		Root: 'public/'
-		Files: [
-			'library.h'
-		]
-	}
+	{ Root: 'public/' }
 ]

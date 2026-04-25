@@ -17,6 +17,7 @@ import ftxui;
 import Soup.Core;
 import :AppState;
 import :CustomStyle;
+import :GraphLayout;
 import :PackageLoadState;
 import :RecipeTreeConverter;
 import :TreeValue;
@@ -48,8 +49,56 @@ namespace Soup::View
 
 			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
 
-			auto packagesMenu = ScrollFrame(
-				CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
+			// TEST create graph
+			auto positions = LayoutDAG(_state.PackagesGraph);
+
+			//auto packagesMenu = ScrollFrame(
+			//	CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
+
+			auto packagesMenu = ScrollFrame(ftxui::Renderer([&]
+			{
+				size_t maxWidth = 0;
+				size_t maxHeight = 0;
+				for (auto& point : positions)
+				{
+					maxWidth = std::max(point.X, maxWidth);
+					maxHeight = std::max(point.Y, maxHeight);
+				}
+
+				auto content = std::vector<ftxui::Elements>(maxHeight);
+				for (auto y = 0; y < maxHeight; y++)
+				{
+					content[y].resize(maxWidth);
+					for (auto x = 0; x < maxWidth; x++)
+					{
+						content[y][x] = ftxui::text("");
+					}
+				}
+
+				constexpr size_t maxSize = 16;
+				auto cell = [](const std::string& t)
+				{
+					if (t.size() > maxSize)
+					{
+						return ftxui::text(t.substr(0, maxSize)) | ftxui::border | ftxui::hcenter;
+					}
+					else
+					{
+						auto prefix = (maxSize - t.size()) / 2;
+						auto postfix = maxSize - t.size() - prefix;
+						auto content = std::string(prefix, ' ') + t + std::string(postfix, ' ');
+						return ftxui::text(content) | ftxui::border | ftxui::hcenter;
+					}
+				};
+				for (auto i = 0; i < positions.size(); i++)
+				{
+					auto point = positions[i];
+					content[point.Y - 1][point.X - 1] = cell(_state.PackagesNameList[i]);
+				}
+
+				auto grid = ftxui::gridbox(std::move(content));
+				return grid;
+			}));
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
@@ -83,14 +132,16 @@ namespace Soup::View
 		}
 
 	private:
-		void InitializeGraph(
+		size_t InitializeGraph(
 			Core::PackageProvider& packageProvider,
 			int packageId)
 		{
-			_state.ShowAsciiArt = true;
-
 			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
+
+			auto packageIndex = _state.PackagesIdList.size();
+
 			_state.PackagesList.push_back(packageInfo.Name.ToString());
+			_state.PackagesNameList.push_back(packageInfo.Name.GetName());
 			_state.PackagesIdList.push_back(packageInfo.Id);
 
 			for (auto& [dependencyType, dependencyTypeSet] : packageInfo.Dependencies)
@@ -101,19 +152,25 @@ namespace Soup::View
 					if (!dependency.IsSubGraph &&
 						std::find(_state.PackagesIdList.begin(), _state.PackagesIdList.end(), dependency.PackageId) == _state.PackagesIdList.end())
 					{
-						InitializeGraph(packageProvider, dependency.PackageId);
+						auto childIndex = InitializeGraph(packageProvider, dependency.PackageId);
+
+						// Add an edge for the graph
+						_state.PackagesGraph.Edges.push_back({packageIndex, childIndex});
 					}
 				}
 			}
+
+			return packageIndex;
 		}
 		
 		void InitializeState(Core::PackageProvider& packageProvider)
 		{
 			auto& packageGraph = packageProvider.GetRootPackageGraph();
 			InitializeGraph(packageProvider, packageGraph.RootPackageId);
+			_state.PackagesGraph.Vertices = _state.PackagesIdList.size();
 
+			_state.ShowAsciiArt = true;
 			_state.PackagesListSelected = 0;
-
 			_state.PackageTabSelected = 0;
 		}
 
