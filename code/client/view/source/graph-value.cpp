@@ -14,21 +14,21 @@ export namespace Soup::View
 {
 	struct GraphEdge
 	{
-		size_t Source;
-		size_t Target;
+		int Source;
+		int Target;
 	};
 
 	struct Graph
 	{
-		size_t Vertices;
+		int Vertices;
 		std::vector<GraphEdge> Edges;
 	};
 
 	struct GraphNode
 	{
-		size_t Index;
+		int Index;
 
 		// The set of edges in the next row
-		std::vector<size_t> Edges;
+		std::vector<int> Edges;
 	};
 }

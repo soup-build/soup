@@ -90,13 +90,13 @@ namespace Soup::View
 		}
 
 	private:
-		size_t InitializeGraph(
+		int InitializeGraph(
 			Core::PackageProvider& packageProvider,
 			int packageId)
 		{
 			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
 
-			auto packageIndex = _state.PackagesIdList.size();
+			int packageIndex = _state.PackagesIdList.size();
 
 			_state.PackagesList.push_back(packageInfo.Name.ToString());
 			_state.PackagesNameList.push_back(packageInfo.Name.GetName());

@@ -228,14 +228,14 @@ namespace Soup::View
 					{
 						auto& node = layer[x];
 
-						auto is_selected = y == 0;
-						auto is_focused = y == 1;
+						auto isSelected = y == 0;
+						auto isFocused = y == 1;
 
 						auto hasInput = y > 0;
-						auto hasOutput = y < _layers.size();
+						auto hasOutput = node.Edges.size() > 0;
 
 						const ftxui::EntryState state = {
-							TruncateCenterLabel(_nodeValues[node.Index]), false, is_selected, is_focused, (int)node.Index,
+							TruncateCenterLabel(_nodeValues[node.Index]), false, isSelected, isFocused, (int)node.Index,
 						};
 
 						auto element = DefaultOptionTransform(state, hasInput, hasOutput);
@@ -244,18 +244,51 @@ namespace Soup::View
 
 					content.push_back(ftxui::hbox(std::move(layerElements)));
 
-					// Build the edges
+					// Build the edges if we are not on the last row
 					if (y + 1 != _layers.size())
 					{
+						// Make sure we have enough space
+						auto width = std::max(layer.size(), _layers[y+1].size());
+						auto lines = std::vector<GraphLineState>(
+							width,
+							{ false, false, GraphLineTransition::None, });
+
+						for (auto x = 0; x < layer.size(); x++)
+						{
+							auto& node = layer[x];
+
+							if (node.Edges.size() > 0)
+							{
+								lines[x].Transition = GraphLineTransition::Up;
+
+								// Update for all outgoing connections
+								for (auto targetColumn : node.Edges)
+								{
+									lines[targetColumn].Transition = GraphLineTransition::Down;
+									if (targetColumn > x)
+									{
+										lines[x].HasRight = true;
+										lines[targetColumn].HasLeft = true;
+									}
+									else if (targetColumn < x)
+									{
+										lines[x].HasLeft = true;
+										lines[targetColumn].HasRight = true;
+									}
+									else
+									{
+										lines[x].Transition = GraphLineTransition::Bidirectional;
+									}
+								}
+							}
+						}
+
 						auto edgeElements = ftxui::Elements();
 
-						GraphLineState state = {
-							false,
-							true,
-							GraphLineTransition::Bidirectional,
-						};
-
-						edgeElements.push_back(DefaultOptionEdgeTransform(state));
+						for (auto& line : lines)
+						{
+							edgeElements.push_back(DefaultOptionEdgeTransform(line));
+						}
 
 						content.push_back(ftxui::hbox(std::move(edgeElements)));
 					}
