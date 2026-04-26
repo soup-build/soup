@@ -18,6 +18,21 @@ import ftxui;
 
 namespace Soup::View
 {
+	enum class GraphLineTransition
+	{
+		None,
+		Down,
+		Up,
+		Bidirectional,
+	};
+
+	struct GraphLineState
+	{
+		bool HasLeft;
+		bool HasRight;
+		GraphLineTransition Transition;
+	};
+
 	struct Charset
 	{
 		std::string TopLeft;
@@ -103,6 +118,73 @@ namespace Soup::View
 		return element;
 	}
 
+	ftxui::Element DefaultOptionEdgeTransform(const GraphLineState& state)
+	{
+		auto charsetType = ftxui::ROUNDED;
+		auto& charset = simple_border_charset[charsetType];
+
+		auto size = 15;
+
+		auto half = size / 2 + 1;
+
+		std::string content;
+		if (state.HasLeft)
+		{
+			content += repeat(charset.Horizontal, half);
+		}
+		else
+		{
+			content += std::string(half, ' ');
+		}
+		
+		switch (state.Transition)
+		{
+			case GraphLineTransition::None:
+				if (state.HasLeft != state.HasRight)
+				{
+					throw new std::runtime_error("None transition must have same on left and right");
+				}
+
+				content += state.HasLeft ? charset.Horizontal : " ";
+				break;
+			case GraphLineTransition::Down:
+				if (state.HasLeft)
+					content += state.HasRight ? "┬" : charset.TopRight;
+				else if (state.HasRight)
+					content += charset.TopLeft;
+				else
+					throw new std::runtime_error("Down transition must have at least one edge");
+				break;
+			case GraphLineTransition::Up:
+				if (state.HasLeft)
+					content += state.HasRight ? "┴" : charset.BottomRight;
+				else if (state.HasRight)
+					content += charset.BottomLeft;
+				else
+					throw new std::runtime_error("Up transition must have at least one edge");
+				break;
+			case GraphLineTransition::Bidirectional:
+				if (state.HasLeft)
+					content += state.HasRight ? "┼" : "┤";
+				else
+					content += state.HasRight ? "├" : charset.Vertical;
+				break;
+			default:
+				throw new std::runtime_error("Unknown transition type");
+		}
+
+		if (state.HasRight)
+		{
+			content += repeat(charset.Horizontal, half);
+		}
+		else
+		{
+			content += std::string(half, ' ');
+		}
+
+		return ftxui::text(std::move(content));
+	}
+
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
 	export ftxui::Component GraphView(
@@ -161,9 +243,25 @@ namespace Soup::View
 					}
 
 					content.push_back(ftxui::hbox(std::move(layerElements)));
+
+					// Build the edges
+					if (y + 1 != _layers.size())
+					{
+						auto edgeElements = ftxui::Elements();
+
+						GraphLineState state = {
+							false,
+							true,
+							GraphLineTransition::Bidirectional,
+						};
+
+						edgeElements.push_back(DefaultOptionEdgeTransform(state));
+
+						content.push_back(ftxui::hbox(std::move(edgeElements)));
+					}
 				}
 
-				return ftxui::vbox(std::move(content));;
+				return ftxui::vbox(std::move(content));
 			}
 
 		private:
