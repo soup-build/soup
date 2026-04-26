@@ -24,9 +24,11 @@ export namespace Soup::View
 		std::vector<GraphEdge> Edges;
 	};
 
-	struct GraphPoint
+	struct GraphNode
 	{
-		size_t X;
-		size_t Y;
+		size_t Index;
+
+		// The set of edges in the next row
+		std::vector<size_t> Edges;
 	};
 }

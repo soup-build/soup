@@ -16,8 +16,8 @@ namespace Soup::View
 {
 	void RecursiveInitialLayers(
 		const Graph& graph,
-		std::vector<GraphPoint>& positions,
-		std::vector<std::vector<int>>& layers,
+		std::vector<size_t>& vertexRowLookup,
+		std::vector<std::vector<GraphNode>>& layers,
 		size_t vertex)
 	{
 		size_t maxY = 1;
@@ -25,10 +25,10 @@ namespace Soup::View
 		{
 			if (edge.Target == vertex)
 			{
-				if (positions[edge.Source].Y == 0)
-					RecursiveInitialLayers(graph, positions, layers, edge.Source);
+				if (vertexRowLookup[edge.Source] == 0)
+					RecursiveInitialLayers(graph, vertexRowLookup, layers, edge.Source);
 
-				auto newY = positions[edge.Source].Y + 1;
+				auto newY = vertexRowLookup[edge.Source] + 1;
 				maxY = std::max(maxY, newY);
 			}
 		}
@@ -36,27 +36,26 @@ namespace Soup::View
 		if (layers.size() < maxY)
 			layers.resize(maxY);
 
-		layers[maxY - 1].push_back(vertex);
-		positions[vertex].Y = maxY;
-		positions[vertex].X = layers[maxY - 1].size();
+		layers[maxY - 1].push_back({ vertex, std::vector<size_t>() });
+		vertexRowLookup[vertex] = maxY;
 	}
 
 	/// <summary>
 	/// Sugiyama Layout
 	/// Note: We skip the cycle breaking as we assume a DAG
 	/// </summary>
-	export std::vector<GraphPoint> LayoutDAG(const Graph& graph)
+	export std::vector<std::vector<GraphNode>> LayoutDAG(const Graph& graph)
 	{
 		// Set 1: Level setting
-		auto positions = std::vector<GraphPoint>(graph.Vertices);
-		auto layers = std::vector<std::vector<int>>();
+		auto vertexRowLookup = std::vector<size_t>(graph.Vertices);
+		auto layers = std::vector<std::vector<GraphNode>>();
 
 		// Find all source nodes with no incoming edges
 		for (size_t vertex = 0; vertex < graph.Vertices; vertex++)
 		{
-			RecursiveInitialLayers(graph, positions, layers, vertex);
+			RecursiveInitialLayers(graph, vertexRowLookup, layers, vertex);
 		}
 
-		return positions;
+		return layers;
 	}
 }

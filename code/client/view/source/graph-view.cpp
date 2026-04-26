@@ -61,7 +61,7 @@ namespace Soup::View
 		std::string topBorder;
 		if (hasInput)
 		{
-			auto prefix = state.label.size() / 2 - 1;
+			auto prefix = state.label.size() / 2;
 			auto postfix = state.label.size() - 1 - prefix;
 			topBorder = charset.TopLeft + repeat(charset.Horizontal, prefix) + "┴" + repeat(charset.Horizontal, postfix) + charset.TopRight;
 		}
@@ -70,11 +70,10 @@ namespace Soup::View
 			topBorder = charset.TopLeft + repeat(charset.Horizontal, state.label.size()) + charset.TopRight;
 		}
 
-
 		std::string bottomBorder;
 		if (hasOutput)
 		{
-			auto prefix = state.label.size() / 2 - 1;
+			auto prefix = state.label.size() / 2;
 			auto postfix = state.label.size() - 1 - prefix;
 			bottomBorder = charset.BottomLeft + repeat(charset.Horizontal, prefix) + "┬" + repeat(charset.Horizontal, postfix) + charset.BottomRight;
 		}
@@ -107,21 +106,21 @@ namespace Soup::View
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
 	export ftxui::Component GraphView(
-		std::vector<GraphPoint>&& positions,
+		std::vector<std::vector<GraphNode>>&& layers,
 		ftxui::ConstStringListRef nodeValues)
 	{
 		class Impl : public ftxui::ComponentBase
 		{
 		public:
-			Impl(std::vector<GraphPoint>&& positions, ftxui::ConstStringListRef nodeValues)
-			 : _positions(positions), _nodeValues(nodeValues)
+			Impl(std::vector<std::vector<GraphNode>>&& layers, ftxui::ConstStringListRef nodeValues)
+			 : _layers(layers), _nodeValues(nodeValues)
 			{
 			}
 
 		private:
 			static std::string TruncateCenterLabel(std::string_view label)
 			{
-				constexpr size_t maxSize = 16;
+				constexpr size_t maxSize = 15;
 				if (label.size() > maxSize)
 				{
 					return std::string(label.substr(0, maxSize));
@@ -137,50 +136,41 @@ namespace Soup::View
 
  			ftxui::Element OnRender() override
 			{
-				size_t maxWidth = 0;
-				size_t maxHeight = 0;
-				for (auto& point : _positions)
+				auto content = ftxui::Elements();
+				for (auto y = 0; y < _layers.size(); y++)
 				{
-					maxWidth = std::max(point.X, maxWidth);
-					maxHeight = std::max(point.Y, maxHeight);
-				}
+					auto& layer = _layers[y];
+					auto layerElements = ftxui::Elements();
 
-				auto content = std::vector<ftxui::Elements>(maxHeight);
-				for (auto y = 0; y < maxHeight; y++)
-				{
-					content[y].resize(maxWidth);
-					for (auto x = 0; x < maxWidth; x++)
+					for (auto x = 0; x < layer.size(); x++)
 					{
-						content[y][x] = ftxui::text("");
+						auto& node = layer[x];
+
+						auto is_selected = y == 0;
+						auto is_focused = y == 1;
+
+						auto hasInput = y > 0;
+						auto hasOutput = y < _layers.size();
+
+						const ftxui::EntryState state = {
+							TruncateCenterLabel(_nodeValues[node.Index]), false, is_selected, is_focused, (int)node.Index,
+						};
+
+						auto element = DefaultOptionTransform(state, hasInput, hasOutput);
+						layerElements.push_back(std::move(element));
 					}
-				}
-				for (auto i = 0; i < _positions.size(); i++)
-				{
-					auto point = _positions[i];
 
-					auto is_selected = i == 0;
-					auto is_focused = i == 1;
-
-					auto hasInput = point.Y > 1;
-					auto hasOutput = point.Y < maxHeight;
-
-					const ftxui::EntryState state = {
-						TruncateCenterLabel(_nodeValues[i]), false, is_selected, is_focused, i,
-					};
-
-					auto element = DefaultOptionTransform(state, hasInput, hasOutput);
-					content[point.Y - 1][point.X - 1] = element;
+					content.push_back(ftxui::hbox(std::move(layerElements)));
 				}
 
-				auto grid = ftxui::gridbox(std::move(content));
-				return grid;
+				return ftxui::vbox(std::move(content));;
 			}
 
 		private:
-			std::vector<GraphPoint> _positions;
+			std::vector<std::vector<GraphNode>> _layers;
 			ftxui::ConstStringListRef _nodeValues;
 		};
 
-		return ftxui::Make<Impl>(std::move(positions), std::move(nodeValues));
+		return ftxui::Make<Impl>(std::move(layers), std::move(nodeValues));
 	}
 }
