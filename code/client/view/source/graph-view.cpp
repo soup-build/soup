@@ -18,6 +18,15 @@ import ftxui;
 
 namespace Soup::View
 {
+	// Runtime state for laying out lines so they do not overlap
+	struct GraphLineSegment
+	{
+		int Start;
+		int End;
+		bool IsForward;
+	};
+
+	// Final layout for lined edges
 	enum class GraphLineTransition
 	{
 		None,
@@ -26,7 +35,8 @@ namespace Soup::View
 		Bidirectional,
 	};
 
-	struct GraphLineState
+	// Render state for a line section
+	struct GraphLineSectionState
 	{
 		bool HasLeft;
 		bool HasRight;
@@ -118,7 +128,7 @@ namespace Soup::View
 		return element;
 	}
 
-	ftxui::Element DefaultOptionEdgeTransform(const GraphLineState& state)
+	ftxui::Element DefaultOptionEdgeTransform(const GraphLineSectionState& state)
 	{
 		auto charsetType = ftxui::ROUNDED;
 		auto& charset = simple_border_charset[charsetType];
@@ -185,6 +195,213 @@ namespace Soup::View
 		return ftxui::text(std::move(content));
 	}
 
+	bool IsOverlapping(GraphLineSegment a, GraphLineSegment b)
+	{
+		return a.Start <= b.End && b.Start <= a.End;
+	}
+
+	bool TryInsertSegment(GraphLineSegment segment, std::vector<GraphLineSegment>& line)
+	{
+		auto source = segment.IsForward ? segment.Start : segment.End;
+		auto target = segment.IsForward ? segment.End : segment.Start;
+		for (auto current = line.begin(); current != line.end(); ++current)
+		{
+			auto currentSource = current->IsForward ? current->Start : current->End;
+			auto currentTarget = current->IsForward ? current->End : current->Start;
+			if (current->Start > segment.End)
+			{
+				// Fits entirely before this one
+				line.insert(current, segment);
+				return true;
+			}
+
+			// Check if they have the same source
+			if (source == currentSource)
+			{
+				// Add if ends before the current
+				// Otherwise check the next iteration
+				if (target < currentTarget)
+				{
+					// The new overlap ends after the current
+					line.insert(current, segment);
+					return true;
+				}
+			}
+			else if (IsOverlapping(*current, segment))
+			{
+				return false;
+			}
+		}
+
+		// No conflicts, add at the end
+		line.push_back(segment);
+		return true;
+	}
+
+	void InsertSegment(GraphLineSegment segment, std::vector<std::vector<GraphLineSegment>>& lines)
+	{
+		for (auto& line : lines)
+		{
+			if (TryInsertSegment(segment, line))
+			{
+				return;
+			}
+		}
+
+		// Need an entire new line
+		lines.push_back(std::vector<GraphLineSegment>({ segment }));
+	}
+
+	void VerifyAddTransition(GraphLineSectionState& state, GraphLineTransition transition)
+	{
+		if (state.Transition != transition)
+		{
+			switch (state.Transition)
+			{
+				case GraphLineTransition::None:
+					// Safe to force replace
+					state.Transition = transition;
+					break;
+				case GraphLineTransition::Bidirectional:
+					switch (transition)
+					{
+						case GraphLineTransition::Up:
+						case GraphLineTransition::Down:
+							// Leave as bidirectional
+							break;
+						default:
+							throw std::runtime_error("Can only set Up or Down to Bidirectional");
+					}
+					break;
+				case GraphLineTransition::Up:
+					switch (transition)
+					{
+						case GraphLineTransition::Down:
+						case GraphLineTransition::Bidirectional:
+							// Combine with up
+							state.Transition = GraphLineTransition::Bidirectional;
+							break;
+						default:
+							throw std::runtime_error("Can only set Down or Bidi to Up");
+					}
+					break;
+				case GraphLineTransition::Down:
+					switch (transition)
+					{
+						case GraphLineTransition::Up:
+						case GraphLineTransition::Bidirectional:
+							// Combine with down
+							state.Transition = GraphLineTransition::Bidirectional;
+							break;
+						default:
+							throw std::runtime_error("Can only set Up or Bidi to Down");
+					}
+					break;
+				default:
+					throw std::runtime_error("Cannot change transition");
+			}
+		}
+	}
+
+	void SetPassThrough(
+		std::vector<std::vector<GraphLineSectionState>>& layers,
+		int startY,
+		int endY,
+		int x)
+	{
+		for (auto y = startY; y <= endY; y++)
+		{
+			VerifyAddTransition(
+				layers[y][x],
+				GraphLineTransition::Bidirectional);
+		}
+	}
+
+	std::vector<std::vector<GraphLineSectionState>> LayoutEdges(
+		int width, const std::vector<GraphNode>& layer)
+	{
+		// Insert the edges on as few of rows so they do not collide
+		auto activeLines = std::vector<std::vector<GraphLineSegment>>();
+		for (auto x = 0; x < layer.size(); x++)
+		{
+			auto& node = layer[x];
+			for (auto& target : node.Edges)
+			{
+				bool isForward = target > x;
+				GraphLineSegment segment = { x, target, isForward };
+				InsertSegment(segment, activeLines);
+			}
+		}
+
+		// Convert to rendering states
+		auto result = std::vector<std::vector<GraphLineSectionState>>();
+		for (auto y = 0; y < activeLines.size(); y++)
+		{
+			result.push_back(
+				std::vector<GraphLineSectionState>(
+					width,
+					{ false, false, GraphLineTransition::None, }));
+		}
+
+		for (auto y = 0; y < activeLines.size(); y++)
+		{
+			auto& line = activeLines[y];
+			auto& layoutSegments = result[y];
+			for (auto segment : line)
+			{
+				for (auto x = segment.Start; x <= segment.End; x++)
+				{
+					layoutSegments[x].HasLeft |= x > segment.Start;
+					layoutSegments[x].HasRight |= x < segment.End;
+
+					if (segment.Start == segment.End)
+					{
+						VerifyAddTransition(
+							layoutSegments[x],
+							GraphLineTransition::Bidirectional);
+						SetPassThrough(result, y + 1, activeLines.size() - 1, x);
+					}
+					else if (x == segment.Start)
+					{
+						auto transition = segment.IsForward ?
+							GraphLineTransition::Up :
+							GraphLineTransition::Down;
+						VerifyAddTransition(
+							layoutSegments[x],
+							transition);
+						if (segment.IsForward)
+						{
+							SetPassThrough(result, 0, y, x);
+						}
+						else
+						{
+							SetPassThrough(result, y + 1, activeLines.size() - 1, x);
+						}
+					}
+					else if (x == segment.End)
+					{
+						auto transition = segment.IsForward ?
+							GraphLineTransition::Down :
+							GraphLineTransition::Up;
+						VerifyAddTransition(
+							layoutSegments[x],
+							transition);
+						if (segment.IsForward)
+						{
+							SetPassThrough(result, y + 1, activeLines.size() - 1, x);
+						}
+						else
+						{
+							SetPassThrough(result, 0, y, x);
+						}
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
 	export ftxui::Component GraphView(
@@ -228,8 +445,8 @@ namespace Soup::View
 					{
 						auto& node = layer[x];
 
-						auto isSelected = y == 0;
-						auto isFocused = y == 1;
+						auto isSelected = false;
+						auto isFocused = false;
 
 						auto hasInput = y > 0;
 						auto hasOutput = node.Edges.size() > 0;
@@ -249,48 +466,18 @@ namespace Soup::View
 					{
 						// Make sure we have enough space
 						auto width = std::max(layer.size(), _layers[y+1].size());
-						auto lines = std::vector<GraphLineState>(
-							width,
-							{ false, false, GraphLineTransition::None, });
-
-						for (auto x = 0; x < layer.size(); x++)
-						{
-							auto& node = layer[x];
-
-							if (node.Edges.size() > 0)
-							{
-								lines[x].Transition = GraphLineTransition::Up;
-
-								// Update for all outgoing connections
-								for (auto targetColumn : node.Edges)
-								{
-									lines[targetColumn].Transition = GraphLineTransition::Down;
-									if (targetColumn > x)
-									{
-										lines[x].HasRight = true;
-										lines[targetColumn].HasLeft = true;
-									}
-									else if (targetColumn < x)
-									{
-										lines[x].HasLeft = true;
-										lines[targetColumn].HasRight = true;
-									}
-									else
-									{
-										lines[x].Transition = GraphLineTransition::Bidirectional;
-									}
-								}
-							}
-						}
-
-						auto edgeElements = ftxui::Elements();
+						auto lines = LayoutEdges(width, layer);
 
 						for (auto& line : lines)
 						{
-							edgeElements.push_back(DefaultOptionEdgeTransform(line));
-						}
+							auto lineElements = ftxui::Elements();
+							for (auto& lineSection : line)
+							{
+								lineElements.push_back(DefaultOptionEdgeTransform(lineSection));
+							}
 
-						content.push_back(ftxui::hbox(std::move(edgeElements)));
+							content.push_back(ftxui::hbox(std::move(lineElements)));
+						}
 					}
 				}
 
