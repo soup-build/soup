@@ -25,6 +25,12 @@ namespace Soup::View
 		bool ShowAsciiArt;
 
 		Graph PackagesGraph;
+		
+		// 0 show list 1 show graph
+		int ShowPackagesGraphView;
+		int ShowTasksGraphView;
+		int ShowOperationsGraphView;
+
 		std::vector<int> PackagesIdList;
 		std::vector<std::string> PackagesList;
 		std::vector<std::string> PackagesNameList;

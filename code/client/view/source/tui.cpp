@@ -53,10 +53,14 @@ namespace Soup::View
 			// TEST create graph
 			auto positions = LayoutDAG(_state.PackagesGraph);
 
-			//auto packagesMenu = ScrollFrame(
-			//	CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
+			auto packagesList = CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected);
+			auto packagesGraph = GraphView(std::move(positions), _state.PackagesNameList);
 
-			auto packagesMenu = ScrollFrame(GraphView(std::move(positions), _state.PackagesNameList));
+			auto packagesMenu = ScrollFrame(ftxui::Container::Tab({
+					std::move(packagesList),
+					std::move(packagesGraph),
+				},
+				&_state.ShowPackagesGraphView));
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
@@ -67,6 +71,10 @@ namespace Soup::View
 			auto packagesView = ftxui::Container::Horizontal({
 				packagesMenu,
 				packagesPropertiesView,
+			});
+
+			auto statusBar = ftxui::Renderer([] {
+				return ftxui::text("<p> Toggle Package View | <t> Toggle Tasks View | <o> Toggle Operations View");
 			});
 
 			auto appView = ftxui::Renderer(packagesView, [&] {
@@ -80,10 +88,30 @@ namespace Soup::View
 						packagesMenu->Render(),
 						ftxui::separator(),
 						packagesPropertiesView->Render() | ftxui::flex,
-					}) |
-					ftxui::border |
-					ftxui::flex
+					}) | ftxui::border | ftxui::flex,
+					statusBar->Render(),
 				});
+			});
+
+			appView |= ftxui::CatchEvent([&](ftxui::Event event)
+			{
+				if (event == ftxui::Event::p)
+				{
+					_state.ShowPackagesGraphView = !_state.ShowPackagesGraphView;
+					return true;
+				}
+				else if (event == ftxui::Event::t)
+				{
+					_state.ShowTasksGraphView = !_state.ShowTasksGraphView;
+					return true;
+				}
+				else if (event == ftxui::Event::o)
+				{
+					_state.ShowOperationsGraphView = !_state.ShowOperationsGraphView;
+					return true;
+				}
+
+				return false;
 			});
 
 			app.Loop(appView);
@@ -128,6 +156,7 @@ namespace Soup::View
 			_state.PackagesGraph.Vertices = _state.PackagesIdList.size();
 
 			_state.ShowAsciiArt = true;
+			_state.ShowPackagesGraphView = 0;
 			_state.PackagesListSelected = 0;
 			_state.PackageTabSelected = 0;
 		}
