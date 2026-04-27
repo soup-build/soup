@@ -328,7 +328,9 @@ namespace Soup::View
 			for (auto& target : node.Edges)
 			{
 				bool isForward = target > x;
-				GraphLineSegment segment = { x, target, isForward };
+				auto start = isForward ? x : target;
+				auto end = isForward ? target : x;
+				GraphLineSegment segment = { start, end, isForward };
 				InsertSegment(segment, activeLines);
 			}
 		}
