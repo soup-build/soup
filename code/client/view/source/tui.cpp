@@ -20,6 +20,7 @@ import :CustomStyle;
 import :GraphView;
 import :PackageLoadState;
 import :RecipeTreeConverter;
+import :TasksView;
 import :TreeValue;
 import :TreeView;
 import :ValueTreeConverter;
@@ -222,41 +223,8 @@ namespace Soup::View
 				if (packageLoadState.GeneratePhase1Info.has_value())
 				{
 					auto& generatePhase1Info = packageLoadState.GeneratePhase1Info.value();
-					auto findRuntimeOrderResult = generatePhase1Info.find("RuntimeOrder");
-					if (findRuntimeOrderResult == generatePhase1Info.end())
-					{
-						throw std::runtime_error("Generate Info Table missing RuntimeOrder List");
-					}
-
-					auto findTaskInfoTableResult = generatePhase1Info.find("TaskInfo");
-					if (findTaskInfoTableResult == generatePhase1Info.end())
-					{
-						throw std::runtime_error("Generate Info Table missing TaskInfo List");
-					}
-					auto& taskInfoTable = findTaskInfoTableResult->second.AsTable();
-
-					auto tasksComponents = std::vector<std::string>();
-					auto tasksPropertiesComponents = ftxui::Components();
-					for (auto& taskNameValue : findRuntimeOrderResult->second.AsList())
-					{
-						auto taskName = taskNameValue.AsString();
-						tasksComponents.push_back(taskName);
-
-						auto findTaskInfoResult = taskInfoTable.find(taskName);
-						if (findTaskInfoResult == taskInfoTable.end())
-						{
-							throw std::runtime_error(std::format("TaskInfo missing task {}", taskName));
-						}
-
-						auto taskInfo = ValueTreeConverter::ToTreeValue(findTaskInfoResult->second.AsTable());
-						tasksPropertiesComponents.push_back(
-							ScrollFrame(TreeView(std::move(taskInfo))));
-					}
-
 					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessorTask : &packageState.SelectedTask;
-
-					auto tasksList = ScrollFrame(
-						CreateSingleItemMenu(std::move(tasksComponents), selected));
+					auto tasksViewRenderer = LayoutGeneratePhaseTasks(generatePhase1Info, selected);
 
 					if (hasPreprocessor)
 					{
@@ -266,23 +234,6 @@ namespace Soup::View
 					{
 						packageTabList.push_back("Tasks");
 					}
-
-					auto tasksPropertiesView = ftxui::Container::Tab(
-						std::move(tasksPropertiesComponents),
-						selected);
-
-					auto tasksView = ftxui::Container::Horizontal({
-						tasksList,
-						tasksPropertiesView,
-					});
-
-					auto tasksViewRenderer = ftxui::Renderer(tasksView, [tasksList, tasksPropertiesView] {
-						return ftxui::hbox({
-							tasksList->Render(),
-							ftxui::separator(),
-							tasksPropertiesView->Render() | ftxui::xflex,
-						}) | ftxui::yflex;
-					});
 
 					packageTabComponents.push_back(tasksViewRenderer);
 				}
