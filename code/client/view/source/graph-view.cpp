@@ -18,6 +18,8 @@ import ftxui;
 
 namespace Soup::View
 {
+	constexpr size_t maxSize = 13;
+
 	// Runtime state for laying out lines so they do not overlap
 	struct GraphLineSegment
 	{
@@ -133,9 +135,7 @@ namespace Soup::View
 		auto charsetType = ftxui::ROUNDED;
 		auto& charset = simple_border_charset[charsetType];
 
-		auto size = 15;
-
-		auto half = size / 2 + 1;
+		auto half = maxSize / 2 + 1;
 
 		std::string content;
 		if (state.HasLeft)
@@ -421,7 +421,6 @@ namespace Soup::View
 		private:
 			static std::string TruncateCenterLabel(std::string_view label)
 			{
-				constexpr size_t maxSize = 15;
 				if (label.size() > maxSize)
 				{
 					return std::string(label.substr(0, maxSize));
