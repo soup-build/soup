@@ -407,14 +407,14 @@ namespace Soup::View
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
 	export ftxui::Component GraphView(
-		std::vector<std::vector<GraphNode>>&& layers,
+		Graph&& graph,
 		ftxui::ConstStringListRef nodeValues)
 	{
 		class Impl : public ftxui::ComponentBase
 		{
 		public:
-			Impl(std::vector<std::vector<GraphNode>>&& layers, ftxui::ConstStringListRef nodeValues)
-			 : _layers(layers), _nodeValues(nodeValues)
+			Impl(Graph&& graph, ftxui::ConstStringListRef nodeValues)
+			 : _graph(graph), _nodeValues(nodeValues)
 			{
 			}
 
@@ -436,10 +436,13 @@ namespace Soup::View
 
  			ftxui::Element OnRender() override
 			{
+				// TODO: Can this be only on resize?
+				auto layers = LayoutDAG(_graph);
+				
 				auto content = ftxui::Elements();
-				for (auto y = 0; y < _layers.size(); y++)
+				for (auto y = 0; y < layers.size(); y++)
 				{
-					auto& layer = _layers[y];
+					auto& layer = layers[y];
 					auto layerElements = ftxui::Elements();
 
 					for (auto x = 0; x < layer.size(); x++)
@@ -463,10 +466,10 @@ namespace Soup::View
 					content.push_back(ftxui::hbox(std::move(layerElements)));
 
 					// Build the edges if we are not on the last row
-					if (y + 1 != _layers.size())
+					if (y + 1 != layers.size())
 					{
 						// Make sure we have enough space
-						auto width = std::max(layer.size(), _layers[y+1].size());
+						auto width = std::max(layer.size(), layers[y+1].size());
 						auto lines = LayoutEdges(width, layer);
 
 						for (auto& line : lines)
@@ -486,10 +489,10 @@ namespace Soup::View
 			}
 
 		private:
-			std::vector<std::vector<GraphNode>> _layers;
+			Graph _graph;
 			ftxui::ConstStringListRef _nodeValues;
 		};
 
-		return ftxui::Make<Impl>(std::move(layers), std::move(nodeValues));
+		return ftxui::Make<Impl>(std::move(graph), std::move(nodeValues));
 	}
 }

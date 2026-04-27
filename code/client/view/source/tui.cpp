@@ -17,7 +17,6 @@ import ftxui;
 import Soup.Core;
 import :AppState;
 import :CustomStyle;
-import :GraphLayout;
 import :GraphView;
 import :PackageLoadState;
 import :RecipeTreeConverter;
@@ -44,21 +43,20 @@ namespace Soup::View
 			auto fileSystemState = Core::FileSystemState();
 
 			_state = AppState();
-			InitializeState(packageProvider);
+
+			Graph packagesGraph = {};
+			InitializeState(packageProvider, packagesGraph);
 
 			auto app = ftxui::App::Fullscreen();
 
 			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
 
-			// TEST create graph
-			auto positions = LayoutDAG(_state.PackagesGraph);
-
 			auto packagesList = CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected);
-			auto packagesGraph = GraphView(std::move(positions), _state.PackagesNameList);
+			auto packagesGraphView = GraphView(std::move(packagesGraph), _state.PackagesNameList);
 
 			auto packagesMenu = ScrollFrame(ftxui::Container::Tab({
 					std::move(packagesList),
-					std::move(packagesGraph),
+					std::move(packagesGraphView),
 				},
 				&_state.ShowPackagesGraphView));
 
@@ -120,6 +118,7 @@ namespace Soup::View
 	private:
 		int InitializeGraph(
 			Core::PackageProvider& packageProvider,
+			Graph& packagesGraph,
 			int packageId)
 		{
 			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
@@ -138,10 +137,10 @@ namespace Soup::View
 					if (!dependency.IsSubGraph &&
 						std::find(_state.PackagesIdList.begin(), _state.PackagesIdList.end(), dependency.PackageId) == _state.PackagesIdList.end())
 					{
-						auto childIndex = InitializeGraph(packageProvider, dependency.PackageId);
+						auto childIndex = InitializeGraph(packageProvider, packagesGraph, dependency.PackageId);
 
 						// Add an edge for the graph
-						_state.PackagesGraph.Edges.push_back({packageIndex, childIndex});
+						packagesGraph.Edges.push_back({packageIndex, childIndex});
 					}
 				}
 			}
@@ -149,11 +148,11 @@ namespace Soup::View
 			return packageIndex;
 		}
 		
-		void InitializeState(Core::PackageProvider& packageProvider)
+		void InitializeState(Core::PackageProvider& packageProvider, Graph& packagesGraph)
 		{
 			auto& packageGraph = packageProvider.GetRootPackageGraph();
-			InitializeGraph(packageProvider, packageGraph.RootPackageId);
-			_state.PackagesGraph.Vertices = _state.PackagesIdList.size();
+			InitializeGraph(packageProvider, packagesGraph, packageGraph.RootPackageId);
+			packagesGraph.Vertices = _state.PackagesIdList.size();
 
 			_state.ShowAsciiArt = true;
 			_state.ShowPackagesGraphView = 0;

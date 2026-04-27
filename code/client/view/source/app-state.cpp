@@ -24,8 +24,6 @@ namespace Soup::View
 	{
 		bool ShowAsciiArt;
 
-		Graph PackagesGraph;
-		
 		// 0 show list 1 show graph
 		int ShowPackagesGraphView;
 		int ShowTasksGraphView;
