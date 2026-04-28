@@ -53,16 +53,9 @@ namespace Soup::View
 				ScrollFrame(TreeView(std::move(operationInfo))));
 		}
 
-		auto operationsList = CreateSingleItemMenu(operationComponents, selected);
-
 		operationsGraph.Vertices = operationComponents.size();
-		auto operationsGraphView = GraphView(std::move(operationsGraph), operationComponents);
 
-		auto operationsMenu = ScrollFrame(ftxui::Container::Tab({
-				std::move(operationsList),
-				std::move(operationsGraphView),
-			},
-			showGraphView));
+		auto operationsMenu = ScrollFrame(CreateSingleItemMenu(operationComponents, selected));
 
 		auto operationsPropertiesView = ftxui::Container::Tab(
 			std::move(operationPropertiesComponents),
@@ -80,7 +73,15 @@ namespace Soup::View
 				operationsPropertiesView->Render() | ftxui::xflex,
 			}) | ftxui::yflex;
 		});
-		
-		return operationsViewRenderer;
+
+		auto operationsGraphView = ScrollFrame(GraphView(std::move(operationsGraph), operationComponents));
+
+		auto operationsToggle = ftxui::Container::Tab({
+				std::move(operationsViewRenderer),
+				std::move(operationsGraphView),
+			},
+			showGraphView);
+
+		return operationsToggle;
 	}
 }

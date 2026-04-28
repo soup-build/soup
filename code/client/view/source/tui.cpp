@@ -54,7 +54,6 @@ namespace Soup::View
 			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
 
 			auto packagesMenu = ScrollFrame(CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
-			auto packagesGraphView = ScrollFrame(GraphView(std::move(packagesGraph), _state.PackagesNameList));
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
@@ -74,6 +73,8 @@ namespace Soup::View
 					packagesPropertiesView->Render() | ftxui::flex,
 				});
 			});
+
+			auto packagesGraphView = ScrollFrame(GraphView(std::move(packagesGraph), _state.PackagesNameList));
 
 			auto packagesToggle = ftxui::Container::Tab({
 					std::move(packagesViewRenderer),

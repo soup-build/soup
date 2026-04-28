@@ -58,16 +58,7 @@ namespace Soup::View
 				ScrollFrame(TreeView(std::move(taskInfo))));
 		}
 
-		auto tasksList = CreateSingleItemMenu(tasksComponents, selected);
-
-		tasksGraph.Vertices = tasksComponents.size();
-		auto tasksGraphView = GraphView(std::move(tasksGraph), tasksComponents);
-
-		auto tasksMenu = ScrollFrame(ftxui::Container::Tab({
-				std::move(tasksList),
-				std::move(tasksGraphView),
-			},
-			showGraphView));
+		auto tasksMenu = ScrollFrame(CreateSingleItemMenu(tasksComponents, selected));
 
 		auto tasksPropertiesView = ftxui::Container::Tab(
 			std::move(tasksPropertiesComponents),
@@ -86,6 +77,15 @@ namespace Soup::View
 			}) | ftxui::yflex;
 		});
 
-		return tasksViewRenderer;
+		tasksGraph.Vertices = tasksComponents.size();
+		auto tasksGraphView = ScrollFrame(GraphView(std::move(tasksGraph), tasksComponents));
+
+		auto tasksToggle = ftxui::Container::Tab({
+				std::move(tasksViewRenderer),
+				std::move(tasksGraphView),
+			},
+			showGraphView);
+
+		return tasksToggle;
 	}
 }
