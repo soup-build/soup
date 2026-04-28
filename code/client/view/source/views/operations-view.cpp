@@ -6,6 +6,7 @@ module;
 
 #include <format>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 
 export module Soup.View:OperationsView;
@@ -21,12 +22,28 @@ namespace Soup::View
 {
 	ftxui::Component LayoutOperations(const Core::OperationGraph& graph, int* selected, int* showGraphView)
 	{
+		// Build up the id lookups
+		auto operationLookup = std::unordered_map<int, int>();
 		auto operationComponents = std::vector<std::string>();
+		for (auto& [operationId, operation] : graph.GetOperations())
+		{
+			operationLookup.emplace(operationId, operationComponents.size());
+			operationComponents.push_back(operation.Title);
+		}
+
 		auto operationPropertiesComponents = ftxui::Components();
 		Graph operationsGraph = {};
 		for (auto& [operationId, operation] : graph.GetOperations())
 		{
-			operationComponents.push_back(operation.Title);
+			auto operationIndex = operationLookup[operationId];
+			operationLookup.emplace(operationId, operationComponents.size());
+
+			// Add edges for children
+			for (auto childId : operation.Children)
+			{
+				auto childIndex = operationLookup[childId];
+				operationsGraph.Edges.push_back({ operationIndex, childIndex });
+			}
 
 			auto operationInfo = TreeValueTable();
 

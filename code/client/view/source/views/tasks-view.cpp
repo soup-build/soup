@@ -6,6 +6,7 @@ module;
 
 #include <format>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 
 export module Soup.View:TasksView;
@@ -37,14 +38,16 @@ namespace Soup::View
 		}
 		auto& taskInfoTable = findTaskInfoTableResult->second.AsTable();
 
+		// Build up the id lookups
+		auto taskLookup = std::unordered_map<std::string, int>();
 		auto tasksComponents = std::vector<std::string>();
 		auto tasksPropertiesComponents = ftxui::Components();
-		Graph tasksGraph = {};
 		for (auto& taskNameValue : findRuntimeOrderResult->second.AsList())
 		{
 			auto index = tasksComponents.size();
 
 			auto taskName = taskNameValue.AsString();
+			taskLookup.emplace(taskName, index);
 			tasksComponents.push_back(taskName);
 
 			auto findTaskInfoResult = taskInfoTable.find(taskName);
@@ -56,6 +59,29 @@ namespace Soup::View
 			auto taskInfo = ValueTreeConverter::ToTreeValue(findTaskInfoResult->second.AsTable());
 			tasksPropertiesComponents.push_back(
 				ScrollFrame(TreeView(std::move(taskInfo))));
+		}
+
+		// Build up the children edges
+		Graph tasksGraph = {};
+		for (auto& [taskName, taskInfoValue] : taskInfoTable)
+		{
+			auto& taskInfo = taskInfoValue.AsTable();
+			auto taskIndex = taskLookup[taskName];
+
+			// Build up the children set
+			auto findRunAfterClosureResult = taskInfo.find("RunAfterClosureList");
+			if (findRunAfterClosureResult == taskInfo.end())
+			{
+				throw std::runtime_error("TaskInfo missing RunAfterClosureList");
+			}
+
+			for (auto& parentValue : findRunAfterClosureResult->second.AsList())
+			{
+				auto& parentName = parentValue.AsString();
+				auto parentIndex = taskLookup[parentName];
+
+				tasksGraph.Edges.push_back({ parentIndex, taskIndex });
+			}
 		}
 
 		auto tasksMenu = ScrollFrame(CreateSingleItemMenu(tasksComponents, selected));
