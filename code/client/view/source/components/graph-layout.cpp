@@ -44,7 +44,7 @@ namespace Soup::View
 			layers.resize(maxY + 1);
 
 		vertexLookup[vertex].Layer = maxY;
-		vertexLookup[vertex].Column = layers[maxY].size();
+		vertexLookup[vertex].Column = static_cast<int>(layers[maxY].size());
 
 		layers[maxY].push_back({ vertex, std::vector<int>() });
 	}
@@ -60,7 +60,7 @@ namespace Soup::View
 		auto layers = std::vector<std::vector<GraphNode>>();
 
 		// Initialize all layers with maximum distance required to reach each edge
-		for (size_t vertex = 0; vertex < graph.Vertices; vertex++)
+		for (int vertex = 0; vertex < graph.Vertices; vertex++)
 		{
 			RecursiveInitialLayers(graph, vertexLookup, layers, vertex);
 		}

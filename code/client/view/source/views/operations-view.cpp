@@ -6,6 +6,7 @@ module;
 
 #include <format>
 #include <stdexcept>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -27,7 +28,7 @@ namespace Soup::View
 		auto operationComponents = std::vector<std::string>();
 		for (auto& [operationId, operation] : graph.GetOperations())
 		{
-			operationLookup.emplace(operationId, operationComponents.size());
+			operationLookup.emplace(operationId, static_cast<int>(operationComponents.size()));
 			operationComponents.push_back(operation.Title);
 		}
 
@@ -36,7 +37,7 @@ namespace Soup::View
 		for (auto& [operationId, operation] : graph.GetOperations())
 		{
 			auto operationIndex = operationLookup[operationId];
-			operationLookup.emplace(operationId, operationComponents.size());
+			operationLookup.emplace(operationId, static_cast<int>(operationComponents.size()));
 
 			// Add edges for children
 			for (auto childId : operation.Children)
@@ -70,7 +71,7 @@ namespace Soup::View
 				ScrollFrame(TreeView(std::move(operationInfo))));
 		}
 
-		operationsGraph.Vertices = operationComponents.size();
+		operationsGraph.Vertices = static_cast<int>(operationComponents.size());
 
 		auto operationsMenu = ScrollFrame(CreateSingleItemMenu(operationComponents, selected));
 

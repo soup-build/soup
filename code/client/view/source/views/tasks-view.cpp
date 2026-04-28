@@ -44,7 +44,7 @@ namespace Soup::View
 		auto tasksPropertiesComponents = ftxui::Components();
 		for (auto& taskNameValue : findRuntimeOrderResult->second.AsList())
 		{
-			auto index = tasksComponents.size();
+			auto index = static_cast<int>(tasksComponents.size());
 
 			auto taskName = taskNameValue.AsString();
 			taskLookup.emplace(taskName, index);
@@ -103,7 +103,7 @@ namespace Soup::View
 			}) | ftxui::yflex;
 		});
 
-		tasksGraph.Vertices = tasksComponents.size();
+		tasksGraph.Vertices = static_cast<int>(tasksComponents.size());
 		auto tasksGraphView = ScrollFrame(GraphView(std::move(tasksGraph), tasksComponents));
 
 		auto tasksToggle = ftxui::Container::Tab({

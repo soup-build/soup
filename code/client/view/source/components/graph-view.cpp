@@ -18,7 +18,7 @@ import ftxui;
 
 namespace Soup::View
 {
-	constexpr size_t maxSize = 13;
+	constexpr int maxSize = 13;
 
 	// Runtime state for laying out lines so they do not overlap
 	struct GraphLineSegment
@@ -65,14 +65,14 @@ namespace Soup::View
 		Charset{" ", " ", " ", " ", " ", " "},  // EMPTY
 	};
 
-	std::string repeat(const std::string& input, int n)
+	std::string repeat(const std::string& input, size_t n)
 	{
 		if (n <= 0)
 			return "";
 		std::string result;
 		// Pre-allocate memory for performance
 		result.reserve(input.length() * n);
-		for (int i = 0; i < n; ++i)
+		for (auto i = 0; i < n; ++i)
 		{
 			result += input;
 		}
@@ -82,14 +82,14 @@ namespace Soup::View
 
 	ftxui::Element DefaultOptionTransform(const ftxui::EntryState& state, bool hasInput, bool hasOutput)
 	{
-		auto charsetType = state.active ? ftxui::HEAVY : ftxui::ROUNDED;
+		auto charsetType = state.active ? ftxui::BorderStyle::HEAVY : ftxui::ROUNDED;
 		auto& charset = simple_border_charset[charsetType];
 
 		std::string topBorder;
 		if (hasInput)
 		{
-			auto prefix = state.label.size() / 2;
-			auto postfix = state.label.size() - 1 - prefix;
+			auto prefix = static_cast<int>(state.label.size() / 2);
+			auto postfix = static_cast<int>(state.label.size() - 1 - prefix);
 			topBorder = charset.TopLeft + repeat(charset.Horizontal, prefix) + "┴" + repeat(charset.Horizontal, postfix) + charset.TopRight;
 		}
 		else
@@ -361,7 +361,7 @@ namespace Soup::View
 						VerifyAddTransition(
 							layoutSegments[x],
 							GraphLineTransition::Bidirectional);
-						SetPassThrough(result, y + 1, activeLines.size() - 1, x);
+						SetPassThrough(result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
 					}
 					else if (x == segment.Start)
 					{
@@ -377,7 +377,7 @@ namespace Soup::View
 						}
 						else
 						{
-							SetPassThrough(result, y + 1, activeLines.size() - 1, x);
+							SetPassThrough(result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
 						}
 					}
 					else if (x == segment.End)
@@ -390,7 +390,7 @@ namespace Soup::View
 							transition);
 						if (segment.IsForward)
 						{
-							SetPassThrough(result, y + 1, activeLines.size() - 1, x);
+							SetPassThrough(result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
 						}
 						else
 						{
@@ -469,7 +469,7 @@ namespace Soup::View
 					if (y + 1 != layers.size())
 					{
 						// Make sure we have enough space
-						auto width = std::max(layer.size(), layers[y+1].size());
+						auto width = static_cast<int>(std::max(layer.size(), layers[y+1].size()));
 						auto lines = LayoutEdges(width, layer);
 
 						for (auto& line : lines)

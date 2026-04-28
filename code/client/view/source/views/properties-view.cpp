@@ -5,6 +5,7 @@
 module;
 
 #include <format>
+#include <string>
 #include <stdexcept>
 #include <vector>
 

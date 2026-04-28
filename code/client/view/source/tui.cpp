@@ -125,7 +125,7 @@ namespace Soup::View
 		{
 			auto& packageInfo = packageProvider.GetPackageInfo(packageId);
 
-			int packageIndex = _state.PackagesIdList.size();
+			auto packageIndex = static_cast<int>(_state.PackagesIdList.size());
 
 			_state.PackagesList.push_back(packageInfo.Name.ToString());
 			_state.PackagesNameList.push_back(packageInfo.Name.GetName());
@@ -154,7 +154,7 @@ namespace Soup::View
 		{
 			auto& packageGraph = packageProvider.GetRootPackageGraph();
 			InitializeGraph(packageProvider, packagesGraph, packageGraph.RootPackageId);
-			packagesGraph.Vertices = _state.PackagesIdList.size();
+			packagesGraph.Vertices = static_cast<int>(_state.PackagesIdList.size());
 
 			_state.ShowAsciiArt = true;
 			_state.ShowPackagesGraphView = 0;
