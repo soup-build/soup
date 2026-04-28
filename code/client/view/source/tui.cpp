@@ -20,11 +20,8 @@ import :CustomStyle;
 import :GraphView;
 import :OperationsView;
 import :PackageLoadState;
-import :RecipeTreeConverter;
+import :PropertiesView;
 import :TasksView;
-import :TreeValue;
-import :TreeView;
-import :ValueTreeConverter;
 
 namespace Soup::View
 {
@@ -97,7 +94,7 @@ namespace Soup::View
 						packagesToggle->Render() | ftxui::yflex,
 						ftxui::separator(),
 						statusBar->Render(),
-					}) | ftxui::border | ftxui::yflex_grow,
+					}) | ftxui::border | ftxui::yflex,
 				});
 			});
 
@@ -166,23 +163,6 @@ namespace Soup::View
 			_state.PackageTabSelected = 0;
 		}
 
-		TreeValueTable ToTreeValue(const Core::PackageChildrenMap& children)
-		{
-			auto dependencyProperties = TreeValueTable();
-			for (auto& [dependencyType, dependencies] : children)
-			{
-				auto dependencyItems = TreeValueList();
-				for (auto& dependency : dependencies)
-				{
-					dependencyItems.push_back(TreeValue(dependency.OriginalReference.ToString()));
-				}
-
-				dependencyProperties.Insert(dependencyType, TreeValue(std::move(dependencyItems)));
-			}
-
-			return dependencyProperties;
-		}
-
 		ftxui::Components CreateAllPackageTabs(
 			Core::FileSystemState& fileSystemState,
 			Core::PackageProvider& packageProvider)
@@ -201,19 +181,7 @@ namespace Soup::View
 				auto packageLoadState = LoadPackage(
 					fileSystemState, packageProvider, rootPackageGraphId, packageId);
 
-				auto properties = TreeValueTable();
-
-				properties.Insert("Id", TreeValue(std::to_string(packageInfo.Id)));
-				properties.Insert("Name", TreeValue(packageInfo.Name.ToString()));
-				properties.Insert("Root", TreeValue(packageInfo.PackageRoot.ToString()));
-
-				auto dependencyProperties = ToTreeValue(packageInfo.Dependencies);
-				properties.Insert("Dependencies", TreeValue(std::move(dependencyProperties)));
-
-				auto recipeProperties = RecipeTreeConverter::ToTreeValue(packageInfo.Recipe->GetTable());
-				properties.Insert("Recipe", TreeValue(std::move(recipeProperties)));
-
-				auto propertiesList = ScrollFrame(TreeView(std::move(properties)));
+				auto propertiesList = LayoutProperties(packageInfo);
 
 				auto packageTabList = std::vector<std::string>({
 					"Properties",
@@ -296,10 +264,10 @@ namespace Soup::View
 
 				auto renderer = ftxui::Renderer(container, [tab_toggle, tab_container] {
 					return ftxui::vbox({
-							tab_toggle->Render(),
-							ftxui::separator(),
-							tab_container->Render(),
-						});
+						tab_toggle->Render(),
+						ftxui::separator(),
+						tab_container->Render(),
+					});
 				});
 
 				tabComponents.push_back(renderer);
