@@ -6,7 +6,7 @@ jobs:
   windows-build:
     strategy:
       matrix:
-        os: [ windows-2022, ubuntu-24.04 ]
+        os: [ windows-2025-vs2026, ubuntu-24.04 ]
         config: [ Debug, Release ]
     name: PR Build ${{matrix.os}} ${{matrix.config}}
     runs-on: ${{ matrix.os }}
@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 10.0.x
     - name: Install Clang 22
-      if: matrix.os != 'windows-2022'
+      if: matrix.os != 'windows-2025-vs2026'
       run: |
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
@@ -42,10 +42,10 @@ jobs:
     - name: Soup Restore Client
       run: soup restore ./soup/code/client/cli/ -v:d
     - name: Soup Build Client
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/code/client/cli/ -p 1 -flavor ${{matrix.config}}
     - name: Soup Build Client
-      if: matrix.os != 'windows-2022'
+      if: matrix.os != 'windows-2025-vs2026'
       run: soup build ./soup/code/client/cli/ -flavor ${{matrix.config}}
     - name: Soup Run Version
       run: soup run ./soup/code/client/cli/ -flavor ${{matrix.config}} -args version
@@ -94,7 +94,7 @@ jobs:
     - name: Soup Build C StaticLibrary
       run: soup build ./soup/samples/c/static-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C WindowsApplication
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/samples/c/windows-application/ -flavor ${{matrix.config}}
 
     - name: Soup Restore C# BuildExtension
@@ -113,7 +113,7 @@ jobs:
     - name: Soup Build C++ ConsoleApplication
       run: soup build ./soup/samples/cpp/console-application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DirectX
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/samples/cpp/directx/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DynamicLibrary
       run: soup build ./soup/samples/cpp/dynamic-library/application/ -flavor ${{matrix.config}}
@@ -134,7 +134,7 @@ jobs:
     - name: Soup Build C++ StaticLibrary
       run: soup build ./soup/samples/cpp/static-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ WindowsApplication
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/samples/cpp/windows-application/ -flavor ${{matrix.config}}
 
     - name: Soup Build Interop C++ to C
