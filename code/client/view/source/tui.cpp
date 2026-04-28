@@ -74,7 +74,7 @@ namespace Soup::View
 			});
 
 			auto statusBar = ftxui::Renderer([] {
-				return ftxui::text("<p> Toggle Package View | <t> Toggle Tasks View | <o> Toggle Operations View");
+				return ftxui::text("<v> Toggle Graph View | <c> Toggle Child Graph View");
 			});
 
 			auto appView = ftxui::Renderer(packagesView, [&] {
@@ -95,19 +95,14 @@ namespace Soup::View
 
 			appView |= ftxui::CatchEvent([&](ftxui::Event event)
 			{
-				if (event == ftxui::Event::p)
+				if (event == ftxui::Event::v)
 				{
 					_state.ShowPackagesGraphView = !_state.ShowPackagesGraphView;
 					return true;
 				}
-				else if (event == ftxui::Event::t)
+				else if (event == ftxui::Event::c)
 				{
-					_state.ShowTasksGraphView = !_state.ShowTasksGraphView;
-					return true;
-				}
-				else if (event == ftxui::Event::o)
-				{
-					_state.ShowOperationsGraphView = !_state.ShowOperationsGraphView;
+					_state.ShowChildGraphView = !_state.ShowChildGraphView;
 					return true;
 				}
 
@@ -158,6 +153,7 @@ namespace Soup::View
 
 			_state.ShowAsciiArt = true;
 			_state.ShowPackagesGraphView = 0;
+			_state.ShowChildGraphView = 0;
 			_state.PackagesListSelected = 0;
 			_state.PackageTabSelected = 0;
 		}
@@ -226,7 +222,7 @@ namespace Soup::View
 					auto& generatePhase1Info = packageLoadState.GeneratePhase1Info.value();
 					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessorTask : &packageState.SelectedTask;
 
-					auto tasksViewRenderer = LayoutGeneratePhaseTasks(generatePhase1Info, selected);
+					auto tasksViewRenderer = LayoutGeneratePhaseTasks(generatePhase1Info, selected, &_state.ShowChildGraphView);
 
 					if (hasPreprocessor)
 					{
@@ -244,7 +240,7 @@ namespace Soup::View
 				{
 					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessor : &packageState.SelectedOperation;
 
-					auto operationsView = LayoutOperations(packageLoadState.GeneratePhase1Result.value().GetGraph(), selected);
+					auto operationsView = LayoutOperations(packageLoadState.GeneratePhase1Result.value().GetGraph(), selected, &_state.ShowChildGraphView);
 
 					if (hasPreprocessor)
 					{
@@ -263,7 +259,7 @@ namespace Soup::View
 					auto& generatePhase2Info = packageLoadState.GeneratePhase2Info.value();
 					auto selected = &packageState.SelectedTask;
 
-					auto tasksViewRenderer = LayoutGeneratePhaseTasks(generatePhase2Info, selected);
+					auto tasksViewRenderer = LayoutGeneratePhaseTasks(generatePhase2Info, selected, &_state.ShowChildGraphView);
 
 					packageTabList.push_back("Tasks");
 					packageTabComponents.push_back(tasksViewRenderer);
@@ -273,10 +269,9 @@ namespace Soup::View
 				{
 					auto selected = &packageState.SelectedOperation;
 
-					auto operationsView = LayoutOperations(packageLoadState.GeneratePhase2Result.value(), selected);
+					auto operationsView = LayoutOperations(packageLoadState.GeneratePhase2Result.value(), selected, &_state.ShowChildGraphView);
 
 					packageTabList.push_back("Operations");
-
 					packageTabComponents.push_back(operationsView);
 				}
 

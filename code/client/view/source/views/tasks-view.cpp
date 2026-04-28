@@ -12,12 +12,17 @@ export module Soup.View:TasksView;
 
 import ftxui;
 import Soup.Core;
+import :GraphValue;
+import :GraphView;
 import :TreeView;
 import :ValueTreeConverter;
 
 namespace Soup::View
 {
-	ftxui::Component LayoutGeneratePhaseTasks(const Core::ValueTable& generatePhase1Info, int* selected)
+	ftxui::Component LayoutGeneratePhaseTasks(
+		const Core::ValueTable& generatePhase1Info,
+		int* selected,
+		int* showGraphView)
 	{
 		auto findRuntimeOrderResult = generatePhase1Info.find("RuntimeOrder");
 		if (findRuntimeOrderResult == generatePhase1Info.end())
@@ -34,8 +39,11 @@ namespace Soup::View
 
 		auto tasksComponents = std::vector<std::string>();
 		auto tasksPropertiesComponents = ftxui::Components();
+		Graph tasksGraph = {};
 		for (auto& taskNameValue : findRuntimeOrderResult->second.AsList())
 		{
+			auto index = tasksComponents.size();
+
 			auto taskName = taskNameValue.AsString();
 			tasksComponents.push_back(taskName);
 
@@ -50,21 +58,29 @@ namespace Soup::View
 				ScrollFrame(TreeView(std::move(taskInfo))));
 		}
 
-		auto tasksList = ScrollFrame(
-			CreateSingleItemMenu(std::move(tasksComponents), selected));
+		auto tasksList = CreateSingleItemMenu(tasksComponents, selected);
+
+		tasksGraph.Vertices = tasksComponents.size();
+		auto tasksGraphView = GraphView(std::move(tasksGraph), tasksComponents);
+
+		auto tasksMenu = ScrollFrame(ftxui::Container::Tab({
+				std::move(tasksList),
+				std::move(tasksGraphView),
+			},
+			showGraphView));
 
 		auto tasksPropertiesView = ftxui::Container::Tab(
 			std::move(tasksPropertiesComponents),
 			selected);
 
 		auto tasksView = ftxui::Container::Horizontal({
-			tasksList,
+			tasksMenu,
 			tasksPropertiesView,
 		});
 
-		auto tasksViewRenderer = ftxui::Renderer(tasksView, [tasksList, tasksPropertiesView] {
+		auto tasksViewRenderer = ftxui::Renderer(tasksView, [tasksMenu, tasksPropertiesView] {
 			return ftxui::hbox({
-				tasksList->Render(),
+				tasksMenu->Render(),
 				ftxui::separator(),
 				tasksPropertiesView->Render() | ftxui::xflex,
 			}) | ftxui::yflex;

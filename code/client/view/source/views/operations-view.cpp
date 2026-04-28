@@ -12,15 +12,18 @@ export module Soup.View:OperationsView;
 
 import ftxui;
 import Soup.Core;
+import :GraphValue;
+import :GraphView;
 import :TreeView;
 import :ValueTreeConverter;
 
 namespace Soup::View
 {
-	ftxui::Component LayoutOperations(const Core::OperationGraph& graph, int* selected)
+	ftxui::Component LayoutOperations(const Core::OperationGraph& graph, int* selected, int* showGraphView)
 	{
 		auto operationComponents = std::vector<std::string>();
 		auto operationPropertiesComponents = ftxui::Components();
+		Graph operationsGraph = {};
 		for (auto& [operationId, operation] : graph.GetOperations())
 		{
 			operationComponents.push_back(operation.Title);
@@ -50,21 +53,29 @@ namespace Soup::View
 				ScrollFrame(TreeView(std::move(operationInfo))));
 		}
 
-		auto operationsList = ScrollFrame(
-			CreateSingleItemMenu(std::move(operationComponents), selected));
+		auto operationsList = CreateSingleItemMenu(operationComponents, selected);
+
+		operationsGraph.Vertices = operationComponents.size();
+		auto operationsGraphView = GraphView(std::move(operationsGraph), operationComponents);
+
+		auto operationsMenu = ScrollFrame(ftxui::Container::Tab({
+				std::move(operationsList),
+				std::move(operationsGraphView),
+			},
+			showGraphView));
 
 		auto operationsPropertiesView = ftxui::Container::Tab(
 			std::move(operationPropertiesComponents),
 			selected);
 
 		auto operationsView = ftxui::Container::Horizontal({
-			operationsList,
+			operationsMenu,
 			operationsPropertiesView,
 		});
 
-		auto operationsViewRenderer = ftxui::Renderer(operationsView, [operationsList, operationsPropertiesView] {
+		auto operationsViewRenderer = ftxui::Renderer(operationsView, [operationsMenu, operationsPropertiesView] {
 			return ftxui::hbox({
-				operationsList->Render(),
+				operationsMenu->Render(),
 				ftxui::separator(),
 				operationsPropertiesView->Render() | ftxui::xflex,
 			}) | ftxui::yflex;

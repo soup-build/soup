@@ -26,8 +26,7 @@ namespace Soup::View
 
 		// 0 show list 1 show graph
 		int ShowPackagesGraphView;
-		int ShowTasksGraphView;
-		int ShowOperationsGraphView;
+		int ShowChildGraphView;
 
 		std::vector<int> PackagesIdList;
 		std::vector<std::string> PackagesList;
