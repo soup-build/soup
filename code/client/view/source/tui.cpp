@@ -53,14 +53,8 @@ namespace Soup::View
 
 			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
 
-			auto packagesList = CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected);
-			auto packagesGraphView = GraphView(std::move(packagesGraph), _state.PackagesNameList);
-
-			auto packagesMenu = ScrollFrame(ftxui::Container::Tab({
-					std::move(packagesList),
-					std::move(packagesGraphView),
-				},
-				&_state.ShowPackagesGraphView));
+			auto packagesMenu = ScrollFrame(CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
+			auto packagesGraphView = ScrollFrame(GraphView(std::move(packagesGraph), _state.PackagesNameList));
 
 			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
@@ -73,6 +67,20 @@ namespace Soup::View
 				packagesPropertiesView,
 			});
 
+			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
+				return ftxui::hbox({
+					packagesMenu->Render(),
+					ftxui::separator(),
+					packagesPropertiesView->Render() | ftxui::flex,
+				});
+			});
+
+			auto packagesToggle = ftxui::Container::Tab({
+					std::move(packagesViewRenderer),
+					std::move(packagesGraphView),
+				},
+				&_state.ShowPackagesGraphView);
+
 			auto statusBar = ftxui::Renderer([] {
 				return ftxui::text("<v> Toggle Graph View | <c> Toggle Child Graph View");
 			});
@@ -84,12 +92,11 @@ namespace Soup::View
 
 				return ftxui::vbox({
 					asciiArt->Render(),
-					ftxui::hbox({
-						packagesMenu->Render(),
+					ftxui::vbox({
+						packagesToggle->Render() | ftxui::yflex,
 						ftxui::separator(),
-						packagesPropertiesView->Render() | ftxui::flex,
-					}) | ftxui::border | ftxui::flex,
-					statusBar->Render(),
+						statusBar->Render(),
+					}) | ftxui::border | ftxui::yflex_grow,
 				});
 			});
 
