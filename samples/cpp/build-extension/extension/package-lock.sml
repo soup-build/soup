@@ -2,7 +2,7 @@ Version: 6
 Closure: {
 	Wren: {
 		'samples-cpp-build-extension-extension': { Version: './', Build: '0', Tool: '0' }
-		'soup|build-utils': { Version: 0.9.2, Digest: 'sha256:5350668c3d273aeeb1718ac1520ad24c24b0c8640785286bbca788e7efa7da3c', Build: '0', Tool: '0' }
+		'soup|build-utils': { Version: 0.9.3, Digest: 'sha256:5350668c3d273aeeb1718ac1520ad24c24b0c8640785286bbca788e7efa7da3c', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

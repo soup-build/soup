@@ -84,8 +84,8 @@ Builds: {
 	'4': {
 		Wren: {
 			'soup|c': {
-				Version: 0.9.2
-				Digest: 'sha256:0265ede1ffee044b0e008e798b8a91da003ab59bf9a601df595229c870abc167'
+				Version: 0.9.3
+				Digest: 'sha256:023fc6b0a29e7e18b10cef32b35774c8d5b5c53a8fd58fda1879f36c73cfc0f1'
 				Artifacts: {
 					Windows: 'sha256:e3946263dc70369ffa82678beff0747366fc64ff2bafad4b432f0a3ce78e39dc'
 				}
