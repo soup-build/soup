@@ -28,7 +28,7 @@ Builds: {
 				}
 			}
 			'Soup|CSharp.Nuget': {
-				Version: 0.9.2
+				Version: 0.9.3
 				Digest: 'sha256:36014a673aeb99acc53f46b25011f5859e36631d6a195ca887722093cd047c26'
 			}
 		}

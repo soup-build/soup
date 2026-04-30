@@ -9,11 +9,11 @@ Builds: {
 		Wren: {
 			'samples-cpp-generate-extension': { Version: '../extension/' }
 			'soup|cpp': {
-				Version: 0.19.3
-				Digest: 'sha256:bfd69b0e925fb5b64d9196773dba03cbdac25c798650d044850afbc17e07027a'
+				Version: 0.19.4
+				Digest: 'sha256:24cf2167fb91e85589d242aadfd04d4f81b6388248d959557dc10642c08a0cee'
 				Artifacts: {
-					Linux: 'sha256:af3aee7288b994644274b390df52a6613ef5df15153b434d814afc8ca1201463'
-					Windows: 'sha256:a2c71a322ec5f01b500cd2581cb11345cbf4217a04977f35167828088597c6d3'
+					Linux: 'sha256:b9d96a131b2b521fee79f8eec8af5b49c5361a3a6b222e49f9daa6d0851ae505'
+					Windows: 'sha256:20bb37ee5ec324df254d039ba34b713d54f046e8c2f89e5e1c96ef7b773ad8b9'
 				}
 			}
 		}

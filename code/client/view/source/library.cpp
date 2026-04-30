@@ -6,6 +6,7 @@ export module Soup.View;
 
 import :AppState;
 import :CustomStyle;
+import :GraphLayout;
 import :PackageLoadState;
 import :RecipeTreeConverter;
 import :TreeValue;

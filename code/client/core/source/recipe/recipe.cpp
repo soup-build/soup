@@ -44,8 +44,8 @@ namespace Soup::Core
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Recipe"/> class.
 		/// </summary>
-		Recipe(RecipeTable table) :
-			_table(std::move(table))
+		Recipe(RecipeTable&& table) :
+			_table(table)
 		{
 		}
 

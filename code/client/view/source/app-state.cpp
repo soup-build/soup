@@ -8,6 +8,7 @@ module;
 #include <vector>
 
 export module Soup.View:AppState;
+import :GraphLayout;
 
 namespace Soup::View
 {
@@ -23,8 +24,13 @@ namespace Soup::View
 	{
 		bool ShowAsciiArt;
 
+		// 0 show list 1 show graph
+		int ShowPackagesGraphView;
+		int ShowChildGraphView;
+
 		std::vector<int> PackagesIdList;
 		std::vector<std::string> PackagesList;
+		std::vector<std::string> PackagesNameList;
 		std::vector<PackageState> PackagesState;
 		int PackagesListSelected;
 
