@@ -882,19 +882,19 @@ echo "MakeDir [./script/]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "mkdir" -p ./script/)
 echo "MakeDir [./script/main/]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "mkdir" -p ./script/main/)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/build-operation.wren] -> [./script/main/build-operation.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/build-operation.wren] -> [./script/main/build-operation.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/build-operation.wren ./script/main/build-operation.wren)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/list-extensions.wren] -> [./script/main/list-extensions.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/list-extensions.wren] -> [./script/main/list-extensions.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/list-extensions.wren ./script/main/list-extensions.wren)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/map-extensions.wren] -> [./script/main/map-extensions.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/map-extensions.wren] -> [./script/main/map-extensions.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/map-extensions.wren ./script/main/map-extensions.wren)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/path.wren] -> [./script/main/path.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/path.wren] -> [./script/main/path.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/path.wren ./script/main/path.wren)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/semantic-version.wren] -> [./script/main/semantic-version.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/semantic-version.wren] -> [./script/main/semantic-version.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/semantic-version.wren ./script/main/semantic-version.wren)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/set.wren] -> [./script/main/set.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/set.wren] -> [./script/main/set.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/set.wren ./script/main/set.wren)
-echo "Copy [/(PACKAGE_Soup|Build.Utils)/shared-operations.wren] -> [./script/main/shared-operations.wren]"
+echo "Copy [/(PACKAGE_soup|build-utils)/shared-operations.wren] -> [./script/main/shared-operations.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/shared-operations.wren ./script/main/shared-operations.wren)
 echo "WriteFile [./script/bundles.sml]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "echo" Bundles: {\n}\n > ./script/bundles.sml)
@@ -918,22 +918,22 @@ echo "Copy [/(PACKAGE_Soup|Wren)/tasks/resolve-dependencies-task.wren] -> [./scr
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/tasks/resolve-dependencies-task.wren ./script/main/tasks/resolve-dependencies-task.wren)
 echo "MakeDir [./script/Soup/Build.Utils/]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "mkdir" -p ./script/Soup/Build.Utils/)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/build-operation.wren] -> [./script/Soup/Build.Utils/build-operation.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/build-operation.wren] -> [./script/Soup/Build.Utils/build-operation.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/build-operation.wren ./script/Soup/Build.Utils/build-operation.wren)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/list-extensions.wren] -> [./script/Soup/Build.Utils/list-extensions.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/list-extensions.wren] -> [./script/Soup/Build.Utils/list-extensions.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/list-extensions.wren ./script/Soup/Build.Utils/list-extensions.wren)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/map-extensions.wren] -> [./script/Soup/Build.Utils/map-extensions.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/map-extensions.wren] -> [./script/Soup/Build.Utils/map-extensions.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/map-extensions.wren ./script/Soup/Build.Utils/map-extensions.wren)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/path.wren] -> [./script/Soup/Build.Utils/path.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/path.wren] -> [./script/Soup/Build.Utils/path.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/path.wren ./script/Soup/Build.Utils/path.wren)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/semantic-version.wren] -> [./script/Soup/Build.Utils/semantic-version.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/semantic-version.wren] -> [./script/Soup/Build.Utils/semantic-version.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/semantic-version.wren ./script/Soup/Build.Utils/semantic-version.wren)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/set.wren] -> [./script/Soup/Build.Utils/set.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/set.wren] -> [./script/Soup/Build.Utils/set.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/set.wren ./script/Soup/Build.Utils/set.wren)
-echo "Copy [/(TARGET_Soup|Build.Utils)/script/main/shared-operations.wren] -> [./script/Soup/Build.Utils/shared-operations.wren]"
+echo "Copy [/(TARGET_soup|build-utils)/script/main/shared-operations.wren] -> [./script/Soup/Build.Utils/shared-operations.wren]"
 (cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/Wren/Soup/Build.Utils/0.9.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/script/main/shared-operations.wren ./script/Soup/Build.Utils/shared-operations.wren)
 echo "WriteFile [./script/bundles.sml]"
-(cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "echo" Bundles: {\n	'Soup|Build.Utils': { Root: './Soup/Build.Utils/' }\n}\n > ./script/bundles.sml)
+(cd "$USER_ROOT/.soup/packages/Wren/Soup/Wren/0.5.1/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "echo" Bundles: {\n	'soup|build-utils': { Root: './Soup/Build.Utils/' }\n}\n > ./script/bundles.sml)
 
 # Setup parse.modules
 echo mkdir -p "$ROOT_DIR/out/C++/Local/parse.modules/1.2.0/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"

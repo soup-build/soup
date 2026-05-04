@@ -68,7 +68,7 @@ namespace Soup::Core
 			auto done = false;
 			while (!done)
 			{
-				auto checkRootRecipeFile = parentDirectory + BuildConstants::RootRecipeFileName();
+				auto checkRootRecipeFile = parentDirectory + Build::Constants::RootRecipeFileName();
 				if (System::IFileSystem::Current().Exists(checkRootRecipeFile))
 				{
 					// We found one!

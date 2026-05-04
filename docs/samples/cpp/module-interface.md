@@ -3,19 +3,19 @@ A console application that uses a single module interface file used inside the s
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface)
 
-## [recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/recipe.sml)
+## [recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-interface/recipe.sml)
 The Recipe file that sets the name, type, version, the public interface module and the single source file.
 ```sml
-Name: 'Samples.Cpp.ModuleInterface'
+Name: 'samples-cpp-module-interface'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
 ```
 
-## [executable/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/executable/package-lock.sml)
+## [package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/module-interface/package-lock.sml)
 The package lock that was generated to capture the unique build dependencies required to build this project.
 
-## [helper.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/helper.cpp)
+## [helper.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-interface/helper.cpp)
 A module interface file that exports a single sample class.
 ```cpp
 module;
@@ -23,7 +23,7 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.ModuleInterface;
+export module Sample.ModuleInterface;
 
 export class Helper
 {
@@ -35,12 +35,12 @@ public:
 };
 ```
 
-## [main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/main.cpp)
+## [main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/module-interface/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the previous file.
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.ModuleInterface;
+import Sample.ModuleInterface;
 
 int main()
 {
@@ -49,5 +49,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/module-interface/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/module-interface/.gitignore)
 A simple git ignore file to exclude all Soup build output.

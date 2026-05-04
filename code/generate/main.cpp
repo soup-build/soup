@@ -1,4 +1,4 @@
-// <copyright file="Main.cpp" company="Soup">
+// <copyright file="main.cpp" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -29,14 +29,14 @@ int main(int argc, char** argv)
 	{
 		// Setup the filter
 		auto defaultTypes =
-			static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
+			// static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
 			static_cast<uint32_t>(TraceEventFlag::Information) |
 			static_cast<uint32_t>(TraceEventFlag::HighPriority) |
 			static_cast<uint32_t>(TraceEventFlag::Warning) |
 			static_cast<uint32_t>(TraceEventFlag::Error) |
 			static_cast<uint32_t>(TraceEventFlag::Critical);
 		auto filter = std::make_shared<EventTypeFilter>(
-				static_cast<TraceEventFlag>(defaultTypes));
+			static_cast<TraceEventFlag>(defaultTypes));
 
 		// Setup the console listener
 		Log::RegisterListener(
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 		if (argc != 3)
 		{
 			Log::Error("Invalid parameters. Expected two parameters.");
-			return -1;
+			return 112;
 		}
 
 		auto generatePhase = std::string(argv[1]);
@@ -69,6 +69,6 @@ int main(int argc, char** argv)
 	catch (const std::exception& ex)
 	{
 		Log::Error(ex.what());
-		return -1;
+		return 88;
 	}
 }

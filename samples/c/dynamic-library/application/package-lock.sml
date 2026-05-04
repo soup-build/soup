@@ -1,19 +1,19 @@
 Version: 6
 Closure: {
 	C: {
-		'Samples.C.DynamicLibrary.Application': { Version: './', Build: '0', Tool: '0' }
-		'Samples.C.DynamicLibrary.Library': { Version: '../library/', Build: '0', Tool: '0' }
+		'samples-c-dynamic-library-application': { Version: './', Build: '0', Tool: '0' }
+		'samples-c-dynamic-library-library': { Version: '../library/', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'Soup|C': {
-				Version: 0.6.1
-				Digest: 'sha256:aeef46ffb39aa3f46e39967b0762106e2554aacb299638b83198a812e5a818b0'
+			'soup|c': {
+				Version: 0.9.3
+				Digest: 'sha256:023fc6b0a29e7e18b10cef32b35774c8d5b5c53a8fd58fda1879f36c73cfc0f1'
 				Artifacts: {
-					Linux: 'sha256:8c3b9a842cdc84a3a27ed8eff8258529eb8f78c215d82b4faf00bf1bda55a814'
-					Windows: 'sha256:90b01827af1092cacf8c86674925552a67c560a143e1b96e288ea2d7a08b523e'
+					Linux: 'sha256:919b5abd04c906997f6506fa949cd5f5bfcaee189bf1832e5fefaedfbd1722fc'
+					Windows: 'sha256:ee746878b7393bcaa789f619c8b120909244376e36f57cdfbb8498499ff7441d'
 				}
 			}
 		}

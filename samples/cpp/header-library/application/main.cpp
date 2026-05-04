@@ -1,7 +1,7 @@
 #include <iostream>
 #include <library.h>
 
-using namespace Samples::Cpp::HeaderLibrary::Library;
+using namespace Sample::HeaderLibrary::Library;
 
 int main()
 {

@@ -6,6 +6,7 @@ module;
 
 #include <chrono>
 #include <format>
+#include <functional>
 #include <map>
 #include <memory>
 #include <set>
@@ -62,11 +63,12 @@ namespace Soup::Core
 		/// Execute the entire operation graph that is referenced by this build evaluate engine
 		/// </summary>
 		bool Evaluate(
-			const OperationGraph& operationGraph,
+			OperationGraph& operationGraph,
 			OperationResults& operationResults,
 			const Path& temporaryDirectory,
 			const std::vector<Path>& /*globalAllowedReadAccess*/,
-			const std::vector<Path>& /*globalAllowedWriteAccess*/)
+			const std::vector<Path>& /*globalAllowedWriteAccess*/,
+			std::optional<std::function<ValueTable(std::string_view)>> /*processStdOut*/)
 		{
 			std::stringstream message;
 			message << "Evaluate: " << temporaryDirectory.ToString();
@@ -84,7 +86,8 @@ namespace Soup::Core
 					true,
 					time,
 					{ },
-					{ }));
+					{ },
+					std::nullopt));
 			}
 
 			return true;

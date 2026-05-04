@@ -13,9 +13,9 @@ export module Soup.Core:RecipeBuildLocationManager;
 
 import CryptoPP;
 import Opal;
+import Soup.SML;
 import :HandledException;
 import :KnownLanguage;
-import :PackageName;
 import :Recipe;
 import :RecipeCache;
 import :RootRecipe;
@@ -24,6 +24,7 @@ import :Value;
 import :ValueTableWriter;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core
 {
@@ -78,7 +79,16 @@ namespace Soup::Core
 
 					// Add the language sub folder
 					auto language = recipe.GetLanguage().GetName();
-					rootOutput = rootOutput + Path(std::format("./{}/", language));
+
+					// Get the simple name
+					auto knownLanguageResult = _knownLanguageLookup.find(language);
+					if (knownLanguageResult == _knownLanguageLookup.end())
+					{
+						throw std::runtime_error(
+							std::format("Unknown language: {}", language));
+					}
+
+					rootOutput = rootOutput + Path(std::format("./{}/", knownLanguageResult->second.ExtensionName));
 
 					if (name.HasOwner())
 					{
@@ -88,7 +98,7 @@ namespace Soup::Core
 					else
 					{
 						// Label as local
-						rootOutput = rootOutput + Path("./Local/");
+						rootOutput = rootOutput + Path("./local/");
 					}
 
 					// Add the unique recipe name/version

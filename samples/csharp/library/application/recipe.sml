@@ -1,4 +1,4 @@
-Name: 'Samples.CSharp.Library.ConsoleApplication'
+Name: 'samples-csharp-library-application'
 Language: 'C#|0'
 TargetFramework: 'net10.0'
 Type: 'Executable'

@@ -506,8 +506,6 @@ namespace Monitor::Windows
 
 		try
 		{
-			auto traceProcessId = s_Payload.nTraceProcessId;
-
 			// Extract the allowed read/write directories
 			auto workingDirectory = Opal::Path(s_Payload.zWorkingDirectory);
 			bool enableAccessChecks = s_Payload.EnableAccessChecks;
@@ -515,7 +513,7 @@ namespace Monitor::Windows
 			auto allowedWriteDirectories = ExtractStringList(s_Payload.zWriteAccessDirectories, s_Payload.cWriteAccessDirectories);
 
 			// Initialize the event pipe
-			connectionManager.Initialize(traceProcessId);
+			connectionManager.Initialize(s_Payload.nTraceProcessId, s_Payload.nTraceChildId);
 			Monitor::FileSystemAccessSandbox::Initialize(
 				enableAccessChecks,
 				std::move(workingDirectory),

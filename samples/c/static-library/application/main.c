@@ -3,6 +3,6 @@
 
 int main()
 {
-	printf("Hello World, %s Style!", GetName());
+	printf("Hello World, %s Style!\n", GetName());
 	return 0;
 }

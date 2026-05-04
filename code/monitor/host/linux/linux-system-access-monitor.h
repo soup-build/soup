@@ -257,8 +257,8 @@ namespace Monitor::Linux
 
 		bool IsSpecialFile(std::string_view fileName)
 		{
-			// Check if the file name is a pipe or the standard input/output streams
-			return false;
+			// Check if the file name is a special file
+			return fileName.starts_with("/proc/");
 		}
 
 		void SearchPath(std::wstring_view path, std::wstring_view filename)

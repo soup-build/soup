@@ -22,10 +22,13 @@ import :RecipeValue;
 
 import Monitor.Host;
 import Opal;
+import Soup.Core;
+import Soup.SML;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
+using namespace Soup::SML;
 using namespace Soup::Test;
 
 namespace Soup::Core::UnitTests
@@ -120,7 +123,7 @@ namespace Soup::Core::UnitTests
 			fileSystem->CreateMockFile(
 				Path("./TestFiles/SimpleRecipe/recipe.sml"),
 				std::make_shared<MockFile>(std::stringstream(R"(
-					Name: 'MyPackage'
+					Name: 'my-package'
 					Language: (C++@1)
 				)")));
 
@@ -132,7 +135,7 @@ namespace Soup::Core::UnitTests
 
 			auto expected = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 			}));
 
@@ -169,7 +172,7 @@ namespace Soup::Core::UnitTests
 			auto directory = Path("./TestFiles/SimpleRecipe/recipe.sml");
 			auto recipe = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 			}));
 			RecipeExtensions::SaveToFile(directory, recipe);
@@ -191,7 +194,7 @@ namespace Soup::Core::UnitTests
 
 			// Verify the contents of the build file
 			std::string expectedBuildFile = 
-R"(Name: 'MyPackage'
+R"(Name: 'my-package'
 Language: (C++@1)
 )";
 			auto mockBuildFile = fileSystem->GetMockFile(Path("./TestFiles/SimpleRecipe/recipe.sml"));

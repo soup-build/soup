@@ -69,7 +69,7 @@ int main()
 		auto fileSystemState = FileSystemState();
 		auto binaryFileContent = std::vector<char>(
 		{
-			'B', 'O', 'R', '\0', 0x02, 0x00, 0x00, 0x00,
+			'B', 'O', 'R', '\0', 0x03, 0x00, 0x00, 0x00,
 			'F', 'I', 'S', '\0', 0x00, 0x00, 0x00, 0x00,
 			'R', 'T', 'S', '\0', 0x00, 0x00, 0x00, 0x00,
 		});
@@ -97,7 +97,7 @@ int main()
 			});
 		auto binaryFileContent = std::vector<uint8_t>(
 		{
-			'B', 'O', 'R', '\0', 0x02, 0x00, 0x00, 0x00,
+			'B', 'O', 'R', '\0', 0x00, 0x00, 0x00, 0x00,
 			'F', 'I', 'S', '\0', 0x08, 0x00, 0x00, 0x00,
 			0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 'C', ':', '/', 'F', 'i', 'l', 'e', '1',
 			0x02, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 'C', ':', '/', 'F', 'i', 'l', 'e', '2',
@@ -113,11 +113,13 @@ int main()
 			0x10, 0x16, 0x62, 0xbb, 0x0b, 0x41, 0x38, 0x00,
 			0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
 			0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00,
 			0x06, 0x00, 0x00, 0x00,
 			0x01, 0x00, 0x00, 0x00,
 			0x80, 0x8d, 0xa9, 0xeb, 0x0b, 0x41, 0x38, 0x00,
 			0x02, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00,
 			0x02, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00,
 		});
 		auto content = std::stringstream(std::string((char*)binaryFileContent.data(), binaryFileContent.size()));
 
@@ -132,7 +134,7 @@ int main()
 		auto recipeFile = Path("./recipe.sml");
 		auto recipe = std::stringstream(
 			R"(
-				Name: 'MyPackage'
+				Name: 'my-package'
 				Language: (C++@1)
 			)");
 		ankerl::nanobench::Bench().minEpochIterations(20000).run("RecipeSML Deserialize Simple", [&]
@@ -146,7 +148,7 @@ int main()
 		auto recipeFile = Path("./recipe.sml");
 		auto recipe = std::stringstream(
 			R"(
-				Name: 'MyPackage'
+				Name: 'my-package'
 				Language: (C++@1)
 				Version: 1.2.3
 				Source: [
@@ -190,87 +192,87 @@ int main()
 		auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
 		fileSystem->CreateMockFile(
-			Path("C:/testlocation/Soup.Generate.exe"),
+			Path("C:/testlocation/soup-generate.exe"),
 			std::make_shared<MockFile>());
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/WorkingDirectory/MyPackage/"),
+			Path("C:/WorkingDirectory/my-package/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({
 				Path("./recipe.sml"),
 			})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({
 				Path("./recipe.sml"),
 			})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/BuiltIn/Packages/Soup/Wren/0.4.1/"),
+			Path("C:/BuiltIn/Packages/soup/Wren/0.4.1/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({
 				Path("./recipe.sml"),
 			})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/temp/"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/temp/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		// Create the Recipe to build
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/recipe.sml"),
+			Path("C:/WorkingDirectory/my-package/recipe.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
-				Name: 'MyPackage'
+				Name: 'my-package'
 				Language: (C++@0.8)
 			)")));
 
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/recipe.sml"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
-				Name: 'Cpp'
+				Name: 'cpp'
 				Language: (Wren@1)
 			)")));
 
 		fileSystem->CreateMockFile(
-			Path("C:/BuiltIn/Packages/Soup/Wren/0.4.1/recipe.sml"),
+			Path("C:/BuiltIn/Packages/soup/Wren/0.4.1/recipe.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
-				Name: 'Wren'
+				Name: 'wren'
 				Language: (Wren@1)
 			)")));
 
 		// Create the package lock
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/package-lock.sml"),
+			Path("C:/WorkingDirectory/my-package/package-lock.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Version: 5
 				Closures: {
 					Root: {
 						'C++': {
-							MyPackage: { Version: '../MyPackage/', Build: 'Build0', Tool: 'Tool0' }
+							'my-package': { Version: '../my-package/', Build: 'Build0', Tool: 'Tool0' }
 						}
 					}
 					Build0: {
 						Wren: {
-							'Soup|Cpp': { Version: 0.8.2 }
+							'soup|cpp': { Version: 0.8.2 }
 						}
 					}
 					Tool0: {}
@@ -278,18 +280,18 @@ int main()
 			)")));
 
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/locks/Wren/Soup/Cpp/0.8.2/package-lock.sml"),
+			Path("C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml"),
 			std::make_shared<MockFile>(std::stringstream(R"(
 				Version: 5
 				Closures: {
 					Root: {
 						Wren: {
-							'Soup|Cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
+							'soup|cpp': { Version: './', Build: 'Build0', Tool: 'Tool0' }
 						}
 					}
 					Build0: {
 						Wren: {
-							'Soup|Wren': { Version: 0.4.3 }
+							'soup|wren': { Version: 0.4.3 }
 						}
 					}
 					Tool0: {}
@@ -305,7 +307,7 @@ int main()
 		auto myPackageOperationGraphContent = std::stringstream();
 		OperationGraphWriter::Serialize(myPackageOperationGraph, myPackageFiles, fileSystemState, myPackageOperationGraphContent);
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Evaluate.bog"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Evaluate.bog"),
 			std::make_shared<MockFile>(std::move(myPackageOperationGraphContent)));
 
 		auto soupCppOperationGraph = OperationGraph(
@@ -315,7 +317,7 @@ int main()
 		auto soupCppOperationGraphContent = std::stringstream();
 		OperationGraphWriter::Serialize(soupCppOperationGraph, soupCppFiles, fileSystemState, soupCppOperationGraphContent);
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/Evaluate.bog"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/Evaluate.bog"),
 			std::make_shared<MockFile>(std::move(soupCppOperationGraphContent)));
 
 		auto soupCppGenerateInput = ValueTable({
@@ -331,7 +333,7 @@ int main()
 								"Soup|Wren",
 								ValueTable(
 								{
-									{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/Soup/Wren/0.4.1/out/.soup/") },
+									{ "SoupTargetDirectory", std::string("C:/BuiltIn/Packages/soup/Wren/0.4.1/out/.soup/") },
 								})
 							},
 						})
@@ -342,8 +344,8 @@ int main()
 				"EvaluateMacros",
 				ValueTable(
 				{
-					{ "/(PACKAGE_Soup|Cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/") },
-					{ "/(TARGET_Soup|Cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/") },
+					{ "/(PACKAGE_Soup|Cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/") },
+					{ "/(TARGET_Soup|Cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/") },
 				})
 			},
 			{
@@ -365,7 +367,7 @@ int main()
 				"GenerateMacros",
 				ValueTable(
 				{
-					{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/Soup/Wren/0.4.1/out/") },
+					{ "/(BUILD_TARGET_Soup|Wren)/", std::string("C:/BuiltIn/Packages/soup/Wren/0.4.1/out/") },
 				})
 			},
 			{
@@ -431,7 +433,7 @@ int main()
 			},
 			{
 				"PackageRoot",
-				std::string("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/")
+				std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")
 			},
 			{
 				"UserDataPath",
@@ -441,7 +443,7 @@ int main()
 		auto soupCppGenerateInputContent = std::stringstream();
 		ValueTableWriter::Serialize(soupCppGenerateInput, soupCppGenerateInputContent);
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/GenerateInput.bvt"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/GenerateInput.bvt"),
 			std::make_shared<MockFile>(std::move(soupCppGenerateInputContent)));
 
 		auto myPackageGenerateInput = ValueTable({
@@ -457,7 +459,7 @@ int main()
 								"Soup|Cpp",
 								ValueTable(
 								{
-									{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/") },
+									{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/") },
 								})
 							},
 						})
@@ -468,30 +470,30 @@ int main()
 				"EvaluateMacros",
 				ValueTable(
 				{
-					{ "/(PACKAGE_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/") },
-					{ "/(TARGET_MyPackage)/", std::string("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/") },
+					{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
+					{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/") },
 				})
 			},
 			{
 				"EvaluateReadAccess",
 				ValueList(
 				{
-					std::string("/(PACKAGE_MyPackage)/"),
-					std::string("/(TARGET_MyPackage)/"),
+					std::string("/(PACKAGE_my-package)/"),
+					std::string("/(TARGET_my-package)/"),
 				})
 			},
 			{
 				"EvaluateWriteAccess",
 				ValueList(
 				{
-					std::string("/(TARGET_MyPackage)/"),
+					std::string("/(TARGET_my-package)/"),
 				})
 			},
 			{
 				"GenerateMacros",
 				ValueTable(
 				{
-					{ "/(BUILD_TARGET_Soup|Cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/") },
+					{ "/(BUILD_TARGET_Soup|Cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/") },
 				})
 			},
 			{
@@ -510,8 +512,8 @@ int main()
 						ValueTable(
 						{
 							{ "HostPlatform", std::string("FakePlatform") },
-							{ "PackageDirectory", std::string("/(PACKAGE_MyPackage)/") },
-							{ "TargetDirectory", std::string("/(TARGET_MyPackage)/") },
+							{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
+							{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
 						})
 					},
 					{
@@ -551,7 +553,7 @@ int main()
 			},
 			{
 				"PackageRoot",
-				std::string("C:/WorkingDirectory/MyPackage/")
+				std::string("C:/WorkingDirectory/my-package/")
 			},
 			{
 				"UserDataPath",
@@ -561,7 +563,7 @@ int main()
 		auto myPackageGenerateInputContent = std::stringstream();
 		ValueTableWriter::Serialize(myPackageGenerateInput, myPackageGenerateInputContent);
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/GenerateInput.bvt"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/GenerateInput.bvt"),
 			std::make_shared<MockFile>(std::move(myPackageGenerateInputContent)));
 
 		auto myPackageGenerateResults = OperationResults({
@@ -579,7 +581,7 @@ int main()
 		auto myPackageGenerateResultsFiles = std::set<FileId>();
 		OperationResultsWriter::Serialize(myPackageGenerateResults, myPackageGenerateResultsFiles, fileSystemState,  myPackageGenerateResultsContent);
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Generate.bor"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Generate.bor"),
 			std::make_shared<MockFile>(std::move(myPackageGenerateResultsContent)));
 
 		auto soupCppGenerateResults = OperationResults({
@@ -597,7 +599,7 @@ int main()
 		auto soupCppGenerateResultsFiles = std::set<FileId>();
 		OperationResultsWriter::Serialize(soupCppGenerateResults, soupCppGenerateResultsFiles, fileSystemState, soupCppGenerateResultsContent);
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/Generate.bor"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/Generate.bor"),
 			std::make_shared<MockFile>(std::move(soupCppGenerateResultsContent)));
 
 		auto soupCppEvaluateResults = OperationResults();
@@ -605,7 +607,7 @@ int main()
 		auto soupCppEvaluateResultsFiles = std::set<FileId>();
 		OperationResultsWriter::Serialize(soupCppEvaluateResults, soupCppEvaluateResultsFiles, fileSystemState, soupCppEvaluateResultsContent);
 		fileSystem->CreateMockFile(
-			Path("C:/Users/Me/.soup/packages/Wren/Soup/Cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/Evaluate.bor"),
+			Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/tsWW3RZ_9Jb7Xbk2kTzx3n6uQUM/.soup/Evaluate.bor"),
 			std::make_shared<MockFile>(std::move(soupCppEvaluateResultsContent)));
 
 		auto myPackageEvaluateResults = OperationResults();
@@ -613,7 +615,7 @@ int main()
 		auto myPackageEvaluateResultsFiles = std::set<FileId>();
 		OperationResultsWriter::Serialize(myPackageEvaluateResults, myPackageEvaluateResultsFiles, fileSystemState, myPackageEvaluateResultsContent);
 		fileSystem->CreateMockFile(
-			Path("C:/WorkingDirectory/MyPackage/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Evaluate.bor"),
+			Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Evaluate.bor"),
 			std::make_shared<MockFile>(std::move(myPackageEvaluateResultsContent)));
 
 		// Register the test process manager
@@ -624,27 +626,32 @@ int main()
 		auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
 		auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
-		ankerl::nanobench::Bench().minEpochIterations(3000).run("BuildEngine Execute NoDependencies UpToDate", [&]
+		ankerl::nanobench::Bench().minEpochIterations(3000).run("Build Execute NoDependencies UpToDate", [&]
 		{
+			auto systemReadAccess = std::vector<Path>();
+
 			auto arguments = RecipeBuildArguments();
+			arguments.Parallelization = 1;
 			arguments.HostPlatform = "FakePlatform";
-			arguments.WorkingDirectory = Path("C:/WorkingDirectory/MyPackage/");
+			arguments.WorkingDirectory = Path("C:/WorkingDirectory/my-package/");
 
 			// Load user config state
-			auto userDataPath = BuildEngine::GetSoupUserDataPath();
+			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
 
-			auto packageProvider = BuildEngine::LoadBuildGraph(
+			auto packageProvider = Build::LoadBuildGraph(
 				arguments.WorkingDirectory,
 				std::nullopt,
 				arguments.GlobalParameters,
 				userDataPath,
+				arguments.HostPlatform,
 				recipeCache);
 
-			BuildEngine::Execute(
+			Build::Execute(
 				packageProvider,
 				std::move(arguments),
 				userDataPath,
+				systemReadAccess,
 				recipeCache);
 		});
 	}

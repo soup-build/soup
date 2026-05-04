@@ -1,4 +1,4 @@
-Name: 'Monitor.Host'
+Name: 'monitor-host'
 Language: 'C++|0'
 Version: 1.0.0
 Defines: [
@@ -7,9 +7,9 @@ Defines: [
 ]
 Dependencies: {
 	Runtime: [
-		'mwasplund|Detours@4'
+		'mwasplund|detours@4'
 		'[C]mwasplund|libseccomp@2.5'
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 		'../shared/'
 	]
 }

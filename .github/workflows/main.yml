@@ -6,7 +6,7 @@ jobs:
   windows-build:
     strategy:
       matrix:
-        os: [ windows-2022, ubuntu-24.04 ]
+        os: [ windows-2025-vs2026, ubuntu-24.04 ]
         config: [ Debug, Release ]
     name: PR Build ${{matrix.os}} ${{matrix.config}}
     runs-on: ${{ matrix.os }}
@@ -20,6 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 10.0.x
+    - name: Install Clang 22
+      if: matrix.os != 'windows-2025-vs2026'
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 22
+        sudo apt-get install -y clang-22 lldb-22 lld-22
     - name: Setup Soup Build
       uses: soup-build/setup-soup@v1
       with:
@@ -35,6 +42,10 @@ jobs:
     - name: Soup Restore Client
       run: soup restore ./soup/code/client/cli/ -v:d
     - name: Soup Build Client
+      if: matrix.os == 'windows-2025-vs2026'
+      run: soup build ./soup/code/client/cli/ -p 1 -flavor ${{matrix.config}}
+    - name: Soup Build Client
+      if: matrix.os != 'windows-2025-vs2026'
       run: soup build ./soup/code/client/cli/ -flavor ${{matrix.config}}
     - name: Soup Run Version
       run: soup run ./soup/code/client/cli/ -flavor ${{matrix.config}} -args version
@@ -50,9 +61,9 @@ jobs:
     #   run: soup restore ./soup/code/generate-sharp/package-manager/
     # - name: Soup Build PackageManager
     #   run: soup build ./soup/code/generate-sharp/package-manager/ -flavor ${{matrix.config}}
-    - name: Soup Restore Tools
+    - name: Soup Restore Native
       run: soup restore ./soup/code/client/native/
-    - name: Soup Build Tools
+    - name: Soup Build Native
       run: soup build ./soup/code/client/native/ -flavor ${{matrix.config}}
 
     # Build DotNet
@@ -73,9 +84,9 @@ jobs:
 
     # Build Samples
     - name: Soup Restore C BuildExtension
-      run: soup restore ./soup/samples/c/build-extension/executable/
+      run: soup restore ./soup/samples/c/build-extension/application/
     - name: Soup Build C BuildExtension
-      run: soup build ./soup/samples/c/build-extension/executable/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/c/build-extension/application/ -flavor ${{matrix.config}}
     - name: Soup Build C ConsoleApplication
       run: soup build ./soup/samples/c/console-application/ -flavor ${{matrix.config}}
     - name: Soup Build C DynamicLibrary
@@ -83,33 +94,39 @@ jobs:
     - name: Soup Build C StaticLibrary
       run: soup build ./soup/samples/c/static-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C WindowsApplication
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/samples/c/windows-application/ -flavor ${{matrix.config}}
 
     - name: Soup Restore C# BuildExtension
-      run: soup restore ./soup/samples/csharp/build-extension/executable/
+      run: soup restore ./soup/samples/csharp/build-extension/application/
     - name: Soup Build C# BuildExtension
-      run: soup build ./soup/samples/csharp/build-extension/executable/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/csharp/build-extension/application/ -flavor ${{matrix.config}}
     - name: Soup Build C# ConsoleApplication
       run: soup build ./soup/samples/csharp/console-application/ -flavor ${{matrix.config}}
     - name: Soup Build C# Library
       run: soup build ./soup/samples/csharp/library/application/ -flavor ${{matrix.config}}
 
     - name: Soup Restore C++ BuildExtension
-      run: soup restore ./soup/samples/cpp/build-extension/executable/
+      run: soup restore ./soup/samples/cpp/build-extension/application/
     - name: Soup Build C++ BuildExtension
-      run: soup build ./soup/samples/cpp/build-extension/executable/ -flavor ${{matrix.config}}
+      run: soup build ./soup/samples/cpp/build-extension/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ConsoleApplication
       run: soup build ./soup/samples/cpp/console-application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DirectX
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/samples/cpp/directx/ -flavor ${{matrix.config}}
     - name: Soup Build C++ DynamicLibrary
       run: soup build ./soup/samples/cpp/dynamic-library/application/ -flavor ${{matrix.config}}
+    - name: Soup Build C++ Generate
+      run: soup build ./soup/samples/cpp/generate/application/ -flavor ${{matrix.config}}
+    - name: Soup Build C++ HeaderLibrary
+      run: soup build ./soup/samples/cpp/header-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleDynamicLibrary
       run: soup build ./soup/samples/cpp/module-dynamic-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ ModuleInterface
       run: soup build ./soup/samples/cpp/module-interface/ -flavor ${{matrix.config}}
+    - name: Soup Build C++ ModulePartitions
+      run: soup build ./soup/samples/cpp/module-partitions/ -flavor ${{matrix.config}}
     - name: Soup Restore C++ ParseJson
       run: soup restore ./soup/samples/cpp/parse-json/
     - name: Soup Build C++ ParseJson
@@ -117,5 +134,12 @@ jobs:
     - name: Soup Build C++ StaticLibrary
       run: soup build ./soup/samples/cpp/static-library/application/ -flavor ${{matrix.config}}
     - name: Soup Build C++ WindowsApplication
-      if: matrix.os == 'windows-2022'
+      if: matrix.os == 'windows-2025-vs2026'
       run: soup build ./soup/samples/cpp/windows-application/ -flavor ${{matrix.config}}
+
+    - name: Soup Build Interop C++ to C
+      run: soup build ./soup/samples/interop/cpp-to-c/application/ -flavor ${{matrix.config}}
+    - name: Soup Build Interop C# to C
+      run: soup build ./soup/samples/interop/csharp-to-c/application/ -flavor ${{matrix.config}}
+    - name: Soup Build Interop C# to C++
+      run: soup build ./soup/samples/interop/csharp-to-cpp/application/ -flavor ${{matrix.config}}

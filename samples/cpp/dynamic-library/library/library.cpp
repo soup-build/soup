@@ -1,6 +1,6 @@
 #include "library.h"
 
-namespace Samples::Cpp::DynamicLibrary::Library
+namespace Sample::DynamicLibrary::Library
 {
 	const char* Helper::GetName()
 	{

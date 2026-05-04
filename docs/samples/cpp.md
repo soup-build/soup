@@ -13,6 +13,9 @@ This is a console application that demonstrates a more complex graphics applicat
 ## [Dynamic Library](cpp/dynamic-library.md)
 This is a console application that has a single dynamic library dependency.
 
+## [Generate](cpp/generate.md)
+Sample build tool and extension that generates a translation unit and injects it into the normal build process.
+
 ## [Header Library](cpp/header-library.md)
 This is a console application that has a single header library dependency.
 
@@ -21,6 +24,9 @@ This is a console application that has a single dynamic library dependency that 
 
 ## [Module Interface](cpp/module-interface.md)
 This is a console application that uses a single module interface file used inside the same projects.
+
+## [Module Partitions](cpp/module-partitions.md)
+This is a console application that uses a single module interface with internal partitions used inside the same projects.
 
 ## [Parse Json](cpp/parse-json.md)
 This is a console application that reads in a json file using the an external module and prints a single known property value.

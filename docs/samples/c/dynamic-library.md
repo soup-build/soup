@@ -3,10 +3,10 @@ This is a console application that has a single dynamic library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library)
 
-## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.C.DynamicLibrary.Library".
+## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/library/recipe.sml)
+The Recipe file that defines the static library "dynamic-library-library".
 ```sml
-Name: 'Samples.C.DynamicLibrary.Library'
+Name: 'dynamic-library-library'
 Language: 'C|0'
 Version: 1.0.0
 Type: 'DynamicLibrary'
@@ -23,7 +23,7 @@ PublicHeaders: [
 ]
 ```
 
-## [library/library.h](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/library/library.h)
+## [library/public/library.h](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/library/public/library.h)
 A header interface file that declares a single sample function.
 ```c
 #ifdef _WIN32
@@ -32,7 +32,7 @@ __declspec(dllexport)
 const char* GetName();
 ```
 
-## [library/library.c](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/library/library.c)
+## [library/library.c](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/library/library.c)
 A implementation file that defines a single sample function.
 ```c
 #include "library.h"
@@ -43,10 +43,10 @@ const char* GetName()
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.C.DynamicLibrary.Application".
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/application/recipe.sml)
+The Recipe file that defines the executable "dynamic-library-application".
 ```sml
-Name: 'Samples.C.DynamicLibrary.Application'
+Name: 'samples-dynamic-library-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -57,10 +57,10 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dynamic library dependency.
 
-## [application/main.c](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/application/main.c)
+## [application/main.c](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/application/main.c)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
 ```c
 #include <stdio.h>
@@ -68,10 +68,10 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 
 int main()
 {
-  printf("Hello World, %s Style!", GetName());
+  printf("Hello World, %s Style!\n", GetName());
   return 0;
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/c/dynamic-library/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/c/dynamic-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.

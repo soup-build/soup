@@ -1,5 +1,5 @@
-Name: 'Soup'
-Version: 0.43.1
+Name: 'soup'
+Version: 0.47.2
 Language: 'C++|0'
 Type: 'Executable'
 Source: [
@@ -13,14 +13,15 @@ Dependencies: {
 	# Ensure the core build extensions are runtime dependencies
 	Runtime: [
 		'../core/'
+		'../view/'
 		'../../generate/'
 		'../../monitor/host/'
 	]
 	Build: [
-		# TODO: 'Soup.Test.Cpp@0.4.0'
+		# TODO: 'soup-test-cpp@0.4.0'
 	]
 	Test: [
-		# TODO: 'Soup.Test.Assert@0.3.0'
+		# TODO: 'soup-test-assert@0.3.0'
 	]
 }
 Tests: {

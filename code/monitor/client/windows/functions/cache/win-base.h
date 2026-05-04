@@ -213,8 +213,10 @@ namespace Monitor::Windows::Functions::Cache::WinBase
 	/// <summary>
 	/// Deletes an existing file.
 	/// </summary>
-	BOOL (WINAPI* DeleteFile)(
-		LPCSTR lpFileName) = ::DeleteFile;
+	BOOL (WINAPI* DeleteFileA)(
+		LPCSTR lpFileName) = ::DeleteFileA;
+	BOOL (WINAPI* DeleteFileW)(
+		LPCWSTR lpFileName) = ::DeleteFileW;
 
 	/// <summary>
 	/// Deletes an existing file as a transacted operation.
@@ -321,8 +323,8 @@ namespace Monitor::Windows::Functions::Cache::WinBase
 	/// Retrieves the contents of the specified variable from the environment block of the calling process.
 	/// </summary>
 	DWORD (WINAPI* GetEnvironmentVariableA)(
-		LPCTSTR lpName,
-		LPTSTR lpBuffer,
+		LPCSTR lpName,
+		LPSTR lpBuffer,
 		DWORD nSize) = ::GetEnvironmentVariableA;
 	DWORD (WINAPI* GetEnvironmentVariableW)(
 		LPCWSTR lpName,
@@ -436,11 +438,16 @@ namespace Monitor::Windows::Functions::Cache::WinBase
 	/// Creates a name for a temporary file. If a unique file name is generated, an empty
 	/// file is created and the handle to it is released; otherwise, only a file name is generated.
 	/// </summary>
-	UINT (WINAPI* GetTempFileName)(
+	UINT (WINAPI* GetTempFileNameA)(
 		LPCSTR lpPathName,
 		LPCSTR lpPrefixString,
 		UINT uUnique,
-		LPSTR lpTempFileName) = ::GetTempFileName;
+		LPSTR lpTempFileName) = ::GetTempFileNameA;
+	UINT (WINAPI* GetTempFileNameW)(
+		LPCWSTR lpPathName,
+		LPCWSTR lpPrefixString,
+		UINT uUnique,
+		LPWSTR lpTempFileName) = ::GetTempFileNameW;
 
 	/// <summary>
 	/// Loads and executes an application or creates a new instance of an existing application.

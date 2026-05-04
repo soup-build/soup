@@ -4,7 +4,7 @@ Version: 1.0.0
 Type: 'Executable'
 Dependencies: {
 	Build: [
-		'Soup|CSharp.Nuget@0'
+		'soup|csharp-nuget@0'
 	]
 	Runtime: [
 		'../utilities/'

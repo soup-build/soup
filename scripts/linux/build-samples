@@ -13,11 +13,11 @@ SAMPLES_DIR=$ROOT_DIR/samples
 ########################################
 ## C Samples
 ########################################
-echo soup restore $SAMPLES_DIR/c/build-extension/executable/
-soup restore $SAMPLES_DIR/c/build-extension/executable/
+echo soup restore $SAMPLES_DIR/c/build-extension/application/
+soup restore $SAMPLES_DIR/c/build-extension/application/
 
-echo soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
-soup build $SAMPLES_DIR/c/build-extension/executable/ -flavor $FLAVOR
+echo soup build $SAMPLES_DIR/c/build-extension/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/c/build-extension/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/c/console-application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/c/console-application/ -flavor $FLAVOR
@@ -33,11 +33,11 @@ echo SKIP: soup build $SAMPLES_DIR/c/windows-application/ -flavor $FLAVOR
 ########################################
 ## C# Samples
 ########################################
-echo soup restore $SAMPLES_DIR/csharp/build-extension/executable/
-soup restore $SAMPLES_DIR/csharp/build-extension/executable/
+echo soup restore $SAMPLES_DIR/csharp/build-extension/application/
+soup restore $SAMPLES_DIR/csharp/build-extension/application/
 
-echo soup build $SAMPLES_DIR/csharp/build-extension/executable/ -flavor $FLAVOR
-soup build $SAMPLES_DIR/csharp/build-extension/executable/ -flavor $FLAVOR
+echo soup build $SAMPLES_DIR/csharp/build-extension/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/csharp/build-extension/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/csharp/console-application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/csharp/console-application/ -flavor $FLAVOR
@@ -48,11 +48,11 @@ soup build $SAMPLES_DIR/csharp/library/application/ -flavor $FLAVOR
 ########################################
 ## C++ Samples
 ########################################
-echo soup restore $SAMPLES_DIR/cpp/build-extension/executable/
-soup restore $SAMPLES_DIR/cpp/build-extension/executable/
+echo soup restore $SAMPLES_DIR/cpp/build-extension/application/
+soup restore $SAMPLES_DIR/cpp/build-extension/application/
 
-echo soup build $SAMPLES_DIR/cpp/build-extension/executable/ -flavor $FLAVOR
-soup build $SAMPLES_DIR/cpp/build-extension/executable/ -flavor $FLAVOR
+echo soup build $SAMPLES_DIR/cpp/build-extension/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/build-extension/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/console-application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/console-application/ -flavor $FLAVOR
@@ -62,6 +62,9 @@ echo SKIP: soup build $SAMPLES_DIR/cpp/directx/ -flavor $FLAVOR
 echo soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/dynamic-library/application/ -flavor $FLAVOR
 
+echo soup build $SAMPLES_DIR/cpp/generate/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/generate/application/ -flavor $FLAVOR
+
 echo soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/header-library/application/ -flavor $FLAVOR
 
@@ -70,6 +73,9 @@ soup build $SAMPLES_DIR/cpp/module-dynamic-library/application/ -flavor $FLAVOR
 
 echo soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/module-interface/ -flavor $FLAVOR
+
+echo soup build $SAMPLES_DIR/cpp/module-partitions/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/cpp/module-partitions/ -flavor $FLAVOR
 
 echo soup restore $SAMPLES_DIR/cpp/parse-json/
 soup restore $SAMPLES_DIR/cpp/parse-json/
@@ -81,3 +87,15 @@ echo soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
 soup build $SAMPLES_DIR/cpp/static-library/application/ -flavor $FLAVOR
 
 echo SKIP: soup build $SAMPLES_DIR/cpp/windows-application/ -flavor $FLAVOR
+
+########################################
+## Interop Samples
+########################################
+echo soup build $SAMPLES_DIR/interop/cpp-to-c/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/interop/cpp-to-c/application/ -flavor $FLAVOR
+
+echo soup build $SAMPLES_DIR/interop/csharp-to-c/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/interop/csharp-to-c/application/ -flavor $FLAVOR
+
+echo soup build $SAMPLES_DIR/interop/csharp-to-cpp/application/ -flavor $FLAVOR
+soup build $SAMPLES_DIR/interop/csharp-to-cpp/application/ -flavor $FLAVOR

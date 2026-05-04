@@ -1,6 +1,6 @@
 using System;
 
-namespace Samples.CSharp.Library.Application
+namespace Sample.Library.Application
 {
 	public class Program
 	{

@@ -27,7 +27,7 @@ namespace Soup::Core
 	{
 	private:
 		OperationGraph _graph;
-		bool _isPreprocessor;
+		bool _hasPreprocessor;
 
 	public:
 		/// <summary>
@@ -35,7 +35,7 @@ namespace Soup::Core
 		/// </summary>
 		GenerateResult() :
 			_graph(),
-			_isPreprocessor()
+			_hasPreprocessor()
 		{
 		}
 
@@ -44,9 +44,9 @@ namespace Soup::Core
 		/// </summary>
 		GenerateResult(
 			OperationGraph graph,
-			bool isPreprocessor) :
+			bool hasPreprocessor) :
 			_graph(std::move(graph)),
-			_isPreprocessor(isPreprocessor)
+			_hasPreprocessor(hasPreprocessor)
 		{
 		}
 
@@ -67,11 +67,11 @@ namespace Soup::Core
 		}
 
 		/// <summary>
-		/// Get a value indicating if the graph is for preprocessing files
+		/// Get a value indicating if the graph has preprocessing operations
 		/// </summary>
-		bool IsPreprocessor() const
+		bool HasPreprocessor() const
 		{
-			return _isPreprocessor;
+			return _hasPreprocessor;
 		}
 	};
 }

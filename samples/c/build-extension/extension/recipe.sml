@@ -1,8 +1,8 @@
-Name: 'Samples.C.BuildExtension.Extension'
+Name: 'samples-c-build-extension-extension'
 Language: 'Wren|0'
 Version: 1.0.0
 Dependencies: {
 	Runtime: [
-		'Soup|Build.Utils@0'
+		'soup|build-utils@0'
 	]
 }

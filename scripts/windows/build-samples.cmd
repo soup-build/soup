@@ -9,12 +9,12 @@ REM - ########################################
 REM - ## C Samples
 REM - ########################################
 
-echo soup restore %SamplesDir%/c/build-extension/executable/
-call soup restore %SamplesDir%/c/build-extension/executable/
+echo soup restore %SamplesDir%/c/build-extension/application/
+call soup restore %SamplesDir%/c/build-extension/application/
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-echo soup build %SamplesDir%/c/build-extension/executable/ -flavor %Flavor%
-call soup build %SamplesDir%/c/build-extension/executable/ -flavor %Flavor%
+echo soup build %SamplesDir%/c/build-extension/application/ -flavor %Flavor%
+call soup build %SamplesDir%/c/build-extension/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/c/console-application/ -flavor %Flavor%
@@ -37,12 +37,12 @@ REM - ########################################
 REM - ## C# Samples
 REM - ########################################
 
-echo soup restore %SamplesDir%/csharp/build-extension/executable/
-call soup restore %SamplesDir%/csharp/build-extension/executable/
+echo soup restore %SamplesDir%/csharp/build-extension/application/
+call soup restore %SamplesDir%/csharp/build-extension/application/
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-echo soup build %SamplesDir%/csharp/build-extension/executable/ -flavor %Flavor%
-call soup build %SamplesDir%/csharp/build-extension/executable/ -flavor %Flavor%
+echo soup build %SamplesDir%/csharp/build-extension/application/ -flavor %Flavor%
+call soup build %SamplesDir%/csharp/build-extension/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/csharp/console-application/ -flavor %Flavor%
@@ -57,12 +57,12 @@ REM - ########################################
 REM - ## C++ Samples
 REM - ########################################
 
-echo soup restore %SamplesDir%/cpp/build-extension/executable/
-call soup restore %SamplesDir%/cpp/build-extension/executable/
+echo soup restore %SamplesDir%/cpp/build-extension/application/
+call soup restore %SamplesDir%/cpp/build-extension/application/
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-echo soup build %SamplesDir%/cpp/build-extension/executable/ -flavor %Flavor%
-call soup build %SamplesDir%/cpp/build-extension/executable/ -flavor %Flavor%
+echo soup build %SamplesDir%/cpp/build-extension/application/ -flavor %Flavor%
+call soup build %SamplesDir%/cpp/build-extension/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/cpp/console-application/ -flavor %Flavor%
@@ -77,6 +77,10 @@ echo soup build %SamplesDir%/cpp/dynamic-library/application/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/dynamic-library/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
+echo soup build %SamplesDir%/cpp/generate/application/ -flavor %Flavor%
+call soup build %SamplesDir%/cpp/generate/application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
 echo soup build %SamplesDir%/cpp/header-library/application/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/header-library/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
@@ -87,6 +91,10 @@ if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/cpp/module-interface/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/module-interface/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+echo soup build %SamplesDir%/cpp/module-partitions/ -flavor %Flavor%
+call soup build %SamplesDir%/cpp/module-partitions/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup restore %SamplesDir%/cpp/parse-json/
@@ -103,4 +111,20 @@ if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
 echo soup build %SamplesDir%/cpp/windows-application/ -flavor %Flavor%
 call soup build %SamplesDir%/cpp/windows-application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+REM - ########################################
+REM - ## Interop Samples
+REM - ########################################
+
+echo soup build %SamplesDir%/interop/cpp-to-c/application/ -flavor %Flavor%
+call soup build %SamplesDir%/interop/cpp-to-c/application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+echo soup build %SamplesDir%/interop/csharp-to-c/application/ -flavor %Flavor%
+call soup build %SamplesDir%/interop/csharp-to-c/application/ -flavor %Flavor%
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+
+echo soup build %SamplesDir%/interop/csharp-to-cpp/application/ -flavor %Flavor%
+call soup build %SamplesDir%/interop/csharp-to-cpp/application/ -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%

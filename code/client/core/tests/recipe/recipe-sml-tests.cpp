@@ -24,10 +24,13 @@ import :RecipeValue;
 
 import Monitor.Host;
 import Opal;
+import Soup.Core;
+import Soup.SML;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
+using namespace Soup::SML;
 using namespace Soup::Test;
 
 namespace Soup::Core::UnitTests
@@ -51,14 +54,14 @@ namespace Soup::Core::UnitTests
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
-					Name: 'MyPackage'
+					Name: 'my-package'
 					Language: (C++@1)
 				)");
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 
 			auto expected = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 			}));
 
@@ -72,14 +75,14 @@ namespace Soup::Core::UnitTests
 			auto recipe = std::stringstream(
 				R"(
 					# This is an awesome project
-					Name: 'MyPackage'
+					Name: 'my-package'
 					Language: (C++@1)
 				)");
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 
 			auto expected = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 			}));
 
@@ -92,7 +95,7 @@ namespace Soup::Core::UnitTests
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
-					Name: 'MyPackage'
+					Name: 'my-package'
 					Language: (C++@1)
 					Version: 1.2.3
 					IntegerValue: 55
@@ -111,7 +114,7 @@ namespace Soup::Core::UnitTests
 
 			auto expected = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 				{ "Version", SemanticVersion(1, 2, 3) },
 				{ "IntegerValue", (int64_t)55 },
@@ -140,7 +143,7 @@ namespace Soup::Core::UnitTests
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 			}));
 
@@ -148,7 +151,7 @@ namespace Soup::Core::UnitTests
 			RecipeSML::Serialize(recipe.GetTable(), actual);
 
 			auto expected = 
-R"(Name: 'MyPackage'
+R"(Name: 'my-package'
 Language: (C++@1)
 )";
 
@@ -161,7 +164,7 @@ Language: (C++@1)
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
 				{ "Version", SemanticVersion(1, 2, 3) },
 				{ "IntegerValue", (int64_t)55 },
@@ -183,7 +186,7 @@ Language: (C++@1)
 			RecipeSML::Serialize(recipe.GetTable(), actual);
 
 			auto expected = 
-R"(Name: 'MyPackage'
+R"(Name: 'my-package'
 Language: (C++@1)
 Version: 1.2.3
 IntegerValue: 55

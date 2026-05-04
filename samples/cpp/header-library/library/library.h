@@ -1,6 +1,6 @@
 #include <string>
 
-namespace Samples::Cpp::HeaderLibrary::Library
+namespace Sample::HeaderLibrary::Library
 {
 	class Helper
 	{

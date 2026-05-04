@@ -13,11 +13,8 @@ module;
 export module Soup.Core:RecipeSML;
 
 import Opal;
-import :LanguageReference;
-import :PackageReference;
+import Soup.SML;
 import :RecipeValue;
-import :SequenceMap;
-import :SML;
 
 using namespace Opal;
 
@@ -45,7 +42,7 @@ namespace Soup::Core
 
 				auto contentBuffer = std::vector<char>(size);
 				stream.read(contentBuffer.data(), size);
-			
+
 				// Read the contents of the recipe file
 				auto root = SMLDocument::Parse(contentBuffer.data(), size);
 

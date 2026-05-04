@@ -1,19 +1,19 @@
 Version: 6
 Closure: {
 	Wren: {
-		'Samples.Cpp.BuildExtension.Extension': { Version: './', Build: '0', Tool: '0' }
-		'Soup|Build.Utils': { Version: 0.9.2, Digest: 'sha256:0b70e1c4392ee591b06e64b00fc3b267fad1f32ced90e7b2d61c01c2780e4096', Build: '0', Tool: '0' }
+		'samples-cpp-build-extension-extension': { Version: './', Build: '0', Tool: '0' }
+		'soup|build-utils': { Version: 0.9.3, Digest: 'sha256:5350668c3d273aeeb1718ac1520ad24c24b0c8640785286bbca788e7efa7da3c', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'Soup|Wren': {
-				Version: 0.5.4
-				Digest: 'sha256:11c795361ffddfb5f954cf747e69c7036d3f52fdd86e0869a40a55c03fa9bac3'
+			'soup|wren': {
+				Version: 0.6.0
+				Digest: 'sha256:b9e3a6552b51220582684f69bb2cb89fdcf364e4fe6ea4b86ab00f51a45f0d7e'
 				Artifacts: {
-					Linux: 'sha256:61028ebdd655b14bf293febc483d04c5312c3546b7890dfa104e0e1cf6121112'
-					Windows: 'sha256:a63c6fa40955a46b0e3b95a13cfceaba1e067229b9ef518b957fa7cabb6c195a'
+					Linux: 'sha256:e7f6a90708f8b3196a316546ddb7ef3c9b9b0e0c85bb933ae6a90811daf15629'
+					Windows: 'sha256:1356ba73d8ecfc5d3f0dd05130b0aa4f94110dd3a8ab48a827b877620dbe7a0e'
 				}
 			}
 		}

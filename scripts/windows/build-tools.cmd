@@ -33,15 +33,6 @@ echo soup build %ToolsDir%\mkdir -flavor %Flavor%
 call soup build %ToolsDir%\mkdir -flavor %Flavor%
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
-REM - Parse Modules
-echo soup restore %ToolsDir%\parse-modules
-call soup restore %ToolsDir%\parse-modules
-if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
-
-echo soup build %ToolsDir%\parse-modules -flavor %Flavor%
-call soup build %ToolsDir%\parse-modules -flavor %Flavor%
-if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
-
 REM - Print
 echo soup restore %ToolsDir%\print
 call soup restore %ToolsDir%\print

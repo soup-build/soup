@@ -1,35 +1,37 @@
 Version: 6
 Closure: {
 	'C#': {
-		Migrate: { Version: './', Build: '0', Tool: '0' }
-		Opal: { Version: '../opal/', Build: '0', Tool: '0' }
-		'Soup.Utilities': { Version: '../utilities/', Build: '1', Tool: '0' }
+		migrate: { Version: './', Build: '0', Tool: '0' }
+		opal: { Version: '../opal/', Build: '0', Tool: '0' }
+		'soup-utilities': { Version: '../utilities/', Build: '1', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
-			'Soup|CSharp': {
-				Version: 0.17.0
-				Digest: 'sha256:5f8a05aedfc9d1c6857213367c70febd008b3d5e8c98f510e898177676ebd65a'
+			'soup|csharp': {
+				Version: 0.18.1
+				Digest: 'sha256:473d683e9e0157cf695f47f54e5ded7549c0885effe51ad891aa4b9ff7bc63e0'
 				Artifacts: {
-					Linux: 'sha256:ce00f1900d5493fc7210427f6c3efe0dfbeb09ce8a7429af845d7cf478f475b4'
+					Linux: 'sha256:8b9d8cd7aba4d4edbb0d2d8fb23344ba42d0db70b1ee792c69ae67a6e2ddadbe'
+					Windows: 'sha256:54465203300ca0a74c2bf311e51b2cb7c0740905bea4168a59e26f4653d36023'
 				}
 			}
 		}
 	}
 	'1': {
 		Wren: {
-			'Soup|CSharp': {
-				Version: 0.17.0
-				Digest: 'sha256:5f8a05aedfc9d1c6857213367c70febd008b3d5e8c98f510e898177676ebd65a'
+			'soup|csharp': {
+				Version: 0.18.1
+				Digest: 'sha256:473d683e9e0157cf695f47f54e5ded7549c0885effe51ad891aa4b9ff7bc63e0'
 				Artifacts: {
-					Linux: 'sha256:ce00f1900d5493fc7210427f6c3efe0dfbeb09ce8a7429af845d7cf478f475b4'
+					Linux: 'sha256:8b9d8cd7aba4d4edbb0d2d8fb23344ba42d0db70b1ee792c69ae67a6e2ddadbe'
+					Windows: 'sha256:54465203300ca0a74c2bf311e51b2cb7c0740905bea4168a59e26f4653d36023'
 				}
 			}
-			'Soup|CSharp.Nuget': {
+			'soup|csharp-nuget': {
 				Version: 0.7.0
-				Digest: 'sha256:36014a673aeb99acc53f46b25011f5859e36631d6a195ca887722093cd047c26'
+				Digest: 'sha256:0b5bb6797a2ff4e7fbefd6ef9c650f7baa4834dc4743589d30637841fc15511b'
 			}
 		}
 	}

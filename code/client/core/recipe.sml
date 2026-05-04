@@ -1,4 +1,4 @@
-Name: 'Soup.Core'
+Name: 'soup-core'
 Language: 'C++|0'
 Version: 0.1.1
 Defines: [
@@ -13,17 +13,18 @@ Source: [
 ]
 Dependencies: {
 	Build: [
-		'mwasplund|Soup.Test.Cpp@0'
+		'mwasplund|soup-test-cpp@0'
 	]
 	Runtime: [
-		'mwasplund|Opal@0'
+		'mwasplund|opal@0'
 		'mwasplund|reflex@5'
 		'../../monitor/host/'
 		'[C]mwasplund|wren@1'
-		'mwasplund|CryptoPP@1'
+		'mwasplund|cryptopp@1'
+		'../../sml/'
 	]
 	Test: [
-		'mwasplund|Soup.Test.Assert@0'
+		'mwasplund|soup-test-assert@0'
 	]
 }
 Tests: {

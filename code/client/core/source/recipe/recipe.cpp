@@ -13,8 +13,7 @@ module;
 export module Soup.Core:Recipe;
 
 import Opal;
-import :LanguageReference;
-import :PackageReference;
+import Soup.SML;
 import :RecipeValue;
 
 using namespace Opal;
@@ -45,8 +44,8 @@ namespace Soup::Core
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Recipe"/> class.
 		/// </summary>
-		Recipe(RecipeTable table) :
-			_table(std::move(table))
+		Recipe(RecipeTable&& table) :
+			_table(table)
 		{
 		}
 
@@ -194,6 +193,11 @@ namespace Soup::Core
 		/// <summary>
 		/// Raw access
 		/// </summary>
+		const RecipeTable& GetTable() const
+		{
+			return _table;
+		}
+
 		RecipeTable& GetTable()
 		{
 			return _table;

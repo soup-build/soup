@@ -5,8 +5,8 @@ Version: 1.0.0
 Type: 'Executable'
 Dependencies: {
 	Runtime: [
-		'mwasplund|Detours@4'
-		'mwasplund|Opal@0'
+		'mwasplund|detours@4'
+		'mwasplund|opal@0'
 		'../shared/'
 	]
 }

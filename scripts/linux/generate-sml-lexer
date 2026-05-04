@@ -8,8 +8,8 @@ FLAVOR="$1"
 SCRIPTS_DIR=$(dirname "$0")
 ROOT_DIR=$SCRIPTS_DIR/../..
 CODE_DIR=$ROOT_DIR/code
-CLIENT_CODE_DIR=$CODE_DIR/client/core/source
-REFLEX=~/dev/repos/RE-flex/bin/reflex
+SML_DIR=$CODE_DIR/sml
+REFLEX=~/repos/re-flex/bin/reflex
 
-echo $REFLEX $CLIENT_CODE_DIR/sml/sml-parser.l -o $CLIENT_CODE_DIR/sml/sml-parser.cpp
-$REFLEX $CLIENT_CODE_DIR/sml/sml-parser.l -o $CLIENT_CODE_DIR/sml/sml-parser.cpp
+echo $REFLEX $SML_DIR/sml-parser.l -o $SML_DIR/sml-parser.cpp
+$REFLEX $SML_DIR/sml-parser.l -o $SML_DIR/sml-parser.cpp

@@ -14,9 +14,8 @@ module;
 export module Soup.Core:ValueTableReader;
 
 import Opal;
+import Soup.SML;
 import :Value;
-import :LanguageReference;
-import :PackageReference;
 
 using namespace Opal;
 

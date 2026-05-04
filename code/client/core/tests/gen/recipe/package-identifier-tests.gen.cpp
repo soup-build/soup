@@ -18,15 +18,15 @@ export TestState RunPackageIdentifierTests()
 	state += Soup::Test::RunTest(className, "OperatorNotEqualLanguage", [&testClass]() { testClass->OperatorNotEqualLanguage(); });
 	state += Soup::Test::RunTest(className, "OperatorNotEqualOwner", [&testClass]() { testClass->OperatorNotEqualOwner(); });
 	state += Soup::Test::RunTest(className, "OperatorNotEqualName", [&testClass]() { testClass->OperatorNotEqualName(); });
-	state += Soup::Test::RunTest(className, "ParseValues(\"Name\", std::nullopt, std::nullopt, \"Name\")", [&testClass]() { testClass->ParseValues("Name", std::nullopt, std::nullopt, "Name"); });
-	state += Soup::Test::RunTest(className, "ParseValues(\"[C#]Name\", \"C#\", std::nullopt, \"Name\")", [&testClass]() { testClass->ParseValues("[C#]Name", "C#", std::nullopt, "Name"); });
-	state += Soup::Test::RunTest(className, "ParseValues(\"User1|Name\", std::nullopt, \"User1\", \"Name\")", [&testClass]() { testClass->ParseValues("User1|Name", std::nullopt, "User1", "Name"); });
-	state += Soup::Test::RunTest(className, "ParseValues(\"[C#]User1|Name\", \"C#\", \"User1\", \"Name\")", [&testClass]() { testClass->ParseValues("[C#]User1|Name", "C#", "User1", "Name"); });
-	state += Soup::Test::RunTest(className, "TryParseValues(\"Package@1.2.3\", true)", [&testClass]() { testClass->TryParseValues("Package", true); });
-	state += Soup::Test::RunTest(className, "ToStringValues(std::nullopt, std::nullopt, \"Name\", \"Name\")", [&testClass]() { testClass->ToStringValues(std::nullopt, std::nullopt, "Name", "Name"); });
-	state += Soup::Test::RunTest(className, "ToStringValues(\"C#\", std::nullopt, \"Name\", \"[C#]Name\")", [&testClass]() { testClass->ToStringValues("C#", std::nullopt, "Name", "[C#]Name"); });
-	state += Soup::Test::RunTest(className, "ToStringValues(std::nullopt, \"User1\", \"Name\", \"User1|Name\")", [&testClass]() { testClass->ToStringValues(std::nullopt, "User1", "Name", "User1|Name"); });
-	state += Soup::Test::RunTest(className, "ToStringValues(\"C#\", \"User1\", \"Name\", \"[C#]User1|Name\")", [&testClass]() { testClass->ToStringValues("C#", "User1", "Name", "[C#]User1|Name"); });
+	state += Soup::Test::RunTest(className, "ParseValues(\"name\", std::nullopt, std::nullopt, \"name\")", [&testClass]() { testClass->ParseValues("name", std::nullopt, std::nullopt, "name"); });
+	state += Soup::Test::RunTest(className, "ParseValues(\"[C#]name\", \"C#\", std::nullopt, \"name\")", [&testClass]() { testClass->ParseValues("[C#]name", "C#", std::nullopt, "name"); });
+	state += Soup::Test::RunTest(className, "ParseValues(\"user1|name\", std::nullopt, \"user1\", \"name\")", [&testClass]() { testClass->ParseValues("user1|name", std::nullopt, "user1", "name"); });
+	state += Soup::Test::RunTest(className, "ParseValues(\"[C#]user1|name\", \"C#\", \"user1\", \"name\")", [&testClass]() { testClass->ParseValues("[C#]user1|name", "C#", "user1", "name"); });
+	state += Soup::Test::RunTest(className, "TryParseValues(\"package@1.2.3\", true)", [&testClass]() { testClass->TryParseValues("package", true); });
+	state += Soup::Test::RunTest(className, "ToStringValues(std::nullopt, std::nullopt, \"name\", \"name\")", [&testClass]() { testClass->ToStringValues(std::nullopt, std::nullopt, "name", "name"); });
+	state += Soup::Test::RunTest(className, "ToStringValues(\"C#\", std::nullopt, \"name\", \"[C#]name\")", [&testClass]() { testClass->ToStringValues("C#", std::nullopt, "name", "[C#]name"); });
+	state += Soup::Test::RunTest(className, "ToStringValues(std::nullopt, \"user1\", \"name\", \"user1|name\")", [&testClass]() { testClass->ToStringValues(std::nullopt, "user1", "name", "user1|name"); });
+	state += Soup::Test::RunTest(className, "ToStringValues(\"C#\", \"user1\", \"name\", \"[C#]user1|name\")", [&testClass]() { testClass->ToStringValues("C#", "user1", "name", "[C#]user1|name"); });
 
 	return state;
 }

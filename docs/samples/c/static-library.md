@@ -3,10 +3,10 @@ This is a console application that has a single static library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/c/static-library)
 
-## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/static-library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.C.StaticLibrary.Library".
+## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/static-library/library/recipe.sml)
+The Recipe file that defines the static library "samples-static-library-library".
 ```sml
-Name: 'Samples.C.StaticLibrary.Library'
+Name: 'samples-static-library-library'
 Language: 'C|0'
 Version: 1.0.0
 Type: 'StaticLibrary'
@@ -23,13 +23,13 @@ PublicHeaders: [
 ]
 ```
 
-## [library/library.h](https://github.com/soup-build/soup/tree/main/samples/c/static-library/library/library.h)
+## [library/public/library.h](https://github.com/soup-build/soup/blob/main/samples/c/static-library/library/public/library.h)
 A header interface file that declares a single sample function.
 ```c
 const char* GetName();
 ```
 
-## [library/library.c](https://github.com/soup-build/soup/tree/main/samples/c/static-library/library/library.c)
+## [library/library.c](https://github.com/soup-build/soup/blob/main/samples/c/static-library/library/library.c)
 A implementation file that defines a single sample function.
 ```c
 #include "library.h"
@@ -40,10 +40,10 @@ const char* GetName()
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/c/static-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.C.StaticLibrary.Application".
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/c/static-library/application/recipe.sml)
+The Recipe file that defines the executable "samples-static-library-application".
 ```sml
-Name: 'Samples.C.StaticLibrary.Application'
+Name: 'samples-static-library-application'
 Language: 'C|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -54,10 +54,10 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/c/static-library/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/c/static-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dependency static library.
 
-## [application/main.c](https://github.com/soup-build/soup/tree/main/samples/c/static-library/application/main.c)
+## [application/main.c](https://github.com/soup-build/soup/blob/main/samples/c/static-library/application/main.c)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
 ```c
 #include <stdio.h>
@@ -65,10 +65,10 @@ A simple main method that prints our "Hello World, Soup Style!" by using the mod
 
 int main()
 {
-  printf("Hello World, %s Style!", GetName());
+  printf("Hello World, %s Style!\n", GetName());
   return 0;
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/c/static-library/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/c/static-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.

@@ -10,7 +10,7 @@ import Soup.Test.Assert;
 export TestState RunBuildRunnerTests() 
 {
 	auto className = "BuildRunnerTests";
-	auto testClass = std::make_shared<Soup::Core::UnitTests::BuildRunnerTests>();
+	auto testClass = std::make_shared<Soup::Core::Build::UnitTests::BuildRunnerTests>();
 	TestState state = { 0, 0 };
 	state += Soup::Test::RunTest(className, "Initialize_Success", [&testClass]() { testClass->Initialize_Success(); });
 	state += Soup::Test::RunTest(className, "Execute_NoDependencies", [&testClass]() { testClass->Execute_NoDependencies(); });

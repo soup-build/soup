@@ -1,0 +1,52 @@
+Version: 6
+Closure: {
+	'C++': {
+		'samples-cpp-build-extension-application': { Version: './', Build: '0', Tool: '0' }
+	}
+}
+Builds: {
+	'0': {
+		Wren: {
+			'samples-cpp-build-extension-extension': { Version: '../extension/' }
+			'soup|cpp': {
+				Version: 0.19.4
+				Digest: 'sha256:24cf2167fb91e85589d242aadfd04d4f81b6388248d959557dc10642c08a0cee'
+				Artifacts: {
+					Linux: 'sha256:b9d96a131b2b521fee79f8eec8af5b49c5361a3a6b222e49f9daa6d0851ae505'
+					Windows: 'sha256:20bb37ee5ec324df254d039ba34b713d54f046e8c2f89e5e1c96ef7b773ad8b9'
+				}
+			}
+		}
+	}
+}
+Tools: {
+	'0': {
+		'C++': {
+			'samples-cpp-build-extension-tool': { Version: '../tool/' }
+			'mwasplund|copy': {
+				Version: 1.2.0
+				Digest: 'sha256:d493afdc0eba473a7f5a544cc196476a105556210bc18bd6c1ecfff81ba07290'
+				Artifacts: {
+					Linux: 'sha256:cd2e05f53f8e6515383c6b5b5dc6423bda03ee9d4efe7bd2fa74f447495471d2'
+					Windows: 'sha256:c4dc68326a11a704d568052e1ed46bdb3865db8d12b7d6d3e8e8d8d6d3fad6c8'
+				}
+			}
+			'mwasplund|mkdir': {
+				Version: 1.2.0
+				Digest: 'sha256:b423f7173bb4eb233143f6ca7588955a4c4915f84945db5fb06ba2eec3901352'
+				Artifacts: {
+					Linux: 'sha256:bbf3cd98e44319844de6e9f21de269adeb0dabf1429accad9be97f3bd6c56bbd'
+					Windows: 'sha256:4d43a781ed25ae9a97fa6881da7c24425a3162703df19964d987fb2c7ae46ae3'
+				}
+			}
+			'mwasplund|parse-modules': {
+				Version: 3.0.0
+				Digest: 'sha256:c7d7b9e7de3b304c936430be8d94b406b40939550503c0d8b5d3c1a5d10815e2'
+				Artifacts: {
+					Linux: 'sha256:8a54de2c0495c08349c7f9e073536c30c071cca9c311639c59b10bf11c3ebe79'
+					Windows: 'sha256:ce5ab795beffde62d46d00a24a20b5206fa6e560a05c8a5058141aa8bd7e64ad'
+				}
+			}
+		}
+	}
+}

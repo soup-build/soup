@@ -16,7 +16,7 @@ import Opal;
 
 using namespace Opal;
 
-namespace Soup::Core::UnitTests
+namespace Soup::Core::Build::UnitTests
 {
 	export class TestHelpers
 	{

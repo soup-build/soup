@@ -15,7 +15,7 @@ namespace Monitor::Linux
 		}
 
 	protected:
-		virtual void Connect(int32_t traceProcessId)
+		virtual void Connect(int32_t traceProcessId, int32_t traceChildId)
 		{
 			DebugTrace("ConnectionManager::Connect");
 

@@ -51,7 +51,7 @@ namespace Soup::Client
 			auto recipeCache = Core::RecipeCache();
 			auto recipePath =
 				workingDirectory +
-				Core::BuildConstants::RecipeFileName();
+				Core::Build::Constants::RecipeFileName();
 			const Core::Recipe* recipe;
 			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
 			{
@@ -63,7 +63,7 @@ namespace Soup::Client
 			}
 
 			// Build up the unique name
-			auto packageName = Core::PackageName(_options.Owner, recipe->GetName());
+			auto packageName = PackageName(_options.Owner, recipe->GetName());
 
 			// Setup the build parameters
 			auto globalParameters = Core::ValueTable();
@@ -77,7 +77,7 @@ namespace Soup::Client
 			// TODO: Generic parameters
 
 			// Load the value table to get the exe path
-			auto knownLanguages = Core::BuildEngine::GetKnownLanguages();
+			auto knownLanguages = Core::Build::GetKnownLanguages();
 			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
 				packageName,

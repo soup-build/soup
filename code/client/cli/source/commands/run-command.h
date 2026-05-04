@@ -29,29 +29,111 @@ namespace Soup::Client
 		{
 			Log::Diag("RunCommand::Run");
 
-			auto recipeDirectory = Path();
+			auto workingDirectory = Path();
 			if (_options.Path.empty())
 			{
 				// Build in the current directory
-				recipeDirectory = System::IFileSystem::Current().GetCurrentDirectory();
+				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 			}
 			else
 			{
 				// Parse the path in any system valid format
-				recipeDirectory = Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
-				if (!recipeDirectory.HasRoot())
+				if (!workingDirectory.HasRoot())
 				{
-					recipeDirectory = System::IFileSystem::Current().GetCurrentDirectory() + recipeDirectory;
+					workingDirectory = System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
 				}
 			}
 
-			// Load the recipe
 			auto recipeCache = Core::RecipeCache();
+
+			// Setup the build parameters
+			auto globalParameters = Core::ValueTable();
+
+			// Process well known parameters
+			if (!_options.Flavor.empty())
+				globalParameters.emplace("Flavor", Core::Value(_options.Flavor));
+			if (!_options.Architecture.empty())
+				globalParameters.emplace("Architecture", Core::Value(_options.Architecture));
+
+			Build(workingDirectory, recipeCache, globalParameters);
+			Run(workingDirectory, recipeCache, globalParameters);
+		}
+
+	private:
+		void Build(
+			const Path& workingDirectory,
+			Core::RecipeCache& recipeCache,
+			const Core::ValueTable& globalParameters)
+		{
+			auto systemReadAccess = std::vector<Path>();
+
+			// Platform specific defaults
+			#if defined(_WIN32)
+				auto hostPlatform = "Windows";
+
+				// Allow read access from system directories
+				systemReadAccess.push_back(
+					Path("C:/Windows/"));
+			#elif defined(__linux__)
+				auto hostPlatform = "Linux";
+			#else
+				#error "Unknown Platform"
+			#endif
+
+			// Setup the build arguments
+			auto arguments = Core::RecipeBuildArguments();
+			arguments.Parallelization = Core::Build::Constants::GetDefaultParallelization();
+			arguments.WorkingDirectory = workingDirectory;
+			arguments.ForceRebuild = false;
+			arguments.SkipGenerate = false;
+			arguments.SkipEvaluate = false;
+			arguments.DisableMonitor = false;
+			arguments.PartialMonitor = false;
+			arguments.HostPlatform = hostPlatform;
+			arguments.GlobalParameters = globalParameters;
+
+			// TODO: Generic parameters
+
+			// Now build the current project
+			Log::Info("Begin Build:");
+
+			// Find the built in folder root
+			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto processDirectory = processFilename.GetParent();
+
+			// Load user config state
+			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
+
+			auto packageProvider = Core::Build::LoadBuildGraph(
+				arguments.WorkingDirectory,
+				std::nullopt,
+				arguments.GlobalParameters,
+				userDataPath,
+				hostPlatform,
+				recipeCache);
+
+			Core::Build::Execute(
+				packageProvider,
+				std::move(arguments),
+				userDataPath,
+				systemReadAccess,
+				recipeCache);
+
+			Log::Info("End Build:");
+		}
+
+		void Run(
+			const Path& workingDirectory,
+			Core::RecipeCache& recipeCache,
+			const Core::ValueTable& globalParameters)
+		{
+			// Load the recipe
 			auto recipePath =
-				recipeDirectory +
-				Core::BuildConstants::RecipeFileName();
+				workingDirectory +
+				Core::Build::Constants::RecipeFileName();
 			const Core::Recipe* recipe;
 			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
 			{
@@ -63,32 +145,23 @@ namespace Soup::Client
 			}
 
 			// Build up the unique name
-			auto packageName = Core::PackageName(std::nullopt, recipe->GetName());
-
-			// Setup the build parameters
-			auto globalParameters = Core::ValueTable();
-
-			// Process well known parameters
-			if (!_options.Flavor.empty())
-				globalParameters.emplace("Flavor", Core::Value(_options.Flavor));
-			if (!_options.Architecture.empty())
-				globalParameters.emplace("Architecture", Core::Value(_options.Architecture));
+			auto packageName = PackageName(std::nullopt, recipe->GetName());
 
 			// TODO: Generic parameters
 
 			// Load the value table to get the exe path
-			auto knownLanguages = Core::BuildEngine::GetKnownLanguages();
+			auto knownLanguages = Core::Build::GetKnownLanguages();
 			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
 				packageName,
-				recipeDirectory,
+				workingDirectory,
 				*recipe,
 				globalParameters,
 				recipeCache);
-			auto soupTargetDirectory = targetDirectory + Core::BuildConstants::SoupTargetDirectory();
+			auto soupTargetDirectory = targetDirectory + Core::Build::Constants::SoupTargetDirectory();
 
 			// Load the shared state file
-			auto generateInputFile = soupTargetDirectory + Core::BuildConstants::GenerateInputFileName();
+			auto generateInputFile = soupTargetDirectory + Core::Build::Constants::GenerateInputFileName();
 			auto generateInputTable = Core::ValueTable();
 			if (!Core::ValueTableManager::TryLoadState(generateInputFile, generateInputTable))
 			{
@@ -105,7 +178,7 @@ namespace Soup::Client
 			auto macroManager = Core::MacroManager( macros);
 
 			// Load the shared state file
-			auto sharedStateFile = soupTargetDirectory + Core::BuildConstants::GenerateSharedStateFileName();
+			auto sharedStateFile = soupTargetDirectory + Core::Build::Constants::GenerateSharedStateFileName();
 			auto sharedStateTable = Core::ValueTable();
 			if (!Core::ValueTableManager::TryLoadState(sharedStateFile, sharedStateTable))
 			{
@@ -156,11 +229,11 @@ namespace Soup::Client
 
 			// Execute the requested target
 			Log::Info("CreateProcess");
-			auto workingDirectory = Path();
+			auto runDirectory = Path();
 			auto process = System::IProcessManager::Current().CreateProcess(
 				runExecutable,
 				std::move(arguments),
-				workingDirectory,
+				runDirectory,
 				false);
 			process->Start();
 			process->WaitForExit();

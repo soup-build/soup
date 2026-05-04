@@ -26,10 +26,13 @@ import :Value;
 
 import Monitor.Host;
 import Opal;
+import Soup.Core;
+import Soup.SML;
 import Soup.Test.Assert;
 
 using namespace Opal;
 using namespace Opal::System;
+using namespace Soup::SML;
 using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
@@ -46,11 +49,11 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto packageName = Core::PackageName(std::nullopt, "MyPackage");
+			auto packageName = PackageName(std::nullopt, "my-package");
 			auto workingDirectory = Path("C:/WorkingDirectory/");
 			auto recipe = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 			}));
@@ -60,7 +63,7 @@ namespace Soup::Core::UnitTests
 			{
 				{
 					"C++",
-					KnownLanguage("User1", "Cpp")
+					KnownLanguage("user1", "cpp")
 				}
 			});
 			auto uut = RecipeBuildLocationManager(knownLanguages);
@@ -100,11 +103,11 @@ namespace Soup::Core::UnitTests
 					OutputRoot: './BuildOut/'
 				)")));
 
-			auto packageName = Core::PackageName(std::nullopt, "MyPackage");
+			auto packageName = PackageName(std::nullopt, "my-package");
 			auto workingDirectory = Path("C:/WorkingDirectory/");
 			auto recipe = Recipe(RecipeTable(
 			{
-				{ "Name", "MyPackage" },
+				{ "Name", "my-package" },
 				{ "Language", "C++|1" },
 				{ "Version", "1.2.3" },
 			}));
@@ -114,7 +117,7 @@ namespace Soup::Core::UnitTests
 			{
 				{
 					"C++",
-					KnownLanguage("User1", "Cpp")
+					KnownLanguage("user1", "cpp")
 				}
 			});
 			auto uut = RecipeBuildLocationManager(knownLanguages);
@@ -126,7 +129,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			Assert::AreEqual(
-				Path("C:/BuildOut/C++/Local/MyPackage/1.2.3/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+				Path("C:/BuildOut/cpp/local/my-package/1.2.3/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
 				targetDirectory,
 				"Verify target directory matches expected.");
 
@@ -135,7 +138,7 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"INFO: Found Root Recipe: 'C:/root-recipe.sml'",
 					"DIAG: Load Root Recipe: C:/root-recipe.sml",
-					"INFO: Override root output: C:/BuildOut/C++/Local/MyPackage/1.2.3/",
+					"INFO: Override root output: C:/BuildOut/cpp/local/my-package/1.2.3/",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");

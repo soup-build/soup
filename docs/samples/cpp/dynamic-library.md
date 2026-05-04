@@ -3,10 +3,10 @@ This is a console application that has a single dynamic library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library)
 
-## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.Cpp.DynamicLibrary.Library".
+## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/library/recipe.sml)
+The Recipe file that defines the static library "samples-cpp-dynamic-library-library".
 ```sml
-Name: 'Samples.Cpp.DynamicLibrary.Library'
+Name: 'samples-cpp-dynamic-library-library'
 Language: 'C++|0'
 Version: 1.0.0
 Type: 'DynamicLibrary'
@@ -26,7 +26,7 @@ PublicHeaders: [
 ]
 ```
 
-## [library/public/library.h](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/library/public/library.h)
+## [library/public/library.h](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/library/public/library.h)
 A module header file that declares a single sample class.
 ```cpp
 #ifdef _WIN32
@@ -39,7 +39,7 @@ A module header file that declares a single sample class.
   #define LIBRARY_API
 #endif
 
-namespace Samples::Cpp::DynamicLibrary::Library
+namespace Sample::DynamicLibrary::Library
 {
   class Helper
   {
@@ -49,12 +49,12 @@ namespace Samples::Cpp::DynamicLibrary::Library
 }
 ```
 
-## [library/library.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/library/library.cpp)
+## [library/library.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/library/library.cpp)
 A library file implements a sample class.
 ```cpp
 #include "library.h"
 
-namespace Samples::Cpp::DynamicLibrary::Library
+namespace Sample::DynamicLibrary::Library
 {
   const char* Helper::GetName()
   {
@@ -63,10 +63,10 @@ namespace Samples::Cpp::DynamicLibrary::Library
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.Cpp.DynamicLibrary.Application".
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/application/recipe.sml)
+The Recipe file that defines the executable "samples-cpp-dynamic-library-application".
 ```sml
-Name: 'Samples.Cpp.DynamicLibrary.Application'
+Name: 'samples-cpp-dynamic-library-application'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -77,16 +77,16 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dynamic library dependency.
 
-## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/application/main.cpp)
+## [application/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
 ```cpp
 #include <iostream>
 #include <library.h>
 
-using namespace Samples::Cpp::DynamicLibrary::Library;
+using namespace Sample::DynamicLibrary::Library;
 
 int main()
 {
@@ -95,5 +95,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/dynamic-library/)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/dynamic-library/)
 A simple git ignore file to exclude all Soup build output.

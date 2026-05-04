@@ -12,13 +12,14 @@ module;
 export module Soup.Core:RecipeCache;
 
 import Opal;
-import :PackageReference;
+import Soup.SML;
 import :Recipe;
 import :RecipeExtensions;
 import :RootRecipe;
 import :RootRecipeExtensions;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core
 {

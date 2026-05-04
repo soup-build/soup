@@ -1,4 +1,11 @@
 #ifdef _WIN32
-__declspec(dllexport)
+	#ifdef EXPORT_LIBRARY
+		#define LIBRARY_API __declspec(dllexport)
+	#else
+		#define LIBRARY_API __declspec(dllimport)
+	#endif
+#else
+	#define LIBRARY_API
 #endif
-const char* GetName();
+
+LIBRARY_API const char* GetName();

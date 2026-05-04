@@ -19,12 +19,12 @@ namespace Monitor
 			DebugTrace("ConnectionManagerBase::ConnectionManagerBase");
 		}
 
-		void Initialize(int32_t traceProcessId)
+		void Initialize(int32_t traceProcessId, int32_t traceChildId)
 		{
 			DebugTrace("ConnectionManagerBase::Initialize");
 			{
 				auto lock = std::lock_guard<std::mutex>(pipeMutex);
-				Connect(traceProcessId);
+				Connect(traceProcessId, traceChildId);
 			}
 
 			// Notify that we are connected
@@ -64,12 +64,12 @@ namespace Monitor
 	#ifdef TRACE_DETOUR_CLIENT
 		void DebugError(std::string_view message, uint32_t value)
 		{
-			printf("DETOUR-CLIENT-ERROR: %s %u\n", message.data(), value);
+			std::cout << "DETOUR-CLIENT-ERROR: " << message << " " << value << std::endl;
 		}
 
 		void DebugError(std::string_view message)
 		{
-			printf("DETOUR-CLIENT-ERROR: %s\n", message.data());
+			std::cout << "DETOUR-CLIENT-ERROR: " << message << std::endl;
 		}
 	#else
 		void DebugError(std::string_view /*message*/, uint32_t /*value*/)
@@ -87,7 +87,7 @@ namespace Monitor
 		static void DebugTrace(std::string_view message, Args&&... args)
 		{
 			auto result = std::vformat(message, std::make_format_args(args...));
-			printf("DETOUR-CLIENT: %s\n", result.c_str());
+			std::cout <<  "DETOUR-CLIENT: " << result << std::endl;
 		}
 	#else
 		template<typename... Args>
@@ -98,7 +98,7 @@ namespace Monitor
 	#endif
 
 	protected:
-		virtual void Connect(int32_t traceProcessId) = 0;
+		virtual void Connect(int32_t traceProcessId, int32_t traceChildId) = 0;
 		virtual void Disconnect() = 0;
 		virtual bool TryUnsafeWriteMessage(const Message& message) = 0;
 	};

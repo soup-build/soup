@@ -3,16 +3,16 @@ This is a console application that has a single static library dependency.
 
 [Source](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library)
 
-## [library/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/library/recipe.sml)
-The Recipe file that defines the static library "Samples.Cpp.StaticLibrary.Library".
+## [library/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/static-library/library/recipe.sml)
+The Recipe file that defines the static library "samples-cpp-static-library-library".
 ```sml
-Name: 'Samples.Cpp.StaticLibrary.Library'
+Name: 'samples-cpp-static-library-library'
 Language: 'C++|0'
 Version: 1.0.0
 Type: 'StaticLibrary'
 ```
 
-## [library/library.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/library/library.cpp)
+## [library/library.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/static-library/library/library.cpp)
 A module interface file that exports a single sample class.
 ```cpp
 module;
@@ -20,10 +20,10 @@ module;
 // Include all standard library headers in the global module
 #include <string>
 
-export module Samples.Cpp.StaticLibrary.Library;
+export module Sample.StaticLibrary.Library;
 
 // Note: The namespace does not have to match the module name
-export namespace Samples::Cpp::StaticLibrary::Library
+export namespace Sample::StaticLibrary::Library
 {
   class Helper
   {
@@ -36,10 +36,10 @@ export namespace Samples::Cpp::StaticLibrary::Library
 }
 ```
 
-## [application/recipe.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/recipe.sml)
-The Recipe file that defines the executable "Samples.Cpp.StaticLibrary.Application".
+## [application/recipe.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/static-library/application/recipe.sml)
+The Recipe file that defines the executable "samples-cpp-static-library-application".
 ```sml
-Name: 'Samples.Cpp.StaticLibrary.Application'
+Name: 'samples-cpp-static-library-application'
 Language: 'C++|0'
 Type: 'Executable'
 Version: 1.0.0
@@ -50,16 +50,16 @@ Dependencies: {
 }
 ```
 
-## [application/package-lock.sml](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/package-lock.sml)
+## [application/package-lock.sml](https://github.com/soup-build/soup/blob/main/samples/cpp/static-library/application/package-lock.sml)
 The package lock that was generated to capture the unique dependencies required to build this project and the dependency static library.
 
-## [application/main.cpp](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/application/main.cpp)
+## [application/main.cpp](https://github.com/soup-build/soup/blob/main/samples/cpp/static-library/application/main.cpp)
 A simple main method that prints our "Hello World, Soup Style!" by using the module from the library.
 ```cpp
 #include <iostream>
 
-import Samples.Cpp.StaticLibrary.Library;
-using namespace Samples::Cpp::StaticLibrary::Library;
+import Sample.StaticLibrary.Library;
+using namespace Sample::StaticLibrary::Library;
 
 int main()
 {
@@ -68,5 +68,5 @@ int main()
 }
 ```
 
-## [.gitignore](https://github.com/soup-build/soup/tree/main/samples/cpp/static-library/.gitignore)
+## [.gitignore](https://github.com/soup-build/soup/blob/main/samples/cpp/static-library/.gitignore)
 A simple git ignore file to exclude all Soup build output.

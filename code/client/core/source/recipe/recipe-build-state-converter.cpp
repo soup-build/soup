@@ -9,11 +9,12 @@ module;
 export module Soup.Core:RecipeBuildStateConverter;
 
 import Opal;
-import :PackageReference;
+import Soup.SML;
 import :RecipeValue;
 import :Value;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 namespace Soup::Core
 {

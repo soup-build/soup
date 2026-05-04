@@ -13,14 +13,13 @@ module;
 export module Soup.Core:PackageLock;
 
 import Opal;
+import Soup.SML;
 import :Digest;
-import :PackageName;
-import :PackageReference;
 import :PackageWithArtifactReference;
 import :RecipeValue;
-import :SequenceMap;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 export namespace Soup::Core
 {
@@ -120,7 +119,8 @@ export namespace Soup::Core
 					if (versionValue.IsVersion())
 					{
 						auto version = versionValue.AsVersion();
-						reference = PackageReference(std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
+						reference = PackageReference(
+							std::nullopt, projectName.GetOwner(), projectName.GetName(), version);
 					}
 					else if (versionValue.IsString())
 					{

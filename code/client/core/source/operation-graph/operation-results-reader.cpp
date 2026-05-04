@@ -17,6 +17,7 @@ import :FileSystemState;
 import :OperationInfo;
 import :OperationResult;
 import :OperationResults;
+import :ValueTableReader;
 
 using namespace Opal;
 
@@ -29,7 +30,7 @@ namespace Soup::Core
 	{
 	private:
 		// Binary Operation Results file format
-		static constexpr uint32_t FileVersion = 2;
+		static constexpr uint32_t FileVersion = 3;
 
 		// The time duration that represents how we store the values in the file using 64 bit integer with resolution of 100 nanoseconds
 		// Note: Unix Time, time since 00:00:00 Coordinated Universal Time (UTC), Thursday, 1 January 1970, not counting leap seconds
@@ -161,11 +162,20 @@ namespace Soup::Core
 			// Read the observed output files
 			auto observedOutput = ReadFileIdList(data, size, offset, activeFileIdMap);
 
+			// Read the optional observed values
+			std::optional<ValueTable> observedValues = std::nullopt;
+			auto hasObservedValues = ReadBoolean(data, size, offset);
+			if (hasObservedValues)
+			{
+				observedValues = ValueTableReader::ReadValueTable(data, size, offset);
+			}
+
 			auto result = OperationResult(
 				wasSuccessfulRun,
 				evaluateTimeFile,
 				std::move(observedInput),
-				std::move(observedOutput));
+				std::move(observedOutput),
+				std::move(observedValues));
 
 			results.AddOrUpdateOperationResult(operationId, std::move(result));
 		}

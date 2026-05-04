@@ -69,6 +69,15 @@ namespace PrintValueTable
 		case Soup::Core::ValueType::Boolean:
 			std::cout << value.AsBoolean();
 			break;
+		case Soup::Core::ValueType::Version:
+			std::cout << value.AsVersion().ToString();
+			break;
+		case Soup::Core::ValueType::PackageReference:
+			std::cout << value.AsPackageReference().ToString();
+			break;
+		case Soup::Core::ValueType::LanguageReference:
+			std::cout << value.AsLanguageReference().ToString();
+			break;
 		default:
 			throw std::runtime_error("Unknown ValueType");
 		}

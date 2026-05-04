@@ -1,4 +1,4 @@
-Name: 'Samples.Cpp.DirectX'
+Name: 'samples-cpp-directx'
 Language: 'C++|0'
 Type: 'Windows'
 Version: 1.0.0

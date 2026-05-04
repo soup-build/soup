@@ -41,7 +41,7 @@ namespace Soup::Core
 			stream.write("BGR\0", 4);
 			WriteValue(stream, FileVersion);
 
-			WriteValue(stream, state.IsPreprocessor());
+			WriteValue(stream, state.HasPreprocessor());
 
 			// Write out the set of files
 			stream.write("FIS\0", 4);

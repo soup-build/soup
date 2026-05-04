@@ -45,23 +45,18 @@ namespace Soup::Core::UnitTests
 			// Initialize the file system state
 			auto fileSystemState = FileSystemState(
 				2,
-				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
-				}),
+				std::unordered_map<FileId, Path>({}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, std::nullopt },
-				}));
+				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
 
 			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
+			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
+				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({});
 
 			// Perform the check
 			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
+			bool result = uut.IsOutdated(evaluateTime, inputFiles);
 
 			// Verify the results
 			Assert::IsFalse(result, "Verify the result is false.");
@@ -74,7 +69,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_UnknownTarget()
+		void IsOutdated_SingleInput_UnknownInputFile()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -88,134 +83,28 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
 					{ 2, Path("C:/Root/Input.cpp") },
 				}),
 				{},
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 2, std::nullopt },
 				}));
 
 			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
-			auto inputFiles = std::vector<FileId>({
-				2,
-			});
-
-			// Perform the check
-			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
-
-			// Verify the results
-			Assert::IsTrue(result, "Verify the result is true.");
-
-			// Verify expected logs
-			Assert::AreEqual(
-				std::vector<std::string>({
-					"INFO: Output target does not exist: C:/Root/Output.bin",
-				}),
-				testListener->GetMessages(),
-				"Verify log messages match expected.");
-
-			// Verify expected file system requests
-			Assert::AreEqual(
-				std::vector<std::string>({
-					"TryGetLastWriteTime: C:/Root/Output.bin",
-				}),
-				fileSystem->GetRequests(),
-				"Verify file system requests match expected.");
-		}
-
-		// [[Fact]]
-		void IsOutdated_SingleInput_DeletedTarget()
-		{
-			// Register the test listener
-			auto testListener = std::make_shared<TestTraceListener>();
-			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
-
-			// Initialize the file system state
-			auto fileSystemState = FileSystemState(
-				3,
-				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
-					{ 2, Path("C:/Root/Input.cpp") },
-				}),
-				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, std::nullopt },
-					{ 2, std::nullopt },
-				}));
-
-			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
-			auto inputFiles = std::vector<FileId>({
-				2,
-			});
-
-			// Perform the check
-			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
-
-			// Verify the results
-			Assert::IsTrue(result, "Verify the result is true.");
-
-			// Verify expected logs
-			Assert::AreEqual(
-				std::vector<std::string>({
-					"INFO: Output target does not exist: C:/Root/Output.bin",
-				}),
-				testListener->GetMessages(),
-				"Verify log messages match expected.");
-		}
-
-		// [[Fact]]
-		void IsOutdated_SingleInput_TargetExists_UnknownInputFile()
-		{
-			// Register the test listener
-			auto testListener = std::make_shared<TestTraceListener>();
-			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
-
-			// Register the test file system
-			auto fileSystem = std::make_shared<MockFileSystem>();
-			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
-
-			// Create the file state
-			auto outputTime = std::chrono::clock_cast<std::chrono::file_clock>(
+			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
 				std::chrono::sys_days(May/22/2015) + 9h + 12min);
-
-			// Initialize the file system state
-			auto fileSystemState = FileSystemState(
-				3,
-				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
-					{ 2, Path("C:/Root/Input.cpp") },
-				}),
-				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, outputTime },
-				}));
-
-			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
 
 			// Perform the check
 			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
+			bool result = uut.IsOutdated(evaluateTime, inputFiles);
 			Assert::IsTrue(result, "Verify the result is true.");
 
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"INFO: Input Missing [C:/Root/Input.cpp]",
+					"INFO: File Missing [C:/Root/Input.cpp]",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -230,7 +119,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_TargetExists_DeletedInputFile()
+		void IsOutdated_SingleInput_DeletedInputFile()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
@@ -241,39 +130,33 @@ namespace Soup::Core::UnitTests
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
 			// Create the file state
-			auto outputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
-
 			// Initialize the file system state
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
 					{ 2, Path("C:/Root/Input.cpp") },
 				}),
 				{},
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, outputTime },
 					{ 2, std::nullopt },
 				}));
 
 			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
+			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
+				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
 
 			// Perform the check
 			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
+			bool result = uut.IsOutdated(evaluateTime, inputFiles);
 			Assert::IsTrue(result, "Verify the result is true.");
 
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"INFO: Input Missing [C:/Root/Input.cpp]",
+					"INFO: File Missing [C:/Root/Input.cpp]",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
@@ -286,15 +169,13 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_TargetExists_Outdated()
+		void IsOutdated_SingleInput_Outdated()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
 
 			// Create the file state
-			auto outputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputTime = std::chrono::clock_cast<std::chrono::file_clock>(
 				std::chrono::sys_days(May/22/2015) + 9h + 13min);
 
@@ -302,26 +183,23 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
 					{ 2, Path("C:/Root/Input.cpp") },
 				}),
 				{},
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, outputTime },
 					{ 2, inputTime },
 				}));
 
 			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
+			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
+				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
 
 			// Perform the check
 			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
+			bool result = uut.IsOutdated(evaluateTime, inputFiles);
 
 			// Verify the results
 			Assert::IsTrue(result, "Verify the result is true.");
@@ -329,22 +207,20 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"INFO: Input altered after target [C:/Root/Input.cpp] -> [C:/Root/Output.bin]",
+					"INFO: File altered after last evaluate [C:/Root/Input.cpp]",
 				}),
 				testListener->GetMessages(),
 				"Verify log messages match expected.");
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_TargetExists_UpToDate()
+		void IsOutdated_SingleInput_UpToDate()
 		{
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
 
 			// Create the file state
-			auto outputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputTime = std::chrono::clock_cast<std::chrono::file_clock>(
 				std::chrono::sys_days(May/22/2015) + 9h + 11min);
 
@@ -352,26 +228,23 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
 					{ 2, Path("C:/Root/Input.cpp") },
 				}),
 				{},
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, outputTime },
 					{ 2, inputTime },
 				}));
 
 			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
+			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
+				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
 
 			// Perform the check
 			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
+			bool result = uut.IsOutdated(evaluateTime, inputFiles);
 
 			// Verify the results
 			Assert::IsFalse(result, "Verify the result is false.");
@@ -391,8 +264,6 @@ namespace Soup::Core::UnitTests
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
 
 			// Create the file state
-			auto outputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputTime = std::chrono::clock_cast<std::chrono::file_clock>(
 				std::chrono::sys_days(May/22/2015) + 9h + 11min);
 
@@ -400,21 +271,18 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState(
 				4,
 				std::unordered_map<FileId, Path>({
-					{ 1, Path("C:/Root/Output.bin") },
 					{ 2, Path("C:/Root/Input.cpp") },
 					{ 3, Path("C:/Input.h") },
 				}),
 				{},
 				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 1, outputTime },
 					{ 2, inputTime },
 					{ 3, inputTime },
 				}));
 
 			// Setup the input parameters
-			auto targetFiles = std::vector<FileId>({
-				1,
-			});
+			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
+				std::chrono::sys_days(May/22/2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 				3,
@@ -422,7 +290,7 @@ namespace Soup::Core::UnitTests
 
 			// Perform the check
 			auto uut = BuildHistoryChecker(fileSystemState);
-			bool result = uut.IsOutdated(targetFiles, inputFiles);
+			bool result = uut.IsOutdated(evaluateTime, inputFiles);
 
 			// Verify the results
 			Assert::IsFalse(result, "Verify the result is false.");

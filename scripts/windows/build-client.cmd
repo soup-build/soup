@@ -32,10 +32,10 @@ for /f %%i in ('soup target %MonitorClientDir% -architecture x64 -flavor %Flavor
 for /f %%i in ('soup target %MonitorClientDir% -architecture x86 -flavor %Flavor%') do set MonitorClientOutputX86Directory=%%i
 
 REM - Copy the monitor client dlls
-echo copy "%MonitorClientOutputX64Directory%\bin\Monitor.Client.dll" "%ClientCLIOutputDirectory%\bin\Monitor.Client.64.dll"
-copy "%MonitorClientOutputX64Directory%\bin\Monitor.Client.dll" "%ClientCLIOutputDirectory%\bin\Monitor.Client.64.dll"
-echo copy "%MonitorClientOutputX86Directory%\bin\Monitor.Client.dll" "%ClientCLIOutputDirectory%\bin\Monitor.Client.32.dll"
-copy "%MonitorClientOutputX86Directory%\bin\Monitor.Client.dll" "%ClientCLIOutputDirectory%\bin\Monitor.Client.32.dll"
+echo copy "%MonitorClientOutputX64Directory%\bin\monitor-client.dll" "%ClientCLIOutputDirectory%\bin\monitor-client.64.dll"
+copy "%MonitorClientOutputX64Directory%\bin\monitor-client.dll" "%ClientCLIOutputDirectory%\bin\monitor-client.64.dll"
+echo copy "%MonitorClientOutputX86Directory%\bin\monitor-client.dll" "%ClientCLIOutputDirectory%\bin\monitor-client.32.dll"
+copy "%MonitorClientOutputX86Directory%\bin\monitor-client.dll" "%ClientCLIOutputDirectory%\bin\monitor-client.32.dll"
 
 REM - Restore client native
 echo soup restore %CodeDir%\client\native

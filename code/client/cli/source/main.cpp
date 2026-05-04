@@ -19,8 +19,11 @@
 import Monitor.Host;
 import Opal;
 import Soup.Core;
+import Soup.View;
+import Soup.SML;
 
 using namespace Opal;
+using namespace Soup::SML;
 
 #include "program.h"
 

@@ -17,12 +17,14 @@ public class OperationResult : IEquatable<OperationResult>
 		bool wasSuccessfulRun,
 		DateTime evaluateTime,
 		IList<FileId> observedInput,
-		IList<FileId> observedOutput)
+		IList<FileId> observedOutput,
+		ValueTable? observedValues)
 	{
 		this.WasSuccessfulRun = wasSuccessfulRun;
 		this.EvaluateTime = evaluateTime;
 		this.ObservedInput = observedInput;
 		this.ObservedOutput = observedOutput;
+		this.ObservedValues = observedValues;
 	}
 
 	public bool Equals(OperationResult? other)
@@ -64,4 +66,5 @@ public class OperationResult : IEquatable<OperationResult>
 	public DateTime EvaluateTime { get; init; }
 	public IList<FileId> ObservedInput { get; init; }
 	public IList<FileId> ObservedOutput { get; init; }
+	public ValueTable? ObservedValues { get; init; }
 }

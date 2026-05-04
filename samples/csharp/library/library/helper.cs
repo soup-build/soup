@@ -1,4 +1,4 @@
-namespace Samples.CSharp.Library
+namespace Sample.Library
 {
 	public class Helper
 	{

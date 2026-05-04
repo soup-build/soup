@@ -73,6 +73,15 @@ namespace Soup::Client
 					options->Architecture = std::move(architectureValue);
 				}
 
+				auto parallelizationValue = std::string();
+				options->Parallelization = 0;
+				if (TryGetValueArgument("p", unusedArgs, parallelizationValue))
+				{
+					options->Parallelization = std::stoi(parallelizationValue);
+					if (options->Parallelization > 20)
+						throw std::runtime_error("Invalid amount of parallelization");
+				}
+
 				result = std::move(options);
 			}
 			else if (commandType == "init")
@@ -284,6 +293,25 @@ namespace Soup::Client
 				}
 
 				options->Verbosity = CheckVerbosity(unusedArgs);
+
+
+				auto ownerValue = std::string();
+				if (TryGetValueArgument("owner", unusedArgs, ownerValue))
+				{
+					options->Owner = std::move(ownerValue);
+				}
+
+				auto flavorValue = std::string();
+				if (TryGetValueArgument("flavor", unusedArgs, flavorValue))
+				{
+					options->Flavor = std::move(flavorValue);
+				}
+
+				auto architectureValue = std::string();
+				if (TryGetValueArgument("architecture", unusedArgs, architectureValue))
+				{
+					options->Architecture = std::move(architectureValue);
+				}
 
 				result = std::move(options);
 			}

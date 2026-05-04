@@ -1,6 +1,6 @@
 using System;
 
-namespace Samples.CSharp.ConsoleApplication
+namespace Sample.ConsoleApplication
 {
 	public class Program
 	{

@@ -27,7 +27,7 @@ int main()
 
 	TestState state = { 0, 0 };
 
-	state += RunBuildEngineTests();
+	state += RunBuildTests();
 	state += RunBuildEvaluateEngineTests();
 	state += RunBuildHistoryCheckerTests();
 	state += RunBuildLoadEngineTests();
