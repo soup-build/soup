@@ -37,3 +37,14 @@ cd code/client/cli
 soup restore
 soup build
 ```
+
+## LSP Generation
+
+Soup does not yet integrate directly into clangd language service so we need to generate the compile commands before loading the service so it knowns how to compile all of our source files.
+
+Install [Bear](https://github.com/rizsotto/Bear)
+```
+bear -- soup build code/client/cli/ -force
+```
+this will force rebuild the entire project so bear can track commands to compile each source file.
+

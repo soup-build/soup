@@ -4,9 +4,7 @@
 
 module;
 
-#include <memory>
 #include <optional>
-#include <vector>
 
 export module Soup.View:PackageLoadState;
 

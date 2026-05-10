@@ -5,7 +5,6 @@
 module;
 
 #include <stdexcept>
-#include <string>
 
 export module Soup.View:ValueTreeConverter;
 
