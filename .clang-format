@@ -1,0 +1,8 @@
+# Tabs are better for semantics, accessibility and customization
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+
+# Do not try to be cute with comments.
+AlignTrailingComments:
+  Kind: Never
