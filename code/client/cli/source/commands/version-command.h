@@ -6,30 +6,27 @@
 #include "i-command.h"
 #include "version-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Version Command
 	/// </summary>
-	class VersionCommand : public ICommand
-	{
+	class VersionCommand : public ICommand {
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="VersionCommand"/> class.
+		/// Initializes a new instance of the <see cref="VersionCommand"/>
+		/// class.
 		/// </summary>
-		VersionCommand(VersionOptions options) :
-			_options(std::move(options))
-		{
-		}
+		VersionCommand(VersionOptions options)
+			: _options(std::move(options)) {}
 
 		/// <summary>
 		/// Main entry point for a unique command
 		/// </summary>
-		virtual void Run() override final
-		{
+		virtual void Run() override final {
 			Log::Diag("VersionsCommand::Run");
 
-			// TODO var version = Assembly.GetExecutingAssembly().GetName().Version;
+			// TODO var version =
+			// Assembly.GetExecutingAssembly().GetName().Version;
 			// Log::Message($"{version.Major}.{version.Minor}.{version.Build}");
 			Log::HighPriority("0.47.3");
 		}

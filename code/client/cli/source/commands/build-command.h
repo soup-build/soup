@@ -3,69 +3,66 @@
 // </copyright>
 
 #pragma once
-#include "i-command.h"
 #include "build-options.h"
+#include "i-command.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Build Command
 	/// </summary>
-	class BuildCommand : public ICommand
-	{
+	class BuildCommand : public ICommand {
 	public:
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BuildCommand"/> class.
 		/// </summary>
-		BuildCommand(BuildOptions options) :
-			_options(std::move(options))
-		{
-		}
+		BuildCommand(BuildOptions options)
+			: _options(std::move(options)) {}
 
 		/// <summary>
 		/// Main entry point for a unique command
 		/// </summary>
-		virtual void Run() override final
-		{
+		virtual void Run() override final {
 			Log::Diag("BuildCommand::Run");
 			auto startTime = std::chrono::high_resolution_clock::now();
 
 			auto workingDirectory = Path();
-			if (_options.Path.empty())
-			{
+			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-			}
-			else
-			{
+				workingDirectory =
+					System::IFileSystem::Current().GetCurrentDirectory();
+			} else {
 				// Parse the path in any system valid format
-				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory =
+					Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
-				if (!workingDirectory.HasRoot())
-				{
-					workingDirectory = System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
+				if (!workingDirectory.HasRoot()) {
+					workingDirectory =
+						System::IFileSystem::Current().GetCurrentDirectory() +
+						workingDirectory;
 				}
 			}
 
 			auto systemReadAccess = std::vector<Path>();
 
-			// Platform specific defaults
-			#if defined(_WIN32)
-				auto hostPlatform = "Windows";
+// Platform specific defaults
+#if defined(_WIN32)
+			auto hostPlatform = "Windows";
 
-				// Allow read access from system directories
-				systemReadAccess.push_back(
-					Path("C:/Windows/"));
-			#elif defined(__linux__)
-				auto hostPlatform = "Linux";
-			#else
-				#error "Unknown Platform"
-			#endif
+			// Allow read access from system directories
+			systemReadAccess.push_back(Path("C:/Windows/"));
+#elif defined(__linux__)
+			auto hostPlatform = "Linux";
+#else
+#error "Unknown Platform"
+#endif
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
-			arguments.Parallelization = _options.Parallelization > 0 ? _options.Parallelization : Core::Build::Constants::GetDefaultParallelization();
+			arguments.Parallelization =
+				_options.Parallelization > 0
+					? _options.Parallelization
+					: Core::Build::Constants::GetDefaultParallelization();
 			arguments.WorkingDirectory = std::move(workingDirectory);
 			arguments.ForceRebuild = _options.Force;
 			arguments.SkipGenerate = _options.SkipGenerate;
@@ -76,9 +73,11 @@ namespace Soup::Client
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
-				arguments.GlobalParameters.emplace("Flavor", Core::Value(_options.Flavor));
+				arguments.GlobalParameters.emplace(
+					"Flavor", Core::Value(_options.Flavor));
 			if (!_options.Architecture.empty())
-				arguments.GlobalParameters.emplace("Architecture", Core::Value(_options.Architecture));
+				arguments.GlobalParameters.emplace(
+					"Architecture", Core::Value(_options.Architecture));
 
 			// TODO: Generic parameters
 
@@ -86,45 +85,36 @@ namespace Soup::Client
 			Log::Info("Begin Build:");
 
 			// Find the built in folder root
-			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto processFilename =
+				System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
 			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
-			
+
 			auto recipeCache = Core::RecipeCache();
 
 			auto packageProvider = Core::Build::LoadBuildGraph(
-				arguments.WorkingDirectory,
-				std::nullopt,
-				arguments.GlobalParameters,
-				userDataPath,
-				hostPlatform,
+				arguments.WorkingDirectory, std::nullopt,
+				arguments.GlobalParameters, userDataPath, hostPlatform,
 				recipeCache);
 
-			Core::Build::Execute(
-				packageProvider,
-				std::move(arguments),
-				userDataPath,
-				systemReadAccess,
-				recipeCache);
+			Core::Build::Execute(packageProvider, std::move(arguments),
+								 userDataPath, systemReadAccess, recipeCache);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+			auto duration =
+				std::chrono::duration_cast<std::chrono::duration<double>>(
+					endTime - startTime);
 
 			std::ostringstream durationMessage;
-			if (duration.count() >= 60)
-			{
+			if (duration.count() >= 60) {
 				durationMessage << std::fixed << std::setprecision(2);
-				durationMessage << duration.count() / 60  << " minutes";
-			}
-			else if (duration.count() >= 10)
-			{
+				durationMessage << duration.count() / 60 << " minutes";
+			} else if (duration.count() >= 10) {
 				durationMessage << std::fixed << std::setprecision(0);
 				durationMessage << duration.count() << " seconds";
-			}
-			else
-			{
+			} else {
 				durationMessage << std::fixed << std::setprecision(3);
 				durationMessage << duration.count() << " seconds";
 			}

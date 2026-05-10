@@ -6,50 +6,45 @@
 #include "i-command.h"
 #include "install-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Install Command
 	/// </summary>
-	class InstallCommand : public ICommand
-	{
+	class InstallCommand : public ICommand {
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="InstallCommand"/> class.
+		/// Initializes a new instance of the <see cref="InstallCommand"/>
+		/// class.
 		/// </summary>
-		InstallCommand(InstallOptions options) :
-			_options(std::move(options))
-		{
-		}
+		InstallCommand(InstallOptions options)
+			: _options(std::move(options)) {}
 
 		/// <summary>
 		/// Main entry point for a unique command
 		/// </summary>
-		virtual void Run() override final
-		{
+		virtual void Run() override final {
 			Log::Diag("InstallCommand::Run");
 
 			auto workingDirectory = Path();
-			if (_options.Path.empty())
-			{
+			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-			}
-			else
-			{
+				workingDirectory =
+					System::IFileSystem::Current().GetCurrentDirectory();
+			} else {
 				// Parse the path in any system valid format
-				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory =
+					Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
-				if (!workingDirectory.HasRoot())
-				{
-					workingDirectory = System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
+				if (!workingDirectory.HasRoot()) {
+					workingDirectory =
+						System::IFileSystem::Current().GetCurrentDirectory() +
+						workingDirectory;
 				}
 			}
 
 			Core::PackageManager::InstallPackageReference(
-				workingDirectory,
-				_options.PackageReference);
+				workingDirectory, _options.PackageReference);
 		}
 
 	private:

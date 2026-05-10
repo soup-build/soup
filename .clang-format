@@ -6,3 +6,15 @@ TabWidth: 4
 # Do not try to be cute with comments.
 AlignTrailingComments:
   Kind: Never
+
+# Visually call out when access modifier scope changes
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+
+# Consistent intializers on new lines
+PackConstructorInitializers: Never
+
+# Visually indicate when in namespace
+NamespaceIndentation: All
+# Visual noise that does not improve readability
+FixNamespaceComments: false
