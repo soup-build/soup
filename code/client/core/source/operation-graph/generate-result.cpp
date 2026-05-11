@@ -17,61 +17,46 @@ import :OperationGraph;
 
 using namespace Opal;
 
-namespace Soup::Core 
-{
+namespace Soup::Core {
 	/// <summary>
-	/// The generate result that represents the known operation graph that needs to 
-	/// be evaluated and a boolean indication if this is a preprocessing run
+	/// The generate result that represents the known operation graph that needs
+	/// to be evaluated and a boolean indication if this is a preprocessing run
 	/// </summary>
-	export class GenerateResult
-	{
+	export class GenerateResult {
 	private:
 		OperationGraph _graph;
 		bool _hasPreprocessor;
 
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="GenerateResult"/> class.
+		/// Initializes a new instance of the <see cref="GenerateResult"/>
+		/// class.
 		/// </summary>
-		GenerateResult() :
-			_graph(),
-			_hasPreprocessor()
-		{
-		}
+		GenerateResult()
+			: _graph(),
+			  _hasPreprocessor() {}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="GenerateResult"/> class.
+		/// Initializes a new instance of the <see cref="GenerateResult"/>
+		/// class.
 		/// </summary>
-		GenerateResult(
-			OperationGraph graph,
-			bool hasPreprocessor) :
-			_graph(std::move(graph)),
-			_hasPreprocessor(hasPreprocessor)
-		{
-		}
+		GenerateResult(OperationGraph graph, bool hasPreprocessor)
+			: _graph(std::move(graph)),
+			  _hasPreprocessor(hasPreprocessor) {}
 
 		/// <summary>
 		/// Get the operation graph
 		/// </summary>
-		const OperationGraph& GetGraph() const
-		{
-			return _graph;
-		}
+		const OperationGraph &GetGraph() const { return _graph; }
 
 		/// <summary>
 		/// Get the operation graph
 		/// </summary>
-		OperationGraph& GetGraph()
-		{
-			return _graph;
-		}
+		OperationGraph &GetGraph() { return _graph; }
 
 		/// <summary>
 		/// Get a value indicating if the graph has preprocessing operations
 		/// </summary>
-		bool HasPreprocessor() const
-		{
-			return _hasPreprocessor;
-		}
+		bool HasPreprocessor() const { return _hasPreprocessor; }
 	};
 }

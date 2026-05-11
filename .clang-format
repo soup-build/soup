@@ -3,6 +3,12 @@ UseTab: Always
 IndentWidth: 4
 TabWidth: 4
 
+BinPackArguments: true
+# TODO: Clang-Format 23
+# Either place everthing on the same line or one per line
+#PackParameters:
+#  BinPack: OnePerLine
+
 # Do not try to be cute with comments.
 AlignTrailingComments:
   Kind: Never
@@ -10,6 +16,9 @@ AlignTrailingComments:
 # Visually call out when access modifier scope changes
 IndentAccessModifiers: false
 AccessModifierOffset: -4
+
+# It is very buisy to have switch and cases on the same level
+IndentCaseLabels: true
 
 # Consistent intializers on new lines
 PackConstructorInitializers: Never

@@ -16,22 +16,19 @@ import :Value;
 using namespace Opal;
 using namespace Soup::SML;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
-	/// The recipe build state converter that converts between a recipe table and a value table
+	/// The recipe build state converter that converts between a recipe table
+	/// and a value table
 	/// </summary>
-	export class RecipeBuildStateConverter
-	{
+	export class RecipeBuildStateConverter {
 	public:
 		/// <summary>
 		/// Convert the recipe internal representation to initial build state
 		/// </summary>
-		static ValueTable ConvertToBuildState(const RecipeTable& table)
-		{
+		static ValueTable ConvertToBuildState(const RecipeTable &table) {
 			auto result = ValueTable();
-			for (const auto& [key, value] : table)
-			{
+			for (const auto &[key, value] : table) {
 				auto buildValue = ConvertToBuildState(value);
 				result.emplace(key, std::move(buildValue));
 			}
@@ -43,11 +40,9 @@ namespace Soup::Core
 		/// <summary>
 		/// Convert the recipe internal representation to initial build state
 		/// </summary>
-		static ValueList ConvertToBuildState(const RecipeList& list)
-		{
+		static ValueList ConvertToBuildState(const RecipeList &list) {
 			auto result = ValueList();
-			for (auto& value : list)
-			{
+			for (auto &value : list) {
 				auto buildValue = ConvertToBuildState(value);
 				result.push_back(std::move(buildValue));
 			}
@@ -58,10 +53,8 @@ namespace Soup::Core
 		/// <summary>
 		/// Convert the recipe internal representation to initial build state
 		/// </summary>
-		static Value ConvertToBuildState(const RecipeValue& value)
-		{
-			switch (value.GetType())
-			{
+		static Value ConvertToBuildState(const RecipeValue &value) {
+			switch (value.GetType()) {
 				case RecipeValueType::Table:
 					return Value(ConvertToBuildState(value.AsTable()));
 				case RecipeValueType::List:

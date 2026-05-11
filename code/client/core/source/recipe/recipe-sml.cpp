@@ -18,23 +18,18 @@ import :RecipeValue;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The recipe SML serialize manager
 	/// </summary>
-	export class RecipeSML
-	{
+	export class RecipeSML {
 	public:
 		/// <summary>
 		/// Load from stream
 		/// </summary>
-		static RecipeTable Deserialize(
-			const Path& recipeFile,
-			std::istream& stream)
-		{
-			try
-			{
+		static RecipeTable Deserialize(const Path &recipeFile,
+									   std::istream &stream) {
+			try {
 				// Read the entire file for fastest read operation
 				stream.seekg(0, std::ios_base::end);
 				auto size = stream.tellg();
@@ -51,19 +46,17 @@ namespace Soup::Core
 				Parse(table, root.GetRoot());
 
 				return table;
-			}
-			catch(const std::exception& ex)
-			{
+			} catch (const std::exception &ex) {
 				throw std::runtime_error(
-					std::format("Parsing the Recipe SML failed: {} {}", ex.what(), recipeFile.ToString()));
+					std::format("Parsing the Recipe SML failed: {} {}",
+								ex.what(), recipeFile.ToString()));
 			}
 		}
 
 		/// <summary>
 		/// Save the recipe to the root file
 		/// </summary>
-		static void Serialize(RecipeTable& recipeTable, std::ostream& stream)
-		{
+		static void Serialize(RecipeTable &recipeTable, std::ostream &stream) {
 			// Serialize the contents of the recipe
 			auto document = SMLDocument(Build(recipeTable));
 
@@ -72,80 +65,62 @@ namespace Soup::Core
 		}
 
 	private:
-		static RecipeValue Parse(const SMLValue& source)
-		{
-			switch (source.GetType())
-			{
-				case SMLValueType::Boolean:
-				{
+		static RecipeValue Parse(const SMLValue &source) {
+			switch (source.GetType()) {
+				case SMLValueType::Boolean: {
 					return RecipeValue(source.AsBoolean());
 				}
-				case SMLValueType::Integer:
-				{
+				case SMLValueType::Integer: {
 					return RecipeValue(source.AsInteger());
 				}
-				case SMLValueType::Float:
-				{
+				case SMLValueType::Float: {
 					return RecipeValue(source.AsFloat());
 				}
-				case SMLValueType::String:
-				{
+				case SMLValueType::String: {
 					return RecipeValue(source.AsString());
 				}
-				case SMLValueType::Array:
-				{
+				case SMLValueType::Array: {
 					auto valueList = RecipeList();
 					Parse(valueList, source.AsArray());
 					return RecipeValue(std::move(valueList));
 				}
-				case SMLValueType::Table:
-				{
+				case SMLValueType::Table: {
 					auto valueTable = RecipeTable();
 					Parse(valueTable, source.AsTable());
 					return RecipeValue(std::move(valueTable));
 				}
-				case SMLValueType::Version:
-				{
+				case SMLValueType::Version: {
 					return RecipeValue(source.AsVersion());
 				}
-				case SMLValueType::PackageReference:
-				{
+				case SMLValueType::PackageReference: {
 					return RecipeValue(source.AsPackageReference());
 				}
-				case SMLValueType::LanguageReference:
-				{
+				case SMLValueType::LanguageReference: {
 					return RecipeValue(source.AsLanguageReference());
 				}
-				default:
-				{
+				default: {
 					throw std::runtime_error("Unknown SML type.");
 				}
 			}
 		}
 
-		static void Parse(RecipeTable& target, const SMLTable& source)
-		{
-			for (const auto& [key, value] : source.GetValue())
-			{
+		static void Parse(RecipeTable &target, const SMLTable &source) {
+			for (const auto &[key, value] : source.GetValue()) {
 				auto recipeValue = Parse(value);
 				target.Insert(key, std::move(recipeValue));
 			}
 		}
 
-		static void Parse(RecipeList& target, const SMLArray& source)
-		{
+		static void Parse(RecipeList &target, const SMLArray &source) {
 			target.reserve(source.GetSize());
-			for (size_t i = 0; i < source.GetSize(); i++)
-			{
+			for (size_t i = 0; i < source.GetSize(); i++) {
 				auto value = Parse(source[i]);
 				target.push_back(std::move(value));
 			}
 		}
 
-		static SMLValue Build(const RecipeValue& value)
-		{
-			switch (value.GetType())
-			{
+		static SMLValue Build(const RecipeValue &value) {
+			switch (value.GetType()) {
 				case RecipeValueType::Table:
 					return Build(value.AsTable());
 				case RecipeValueType::List:
@@ -169,24 +144,20 @@ namespace Soup::Core
 			}
 		}
 
-		static SMLTable Build(const RecipeTable& table)
-		{
+		static SMLTable Build(const RecipeTable &table) {
 			auto result = SequenceMap<std::string, SMLValue>();
 
-			for (const auto& [key, value] : table)
-			{
+			for (const auto &[key, value] : table) {
 				result.Insert(key, Build(value));
 			}
 
 			return SMLTable(std::move(result));
 		}
 
-		static SMLArray Build(const RecipeList& list)
-		{
+		static SMLArray Build(const RecipeList &list) {
 			auto result = std::vector<SMLValue>();
 
-			for (auto& value : list)
-			{
+			for (auto &value : list) {
 				result.push_back(Build(value));
 			}
 

@@ -3,27 +3,27 @@ module;
 // TODO: Add a converter level to Opal?
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
-#include <any>
-#include <array>
-#include <chrono>
-#include <codecvt>
+#include <any> // IWYU pragma: keep
+#include <array> // IWYU pragma: keep
+#include <chrono> // IWYU pragma: keep
+#include <codecvt> // IWYU pragma: keep
 #include <cstring>
 #include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <locale>
-#include <map>
-#include <regex>
-#include <optional>
-#include <set>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <fstream>
-#include <unordered_map>
-#include <unordered_set>
-#include <variant>
-#include <vector>
+#include <fstream> // IWYU pragma: keep
+#include <iomanip> // IWYU pragma: keep
+#include <iostream> // IWYU pragma: keep
+#include <locale> // IWYU pragma: keep
+#include <map> // IWYU pragma: keep
+#include <optional> // IWYU pragma: keep
+#include <regex> // IWYU pragma: keep
+#include <set> // IWYU pragma: keep
+#include <sstream> // IWYU pragma: keep
+#include <stack> // IWYU pragma: keep
+#include <string> // IWYU pragma: keep
+#include <unordered_map> // IWYU pragma: keep
+#include <unordered_set> // IWYU pragma: keep
+#include <variant> // IWYU pragma: keep
+#include <vector> // IWYU pragma: keep
 
 #ifdef _WIN32
 
@@ -102,7 +102,7 @@ export import :PackageManager;
 export import :PackageLock;
 export import :PackageLockExtensions;
 
-// Recipe 
+// Recipe
 export import :Digest;
 export import :Recipe;
 export import :RecipeBuildStateConverter;

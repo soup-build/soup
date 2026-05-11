@@ -17,24 +17,24 @@ import :OperationResults;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
-	/// The core build evaluation interface that knows how to perform a build from a provided Operation Graph.
+	/// The core build evaluation interface that knows how to perform a build
+	/// from a provided Operation Graph.
 	/// </summary>
-	export class IEvaluateEngine
-	{
+	export class IEvaluateEngine {
 	public:
 		/// <summary>
-		/// Execute the entire operation graph that is referenced by this build evaluate engine
-		/// Returns true if any of the operations were evaluated
+		/// Execute the entire operation graph that is referenced by this build
+		/// evaluate engine Returns true if any of the operations were evaluated
 		/// </summary>
-		virtual bool Evaluate(
-			OperationGraph& operationGraph,
-			OperationResults& operationResults,
-			const Path& temporaryDirectory,
-			const std::vector<Path>& globalAllowedReadAccess,
-			const std::vector<Path>& globalAllowedWriteAccess,
-			std::optional<std::function<ValueTable(std::string_view)>> processStdOut) = 0;
+		virtual bool
+		Evaluate(OperationGraph &operationGraph,
+				 OperationResults &operationResults,
+				 const Path &temporaryDirectory,
+				 const std::vector<Path> &globalAllowedReadAccess,
+				 const std::vector<Path> &globalAllowedWriteAccess,
+				 std::optional<std::function<ValueTable(std::string_view)>>
+					 processStdOut) = 0;
 	};
 }
