@@ -4,6 +4,7 @@
 
 module;
 
+#include <string>
 #include <stdexcept>
 
 export module Soup.View:ValueTreeConverter;

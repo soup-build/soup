@@ -4,6 +4,7 @@
 
 module;
 
+#include <sstream>
 #include <stdexcept> // IWYU pragma: keep
 
 export module Soup.Core:RootRecipeExtensions;

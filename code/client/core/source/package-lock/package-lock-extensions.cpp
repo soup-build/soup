@@ -4,6 +4,7 @@
 
 module;
 
+#include <sstream>
 #include <memory>
 
 export module Soup.Core:PackageLockExtensions;

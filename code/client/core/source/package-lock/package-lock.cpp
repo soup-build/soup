@@ -8,6 +8,7 @@ module;
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 export module Soup.Core:PackageLock;
 
