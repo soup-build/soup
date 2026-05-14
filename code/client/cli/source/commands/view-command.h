@@ -60,12 +60,15 @@ namespace Soup::Client {
 			auto globalParameters = Core::ValueTable();
 
 			// Process well known parameters
-			if (!_options.Flavor.empty())
+			if (!_options.Flavor.empty()) {
 				globalParameters.emplace("Flavor",
 										 Core::Value(_options.Flavor));
-			if (!_options.Architecture.empty())
+			}
+
+			if (!_options.Architecture.empty()) {
 				globalParameters.emplace("Architecture",
 										 Core::Value(_options.Architecture));
+			}
 
 			auto packageProvider = Core::Build::LoadBuildGraph(
 				workingDirectory, _options.Owner, globalParameters,

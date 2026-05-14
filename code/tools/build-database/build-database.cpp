@@ -186,8 +186,8 @@ export std::string LoadBuildGraphContent(const Path &workingDirectory) {
 			{"PackageTargetDirectories", std::move(packageTargetDirectories)},
 		});
 
-		json11::Json jsonResult =
-			json11::Json::object({"version" : 1, "revision" : 0, "sets" : []});
+		json11::Json jsonResult = json11::Json::object(
+			{{"version", 1}, {"revision", 0}, {"sets", json11::Json::array()}});
 		auto value = jsonResult.dump();
 		return value;
 	} catch (const HandledException &ex) {

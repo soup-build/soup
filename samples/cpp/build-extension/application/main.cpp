@@ -1,7 +1,6 @@
 #include <iostream>
 
-int main()
-{
+int main() {
 #ifdef SPECIAL_BUILD
 	std::cout << "Hello World, Soup Style!" << std::endl;
 #else
