@@ -6,44 +6,40 @@
 #include "i-command.h"
 #include "release-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Release Command
 	/// </summary>
-	class ReleaseCommand : public ICommand
-	{
+	class ReleaseCommand : public ICommand {
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReleaseCommand"/> class.
+		/// Initializes a new instance of the <see cref="ReleaseCommand"/>
+		/// class.
 		/// </summary>
-		ReleaseCommand(ReleaseOptions options) :
-			_options(std::move(options))
-		{
-		}
+		ReleaseCommand(ReleaseOptions options)
+			: _options(std::move(options)) {}
 
 		/// <summary>
 		/// Main entry point for a unique command
 		/// </summary>
-		virtual void Run() override final
-		{
+		virtual void Run() override final {
 			Log::Diag("ReleaseCommand::Run");
 
 			auto workingDirectory = Path();
-			if (_options.Path.empty())
-			{
+			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-			}
-			else
-			{
+				workingDirectory =
+					System::IFileSystem::Current().GetCurrentDirectory();
+			} else {
 				// Parse the path in any system valid format
-				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory =
+					Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
-				if (!workingDirectory.HasRoot())
-				{
-					workingDirectory = System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
+				if (!workingDirectory.HasRoot()) {
+					workingDirectory =
+						System::IFileSystem::Current().GetCurrentDirectory() +
+						workingDirectory;
 				}
 			}
 
@@ -51,32 +47,32 @@ namespace Soup::Client
 
 			auto targetDirectory = GetTargetDirectory(workingDirectory);
 
-			Core::PackageManager::PublishArtifact(workingDirectory, targetDirectory);
+			Core::PackageManager::PublishArtifact(workingDirectory,
+												  targetDirectory);
 		}
 
 	private:
-		void Build(const Path& workingDirectory)
-		{
+		void Build(const Path &workingDirectory) {
 			auto startTime = std::chrono::high_resolution_clock::now();
 
 			auto systemReadAccess = std::vector<Path>();
 
-			// Platform specific defaults
-			#if defined(_WIN32)
-				auto hostPlatform = "Windows";
+// Platform specific defaults
+#if defined(_WIN32)
+			auto hostPlatform = "Windows";
 
-				// Allow read access from system directories
-				systemReadAccess.push_back(
-					Path("C:/Windows/"));
-			#elif defined(__linux__)
-				auto hostPlatform = "Linux";
-			#else
-				#error "Unknown Platform"
-			#endif
+			// Allow read access from system directories
+			systemReadAccess.push_back(Path("C:/Windows/"));
+#elif defined(__linux__)
+			auto hostPlatform = "Linux";
+#else
+#error "Unknown Platform"
+#endif
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
-			arguments.Parallelization = Core::Build::Constants::GetDefaultParallelization();
+			arguments.Parallelization =
+				Core::Build::Constants::GetDefaultParallelization();
 			arguments.WorkingDirectory = std::move(workingDirectory);
 			arguments.ForceRebuild = false;
 			arguments.SkipGenerate = false;
@@ -87,9 +83,11 @@ namespace Soup::Client
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
-				arguments.GlobalParameters.emplace("Flavor", Core::Value(_options.Flavor));
+				arguments.GlobalParameters.emplace(
+					"Flavor", Core::Value(_options.Flavor));
 			if (!_options.Architecture.empty())
-				arguments.GlobalParameters.emplace("Architecture", Core::Value(_options.Architecture));
+				arguments.GlobalParameters.emplace(
+					"Architecture", Core::Value(_options.Architecture));
 
 			// TODO: Generic parameters
 
@@ -97,45 +95,36 @@ namespace Soup::Client
 			Log::HighPriority("Build:");
 
 			// Find the built in folder root
-			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto processFilename =
+				System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
 			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
-			
+
 			auto recipeCache = Core::RecipeCache();
 
 			auto packageProvider = Core::Build::LoadBuildGraph(
-				arguments.WorkingDirectory,
-				_options.Owner,
-				arguments.GlobalParameters,
-				userDataPath,
-				hostPlatform,
+				arguments.WorkingDirectory, _options.Owner,
+				arguments.GlobalParameters, userDataPath, hostPlatform,
 				recipeCache);
 
-			Core::Build::Execute(
-				packageProvider,
-				std::move(arguments),
-				userDataPath,
-				systemReadAccess,
-				recipeCache);
+			Core::Build::Execute(packageProvider, std::move(arguments),
+								 userDataPath, systemReadAccess, recipeCache);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+			auto duration =
+				std::chrono::duration_cast<std::chrono::duration<double>>(
+					endTime - startTime);
 
 			std::ostringstream durationMessage;
-			if (duration.count() >= 60)
-			{
+			if (duration.count() >= 60) {
 				durationMessage << std::fixed << std::setprecision(2);
-				durationMessage << duration.count() / 60  << " minutes";
-			}
-			else if (duration.count() >= 10)
-			{
+				durationMessage << duration.count() / 60 << " minutes";
+			} else if (duration.count() >= 10) {
 				durationMessage << std::fixed << std::setprecision(0);
 				durationMessage << duration.count() << " seconds";
-			}
-			else
-			{
+			} else {
 				durationMessage << std::fixed << std::setprecision(3);
 				durationMessage << duration.count() << " seconds";
 			}
@@ -143,18 +132,17 @@ namespace Soup::Client
 			Log::HighPriority(durationMessage.str());
 		}
 
-		Path GetTargetDirectory(const Path& workingDirectory)
-		{
+		Path GetTargetDirectory(const Path &workingDirectory) {
 			// Load the recipe
 			auto recipeCache = Core::RecipeCache();
 			auto recipePath =
-				workingDirectory +
-				Core::Build::Constants::RecipeFileName();
-			const Core::Recipe* recipe;
-			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
-			{
-				Log::Error("The Recipe does not exist: {}", recipePath.ToString());
-				Log::HighPriority("Make sure the path is correct and try again");
+				workingDirectory + Core::Build::Constants::RecipeFileName();
+			const Core::Recipe *recipe;
+			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe)) {
+				Log::Error("The Recipe does not exist: {}",
+						   recipePath.ToString());
+				Log::HighPriority(
+					"Make sure the path is correct and try again");
 
 				// Nothing we can do, exit
 				throw Core::HandledException(1234);
@@ -168,20 +156,20 @@ namespace Soup::Client
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
-				globalParameters.emplace("Flavor", Core::Value(_options.Flavor));
+				globalParameters.emplace("Flavor",
+										 Core::Value(_options.Flavor));
 			if (!_options.Architecture.empty())
-				globalParameters.emplace("Architecture", Core::Value(_options.Architecture));
+				globalParameters.emplace("Architecture",
+										 Core::Value(_options.Architecture));
 
 			// TODO: Generic parameters
 
 			// Load the value table to get the exe path
 			auto knownLanguages = Core::Build::GetKnownLanguages();
-			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
+			auto locationManager =
+				Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
-				packageName,
-				workingDirectory,
-				*recipe,
-				globalParameters,
+				packageName, workingDirectory, *recipe, globalParameters,
 				recipeCache);
 
 			return targetDirectory;

@@ -15,41 +15,34 @@ import :RecipeSML;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The local user config extensions
 	/// </summary>
-	export class LocalUserConfigExtensions
-	{
+	export class LocalUserConfigExtensions {
 	public:
 		/// <summary>
 		/// Attempt to load from file
 		/// </summary>
-		static bool TryLoadLocalUserConfigFromFile(
-			const Path& localUserConfigFile,
-			LocalUserConfig& result)
-		{
+		static bool
+		TryLoadLocalUserConfigFromFile(const Path &localUserConfigFile,
+									   LocalUserConfig &result) {
 			// Open the file to read from
-			Log::Diag("Load Local User Config: {}", localUserConfigFile.ToString());
+			Log::Diag("Load Local User Config: {}",
+					  localUserConfigFile.ToString());
 			std::shared_ptr<System::IInputFile> file;
-			if (!System::IFileSystem::Current().TryOpenRead(localUserConfigFile, true, file))
-			{
+			if (!System::IFileSystem::Current().TryOpenRead(localUserConfigFile,
+															true, file)) {
 				Log::Warning("Local User Config file does not exist");
 				return false;
 			}
 
 			// Read the contents of the local user config file
-			try
-			{
-				result = LocalUserConfig(
-					RecipeSML::Deserialize(
-						localUserConfigFile,
-						file->GetInStream()));
+			try {
+				result = LocalUserConfig(RecipeSML::Deserialize(
+					localUserConfigFile, file->GetInStream()));
 				return true;
-			}
-			catch (std::exception& ex)
-			{
+			} catch (std::exception &ex) {
 				Log::Error("Deserialize Threw: {}", ex.what());
 				Log::Info("Failed to parse local user config.");
 				return false;

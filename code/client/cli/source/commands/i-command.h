@@ -4,13 +4,11 @@
 
 #pragma once
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Command Interface
 	/// </summary>
-	class ICommand
-	{
+	class ICommand {
 	public:
 		/// <summary>
 		/// Main entry point for a unique command

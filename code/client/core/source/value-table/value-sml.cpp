@@ -5,10 +5,7 @@
 module;
 
 #include <format>
-#include <iostream>
 #include <stdexcept>
-#include <string>
-#include <vector>
 
 export module Soup.Core:ValueSML;
 
@@ -18,21 +15,17 @@ import :Value;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The value SML serialize manager
 	/// </summary>
-	export class ValueSML
-	{
+	export class ValueSML {
 	public:
 		/// <summary>
 		/// Load from stream
 		/// </summary>
-		static ValueTable Deserialize(std::string_view content)
-		{
-			try
-			{
+		static ValueTable Deserialize(std::string_view content) {
+			try {
 				// Read the contents of the recipe file
 				auto root = SMLDocument::Parse(content.data(), content.size());
 
@@ -41,80 +34,62 @@ namespace Soup::Core
 				Parse(table, root.GetRoot());
 
 				return table;
-			}
-			catch(const std::exception& ex)
-			{
+			} catch (const std::exception &ex) {
 				throw std::runtime_error(
 					std::format("Parsing the SML failed: {}", ex.what()));
 			}
 		}
 
 	private:
-		static Value Parse(const SMLValue& source)
-		{
-			switch (source.GetType())
-			{
-				case SMLValueType::Boolean:
-				{
+		static Value Parse(const SMLValue &source) {
+			switch (source.GetType()) {
+				case SMLValueType::Boolean: {
 					return Value(source.AsBoolean());
 				}
-				case SMLValueType::Integer:
-				{
+				case SMLValueType::Integer: {
 					return Value(source.AsInteger());
 				}
-				case SMLValueType::Float:
-				{
+				case SMLValueType::Float: {
 					return Value(source.AsFloat());
 				}
-				case SMLValueType::String:
-				{
+				case SMLValueType::String: {
 					return Value(source.AsString());
 				}
-				case SMLValueType::Array:
-				{
+				case SMLValueType::Array: {
 					auto valueList = ValueList();
 					Parse(valueList, source.AsArray());
 					return Value(std::move(valueList));
 				}
-				case SMLValueType::Table:
-				{
+				case SMLValueType::Table: {
 					auto valueTable = ValueTable();
 					Parse(valueTable, source.AsTable());
 					return Value(std::move(valueTable));
 				}
-				case SMLValueType::Version:
-				{
+				case SMLValueType::Version: {
 					return Value(source.AsVersion());
 				}
-				case SMLValueType::PackageReference:
-				{
+				case SMLValueType::PackageReference: {
 					return Value(source.AsPackageReference());
 				}
-				case SMLValueType::LanguageReference:
-				{
+				case SMLValueType::LanguageReference: {
 					return Value(source.AsLanguageReference());
 				}
-				default:
-				{
+				default: {
 					throw std::runtime_error("Unknown SML type.");
 				}
 			}
 		}
 
-		static void Parse(ValueTable& target, const SMLTable& source)
-		{
-			for (const auto& [key, value] : source.GetValue())
-			{
+		static void Parse(ValueTable &target, const SMLTable &source) {
+			for (const auto &[key, value] : source.GetValue()) {
 				auto recipeValue = Parse(value);
 				target.emplace(key, std::move(recipeValue));
 			}
 		}
 
-		static void Parse(ValueList& target, const SMLArray& source)
-		{
+		static void Parse(ValueList &target, const SMLArray &source) {
 			target.reserve(source.GetSize());
-			for (size_t i = 0; i < source.GetSize(); i++)
-			{
+			for (size_t i = 0; i < source.GetSize(); i++) {
 				auto value = Parse(source[i]);
 				target.push_back(std::move(value));
 			}

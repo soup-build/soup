@@ -6,57 +6,52 @@
 #include "i-command.h"
 #include "target-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Target Command
 	/// </summary>
-	class TargetCommand : public ICommand
-	{
+	class TargetCommand : public ICommand {
 	public:
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TargetCommand"/> class.
 		/// </summary>
-		TargetCommand(TargetOptions options) :
-			_options(std::move(options))
-		{
-		}
+		TargetCommand(TargetOptions options)
+			: _options(std::move(options)) {}
 
 		/// <summary>
 		/// Main entry point for a unique command
 		/// </summary>
-		virtual void Run() override final
-		{
+		virtual void Run() override final {
 			Log::Diag("TargetCommand::Run");
 
 			auto workingDirectory = Path();
-			if (_options.Path.empty())
-			{
+			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
-			}
-			else
-			{
+				workingDirectory =
+					System::IFileSystem::Current().GetCurrentDirectory();
+			} else {
 				// Parse the path in any system valid format
-				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory =
+					Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
-				if (!workingDirectory.HasRoot())
-				{
-					workingDirectory = System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
+				if (!workingDirectory.HasRoot()) {
+					workingDirectory =
+						System::IFileSystem::Current().GetCurrentDirectory() +
+						workingDirectory;
 				}
 			}
 
 			// Load the recipe
 			auto recipeCache = Core::RecipeCache();
 			auto recipePath =
-				workingDirectory +
-				Core::Build::Constants::RecipeFileName();
-			const Core::Recipe* recipe;
-			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe))
-			{
-				Log::Error("The Recipe does not exist: {}", recipePath.ToString());
-				Log::HighPriority("Make sure the path is correct and try again");
+				workingDirectory + Core::Build::Constants::RecipeFileName();
+			const Core::Recipe *recipe;
+			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe)) {
+				Log::Error("The Recipe does not exist: {}",
+						   recipePath.ToString());
+				Log::HighPriority(
+					"Make sure the path is correct and try again");
 
 				// Nothing we can do, exit
 				throw Core::HandledException(1234);
@@ -70,20 +65,20 @@ namespace Soup::Client
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
-				globalParameters.emplace("Flavor", Core::Value(_options.Flavor));
+				globalParameters.emplace("Flavor",
+										 Core::Value(_options.Flavor));
 			if (!_options.Architecture.empty())
-				globalParameters.emplace("Architecture", Core::Value(_options.Architecture));
+				globalParameters.emplace("Architecture",
+										 Core::Value(_options.Architecture));
 
 			// TODO: Generic parameters
 
 			// Load the value table to get the exe path
 			auto knownLanguages = Core::Build::GetKnownLanguages();
-			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
+			auto locationManager =
+				Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
-				packageName,
-				workingDirectory,
-				*recipe,
-				globalParameters,
+				packageName, workingDirectory, *recipe, globalParameters,
 				recipeCache);
 
 			std::cout << targetDirectory.ToString() << std::flush;

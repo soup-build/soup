@@ -14,13 +14,11 @@ import :Value;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The set of build arguments for building a recipe
 	/// </summary>
-	export struct RecipeBuildArguments
-	{
+	export struct RecipeBuildArguments {
 		/// <summary>
 		/// Gets or sets set of host platform name
 		/// </summary>
@@ -37,17 +35,20 @@ namespace Soup::Core
 		Path WorkingDirectory;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to skip running the build generate phase
+		/// Gets or sets a value indicating whether to skip running the build
+		/// generate phase
 		/// </summary>
 		unsigned int Parallelization;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to skip running the build generate phase
+		/// Gets or sets a value indicating whether to skip running the build
+		/// generate phase
 		/// </summary>
 		bool SkipGenerate;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to skip running the build evaluate phase
+		/// Gets or sets a value indicating whether to skip running the build
+		/// evaluate phase
 		/// </summary>
 		bool SkipEvaluate;
 
@@ -69,18 +70,16 @@ namespace Soup::Core
 		/// <summary>
 		/// Equality operator
 		/// </summary>
-		bool operator ==(const RecipeBuildArguments& rhs) const
-		{
+		bool operator==(const RecipeBuildArguments &rhs) const {
 			return GlobalParameters == rhs.GlobalParameters &&
-				WorkingDirectory == rhs.WorkingDirectory &&
-				Parallelization == rhs.Parallelization &&
-				SkipGenerate == rhs.SkipGenerate &&
-				SkipEvaluate == rhs.SkipEvaluate &&
-				ForceRebuild == rhs.ForceRebuild;
+				   WorkingDirectory == rhs.WorkingDirectory &&
+				   Parallelization == rhs.Parallelization &&
+				   SkipGenerate == rhs.SkipGenerate &&
+				   SkipEvaluate == rhs.SkipEvaluate &&
+				   ForceRebuild == rhs.ForceRebuild;
 		}
 
-		bool operator !=(const RecipeBuildArguments& rhs) const
-		{
+		bool operator!=(const RecipeBuildArguments &rhs) const {
 			return !(*this == rhs);
 		}
 	};

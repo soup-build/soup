@@ -15,45 +15,36 @@ import :RecipeValue;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The SDK config container
 	/// </summary>
-	export class SDKConfig
-	{
+	export class SDKConfig {
 	private:
-		static constexpr const char* Property_Name = "Name";
-		static constexpr const char* Property_SourceDirectories = "SourceDirectories";
-		static constexpr const char* Property_Properties = "Properties";
+		static constexpr const char *Property_Name = "Name";
+		static constexpr const char *Property_SourceDirectories =
+			"SourceDirectories";
+		static constexpr const char *Property_Properties = "Properties";
 
 	public:
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SDKConfig"/> class.
 		/// </summary>
-		SDKConfig() :
-			_table()
-		{
-		}
+		SDKConfig()
+			: _table() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SDKConfig"/> class.
 		/// </summary>
-		SDKConfig(RecipeTable table) :
-			_table(std::move(table))
-		{
-		}
+		SDKConfig(RecipeTable table)
+			: _table(std::move(table)) {}
 
 		/// <summary>
 		/// Gets or sets the Name
 		/// </summary>
-		bool HasName() const
-		{
-			return HasValue(Property_Name);
-		}
+		bool HasName() const { return HasValue(Property_Name); }
 
-		std::string GetName() const
-		{
+		std::string GetName() const {
 			if (!HasName())
 				throw std::runtime_error("No Name.");
 
@@ -63,20 +54,17 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets the list of Source Directories
 		/// </summary>
-		bool HasSourceDirectories()
-		{
+		bool HasSourceDirectories() {
 			return HasValue(Property_SourceDirectories);
 		}
 
-		std::vector<Path> GetSourceDirectories()
-		{
+		std::vector<Path> GetSourceDirectories() {
 			if (!HasSourceDirectories())
 				throw std::runtime_error("No SDKs.");
 
-			auto& values = GetValue(Property_SourceDirectories).AsList();
+			auto &values = GetValue(Property_SourceDirectories).AsList();
 			auto result = std::vector<Path>();
-			for (auto& value : values)
-			{
+			for (auto &value : values) {
 				result.push_back(Path(value.AsString()));
 			}
 
@@ -86,13 +74,9 @@ namespace Soup::Core
 		/// <summary>
 		/// Gets or sets the properties table
 		/// </summary>
-		bool HasProperties()
-		{
-			return HasValue(Property_Properties);
-		}
+		bool HasProperties() { return HasValue(Property_Properties); }
 
-		RecipeTable GetProperties()
-		{
+		RecipeTable GetProperties() {
 			if (!HasSourceDirectories())
 				throw std::runtime_error("No Properties.");
 
@@ -102,43 +86,32 @@ namespace Soup::Core
 		/// <summary>
 		/// Raw access
 		/// </summary>
-		RecipeTable& GetTable()
-		{
-			return _table;
-		}
+		RecipeTable &GetTable() { return _table; }
 
 		/// <summary>
 		/// Equality operator
 		/// </summary>
-		bool operator ==(const SDKConfig& rhs) const
-		{
+		bool operator==(const SDKConfig &rhs) const {
 			return _table == rhs._table;
 		}
 
 		/// <summary>
 		/// Inequality operator
 		/// </summary>
-		bool operator !=(const SDKConfig& rhs) const
-		{
-			return !(*this == rhs);
-		}
+		bool operator!=(const SDKConfig &rhs) const { return !(*this == rhs); }
 
 	private:
-		bool HasValue(std::string_view key) const
-		{
+		bool HasValue(std::string_view key) const {
 			return _table.Contains(key.data());
 		}
 
-		const RecipeValue& GetValue(std::string_view key) const
-		{
-			const RecipeValue* value;
-			if ( _table.TryGet(key.data(), value))
-			{
+		const RecipeValue &GetValue(std::string_view key) const {
+			const RecipeValue *value;
+			if (_table.TryGet(key.data(), value)) {
 				return *value;
-			}
-			else
-			{
-				throw std::runtime_error("Requested recipe value does not exist in the root table.");
+			} else {
+				throw std::runtime_error(
+					"Requested recipe value does not exist in the root table.");
 			}
 		}
 

@@ -16,50 +16,41 @@ import :SDKConfig;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The local user config container
 	/// </summary>
-	export class LocalUserConfig
-	{
+	export class LocalUserConfig {
 	private:
-		static constexpr const char* Property_SDKs = "SDKs";
+		static constexpr const char *Property_SDKs = "SDKs";
 
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LocalUserConfig"/> class.
+		/// Initializes a new instance of the <see cref="LocalUserConfig"/>
+		/// class.
 		/// </summary>
-		LocalUserConfig() :
-			_table()
-		{
-		}
+		LocalUserConfig()
+			: _table() {}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LocalUserConfig"/> class.
+		/// Initializes a new instance of the <see cref="LocalUserConfig"/>
+		/// class.
 		/// </summary>
-		LocalUserConfig(RecipeTable table) :
-			_table(std::move(table))
-		{
-		}
+		LocalUserConfig(RecipeTable table)
+			: _table(std::move(table)) {}
 
 		/// <summary>
 		/// Gets or sets the list of SDKs
 		/// </summary>
-		bool HasSDKs()
-		{
-			return HasValue(Property_SDKs);
-		}
+		bool HasSDKs() { return HasValue(Property_SDKs); }
 
-		std::vector<SDKConfig> GetSDKs()
-		{
+		std::vector<SDKConfig> GetSDKs() {
 			if (!HasSDKs())
 				throw std::runtime_error("No SDKs.");
 
-			auto& values = GetValue(Property_SDKs).AsList();
+			auto &values = GetValue(Property_SDKs).AsList();
 			auto result = std::vector<SDKConfig>();
-			for (auto& value : values)
-			{
+			for (auto &value : values) {
 				result.push_back(SDKConfig(value.AsTable()));
 			}
 
@@ -69,43 +60,34 @@ namespace Soup::Core
 		/// <summary>
 		/// Raw access
 		/// </summary>
-		RecipeTable& GetTable()
-		{
-			return _table;
-		}
+		RecipeTable &GetTable() { return _table; }
 
 		/// <summary>
 		/// Equality operator
 		/// </summary>
-		bool operator ==(const LocalUserConfig& rhs) const
-		{
+		bool operator==(const LocalUserConfig &rhs) const {
 			return _table == rhs._table;
 		}
 
 		/// <summary>
 		/// Inequality operator
 		/// </summary>
-		bool operator !=(const LocalUserConfig& rhs) const
-		{
+		bool operator!=(const LocalUserConfig &rhs) const {
 			return !(*this == rhs);
 		}
 
 	private:
-		bool HasValue(std::string_view key)
-		{
+		bool HasValue(std::string_view key) {
 			return _table.Contains(key.data());
 		}
 
-		const RecipeValue& GetValue(std::string_view key) const
-		{
-			const RecipeValue* value;
-			if ( _table.TryGet(key.data(), value))
-			{
+		const RecipeValue &GetValue(std::string_view key) const {
+			const RecipeValue *value;
+			if (_table.TryGet(key.data(), value)) {
 				return *value;
-			}
-			else
-			{
-				throw std::runtime_error("Requested recipe value does not exist in the root table.");
+			} else {
+				throw std::runtime_error(
+					"Requested recipe value does not exist in the root table.");
 			}
 		}
 

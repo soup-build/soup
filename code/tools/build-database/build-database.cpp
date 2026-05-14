@@ -1,21 +1,12 @@
-// Include all standard library headers in the global module
+module;
+
 #include <filesystem>
 #include <format>
 #include <memory>
 #include <spanstream>
 #include <string>
 
-#ifdef _WIN32
-#include <combaseapi.h>
-#define SOUP_TOOLS_API __declspec(dllexport)
-#ifdef GetCurrentDirectory
-#undef GetCurrentDirectory
-#endif
-#else
-#define SOUP_TOOLS_API
-#define CoTaskMemAlloc(p) malloc(p)
-#define CoTaskMemFree(p) free(p)
-#endif
+export module Soup.BuildDatabase;
 
 import json11;
 import Opal;
@@ -140,8 +131,7 @@ Value JsonToValue(const json11::Json &json) {
 	}
 }
 
-std::string LoadBuildGraphContent(std::string_view workingDirectoryString,
-								  std::istream &globalParametersStream) {
+export std::string LoadBuildGraphContent(const Path &workingDirectory) {
 	try {
 		// Setup the filter
 		auto defaultTypes =
@@ -172,9 +162,7 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString,
 #error "Unknown Platform"
 #endif
 
-		auto workingDirectory = Path(workingDirectoryString);
-		auto globalParameters =
-			ValueTableReader::Deserialize(globalParametersStream);
+		auto globalParameters = ValueTable();
 
 		// Load user config state
 		auto userDataPath = Build::Constants::GetSoupUserDataPath();
@@ -198,11 +186,8 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString,
 			{"PackageTargetDirectories", std::move(packageTargetDirectories)},
 		});
 
-		json11::Json jsonResult = json11::Json::object({
-			{"Message", ""},
-			{"IsSuccess", true},
-			{"Graph", std::move(jsonGraphResult)},
-		});
+		json11::Json jsonResult = json11::Json::object(
+			{{"version", 1}, {"revision", 0}, {"sets", json11::Json::array()}});
 		auto value = jsonResult.dump();
 		return value;
 	} catch (const HandledException &ex) {
@@ -218,34 +203,4 @@ std::string LoadBuildGraphContent(std::string_view workingDirectoryString,
 		});
 		return jsonResult.dump();
 	}
-}
-
-extern "C" {
-SOUP_TOOLS_API const char *LoadBuildGraph(const char *workingDirectory,
-										  const char *globalParametersBuffer,
-										  size_t globalParametersLength) {
-	auto globalParameters = std::ispanstream(std::span<char>(
-		const_cast<char *>(globalParametersBuffer), globalParametersLength));
-
-	auto value = LoadBuildGraphContent(workingDirectory, globalParameters);
-
-	auto result = (char *)CoTaskMemAlloc(value.size() + 1);
-	value.copy(result, value.size());
-	result[value.size()] = 0;
-	return result;
-}
-
-SOUP_TOOLS_API const char *LoadBuildGraphSimple(const char *workingDirectory) {
-	auto globalParameters = ValueTable();
-	auto globalParametersStream = std::stringstream();
-	ValueTableWriter::Serialize(globalParameters, globalParametersStream);
-
-	auto value =
-		LoadBuildGraphContent(workingDirectory, globalParametersStream);
-
-	auto result = (char *)CoTaskMemAlloc(value.size() + 1);
-	value.copy(result, value.size());
-	result[value.size()] = 0;
-	return result;
-}
 }

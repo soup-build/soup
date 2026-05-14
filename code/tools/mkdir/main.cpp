@@ -1,44 +1,34 @@
 #include <chrono>
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 import Opal;
 
-void PrintUsage()
-{
-	std::cout << "mkdir [path]" << std::endl;
-}
+void PrintUsage() { std::cout << "mkdir [path]" << std::endl; }
 
-int main(int argc, char** argv)
-{
-	if (argc != 2)
-	{
+int main(int argc, char **argv) {
+	if (argc != 2) {
 		PrintUsage();
 		return 1;
 	}
 
-	try
-	{
+	try {
 		auto directory = Opal::Path::Parse(argv[1]);
 		auto fileSystem = Opal::System::STLFileSystem();
 
-		if (fileSystem.Exists(directory))
-		{
+		if (fileSystem.Exists(directory)) {
 			auto now = std::chrono::system_clock::now();
-			#ifdef _WIN32
-			auto nowFileTime = std::chrono::clock_cast<std::chrono::file_clock>(now);
-			#else
+#ifdef _WIN32
+			auto nowFileTime =
+				std::chrono::clock_cast<std::chrono::file_clock>(now);
+#else
 			auto nowFileTime = std::chrono::file_clock::from_sys(now);
-			#endif
+#endif
 			fileSystem.SetLastWriteTime(directory, nowFileTime);
-		}
-		else
-		{
+		} else {
 			fileSystem.CreateDirectory(directory);
 		}
-	}
-	catch(const std::exception& e)
-	{
+	} catch (const std::exception &e) {
 		std::cerr << e.what() << std::endl;
 		return 2;
 	}

@@ -12,19 +12,16 @@ import Opal;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The exception thrown to indicate that a build operation has failed
 	/// </summary>
-	export class BuildFailedException : public std::exception
-	{
+	export class BuildFailedException : public std::exception {
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BuildFailedException"/> class.
+		/// Initializes a new instance of the <see cref="BuildFailedException"/>
+		/// class.
 		/// </summary>
-		BuildFailedException()
-		{
-		}
+		BuildFailedException() {}
 	};
 }

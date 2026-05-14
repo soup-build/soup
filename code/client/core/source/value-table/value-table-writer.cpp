@@ -14,20 +14,17 @@ import :Value;
 
 using namespace Opal;
 
-namespace Soup::Core
-{
+namespace Soup::Core {
 	/// <summary>
 	/// The value table state writer
 	/// </summary>
-	export class ValueTableWriter
-	{
+	export class ValueTableWriter {
 	private:
 		// Binary Value Table file format
 		static constexpr uint32_t FileVersion = 2;
 
 	public:
-		static void Serialize(const ValueTable& state, std::ostream& stream)
-		{
+		static void Serialize(const ValueTable &state, std::ostream &stream) {
 			// Write the File Header with version
 			stream.write("BVT\0", 4);
 			WriteValue(stream, FileVersion);
@@ -37,13 +34,12 @@ namespace Soup::Core
 			WriteValueTable(stream, state);
 		}
 
-		static void WriteValueTable(std::ostream& stream, const ValueTable& table)
-		{
+		static void WriteValueTable(std::ostream &stream,
+									const ValueTable &table) {
 			// Write the count of values
 			WriteValue(stream, static_cast<uint32_t>(table.size()));
 
-			for (const auto& [key, value] : table)
-			{
+			for (const auto &[key, value] : table) {
 				// Write the key
 				WriteValue(stream, std::string_view(key));
 
@@ -53,14 +49,12 @@ namespace Soup::Core
 		}
 
 	private:
-		static void WriteValue(std::ostream& stream, const Value& value)
-		{
+		static void WriteValue(std::ostream &stream, const Value &value) {
 			// Write the value type
 			auto valueType = value.GetType();
 			WriteValue(stream, static_cast<uint32_t>(valueType));
 
-			switch (valueType)
-			{
+			switch (valueType) {
 				case ValueType::Table:
 					WriteValueTable(stream, value.AsTable());
 					break;
@@ -80,53 +74,52 @@ namespace Soup::Core
 					WriteValue(stream, value.AsBoolean());
 					break;
 				case ValueType::Version:
-					WriteValue(stream, std::string_view(value.AsVersion().ToString()));
+					WriteValue(stream,
+							   std::string_view(value.AsVersion().ToString()));
 					break;
 				case ValueType::PackageReference:
-					WriteValue(stream, std::string_view(value.AsPackageReference().ToString()));
+					WriteValue(stream,
+							   std::string_view(
+								   value.AsPackageReference().ToString()));
 					break;
 				case ValueType::LanguageReference:
-					WriteValue(stream, std::string_view(value.AsLanguageReference().ToString()));
+					WriteValue(stream,
+							   std::string_view(
+								   value.AsLanguageReference().ToString()));
 					break;
 				default:
 					throw std::runtime_error("Write Unknown ValueType");
 			}
 		}
 
-		static void WriteValue(std::ostream& stream, const ValueList& value)
-		{
+		static void WriteValue(std::ostream &stream, const ValueList &value) {
 			// Write the count of values
 			WriteValue(stream, static_cast<uint32_t>(value.size()));
 
-			for (auto& listValue : value)
-			{
+			for (auto &listValue : value) {
 				WriteValue(stream, listValue);
 			}
 		}
 
-		static void WriteValue(std::ostream& stream, uint32_t value)
-		{
-			stream.write(reinterpret_cast<char*>(&value), sizeof(uint32_t));
+		static void WriteValue(std::ostream &stream, uint32_t value) {
+			stream.write(reinterpret_cast<char *>(&value), sizeof(uint32_t));
 		}
 
-		static void WriteValue(std::ostream& stream, int64_t value)
-		{
-			stream.write(reinterpret_cast<char*>(&value), sizeof(int64_t));
+		static void WriteValue(std::ostream &stream, int64_t value) {
+			stream.write(reinterpret_cast<char *>(&value), sizeof(int64_t));
 		}
 
-		static void WriteValue(std::ostream& stream, double value)
-		{
-			stream.write(reinterpret_cast<char*>(&value), sizeof(double));
+		static void WriteValue(std::ostream &stream, double value) {
+			stream.write(reinterpret_cast<char *>(&value), sizeof(double));
 		}
 
-		static void WriteValue(std::ostream& stream, bool value)
-		{
+		static void WriteValue(std::ostream &stream, bool value) {
 			uint32_t integerValue = value ? 1u : 0u;
-			stream.write(reinterpret_cast<char*>(&integerValue), sizeof(uint32_t));
+			stream.write(reinterpret_cast<char *>(&integerValue),
+						 sizeof(uint32_t));
 		}
 
-		static void WriteValue(std::ostream& stream, std::string_view value)
-		{
+		static void WriteValue(std::ostream &stream, std::string_view value) {
 			WriteValue(stream, static_cast<uint32_t>(value.size()));
 			stream.write(value.data(), value.size());
 		}
