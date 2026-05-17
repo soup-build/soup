@@ -61,19 +61,17 @@ json11::Json GeneratePackageBuildSet(FileSystemState &fileSystemState,
 				for (auto &outputFile : operation.DeclaredOutput) {
 					auto file = fileSystemState.GetFilePath(outputFile);
 					if (file.GetFileExtension() == ".pcm") {
-						producedModules.emplace("importable",
-												GetModuleNameFromFile(file));
+						producedModules.emplace(GetModuleNameFromFile(file),
+												file.ToString());
 					} else if (file.GetFileExtension() == ".o") {
 						objectFile = file.ToString();
 					}
 				}
 
 				translationUnits.push_back(json11::Json::object({
+					{"language", "c++"},
 					{"arguments", std::move(arguments)},
-					{"baseline-arguments", json11::Json::array({})},
-					{"local-arguments", json11::Json::array({})},
 					{"object", std::move(objectFile)},
-					{"private", false},
 					{"provides", std::move(producedModules)},
 					{"requires", std::move(requiredModules)},
 					{"source", std::move(sourceFile)},
@@ -112,6 +110,7 @@ void ConvertToJson(FileSystemState &fileSystemState,
 	auto set = json11::Json::object({
 		{"family-name", packageInfo.Name.ToString()},
 		{"name", packageInfo.Name.ToString() + "@Debug"},
+		{"baseline-arguments", json11::Json::array({})},
 		{"translation-units", std::move(translationUnits)},
 	});
 
