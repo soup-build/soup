@@ -1,10 +1,10 @@
 module;
 
+#include <algorithm>
 #include <filesystem>
 #include <format>
 #include <memory>
 #include <set>
-#include <span>
 #include <string>
 #include <vector>
 
@@ -19,6 +19,12 @@ import Soup.Core;
 using namespace Opal;
 using namespace Soup::Core;
 
+std::string GetModuleNameFromFile(const Path &file) {
+	auto result = std::string(file.GetFileStem());
+	std::replace(result.begin(), result.end(), '-', ':');
+	return result;
+}
+
 json11::Json GeneratePackageBuildSet(FileSystemState &fileSystemState,
 									 PackageProvider &packageProvider,
 									 int graphId, int packageId) {
@@ -27,34 +33,56 @@ json11::Json GeneratePackageBuildSet(FileSystemState &fileSystemState,
 
 	auto translationUnits = json11::Json::array();
 	if (operationGraph.has_value()) {
-		// operationGraph.value()
-		translationUnits.push_back(json11::Json::array({
-			json11::Json::object({
-				{
-					"arguments",
-					json11::Json::array({
-						"/path/to/compiler",
-						"...",
-					}),
-				},
-				{"baseline-arguments", json11::Json::array({
-										   "...",
-									   })},
-				{"local-arguments", json11::Json::array({
-										"...",
-									})},
-				{"object", "CMakeFiles/target.dir/source.cxx.o"},
-				{"private", true},
-				{"provides", json11::Json::object({
-								 {"importable", "path/to/bmi"},
-							 })},
-				{"requires", json11::Json::array()},
-				{"source", "path/to/source.cxx"},
-				{"work-directory", "/path/to/working/directory"},
-				{"visible-sets", json11::Json::array()},
-			}),
-		}));
-		// packageTabComponents.push_back(operationsView);
+		for (auto &[operationId, operation] :
+			 operationGraph.value().GetOperations()) {
+
+			// Hack: Only look at clang operations for now
+			if (operation.Command.Executable.GetFileName().starts_with(
+					"clang")) {
+				auto arguments = json11::Json::array();
+				arguments.push_back(operation.Command.Executable.ToString());
+				for (auto &argument : operation.Command.Arguments) {
+					arguments.push_back(argument);
+				}
+
+				auto requiredModules = json11::Json::array();
+				auto sourceFile = std::string();
+				for (auto &inputFile : operation.DeclaredInput) {
+					auto file = fileSystemState.GetFilePath(inputFile);
+					if (file.GetFileExtension() == ".pcm") {
+						requiredModules.push_back(GetModuleNameFromFile(file));
+					} else if (file.GetFileExtension() == ".cpp") {
+						sourceFile = file.ToString();
+					}
+				}
+
+				auto producedModules = json11::Json::object();
+				auto objectFile = std::string();
+				for (auto &outputFile : operation.DeclaredOutput) {
+					auto file = fileSystemState.GetFilePath(outputFile);
+					if (file.GetFileExtension() == ".pcm") {
+						producedModules.emplace("importable",
+												GetModuleNameFromFile(file));
+					} else if (file.GetFileExtension() == ".o") {
+						objectFile = file.ToString();
+					}
+				}
+
+				translationUnits.push_back(json11::Json::object({
+					{"arguments", std::move(arguments)},
+					{"baseline-arguments", json11::Json::array({})},
+					{"local-arguments", json11::Json::array({})},
+					{"object", std::move(objectFile)},
+					{"private", false},
+					{"provides", std::move(producedModules)},
+					{"requires", std::move(requiredModules)},
+					{"source", std::move(sourceFile)},
+					{"work-directory",
+					 operation.Command.WorkingDirectory.ToString()},
+					{"visible-sets", json11::Json::array()},
+				}));
+			}
+		}
 	}
 
 	return translationUnits;
