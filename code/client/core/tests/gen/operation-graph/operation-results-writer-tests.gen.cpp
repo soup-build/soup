@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunOperationResultsWriterTests;
+export module Soup.Core:RunOperationResultsWriterTests;
 
 import :OperationResultsWriterTests;
 import Soup.Test.Assert;

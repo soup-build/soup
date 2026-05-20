@@ -2,7 +2,7 @@ module;
 
 #include <memory>
 
-export module Soup.Core.Tests:RunOperationGraphReaderTests;
+export module Soup.Core:RunOperationGraphReaderTests;
 
 import :OperationGraphReaderTests;
 import Soup.Test.Assert;

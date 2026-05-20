@@ -13,7 +13,12 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:RecipeTests;
+export module Soup.Core:RecipeTests;
+
+import :LanguageReference;
+import :PackageReference;
+import :Recipe;
+import :RecipeValue;
 
 import Monitor.Host;
 import Opal;
