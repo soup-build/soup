@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 		auto content = LoadBuildGraphContent(workingDirectory);
 
 		auto buildDatabaseFile =
-			workingDirectory + Opal::Path("./build_database_test.json");
+			workingDirectory + Opal::Path("./build_database.json");
 
 		// Open the file to read from
 		auto file = Opal::System::IFileSystem::Current().OpenWrite(

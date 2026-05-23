@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "codelldb",
+      "request": "launch",
+      "name": "C++",
+      "stdio": ["input.txt", null],
+      "expressions": "native",
+      "program": "${workspaceFolder}/${fileBasenameNoExtension}"
+    }
+  ]
+}

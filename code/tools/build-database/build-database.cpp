@@ -77,7 +77,6 @@ json11::Json GeneratePackageBuildSet(FileSystemState &fileSystemState,
 					{"source", std::move(sourceFile)},
 					{"work-directory",
 					 operation.Command.WorkingDirectory.ToString()},
-					{"visible-sets", json11::Json::array()},
 				}));
 			}
 		}
@@ -87,31 +86,39 @@ json11::Json GeneratePackageBuildSet(FileSystemState &fileSystemState,
 }
 
 void ConvertToJson(FileSystemState &fileSystemState,
-				   PackageProvider &packageProvider, int packageId,
-				   std::set<int> &knownPackages, json11::Json::array &sets) {
-	auto &packageInfo = packageProvider.GetPackageInfo(packageId);
+				   PackageProvider &packageProvider,
+				   const PackageInfo &packageInfo, std::set<int> &knownPackages,
+				   json11::Json::array &sets) {
 	auto rootPackageGraphId = packageProvider.GetRootPackageGraphId();
 	knownPackages.insert(packageInfo.Id);
 
+	auto visibleSets = json11::Json::array();
 	for (auto &[dependencyType, dependencyTypeSet] : packageInfo.Dependencies) {
 		for (auto &dependency : dependencyTypeSet) {
-			// Stop at the edge of the graph and ignore duplicates
-			if (!dependency.IsSubGraph &&
-				!knownPackages.contains(dependency.PackageId)) {
-				ConvertToJson(fileSystemState, packageProvider,
-							  dependency.PackageId, knownPackages, sets);
+			if (!dependency.IsSubGraph) {
+				auto &dependencyPackageInfo =
+					packageProvider.GetPackageInfo(dependency.PackageId);
+				visibleSets.push_back(dependencyPackageInfo.Name.ToString() +
+									  "@Debug");
+				// Stop at the edge of the graph and ignore duplicates
+				if (!knownPackages.contains(dependency.PackageId)) {
+					ConvertToJson(fileSystemState, packageProvider,
+								  dependencyPackageInfo, knownPackages, sets);
+				}
 			}
 		}
 	}
 
 	auto translationUnits = GeneratePackageBuildSet(
-		fileSystemState, packageProvider, rootPackageGraphId, packageId);
+		fileSystemState, packageProvider, rootPackageGraphId, packageInfo.Id);
 
+	auto setName = packageInfo.Name.ToString() + "@Debug";
 	auto set = json11::Json::object({
 		{"family-name", packageInfo.Name.ToString()},
-		{"name", packageInfo.Name.ToString() + "@Debug"},
+		{"name", setName},
 		{"baseline-arguments", json11::Json::array({})},
 		{"translation-units", std::move(translationUnits)},
+		{"visible-sets", std::move(visibleSets)},
 	});
 
 	sets.push_back(std::move(set));
@@ -160,9 +167,12 @@ export std::string LoadBuildGraphContent(const Path &workingDirectory) {
 	auto fileSystemState = FileSystemState();
 
 	auto &packageGraph = packageProvider.GetRootPackageGraph();
+	auto &rootPackageInfo =
+		packageProvider.GetPackageInfo(packageGraph.RootPackageId);
+
 	auto sets = json11::Json::array();
 	auto knownPackages = std::set<int>();
-	ConvertToJson(fileSystemState, packageProvider, packageGraph.RootPackageId,
+	ConvertToJson(fileSystemState, packageProvider, rootPackageInfo,
 				  knownPackages, sets);
 
 	json11::Json jsonResult = json11::Json::object(
