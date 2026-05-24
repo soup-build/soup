@@ -3,6 +3,7 @@
 
 # VSCode
 .vscode/settings.json
+*.lscache
 
 # clangd
 .cache/
