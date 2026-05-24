@@ -1,4 +1,4 @@
-﻿// <copyright file="package-version-artifacts-client.cs" company="Soup">
+// <copyright file="package-version-artifacts-client.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
@@ -50,10 +50,17 @@ public class PackageVersionArtifactsClient
 		string ownerName,
 		string packageName,
 		string packageVersion,
-		string digest)
+		string digest
+	)
 	{
 		return GetPackageVersionArtifactAsync(
-			languageName, ownerName, packageName, packageVersion, digest, CancellationToken.None);
+			languageName,
+			ownerName,
+			packageName,
+			packageVersion,
+			digest,
+			CancellationToken.None
+		);
 	}
 
 	/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -73,38 +80,51 @@ public class PackageVersionArtifactsClient
 		string packageName,
 		string packageVersion,
 		string digest,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken
+	)
 	{
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
 			.Append(this.BaseUrl.OriginalString.TrimEnd('/'))
-			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts/{digest}");
+			.Append(
+				CultureInfo.InvariantCulture,
+				$"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts/{digest}"
+			);
 
 		var client = this.httpClient;
 
 		using var requestMessage = await CreateHttpRequestMessageAsync().ConfigureAwait(false);
 		requestMessage.Method = new HttpMethod("GET");
-		requestMessage.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
+		requestMessage.Headers.Accept.Add(
+			MediaTypeWithQualityHeaderValue.Parse("application/json")
+		);
 
 		var url = urlBuilder.ToString();
 		requestMessage.RequestUri = new Uri(url, UriKind.RelativeOrAbsolute);
 
-		using var response = await client.SendAsync(
-			requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+		using var response = await client
+			.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+			.ConfigureAwait(false);
 
 		var status = (int)response.StatusCode;
 		if (status == 200)
 		{
 			var objectResponse = await ReadObjectResponseAsync(
-				response,
-				SourceGenerationContext.Default.PackageVersionArtifactModel,
-				cancellationToken).ConfigureAwait(false);
+					response,
+					SourceGenerationContext.Default.PackageVersionArtifactModel,
+					cancellationToken
+				)
+				.ConfigureAwait(false);
 			return objectResponse;
 		}
 		else
 		{
 			throw new ApiException(
-				"The HTTP status code of the response was not expected.", response.StatusCode, null, null);
+				"The HTTP status code of the response was not expected.",
+				response.StatusCode,
+				null,
+				null
+			);
 		}
 	}
 
@@ -125,7 +145,8 @@ public class PackageVersionArtifactsClient
 		string packageName,
 		string packageVersion,
 		FileParameter archive,
-		BuildConfigurationModel model)
+		BuildConfigurationModel model
+	)
 	{
 		return PublishPackageVersionArtifactAsync(
 			languageName,
@@ -134,7 +155,8 @@ public class PackageVersionArtifactsClient
 			packageVersion,
 			archive,
 			model,
-			CancellationToken.None);
+			CancellationToken.None
+		);
 	}
 
 	/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -157,21 +179,32 @@ public class PackageVersionArtifactsClient
 		string packageVersion,
 		FileParameter archive,
 		BuildConfigurationModel model,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken
+	)
 	{
 		ArgumentNullException.ThrowIfNull(archive.ContentType);
 
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
 			.Append(this.BaseUrl.OriginalString.TrimEnd('/'))
-			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts");
+			.Append(
+				CultureInfo.InvariantCulture,
+				$"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts"
+			);
 
 		var client = this.httpClient;
 
 		using var request = await CreateHttpRequestMessageAsync().ConfigureAwait(false);
 
 		using var archiveContent = new StreamContent(archive.Data);
-		using var modelContent = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+		using var modelContent = new StringContent(
+			JsonSerializer.Serialize(
+				model,
+				BuildConfigurationModelContext.Default.BuildConfigurationModel
+			),
+			Encoding.UTF8,
+			"application/json"
+		);
 		using var content = new MultipartFormDataContent()
 		{
 			// file
@@ -186,8 +219,9 @@ public class PackageVersionArtifactsClient
 		var url = urlBuilder.ToString();
 		request.RequestUri = new Uri(url, UriKind.RelativeOrAbsolute);
 
-		using var response = await client.SendAsync(
-			request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+		using var response = await client
+			.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+			.ConfigureAwait(false);
 
 		switch (response.StatusCode)
 		{
@@ -195,7 +229,12 @@ public class PackageVersionArtifactsClient
 				break;
 			default:
 				Log.Error(await response.Content.ReadAsStringAsync(cancellationToken));
-				throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
+				throw new ApiException(
+					"The HTTP status code of the response was not expected.",
+					response.StatusCode,
+					null,
+					null
+				);
 		}
 	}
 
@@ -214,10 +253,17 @@ public class PackageVersionArtifactsClient
 		string ownerName,
 		string packageName,
 		string packageVersion,
-		Digest digest)
+		Digest digest
+	)
 	{
 		return DownloadPackageVersionArtifactAsync(
-			languageName, ownerName, packageName, packageVersion, digest, CancellationToken.None);
+			languageName,
+			ownerName,
+			packageName,
+			packageVersion,
+			digest,
+			CancellationToken.None
+		);
 	}
 
 	/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -237,33 +283,43 @@ public class PackageVersionArtifactsClient
 		string packageName,
 		string packageVersion,
 		Digest digest,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken
+	)
 	{
 		var urlBuilder = new StringBuilder();
 		_ = urlBuilder
 			.Append(this.BaseUrl.OriginalString.TrimEnd('/'))
-			.Append(CultureInfo.InvariantCulture, $"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts/{digest}/download");
+			.Append(
+				CultureInfo.InvariantCulture,
+				$"/v1/packages/{Uri.EscapeDataString(languageName)}/{Uri.EscapeDataString(ownerName)}/{Uri.EscapeDataString(packageName)}/versions/{Uri.EscapeDataString(packageVersion)}/artifacts/{digest}/download"
+			);
 
 		var client = this.httpClient;
 
 		using var requestMessage = await CreateHttpRequestMessageAsync().ConfigureAwait(false);
 		requestMessage.Method = new HttpMethod("GET");
-		requestMessage.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
+		requestMessage.Headers.Accept.Add(
+			MediaTypeWithQualityHeaderValue.Parse("application/json")
+		);
 
 		var url = urlBuilder.ToString();
 		requestMessage.RequestUri = new Uri(url, UriKind.RelativeOrAbsolute);
 
-		var response = await client.SendAsync(
-			requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+		var response = await client
+			.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+			.ConfigureAwait(false);
 		var disposeResponse = true;
 		try
 		{
 			var status = (int)response.StatusCode;
 			if (status is 200 or 206)
 			{
-				var responseStream = response.Content == null ?
-					Stream.Null :
-					await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+				var responseStream =
+					response.Content == null
+						? Stream.Null
+						: await response
+							.Content.ReadAsStreamAsync(cancellationToken)
+							.ConfigureAwait(false);
 				var fileResponse = new FileResponse(status, null, responseStream, null, response);
 
 				// response is disposed by FileResponse
@@ -273,7 +329,12 @@ public class PackageVersionArtifactsClient
 			}
 			else
 			{
-				throw new ApiException("The HTTP status code of the response was not expected.", response.StatusCode, null, null);
+				throw new ApiException(
+					"The HTTP status code of the response was not expected.",
+					response.StatusCode,
+					null,
+					null
+				);
 			}
 		}
 		finally
@@ -286,13 +347,17 @@ public class PackageVersionArtifactsClient
 	protected virtual async Task<T> ReadObjectResponseAsync<T>(
 		HttpResponseMessage response,
 		JsonTypeInfo<T> jsonTypeInfo,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken
+	)
 	{
 		try
 		{
-			using var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-			var typedBody = await JsonSerializer.DeserializeAsync(
-				responseStream, jsonTypeInfo, cancellationToken).ConfigureAwait(false);
+			using var responseStream = await response
+				.Content.ReadAsStreamAsync(cancellationToken)
+				.ConfigureAwait(false);
+			var typedBody = await JsonSerializer
+				.DeserializeAsync(responseStream, jsonTypeInfo, cancellationToken)
+				.ConfigureAwait(false);
 			if (typedBody is null)
 			{
 				var message = "Response body was empty.";
@@ -303,7 +368,8 @@ public class PackageVersionArtifactsClient
 		}
 		catch (JsonException exception)
 		{
-			var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
+			var message =
+				"Could not deserialize the response body stream as " + typeof(T).FullName + ".";
 			throw new ApiException(message, response.StatusCode, null, exception);
 		}
 	}
@@ -316,7 +382,10 @@ public class PackageVersionArtifactsClient
 		var request = new HttpRequestMessage();
 		if (!string.IsNullOrEmpty(this.bearerToken))
 		{
-			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.bearerToken);
+			request.Headers.Authorization = new AuthenticationHeaderValue(
+				"Bearer",
+				this.bearerToken
+			);
 		}
 
 		return Task.FromResult(request);

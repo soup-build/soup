@@ -10,5 +10,5 @@ CODE_DIR=$SCRIPTS_DIR/../../code
 SWHERE_DIR=$CODE_DIR/generate-sharp/swhere
 
 # Build SWhere tool
-echo dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64 --self-contained
-dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64 --self-contained
+echo dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64
+dotnet publish $SWHERE_DIR -c $FLAVOR -r linux-x64

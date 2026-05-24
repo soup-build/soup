@@ -103,13 +103,11 @@ namespace Soup::Core {
 				System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto moduleFolder = moduleName.GetParent();
 #if defined(_WIN32)
-			auto packageManagerFolder =
-				moduleFolder + Path("./package-manager/");
+			auto packageManagerFolder = moduleFolder;
 			auto executable =
 				packageManagerFolder + Path("./package-manager.exe");
 #elif defined(__linux__)
-			auto packageManagerFolder =
-				moduleFolder + Path("../lib/soup/package-manager/");
+			auto packageManagerFolder = moduleFolder + Path("../lib/soup/");
 			auto executable = packageManagerFolder + Path("./package-manager");
 #else
 #error "Unknown platform"
