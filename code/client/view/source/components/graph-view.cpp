@@ -4,6 +4,7 @@
 
 module;
 
+#include <array>
 #include <functional>
 #include <memory>
 #include <stdexcept>
