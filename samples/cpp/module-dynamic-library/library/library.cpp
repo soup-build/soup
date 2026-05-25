@@ -6,16 +6,13 @@ module;
 export module Sample.ModuleDynamicLibrary.Library;
 
 // Note: The namespace does not have to match the module name
-export namespace Sample::ModuleDynamicLibrary::Library
-{
-	class Helper
-	{
+export namespace Sample::ModuleDynamicLibrary::Library {
+	class Helper {
 	public:
-	#ifdef _WIN32
+#ifdef _WIN32
 		__declspec(dllexport)
-	#endif
-		static std::string GetName()
-		{
+#endif
+		static std::string GetName() {
 			return "Soup";
 		}
 	};
