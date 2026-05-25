@@ -19,7 +19,7 @@ Build Release
 
 Sign Runtime
 ```
-./scripts/windows/soup-release.cmd version
+./scripts/windows/soup.cmd version
 ./scripts/windows/sign-runtime.cmd
 ```
 
