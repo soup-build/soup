@@ -120,8 +120,8 @@ echo "Copy [/(PACKAGE_mwasplund|libseccomp)/include/seccomp-syscalls.h] -> [./in
 (cd "$USER_ROOT/.soup/packages/C/mwasplund/libseccomp/2.6.0/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/" && "cp" $USER_ROOT/.soup/packages/C/mwasplund/libseccomp/2.6.0/include/seccomp-syscalls.h ./include/seccomp-syscalls.h)
 
 # Setup Detours
-echo mkdir -p "$USER_ROOT/.soup/packages/C++/mwasplund/Detours/4.0.14/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
-mkdir -p "$USER_ROOT/.soup/packages/C++/mwasplund/Detours/4.0.14/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
+echo mkdir -p "$USER_ROOT/.soup/packages/C++/mwasplund/Detours/4.0.15/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
+mkdir -p "$USER_ROOT/.soup/packages/C++/mwasplund/Detours/4.0.15/out/Oltq7cGwk0Rbgy1I-3mCMDDE5yM/"
 
 # Build Detours
 

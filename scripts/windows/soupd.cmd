@@ -17,8 +17,7 @@ REM - Use a copy of the final binary in case we are re-building itself
 robocopy %ScriptsDir%\install\ %RunDir%\ /MIR /NJH /NJS /NDL > NUL
 robocopy %OutDir%\cpp\local\soup\%SOUP_VERSION%\%ConfigHash%\bin\ %RunDir%\Soup\ /MIR /NJH /NJS /NDL > NUL
 
-robocopy %MSBuildDir%\bin\soup.build.package-manager\Debug\net10.0\win-x64\publish\ %RunDir%\Soup\package-manager\ /MIR /NJH /NJS /NDL > NUL
-
-robocopy %MSBuildDir%\bin\swhere\Debug\net10.0\win-x64\publish\ %RunDir%\ swhere.exe /NJH /NJS /NDL > NUL
+robocopy %MSBuildDir%\bin\soup.build.package-manager\Release\net10.0\win-x64\publish\ %RunDir%\Soup\ package-manager.exe /NJH /NJS /NDL > NUL
+robocopy %MSBuildDir%\bin\swhere\Release\net10.0\win-x64\publish\ %RunDir%\ swhere.exe /NJH /NJS /NDL > NUL
 
 %RunDir%\soup.cmd %*
