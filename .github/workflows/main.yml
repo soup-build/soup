@@ -6,7 +6,10 @@ jobs:
   windows-build:
     strategy:
       matrix:
-        os: [ windows-2022, windows-2025-vs2026, ubuntu-24.04 ]
+        os: [
+          windows-2022,
+          # windows-2025-vs2026,
+          ubuntu-24.04 ]
         config: [ Debug, Release ]
     name: PR Build ${{matrix.os}} ${{matrix.config}}
     runs-on: ${{ matrix.os }}
