@@ -5,7 +5,7 @@
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>true</SelfContained>
 		<PublishReadyToRun>false</PublishReadyToRun>
-		<PublishTrimmed>false</PublishTrimmed>
+		<PublishTrimmed>true</PublishTrimmed>
 		<AssemblyName>package-manager</AssemblyName>
 	</PropertyGroup>
 	<ItemGroup>
