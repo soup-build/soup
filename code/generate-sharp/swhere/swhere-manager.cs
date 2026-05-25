@@ -1,16 +1,16 @@
-﻿// <copyright file="swhere-manager.cs" company="Soup">
+// <copyright file="swhere-manager.cs" company="Soup">
 // Copyright (c) Soup. All rights reserved.
 // </copyright>
 
-using Opal;
-using Opal.System;
-using Soup.Build.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Opal;
+using Opal.System;
+using Soup.Build.Utilities;
 using Path = Opal.Path;
 
 namespace Soup.Build.Discover;
@@ -20,10 +20,13 @@ public static partial class SwhereManager
 	public static async Task DiscoverAsync(OSPlatform platform, bool includePrerelease)
 	{
 		// Load up the Local User Config
-		var localUserConfigPath = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
-			new Path($"./.soup/{BuildConstants.LocalUserConfigFileName}");
+		var localUserConfigPath =
+			LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory()
+			+ new Path($"./.soup/{BuildConstants.LocalUserConfigFileName}");
 		var (loadConfigResult, userConfig) =
-			await LocalUserConfigExtensions.TryLoadLocalUserConfigFromFileAsync(localUserConfigPath);
+			await LocalUserConfigExtensions.TryLoadLocalUserConfigFromFileAsync(
+				localUserConfigPath
+			);
 		if (!loadConfigResult)
 		{
 			Log.Info("No existing local user config.");
@@ -48,8 +51,9 @@ public static partial class SwhereManager
 		await LocalUserConfigExtensions.SaveToFileAsync(localUserConfigPath, userConfig);
 
 		// Create Root Recipe if missing
-		var rootRecipePath = LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory() +
-			new Path($"./.soup/{BuildConstants.RootRecipeFileName}");
+		var rootRecipePath =
+			LifetimeManager.Get<IFileSystem>().GetUserProfileDirectory()
+			+ new Path($"./.soup/{BuildConstants.RootRecipeFileName}");
 		Log.Info("Check Root Recipe: " + rootRecipePath.ToString());
 		if (!LifetimeManager.Get<IFileSystem>().Exists(rootRecipePath))
 		{
@@ -60,14 +64,20 @@ public static partial class SwhereManager
 		}
 	}
 
-	private static async Task DiscoverSharedPlatformAsync(OSPlatform platform, LocalUserConfig userConfig)
+	private static async Task DiscoverSharedPlatformAsync(
+		OSPlatform platform,
+		LocalUserConfig userConfig
+	)
 	{
 		await DiscoverDotNetAsync(platform, userConfig);
 		DiscoverNuget(userConfig);
 	}
 
 	[SupportedOSPlatform("windows")]
-	private static async Task DiscoverWindowsPlatformAsync(bool includePrerelease, LocalUserConfig userConfig)
+	private static async Task DiscoverWindowsPlatformAsync(
+		bool includePrerelease,
+		LocalUserConfig userConfig
+	)
 	{
 		Log.HighPriority("Discover Windows Platform");
 		var msvcSDK = userConfig.EnsureSDK("MSVC");
@@ -97,16 +107,14 @@ public static partial class SwhereManager
 		if (windowsSDK is not null)
 		{
 			var windowsSDKConfig = userConfig.EnsureSDK("Windows");
-			windowsSDKConfig.SourceDirectories =
-			[
-				windowsSDK.Value.InstallPath,
-			];
+			windowsSDKConfig.SourceDirectories = [windowsSDK.Value.InstallPath];
 			windowsSDKConfig.SetProperties(
 				new Dictionary<string, string>()
 				{
 					{ "Version", windowsSDK.Value.Version },
 					{ "RootPath", windowsSDK.Value.InstallPath.ToString() },
-				});
+				}
+			);
 		}
 		else
 		{
@@ -117,15 +125,10 @@ public static partial class SwhereManager
 		if (netFXToolsPath is not null)
 		{
 			var netFXToolsSDK = userConfig.EnsureSDK("NetFXTools");
-			netFXToolsSDK.SourceDirectories =
-			[
-				netFXToolsPath,
-			];
+			netFXToolsSDK.SourceDirectories = [netFXToolsPath];
 			netFXToolsSDK.SetProperties(
-				new Dictionary<string, string>()
-				{
-					{ "ToolsRoot", netFXToolsPath.ToString() },
-				});
+				new Dictionary<string, string>() { { "ToolsRoot", netFXToolsPath.ToString() } }
+			);
 		}
 		else
 		{
@@ -133,7 +136,10 @@ public static partial class SwhereManager
 		}
 	}
 
-	private static async Task DiscoverLinuxPlatformAsync(OSPlatform platform, LocalUserConfig userConfig)
+	private static async Task DiscoverLinuxPlatformAsync(
+		OSPlatform platform,
+		LocalUserConfig userConfig
+	)
 	{
 		await DiscoverGCCAsync(platform, userConfig);
 		await DiscoverClangAsync(platform, userConfig);
@@ -145,7 +151,7 @@ public static partial class SwhereManager
 
 		var gccSDK = userConfig.EnsureSDK("GCC");
 		gccSDK.SourceDirectories = [];
-		_ = gccSDK.Properties.Values.Remove("Default");
+		gccSDK.Properties.Values.Clear();
 
 		var sdksTable = new SMLTable();
 
@@ -158,13 +164,20 @@ public static partial class SwhereManager
 			var matchName = nameRegex.Match(file.Path.FileName);
 			if (matchName.Success && matchName.Groups["Name"].Value == "gcc")
 			{
-				var version = int.Parse(matchName.Groups["Version"].Value, CultureInfo.InvariantCulture);
+				var version = int.Parse(
+					matchName.Groups["Version"].Value,
+					CultureInfo.InvariantCulture
+				);
 				await DiscoverGCCVersionAsync(platform, sdksTable, version);
 				maxVersion = Math.Max(version, maxVersion);
 			}
 		}
 
-		gccSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
+		gccSDK.Properties.AddItemWithSyntax(
+			"Default",
+			maxVersion.ToString(CultureInfo.InvariantCulture),
+			3
+		);
 
 		var propertiesSDKs = gccSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
 		propertiesSDKs.Values.Clear();
@@ -172,19 +185,31 @@ public static partial class SwhereManager
 			propertiesSDKs.Values.Add(key, value);
 	}
 
-
 	private static async Task DiscoverGCCVersionAsync(
 		OSPlatform platform,
 		SMLTable sdksTable,
-		int version)
+		int version
+	)
 	{
 		Log.HighPriority($"Discover GCC {version}");
 
 		// Find the GCC SDKs
-		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"gcc-{version}");
-		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"g++-{version}");
-		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"gcc-scan-deps-{version}");
-		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"gcc-ar-{version}");
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"gcc-{version}"
+		);
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"g++-{version}"
+		);
+		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"gcc-scan-deps-{version}"
+		);
+		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"gcc-ar-{version}"
+		);
 
 		var versionTable = sdksTable.AddTableWithSyntax($"{version}", 4);
 
@@ -198,17 +223,16 @@ public static partial class SwhereManager
 			versionTable.AddItemWithSyntax("Archiver", archiverPath.ToString(), 5);
 	}
 
-	private static async Task DiscoverClangAsync(
-		OSPlatform platform,
-		LocalUserConfig userConfig)
+	private static async Task DiscoverClangAsync(OSPlatform platform, LocalUserConfig userConfig)
 	{
 		Log.HighPriority("Discover Clang");
 
 		var clangSDK = userConfig.EnsureSDK("Clang");
 		clangSDK.SourceDirectories = [];
-		_ = clangSDK.Properties.Values.Remove("Default");
+		clangSDK.Properties.Values.Clear();
 
-		var sdksTable = new SMLTable();
+		var sdksTable = clangSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
+		sdksTable.Values.Clear();
 
 		var clangMatches = LifetimeManager.Get<IFileSystem>().GetChildFiles(new Path("/bin/"));
 
@@ -219,31 +243,43 @@ public static partial class SwhereManager
 			var matchName = nameRegex.Match(file.Path.FileName);
 			if (matchName.Success && matchName.Groups["Name"].Value == "clang")
 			{
-				var version = int.Parse(matchName.Groups["Version"].Value, CultureInfo.InvariantCulture);
+				var version = int.Parse(
+					matchName.Groups["Version"].Value,
+					CultureInfo.InvariantCulture
+				);
 				await DiscoverClangVersionAsync(platform, sdksTable, version);
 				maxVersion = Math.Max(version, maxVersion);
 			}
 		}
 
-		clangSDK.Properties.AddItemWithSyntax("Default", maxVersion.ToString(CultureInfo.InvariantCulture), 3);
-
-		var propertiesSDKs = clangSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
-		propertiesSDKs.Values.Clear();
-		foreach (var (key, value) in sdksTable.Values)
-			propertiesSDKs.Values.Add(key, value);
+		clangSDK.Properties.AddItemWithSyntax(
+			"Default",
+			maxVersion.ToString(CultureInfo.InvariantCulture),
+			3
+		);
 	}
 
 	private static async Task DiscoverClangVersionAsync(
 		OSPlatform platform,
 		SMLTable sdksTable,
-		int version)
+		int version
+	)
 	{
 		Log.HighPriority($"Discover Clang {version}");
 
 		// Find the Clang SDKs
-		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang-{version}");
-		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang++-{version}");
-		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(platform, $"clang-scan-deps-{version}");
+		var cCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"clang-{version}"
+		);
+		var cppCompilerPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"clang++-{version}"
+		);
+		var cppScannerPath = await WhereIsUtilities.TryFindExecutableAsync(
+			platform,
+			$"clang-scan-deps-{version}"
+		);
 		var archiverPath = await WhereIsUtilities.TryFindExecutableAsync(platform, "ar");
 
 		var versionTable = sdksTable.AddTableWithSyntax($"{version}", 4);
@@ -271,7 +307,8 @@ public static partial class SwhereManager
 				new Dictionary<string, string>()
 				{
 					{ "DotNetExecutable", dotnet.Value.DotNetExecutable.ToString() },
-				});
+				}
+			);
 
 			var sdksTable = dotnetSDK.Properties.EnsureTableWithSyntax("SDKs", 3);
 			foreach (var sdk in dotnet.Value.SDKVersions)
@@ -285,7 +322,11 @@ public static partial class SwhereManager
 				var runtimeTable = runtimesTable.EnsureTableWithSyntax(runtime.Key, 4);
 				foreach (var runtimeVersion in runtime.Value)
 				{
-					runtimeTable.AddItemWithSyntax(runtimeVersion.Version, runtimeVersion.InstallDirectory.ToString(), 5);
+					runtimeTable.AddItemWithSyntax(
+						runtimeVersion.Version,
+						runtimeVersion.InstallDirectory.ToString(),
+						5
+					);
 				}
 			}
 
@@ -296,7 +337,11 @@ public static partial class SwhereManager
 				foreach (var packVersion in pack.Value)
 				{
 					var packVersionTable = packTable.AddTableWithSyntax(packVersion.Version, 5);
-					packVersionTable.AddItemWithSyntax("Path", packVersion.InstallDirectory.ToString(), 6);
+					packVersionTable.AddItemWithSyntax(
+						"Path",
+						packVersion.InstallDirectory.ToString(),
+						6
+					);
 					var analyzerArray = packVersionTable.AddArrayWithSyntax("Analyzer", 6);
 					var managedArray = packVersionTable.AddArrayWithSyntax("Managed", 6);
 					if (packVersion.FrameworkList is not null)
@@ -330,15 +375,14 @@ public static partial class SwhereManager
 		if (hasNuget)
 		{
 			var nugetSDK = userConfig.EnsureSDK("Nuget");
-			nugetSDK.SourceDirectories = [
-				nugetPackagesPath,
-			];
+			nugetSDK.SourceDirectories = [nugetPackagesPath];
 
 			nugetSDK.SetProperties(
 				new Dictionary<string, string>()
 				{
 					{ "PackagesDirectory", nugetPackagesPath.ToString() },
-				});
+				}
+			);
 
 			var packagesTable = nugetSDK.Properties.EnsureTableWithSyntax("Packages", 3);
 			packagesTable.Values.Clear();
@@ -347,28 +391,47 @@ public static partial class SwhereManager
 				var packageTable = packagesTable.EnsureTableWithSyntax(package.Id, 4);
 				foreach (var packageVersion in package.Versions)
 				{
-					var packageVersionTable = packageTable.EnsureTableWithSyntax(packageVersion.Version, 5);
+					var packageVersionTable = packageTable.EnsureTableWithSyntax(
+						packageVersion.Version,
+						5
+					);
 					if (packageVersion.TargetFrameworks.Count > 0)
 					{
-						var targetFrameworksTable = packageVersionTable.EnsureTableWithSyntax("TargetFrameworks", 6);
+						var targetFrameworksTable = packageVersionTable.EnsureTableWithSyntax(
+							"TargetFrameworks",
+							6
+						);
 						foreach (var targetFramework in packageVersion.TargetFrameworks)
 						{
-							var targetFrameworkTable = targetFrameworksTable.EnsureTableWithSyntax(targetFramework.Name, 7);
+							var targetFrameworkTable = targetFrameworksTable.EnsureTableWithSyntax(
+								targetFramework.Name,
+								7
+							);
 
 							if (targetFramework.Dependencies.Count > 0)
 							{
-								var dependenciesArray = targetFrameworkTable.EnsureArrayWithSyntax("Dependencies", 8);
+								var dependenciesArray = targetFrameworkTable.EnsureArrayWithSyntax(
+									"Dependencies",
+									8
+								);
 								foreach (var dependency in targetFramework.Dependencies)
 								{
-									var dependencyTable = dependenciesArray.AddInlineTableWithSyntax(9);
+									var dependencyTable =
+										dependenciesArray.AddInlineTableWithSyntax(9);
 									dependencyTable.AddInlineItemWithSyntax("Id", dependency.Id);
-									dependencyTable.AddInlineItemWithSyntax("Version", dependency.Version);
+									dependencyTable.AddInlineItemWithSyntax(
+										"Version",
+										dependency.Version
+									);
 								}
 							}
 
 							if (targetFramework.Libraries.Count > 0)
 							{
-								var librariesArray = targetFrameworkTable.EnsureArrayWithSyntax("Libraries", 8);
+								var librariesArray = targetFrameworkTable.EnsureArrayWithSyntax(
+									"Libraries",
+									8
+								);
 								foreach (var library in targetFramework.Libraries)
 								{
 									librariesArray.AddItemWithSyntax(library, 9);
