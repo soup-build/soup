@@ -5,13 +5,11 @@
 
 import json11;
 
-int main()
-{
+int main() {
 	// Read in the contents of the json file
 	auto jsonFile = std::ifstream("./message.json");
-	auto jsonContent = std::string(
-		std::istreambuf_iterator<char>(jsonFile),
-		std::istreambuf_iterator<char>());
+	auto jsonContent =
+		std::string(std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>());
 
 	// Parse the json
 	std::string errorMessage;

@@ -37,44 +37,55 @@ export namespace Soup::Core {
 	class RecipeValue {
 	public:
 		RecipeValue(RecipeTable value)
-			: _value(std::move(value)) {}
+			: _value(std::move(value)) {
+		}
 
 		RecipeValue(RecipeList value)
-			: _value(std::move(value)) {}
+			: _value(std::move(value)) {
+		}
 
 		RecipeValue(const char *value)
-			: _value(value) {}
+			: _value(value) {
+		}
 
 		RecipeValue(std::string value)
-			: _value(std::move(value)) {}
+			: _value(std::move(value)) {
+		}
 
 		RecipeValue(int64_t value)
-			: _value(value) {}
+			: _value(value) {
+		}
 
 		RecipeValue(double value)
-			: _value(value) {}
+			: _value(value) {
+		}
 
 		RecipeValue(bool value)
-			: _value(value) {}
+			: _value(value) {
+		}
 
 		RecipeValue(SemanticVersion value)
-			: _value(value) {}
+			: _value(value) {
+		}
 
 		RecipeValue(PackageReference value)
-			: _value(std::move(value)) {}
+			: _value(std::move(value)) {
+		}
 
 		RecipeValue(LanguageReference value)
-			: _value(std::move(value)) {}
+			: _value(std::move(value)) {
+		}
 
-		bool IsString() const { return GetType() == RecipeValueType::String; }
+		bool IsString() const {
+			return GetType() == RecipeValueType::String;
+		}
 
 		const std::string &AsString() const {
 			if (IsString()) {
 				return std::get<std::string>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error(
-					"Attempt to access value as string with incorrect type.");
+				throw std::runtime_error("Attempt to access value as string with incorrect type.");
 			}
 		}
 
@@ -83,8 +94,7 @@ export namespace Soup::Core {
 				return std::get<int64_t>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error(
-					"Attempt to access value as integer with incorrect type.");
+				throw std::runtime_error("Attempt to access value as integer with incorrect type.");
 			}
 		}
 
@@ -93,8 +103,7 @@ export namespace Soup::Core {
 				return std::get<double>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error(
-					"Attempt to access value as float with incorrect type.");
+				throw std::runtime_error("Attempt to access value as float with incorrect type.");
 			}
 		}
 
@@ -103,20 +112,22 @@ export namespace Soup::Core {
 				return std::get<bool>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error(
-					"Attempt to access value as boolean with incorrect type.");
+				throw std::runtime_error("Attempt to access value as boolean with incorrect type.");
 			}
 		}
 
-		bool IsTable() const { return GetType() == RecipeValueType::Table; }
+		bool IsTable() const {
+			return GetType() == RecipeValueType::Table;
+		}
 
 		RecipeTable &AsTable() {
 			if (IsTable()) {
 				return std::get<RecipeTable>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error("Attempt to access value as "
-										 "RecipeTable with incorrect type.");
+				throw std::runtime_error(
+					"Attempt to access value as "
+					"RecipeTable with incorrect type.");
 			}
 		}
 
@@ -125,8 +136,9 @@ export namespace Soup::Core {
 				return std::get<RecipeTable>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error("Attempt to access value as "
-										 "RecipeTable with incorrect type.");
+				throw std::runtime_error(
+					"Attempt to access value as "
+					"RecipeTable with incorrect type.");
 			}
 		}
 
@@ -135,8 +147,9 @@ export namespace Soup::Core {
 				return std::get<RecipeList>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error("Attempt to access value as "
-										 "RecipeList with incorrect type.");
+				throw std::runtime_error(
+					"Attempt to access value as "
+					"RecipeList with incorrect type.");
 			}
 		}
 
@@ -145,20 +158,22 @@ export namespace Soup::Core {
 				return std::get<RecipeList>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error("Attempt to access value as "
-										 "RecipeList with incorrect type.");
+				throw std::runtime_error(
+					"Attempt to access value as "
+					"RecipeList with incorrect type.");
 			}
 		}
 
-		bool IsVersion() const { return GetType() == RecipeValueType::Version; }
+		bool IsVersion() const {
+			return GetType() == RecipeValueType::Version;
+		}
 
 		SemanticVersion AsVersion() const {
 			if (GetType() == RecipeValueType::Version) {
 				return std::get<SemanticVersion>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error(
-					"Attempt to access value as version with incorrect type.");
+				throw std::runtime_error("Attempt to access value as version with incorrect type.");
 			}
 		}
 
@@ -171,8 +186,9 @@ export namespace Soup::Core {
 				return std::get<PackageReference>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error("Attempt to access value as package "
-										 "reference with incorrect type.");
+				throw std::runtime_error(
+					"Attempt to access value as package "
+					"reference with incorrect type.");
 			}
 		}
 
@@ -185,8 +201,9 @@ export namespace Soup::Core {
 				return std::get<LanguageReference>(_value);
 			} else {
 				// Wrong type
-				throw std::runtime_error("Attempt to access value as language "
-										 "reference with incorrect type.");
+				throw std::runtime_error(
+					"Attempt to access value as language "
+					"reference with incorrect type.");
 			}
 		}
 
@@ -222,23 +239,17 @@ export namespace Soup::Core {
 			if (GetType() == rhs.GetType()) {
 				switch (GetType()) {
 					case RecipeValueType::Table:
-						return std::get<RecipeTable>(_value) ==
-							   std::get<RecipeTable>(rhs._value);
+						return std::get<RecipeTable>(_value) == std::get<RecipeTable>(rhs._value);
 					case RecipeValueType::List:
-						return std::get<RecipeList>(_value) ==
-							   std::get<RecipeList>(rhs._value);
+						return std::get<RecipeList>(_value) == std::get<RecipeList>(rhs._value);
 					case RecipeValueType::String:
-						return std::get<std::string>(_value) ==
-							   std::get<std::string>(rhs._value);
+						return std::get<std::string>(_value) == std::get<std::string>(rhs._value);
 					case RecipeValueType::Integer:
-						return std::get<int64_t>(_value) ==
-							   std::get<int64_t>(rhs._value);
+						return std::get<int64_t>(_value) == std::get<int64_t>(rhs._value);
 					case RecipeValueType::Float:
-						return std::get<double>(_value) ==
-							   std::get<double>(rhs._value);
+						return std::get<double>(_value) == std::get<double>(rhs._value);
 					case RecipeValueType::Boolean:
-						return std::get<bool>(_value) ==
-							   std::get<bool>(rhs._value);
+						return std::get<bool>(_value) == std::get<bool>(rhs._value);
 					case RecipeValueType::Version:
 						return std::get<SemanticVersion>(_value) ==
 							   std::get<SemanticVersion>(rhs._value);
@@ -249,8 +260,7 @@ export namespace Soup::Core {
 						return std::get<LanguageReference>(_value) ==
 							   std::get<LanguageReference>(rhs._value);
 					default:
-						throw std::runtime_error(
-							"Unkown Recipe ValueType for comparison.");
+						throw std::runtime_error("Unkown Recipe ValueType for comparison.");
 				}
 			} else {
 				return false;
@@ -265,8 +275,16 @@ export namespace Soup::Core {
 		}
 
 	private:
-		std::variant<RecipeTable, RecipeList, std::string, int64_t, double,
-					 bool, SemanticVersion, PackageReference, LanguageReference>
+		std::variant<
+			RecipeTable,
+			RecipeList,
+			std::string,
+			int64_t,
+			double,
+			bool,
+			SemanticVersion,
+			PackageReference,
+			LanguageReference>
 			_value;
 	};
 }

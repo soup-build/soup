@@ -37,14 +37,15 @@ namespace Soup::Core {
 		/// </summary>
 		RecipeCache()
 			: _knownRecipes(),
-			  _knownRootRecipes() {}
+			  _knownRootRecipes() {
+		}
 
 		RecipeCache(std::map<std::string, Recipe> knownRecipes)
 			: _knownRecipes(std::move(knownRecipes)),
-			  _knownRootRecipes() {}
+			  _knownRootRecipes() {
+		}
 
-		bool TryGetRootRecipe(const Path &recipeFile,
-							  const RootRecipe *&result) {
+		bool TryGetRootRecipe(const Path &recipeFile, const RootRecipe *&result) {
 			// Check if the recipe was already loaded
 			auto findRecipe = _knownRootRecipes.find(recipeFile.ToString());
 			if (findRecipe != _knownRootRecipes.end()) {
@@ -52,12 +53,10 @@ namespace Soup::Core {
 				return true;
 			} else {
 				RootRecipe loadRecipe;
-				if (RootRecipeExtensions::TryLoadRootRecipeFromFile(
-						recipeFile, loadRecipe)) {
+				if (RootRecipeExtensions::TryLoadRootRecipeFromFile(recipeFile, loadRecipe)) {
 					// Save the recipe for later
 					auto [insertRecipeIterator, wasInserted] =
-						_knownRootRecipes.emplace(recipeFile.ToString(),
-												  std::move(loadRecipe));
+						_knownRootRecipes.emplace(recipeFile.ToString(), std::move(loadRecipe));
 
 					result = &insertRecipeIterator->second;
 					return true;
@@ -74,8 +73,8 @@ namespace Soup::Core {
 			if (findRecipe != _knownRecipes.end()) {
 				return findRecipe->second;
 			} else {
-				throw std::runtime_error(std::format(
-					"Recipe [{}] not found in closure", recipeFile.ToString()));
+				throw std::runtime_error(
+					std::format("Recipe [{}] not found in closure", recipeFile.ToString()));
 			}
 		}
 
@@ -87,12 +86,10 @@ namespace Soup::Core {
 				return true;
 			} else {
 				Recipe loadRecipe;
-				if (RecipeExtensions::TryLoadRecipeFromFile(recipeFile,
-															loadRecipe)) {
+				if (RecipeExtensions::TryLoadRecipeFromFile(recipeFile, loadRecipe)) {
 					// Save the recipe for later
 					auto [insertRecipeIterator, wasInserted] =
-						_knownRecipes.emplace(recipeFile.ToString(),
-											  std::move(loadRecipe));
+						_knownRecipes.emplace(recipeFile.ToString(), std::move(loadRecipe));
 
 					result = &insertRecipeIterator->second;
 					return true;

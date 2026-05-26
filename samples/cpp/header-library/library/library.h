@@ -1,12 +1,9 @@
 #include <string>
 
-namespace Sample::HeaderLibrary::Library
-{
-	class Helper
-	{
+namespace Sample::HeaderLibrary::Library {
+	class Helper {
 	public:
-		static std::string GetName()
-		{
+		static std::string GetName() {
 			return "Soup";
 		}
 	};

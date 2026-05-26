@@ -5,11 +5,9 @@ module;
 
 export module Sample.ModuleInterface;
 
-export class Helper
-{
+export class Helper {
 public:
-	static std::string GetName()
-	{
+	static std::string GetName() {
 		return "Soup";
 	}
 };

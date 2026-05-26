@@ -6,7 +6,6 @@ module;
 export module Sample.ModulePartitions:HelperB;
 import :HelperA;
 
-export std::string_view GetSourcePrefix()
-{
+export std::string_view GetSourcePrefix() {
 	return Truncate("Source", 3);
 }

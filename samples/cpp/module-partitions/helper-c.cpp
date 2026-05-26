@@ -6,7 +6,6 @@ module;
 export module Sample.ModulePartitions:HelperC;
 import :HelperA;
 
-export std::string_view GetPackagesPostfix()
-{
+export std::string_view GetPackagesPostfix() {
 	return Truncate("packages", 1);
 }

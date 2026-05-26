@@ -28,14 +28,11 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
-{
-	export class BuildHistoryCheckerTests
-	{
+namespace Soup::Core::UnitTests {
+	export class BuildHistoryCheckerTests {
 	public:
 		// [[Fact]]
-		void IsOutdated_ZeroInput()
-		{
+		void IsOutdated_ZeroInput() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -45,11 +42,13 @@ namespace Soup::Core::UnitTests
 				2,
 				std::unordered_map<FileId, Path>({}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
 
 			// Setup the input parameters
 			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({});
 
 			// Perform the check
@@ -67,8 +66,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_UnknownInputFile()
-		{
+		void IsOutdated_SingleInput_UnknownInputFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -81,15 +79,16 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/Input.cpp") },
+					{2, Path("C:/Root/Input.cpp")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-				}));
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
 
 			// Setup the input parameters
 			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
@@ -117,8 +116,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_DeletedInputFile()
-		{
+		void IsOutdated_SingleInput_DeletedInputFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -132,16 +130,18 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/Input.cpp") },
+					{2, Path("C:/Root/Input.cpp")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 2, std::nullopt },
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
+					{2, std::nullopt},
 				}));
 
 			// Setup the input parameters
 			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
@@ -167,30 +167,31 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_Outdated()
-		{
+		void IsOutdated_SingleInput_Outdated() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
 
 			// Create the file state
 			auto inputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 13min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 13min);
 
 			// Initialize the file system state
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/Input.cpp") },
+					{2, Path("C:/Root/Input.cpp")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 2, inputTime },
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
+					{2, inputTime},
 				}));
 
 			// Setup the input parameters
 			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
@@ -212,30 +213,31 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_SingleInput_UpToDate()
-		{
+		void IsOutdated_SingleInput_UpToDate() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
 
 			// Create the file state
 			auto inputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 11min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 11min);
 
 			// Initialize the file system state
 			auto fileSystemState = FileSystemState(
 				3,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/Input.cpp") },
+					{2, Path("C:/Root/Input.cpp")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 2, inputTime },
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
+					{2, inputTime},
 				}));
 
 			// Setup the input parameters
 			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 			});
@@ -255,32 +257,33 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void IsOutdated_MultipleInputs_RelativeAndAbsolute()
-		{
+		void IsOutdated_MultipleInputs_RelativeAndAbsolute() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
 
 			// Create the file state
 			auto inputTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 11min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 11min);
 
 			// Initialize the file system state
 			auto fileSystemState = FileSystemState(
 				4,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/Input.cpp") },
-					{ 3, Path("C:/Input.h") },
+					{2, Path("C:/Root/Input.cpp")},
+					{3, Path("C:/Input.h")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 2, inputTime },
-					{ 3, inputTime },
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
+					{2, inputTime},
+					{3, inputTime},
 				}));
 
 			// Setup the input parameters
 			auto evaluateTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 12min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 12min);
 			auto inputFiles = std::vector<FileId>({
 				2,
 				3,

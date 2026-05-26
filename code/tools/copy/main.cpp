@@ -9,7 +9,9 @@
 #include <iostream>
 #include <string_view>
 
-void PrintUsage() { std::cout << "copy [source] [destination]" << std::endl; }
+void PrintUsage() {
+	std::cout << "copy [source] [destination]" << std::endl;
+}
 
 #if defined(_WIN32)
 void CopyFile(std::string_view sourcePath, std::string_view destinationPath) {
@@ -43,8 +45,7 @@ void CopyFile(std::string_view sourcePath, std::string_view destinationPath) {
 
 	std::filesystem::permissions(destinationPath, sourcePermissions, error);
 	if (error) {
-		std::cerr << "Error setting permissions: " << error.message()
-				  << std::endl;
+		std::cerr << "Error setting permissions: " << error.message() << std::endl;
 		throw std::runtime_error("Set permissions failed");
 	}
 }

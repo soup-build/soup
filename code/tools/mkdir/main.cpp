@@ -4,7 +4,9 @@
 
 import Opal;
 
-void PrintUsage() { std::cout << "mkdir [path]" << std::endl; }
+void PrintUsage() {
+	std::cout << "mkdir [path]" << std::endl;
+}
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
@@ -19,8 +21,7 @@ int main(int argc, char **argv) {
 		if (fileSystem.Exists(directory)) {
 			auto now = std::chrono::system_clock::now();
 #ifdef _WIN32
-			auto nowFileTime =
-				std::chrono::clock_cast<std::chrono::file_clock>(now);
+			auto nowFileTime = std::chrono::clock_cast<std::chrono::file_clock>(now);
 #else
 			auto nowFileTime = std::chrono::file_clock::from_sys(now);
 #endif

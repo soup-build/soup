@@ -28,18 +28,22 @@ namespace Soup::Core {
 		/// Initializes a new instance of the <see cref="RootRecipe"/> class.
 		/// </summary>
 		RootRecipe()
-			: _table() {}
+			: _table() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Recipe"/> class.
 		/// </summary>
 		RootRecipe(RecipeTable table)
-			: _table(std::move(table)) {}
+			: _table(std::move(table)) {
+		}
 
 		/// <summary>
 		/// Gets or sets the output root
 		/// </summary>
-		bool HasOutputRoot() const { return HasValue(Property_OutputRoot); }
+		bool HasOutputRoot() const {
+			return HasValue(Property_OutputRoot);
+		}
 
 		Path GetOutputRoot() const {
 			if (!HasOutputRoot())
@@ -51,7 +55,9 @@ namespace Soup::Core {
 		/// <summary>
 		/// Raw access
 		/// </summary>
-		RecipeTable &GetTable() { return _table; }
+		RecipeTable &GetTable() {
+			return _table;
+		}
 
 		/// <summary>
 		/// Equality operator
@@ -63,7 +69,9 @@ namespace Soup::Core {
 		/// <summary>
 		/// Inequality operator
 		/// </summary>
-		bool operator!=(const RootRecipe &rhs) const { return !(*this == rhs); }
+		bool operator!=(const RootRecipe &rhs) const {
+			return !(*this == rhs);
+		}
 
 	private:
 		bool HasValue(std::string_view key) const {

@@ -25,8 +25,7 @@ namespace Soup::Core {
 		/// <summary>
 		/// Attempt to load from file
 		/// </summary>
-		static bool TryLoadRootRecipeFromFile(const Path &recipeFile,
-											  RootRecipe &result) {
+		static bool TryLoadRootRecipeFromFile(const Path &recipeFile, RootRecipe &result) {
 			// Verify the requested file exists
 			Log::Diag("Load Root Recipe: {}", recipeFile.ToString());
 			if (!System::IFileSystem::Current().Exists(recipeFile)) {
@@ -35,13 +34,11 @@ namespace Soup::Core {
 			}
 
 			// Open the file to read from
-			auto file =
-				System::IFileSystem::Current().OpenRead(recipeFile, true);
+			auto file = System::IFileSystem::Current().OpenRead(recipeFile, true);
 
 			// Read the contents of the recipe file
 			try {
-				result = RootRecipe(
-					RecipeSML::Deserialize(recipeFile, file->GetInStream()));
+				result = RootRecipe(RecipeSML::Deserialize(recipeFile, file->GetInStream()));
 				return true;
 			} catch (std::exception &ex) {
 				Log::Error("Deserialize Threw: {}", ex.what());
@@ -54,15 +51,12 @@ namespace Soup::Core {
 		/// Check if there is a root recipe file in any of the parent
 		/// directories from the package root
 		/// </summary>
-		static bool TryFindRootRecipeFile(const Path &packageRoot,
-										  Path &rootRecipeFile) {
+		static bool TryFindRootRecipeFile(const Path &packageRoot, Path &rootRecipeFile) {
 			auto parentDirectory = packageRoot.GetParent();
 			auto done = false;
 			while (!done) {
-				auto checkRootRecipeFile =
-					parentDirectory + Build::Constants::RootRecipeFileName();
-				if (System::IFileSystem::Current().Exists(
-						checkRootRecipeFile)) {
+				auto checkRootRecipeFile = parentDirectory + Build::Constants::RootRecipeFileName();
+				if (System::IFileSystem::Current().Exists(checkRootRecipeFile)) {
 					// We found one!
 					rootRecipeFile = std::move(checkRootRecipeFile);
 					return true;
@@ -70,8 +64,7 @@ namespace Soup::Core {
 
 				// Get the next parent directory
 				auto nextParentDirectory = parentDirectory.GetParent();
-				done = nextParentDirectory.ToString().size() ==
-					   parentDirectory.ToString().size();
+				done = nextParentDirectory.ToString().size() == parentDirectory.ToString().size();
 				parentDirectory = std::move(nextParentDirectory);
 			}
 

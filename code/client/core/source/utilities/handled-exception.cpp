@@ -20,15 +20,20 @@ namespace Soup::Core {
 		/// </summary>
 		HandledException(int exitCode)
 			: std::exception(),
-			  m_exitCode(exitCode) {}
+			  m_exitCode(exitCode) {
+		}
 
 		HandledException(const HandledException &other)
 			: std::exception(),
-			  m_exitCode(other.m_exitCode) {}
+			  m_exitCode(other.m_exitCode) {
+		}
 
-		virtual ~HandledException() noexcept {}
+		virtual ~HandledException() noexcept {
+		}
 
-		int GetExitCode() const { return m_exitCode; }
+		int GetExitCode() const {
+			return m_exitCode;
+		}
 
 	private:
 		int m_exitCode;

@@ -29,14 +29,11 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
-{
-	export class RecipeBuildLocationManagerTests
-	{
+namespace Soup::Core::UnitTests {
+	export class RecipeBuildLocationManagerTests {
 	public:
 		// [[Fact]]
-		void GetOutputDirectory_Simple()
-		{
+		void GetOutputDirectory_Simple() {
 			// Register the test file system
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
@@ -44,29 +41,23 @@ namespace Soup::Core::UnitTests
 			auto packageName = PackageName(std::nullopt, "my-package");
 			auto workingDirectory = Path("C:/WorkingDirectory/");
 			auto recipe = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", "C++|1" },
-				{ "Version", "1.2.3" },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", "C++|1"},
+					{"Version", "1.2.3"},
+				}));
 			auto globalParameters = ValueTable();
 			auto recipeCache = RecipeCache();
-			auto knownLanguages = std::map<std::string, KnownLanguage>(
-			{
-				{
-					"C++",
-					KnownLanguage("user1", "cpp")
-				}
-			});
+			auto knownLanguages =
+				std::map<std::string, KnownLanguage>({{"C++", KnownLanguage("user1", "cpp")}});
 			auto uut = RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = uut.GetOutputDirectory(
-				packageName,
-				workingDirectory,
-				recipe,
-				globalParameters,
-				recipeCache);
+				packageName, workingDirectory, recipe, globalParameters, recipeCache);
 
-			Assert::AreEqual(Path("C:/WorkingDirectory/out/J_HqSstV55vlb-x6RWC_hLRFRDU/"), targetDirectory, "Verify target directory matches expected.");
+			Assert::AreEqual(
+				Path("C:/WorkingDirectory/out/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+				targetDirectory,
+				"Verify target directory matches expected.");
 
 			// Verify expected file system requests
 			Assert::AreEqual(
@@ -76,10 +67,9 @@ namespace Soup::Core::UnitTests
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
 		}
-		
+
 		// [[Fact]]
-		void GetOutputDirectory_RootRecipe()
-		{
+		void GetOutputDirectory_RootRecipe() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -90,35 +80,25 @@ namespace Soup::Core::UnitTests
 
 			// Create a root recipe
 			fileSystem->CreateMockFile(
-				Path("C:/root-recipe.sml"),
-				std::make_shared<MockFile>(std::stringstream(R"(
+				Path("C:/root-recipe.sml"), std::make_shared<MockFile>(std::stringstream(R"(
 					OutputRoot: './BuildOut/'
 				)")));
 
 			auto packageName = PackageName(std::nullopt, "my-package");
 			auto workingDirectory = Path("C:/WorkingDirectory/");
 			auto recipe = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", "C++|1" },
-				{ "Version", "1.2.3" },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", "C++|1"},
+					{"Version", "1.2.3"},
+				}));
 			auto globalParameters = ValueTable();
 			auto recipeCache = RecipeCache();
-			auto knownLanguages = std::map<std::string, KnownLanguage>(
-			{
-				{
-					"C++",
-					KnownLanguage("user1", "cpp")
-				}
-			});
+			auto knownLanguages =
+				std::map<std::string, KnownLanguage>({{"C++", KnownLanguage("user1", "cpp")}});
 			auto uut = RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = uut.GetOutputDirectory(
-				packageName,
-				workingDirectory,
-				recipe,
-				globalParameters,
-				recipeCache);
+				packageName, workingDirectory, recipe, globalParameters, recipeCache);
 
 			Assert::AreEqual(
 				Path("C:/BuildOut/cpp/local/my-package/1.2.3/J_HqSstV55vlb-x6RWC_hLRFRDU/"),

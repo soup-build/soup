@@ -27,8 +27,7 @@ namespace Soup::Core {
 		/// <summary>
 		/// Load from stream
 		/// </summary>
-		static RecipeTable Deserialize(const Path &recipeFile,
-									   std::istream &stream) {
+		static RecipeTable Deserialize(const Path &recipeFile, std::istream &stream) {
 			try {
 				// Read the entire file for fastest read operation
 				stream.seekg(0, std::ios_base::end);
@@ -48,8 +47,8 @@ namespace Soup::Core {
 				return table;
 			} catch (const std::exception &ex) {
 				throw std::runtime_error(
-					std::format("Parsing the Recipe SML failed: {} {}",
-								ex.what(), recipeFile.ToString()));
+					std::format(
+						"Parsing the Recipe SML failed: {} {}", ex.what(), recipeFile.ToString()));
 			}
 		}
 

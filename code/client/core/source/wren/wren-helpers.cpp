@@ -38,22 +38,24 @@ export namespace Soup::Core {
 			_handle = nullptr;
 		}
 
-		operator WrenHandle *() const { return _handle; }
+		operator WrenHandle *() const {
+			return _handle;
+		}
 	};
 
 	class WrenHelpers {
 	public:
 		static void ThrowIfFailed(WrenInterpretResult result) {
 			switch (result) {
-			case WREN_RESULT_COMPILE_ERROR: {
-				throw std::runtime_error("Compile Error!");
-			}
-			case WREN_RESULT_RUNTIME_ERROR: {
-				throw std::runtime_error("Runtime Error!");
-			}
-			case WREN_RESULT_SUCCESS: {
-				break;
-			}
+				case WREN_RESULT_COMPILE_ERROR: {
+					throw std::runtime_error("Compile Error!");
+				}
+				case WREN_RESULT_RUNTIME_ERROR: {
+					throw std::runtime_error("Runtime Error!");
+				}
+				case WREN_RESULT_SUCCESS: {
+					break;
+				}
 			}
 		}
 
@@ -63,15 +65,13 @@ export namespace Soup::Core {
 			wrenAbortFiber(vm, 0);
 		}
 
-		static bool HasParentType(WrenVM *vm, WrenHandle *classHandle,
-								  std::string_view parentClassType) {
+		static bool HasParentType(
+			WrenVM *vm, WrenHandle *classHandle, std::string_view parentClassType) {
 			wrenSetSlotHandle(vm, 0, classHandle);
 
 			// Create call handle for supertype and toString methods
-			auto supertypeHandle =
-				SmartHandle(vm, wrenMakeCallHandle(vm, "supertype"));
-			auto toStringHandle =
-				SmartHandle(vm, wrenMakeCallHandle(vm, "toString"));
+			auto supertypeHandle = SmartHandle(vm, wrenMakeCallHandle(vm, "supertype"));
+			auto toStringHandle = SmartHandle(vm, wrenMakeCallHandle(vm, "toString"));
 
 			// Call the supertype method
 			ThrowIfFailed(wrenCall(vm, supertypeHandle));
@@ -91,8 +91,7 @@ export namespace Soup::Core {
 
 			// Create call handle for type and toString methods
 			auto typeHandle = SmartHandle(vm, wrenMakeCallHandle(vm, "type"));
-			auto toStringHandle =
-				SmartHandle(vm, wrenMakeCallHandle(vm, "toString"));
+			auto toStringHandle = SmartHandle(vm, wrenMakeCallHandle(vm, "toString"));
 
 			// Call the type method
 			ThrowIfFailed(wrenCall(vm, typeHandle));
@@ -122,8 +121,7 @@ export namespace Soup::Core {
 			return type;
 		}
 
-		static std::vector<std::string>
-		GetSlotStringList(WrenVM *vm, int listSlot, int valueSlot) {
+		static std::vector<std::string> GetSlotStringList(WrenVM *vm, int listSlot, int valueSlot) {
 			auto responseType = wrenGetSlotType(vm, listSlot);
 			if (responseType != WREN_TYPE_LIST) {
 				throw std::runtime_error("Expected a list type");

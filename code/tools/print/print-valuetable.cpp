@@ -1,7 +1,7 @@
 module;
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <vector>
 
 export module PrintValueTable;
@@ -9,16 +9,13 @@ export module PrintValueTable;
 import Opal;
 import Soup.Core;
 
-namespace PrintValueTable
-{
-	void PrintValue(const Soup::Core::Value& value, const std::string& indent);
+namespace PrintValueTable {
+	void PrintValue(const Soup::Core::Value &value, const std::string &indent);
 
-	void PrintValueTable(const Soup::Core::ValueTable& values, const std::string& indent)
-	{
+	void PrintValueTable(const Soup::Core::ValueTable &values, const std::string &indent) {
 		std::cout << "{" << std::endl;
 		auto nextIndent = indent + "  ";
-		for (const auto& [key, value] : values)
-		{
+		for (const auto &[key, value] : values) {
 			// Write the key
 			std::cout << nextIndent << key << ": ";
 
@@ -31,12 +28,10 @@ namespace PrintValueTable
 		std::cout << indent << "}";
 	}
 
-	void PrintValueList(const Soup::Core::ValueList& values, const std::string& indent)
-	{
+	void PrintValueList(const Soup::Core::ValueList &values, const std::string &indent) {
 		std::cout << "[" << std::endl;
 		auto nextIndent = indent + "  ";
-		for (auto value : values)
-		{
+		for (auto value : values) {
 			std::cout << nextIndent;
 			PrintValue(value, nextIndent);
 
@@ -46,47 +41,43 @@ namespace PrintValueTable
 		std::cout << indent << "]";
 	}
 
-	void PrintValue(const Soup::Core::Value& value, const std::string& indent)
-	{
+	void PrintValue(const Soup::Core::Value &value, const std::string &indent) {
 		auto valueType = value.GetType();
-		switch (valueType)
-		{
-		case Soup::Core::ValueType::Table:
-			PrintValueTable(value.AsTable(), indent);
-			break;
-		case Soup::Core::ValueType::List:
-			PrintValueList(value.AsList(), indent);
-			break;
-		case Soup::Core::ValueType::String:
-			std::cout << "\"" << value.AsString() << "\"";
-			break;
-		case Soup::Core::ValueType::Integer:
-			std::cout << value.AsInteger();
-			break;
-		case Soup::Core::ValueType::Float:
-			std::cout << value.AsFloat();
-			break;
-		case Soup::Core::ValueType::Boolean:
-			std::cout << value.AsBoolean();
-			break;
-		case Soup::Core::ValueType::Version:
-			std::cout << value.AsVersion().ToString();
-			break;
-		case Soup::Core::ValueType::PackageReference:
-			std::cout << value.AsPackageReference().ToString();
-			break;
-		case Soup::Core::ValueType::LanguageReference:
-			std::cout << value.AsLanguageReference().ToString();
-			break;
-		default:
-			throw std::runtime_error("Unknown ValueType");
+		switch (valueType) {
+			case Soup::Core::ValueType::Table:
+				PrintValueTable(value.AsTable(), indent);
+				break;
+			case Soup::Core::ValueType::List:
+				PrintValueList(value.AsList(), indent);
+				break;
+			case Soup::Core::ValueType::String:
+				std::cout << "\"" << value.AsString() << "\"";
+				break;
+			case Soup::Core::ValueType::Integer:
+				std::cout << value.AsInteger();
+				break;
+			case Soup::Core::ValueType::Float:
+				std::cout << value.AsFloat();
+				break;
+			case Soup::Core::ValueType::Boolean:
+				std::cout << value.AsBoolean();
+				break;
+			case Soup::Core::ValueType::Version:
+				std::cout << value.AsVersion().ToString();
+				break;
+			case Soup::Core::ValueType::PackageReference:
+				std::cout << value.AsPackageReference().ToString();
+				break;
+			case Soup::Core::ValueType::LanguageReference:
+				std::cout << value.AsLanguageReference().ToString();
+				break;
+			default:
+				throw std::runtime_error("Unknown ValueType");
 		}
 	}
 
-	export void LoadAndPrintValueTable(const Opal::Path& valueTableFile)
-	{
-		if (!Opal::System::IFileSystem::Current().Exists(valueTableFile))
-		{
+	export void LoadAndPrintValueTable(const Opal::Path &valueTableFile) {
+		if (!Opal::System::IFileSystem::Current().Exists(valueTableFile)) {
 			throw std::runtime_error("Value Table file does not exist");
 		}
 
