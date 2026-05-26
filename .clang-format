@@ -19,6 +19,7 @@ PenaltyReturnTypeOnItsOwnLine: 1000
 # everything on two lines or one parameter per line
 PackArguments:
   BinPack: OnePerLine
+AllowShortFunctionsOnASingleLine: false
 
 ###########################################
 # Comments

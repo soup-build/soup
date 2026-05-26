@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Initialize Command Options
 	/// </summary>
 	// TODO: [Verb("initialize")]
-	class InitializeOptions : public SharedOptions
-	{
+	class InitializeOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to initialize

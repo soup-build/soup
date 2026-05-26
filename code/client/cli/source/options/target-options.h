@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Target Command Options
 	/// </summary>
 	// TODO: [[Verb("target")]]
-	class TargetOptions : public SharedOptions
-	{
+	class TargetOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to target

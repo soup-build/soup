@@ -16,7 +16,8 @@ namespace Soup::Client {
 		/// Initializes a new instance of the <see cref="BuildCommand"/> class.
 		/// </summary>
 		BuildCommand(BuildOptions options)
-			: _options(std::move(options)) {}
+			: _options(std::move(options)) {
+		}
 
 		/// <summary>
 		/// Main entry point for a unique command
@@ -28,18 +29,15 @@ namespace Soup::Client {
 			auto workingDirectory = Path();
 			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory =
-					System::IFileSystem::Current().GetCurrentDirectory();
+				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 			} else {
 				// Parse the path in any system valid format
-				workingDirectory =
-					Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
 				if (!workingDirectory.HasRoot()) {
 					workingDirectory =
-						System::IFileSystem::Current().GetCurrentDirectory() +
-						workingDirectory;
+						System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
 				}
 			}
 
@@ -59,10 +57,9 @@ namespace Soup::Client {
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
-			arguments.Parallelization =
-				_options.Parallelization > 0
-					? _options.Parallelization
-					: Core::Build::Constants::GetDefaultParallelization();
+			arguments.Parallelization = _options.Parallelization > 0
+											? _options.Parallelization
+											: Core::Build::Constants::GetDefaultParallelization();
 			arguments.WorkingDirectory = std::move(workingDirectory);
 			arguments.ForceRebuild = _options.Force;
 			arguments.SkipGenerate = _options.SkipGenerate;
@@ -73,8 +70,7 @@ namespace Soup::Client {
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
-				arguments.GlobalParameters.emplace(
-					"Flavor", Core::Value(_options.Flavor));
+				arguments.GlobalParameters.emplace("Flavor", Core::Value(_options.Flavor));
 			if (!_options.Architecture.empty())
 				arguments.GlobalParameters.emplace(
 					"Architecture", Core::Value(_options.Architecture));
@@ -85,8 +81,7 @@ namespace Soup::Client {
 			Log::Info("Begin Build:");
 
 			// Find the built in folder root
-			auto processFilename =
-				System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
@@ -95,17 +90,19 @@ namespace Soup::Client {
 			auto recipeCache = Core::RecipeCache();
 
 			auto packageProvider = Core::Build::LoadBuildGraph(
-				arguments.WorkingDirectory, std::nullopt,
-				arguments.GlobalParameters, userDataPath, hostPlatform,
+				arguments.WorkingDirectory,
+				std::nullopt,
+				arguments.GlobalParameters,
+				userDataPath,
+				hostPlatform,
 				recipeCache);
 
-			Core::Build::Execute(packageProvider, std::move(arguments),
-								 userDataPath, systemReadAccess, recipeCache);
+			Core::Build::Execute(
+				packageProvider, std::move(arguments), userDataPath, systemReadAccess, recipeCache);
 
 			auto endTime = std::chrono::high_resolution_clock::now();
 			auto duration =
-				std::chrono::duration_cast<std::chrono::duration<double>>(
-					endTime - startTime);
+				std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
 			std::ostringstream durationMessage;
 			if (duration.count() >= 60) {

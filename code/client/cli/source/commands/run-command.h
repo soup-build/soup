@@ -16,7 +16,8 @@ namespace Soup::Client {
 		/// Initializes a new instance of the <see cref="RunCommand"/> class.
 		/// </summary>
 		RunCommand(RunOptions options)
-			: _options(std::move(options)) {}
+			: _options(std::move(options)) {
+		}
 
 		/// <summary>
 		/// Main entry point for a unique command
@@ -27,18 +28,15 @@ namespace Soup::Client {
 			auto workingDirectory = Path();
 			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory =
-					System::IFileSystem::Current().GetCurrentDirectory();
+				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 			} else {
 				// Parse the path in any system valid format
-				workingDirectory =
-					Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
 				if (!workingDirectory.HasRoot()) {
 					workingDirectory =
-						System::IFileSystem::Current().GetCurrentDirectory() +
-						workingDirectory;
+						System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
 				}
 			}
 
@@ -49,19 +47,19 @@ namespace Soup::Client {
 
 			// Process well known parameters
 			if (!_options.Flavor.empty())
-				globalParameters.emplace("Flavor",
-										 Core::Value(_options.Flavor));
+				globalParameters.emplace("Flavor", Core::Value(_options.Flavor));
 			if (!_options.Architecture.empty())
-				globalParameters.emplace("Architecture",
-										 Core::Value(_options.Architecture));
+				globalParameters.emplace("Architecture", Core::Value(_options.Architecture));
 
 			Build(workingDirectory, recipeCache, globalParameters);
 			Run(workingDirectory, recipeCache, globalParameters);
 		}
 
 	private:
-		void Build(const Path &workingDirectory, Core::RecipeCache &recipeCache,
-				   const Core::ValueTable &globalParameters) {
+		void Build(
+			const Path &workingDirectory,
+			Core::RecipeCache &recipeCache,
+			const Core::ValueTable &globalParameters) {
 			auto systemReadAccess = std::vector<Path>();
 
 // Platform specific defaults
@@ -78,8 +76,7 @@ namespace Soup::Client {
 
 			// Setup the build arguments
 			auto arguments = Core::RecipeBuildArguments();
-			arguments.Parallelization =
-				Core::Build::Constants::GetDefaultParallelization();
+			arguments.Parallelization = Core::Build::Constants::GetDefaultParallelization();
 			arguments.WorkingDirectory = workingDirectory;
 			arguments.ForceRebuild = false;
 			arguments.SkipGenerate = false;
@@ -95,35 +92,36 @@ namespace Soup::Client {
 			Log::Info("Begin Build:");
 
 			// Find the built in folder root
-			auto processFilename =
-				System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto processFilename = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto processDirectory = processFilename.GetParent();
 
 			// Load user config state
 			auto userDataPath = Core::Build::Constants::GetSoupUserDataPath();
 
 			auto packageProvider = Core::Build::LoadBuildGraph(
-				arguments.WorkingDirectory, std::nullopt,
-				arguments.GlobalParameters, userDataPath, hostPlatform,
+				arguments.WorkingDirectory,
+				std::nullopt,
+				arguments.GlobalParameters,
+				userDataPath,
+				hostPlatform,
 				recipeCache);
 
-			Core::Build::Execute(packageProvider, std::move(arguments),
-								 userDataPath, systemReadAccess, recipeCache);
+			Core::Build::Execute(
+				packageProvider, std::move(arguments), userDataPath, systemReadAccess, recipeCache);
 
 			Log::Info("End Build:");
 		}
 
-		void Run(const Path &workingDirectory, Core::RecipeCache &recipeCache,
-				 const Core::ValueTable &globalParameters) {
+		void Run(
+			const Path &workingDirectory,
+			Core::RecipeCache &recipeCache,
+			const Core::ValueTable &globalParameters) {
 			// Load the recipe
-			auto recipePath =
-				workingDirectory + Core::Build::Constants::RecipeFileName();
+			auto recipePath = workingDirectory + Core::Build::Constants::RecipeFileName();
 			const Core::Recipe *recipe;
 			if (!recipeCache.TryGetOrLoadRecipe(recipePath, recipe)) {
-				Log::Error("The Recipe does not exist: {}",
-						   recipePath.ToString());
-				Log::HighPriority(
-					"Make sure the path is correct and try again");
+				Log::Error("The Recipe does not exist: {}", recipePath.ToString());
+				Log::HighPriority("Make sure the path is correct and try again");
 
 				// Nothing we can do, exit
 				throw Core::HandledException(1234);
@@ -136,30 +134,25 @@ namespace Soup::Client {
 
 			// Load the value table to get the exe path
 			auto knownLanguages = Core::Build::GetKnownLanguages();
-			auto locationManager =
-				Core::RecipeBuildLocationManager(knownLanguages);
+			auto locationManager = Core::RecipeBuildLocationManager(knownLanguages);
 			auto targetDirectory = locationManager.GetOutputDirectory(
-				packageName, workingDirectory, *recipe, globalParameters,
-				recipeCache);
+				packageName, workingDirectory, *recipe, globalParameters, recipeCache);
 			auto soupTargetDirectory =
 				targetDirectory + Core::Build::Constants::SoupTargetDirectory();
 
 			// Load the shared state file
 			auto generateInputFile =
-				soupTargetDirectory +
-				Core::Build::Constants::GenerateInputFileName();
+				soupTargetDirectory + Core::Build::Constants::GenerateInputFileName();
 			auto generateInputTable = Core::ValueTable();
-			if (!Core::ValueTableManager::TryLoadState(generateInputFile,
-													   generateInputTable)) {
-				Log::Error("Failed to load the generate input file: {}",
-						   generateInputFile.ToString());
+			if (!Core::ValueTableManager::TryLoadState(generateInputFile, generateInputTable)) {
+				Log::Error(
+					"Failed to load the generate input file: {}", generateInputFile.ToString());
 				return;
 			}
 
 			// Load the input macro definition
 			auto macros = std::map<std::string, std::string>();
-			for (auto &[key, value] :
-				 generateInputTable.at("EvaluateMacros").AsTable())
+			for (auto &[key, value] : generateInputTable.at("EvaluateMacros").AsTable())
 				macros.emplace(key, value.AsString());
 
 			// Setup a macro manager to resolve macros
@@ -167,13 +160,10 @@ namespace Soup::Client {
 
 			// Load the shared state file
 			auto sharedStateFile =
-				soupTargetDirectory +
-				Core::Build::Constants::GenerateSharedStateFileName();
+				soupTargetDirectory + Core::Build::Constants::GenerateSharedStateFileName();
 			auto sharedStateTable = Core::ValueTable();
-			if (!Core::ValueTableManager::TryLoadState(sharedStateFile,
-													   sharedStateTable)) {
-				Log::Error("Failed to load the shared state file: {}",
-						   sharedStateFile.ToString());
+			if (!Core::ValueTableManager::TryLoadState(sharedStateFile, sharedStateTable)) {
+				Log::Error("Failed to load the shared state file: {}", sharedStateFile.ToString());
 				return;
 			}
 
@@ -186,8 +176,7 @@ namespace Soup::Client {
 
 			auto &buildTable = sharedStateTable.at("Build").AsTable();
 			if (!buildTable.contains("RunExecutable")) {
-				Log::Error(
-					"Build table does not have a RunExecutable property");
+				Log::Error("Build table does not have a RunExecutable property");
 				return;
 			}
 
@@ -196,8 +185,8 @@ namespace Soup::Client {
 				return;
 			}
 
-			auto runExecutable = Path(macroManager.ResolveMacros(
-				buildTable.at("RunExecutable").AsString()));
+			auto runExecutable =
+				Path(macroManager.ResolveMacros(buildTable.at("RunExecutable").AsString()));
 			Log::Info("Executable: {}", runExecutable.ToString());
 			if (!System::IFileSystem::Current().Exists(runExecutable)) {
 				Log::Error("The run executable does not exist");
@@ -207,8 +196,7 @@ namespace Soup::Client {
 			auto arguments = std::vector<std::string>();
 			auto runArguments = buildTable.at("RunArguments").AsList();
 			for (auto &value : runArguments) {
-				arguments.push_back(
-					macroManager.ResolveMacros(value.AsString()));
+				arguments.push_back(macroManager.ResolveMacros(value.AsString()));
 			}
 
 			for (auto &argument : _options.Arguments) {

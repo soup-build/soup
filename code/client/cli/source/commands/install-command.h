@@ -17,7 +17,8 @@ namespace Soup::Client {
 		/// class.
 		/// </summary>
 		InstallCommand(InstallOptions options)
-			: _options(std::move(options)) {}
+			: _options(std::move(options)) {
+		}
 
 		/// <summary>
 		/// Main entry point for a unique command
@@ -28,18 +29,15 @@ namespace Soup::Client {
 			auto workingDirectory = Path();
 			if (_options.Path.empty()) {
 				// Build in the current directory
-				workingDirectory =
-					System::IFileSystem::Current().GetCurrentDirectory();
+				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 			} else {
 				// Parse the path in any system valid format
-				workingDirectory =
-					Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
 				if (!workingDirectory.HasRoot()) {
 					workingDirectory =
-						System::IFileSystem::Current().GetCurrentDirectory() +
-						workingDirectory;
+						System::IFileSystem::Current().GetCurrentDirectory() + workingDirectory;
 				}
 			}
 

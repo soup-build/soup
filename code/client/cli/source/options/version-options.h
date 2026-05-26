@@ -5,13 +5,10 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Version Command
 	/// </summary>
 	// TODO: [Verb("version")]
-	class VersionOptions : public SharedOptions
-	{
-	};
+	class VersionOptions : public SharedOptions {};
 }

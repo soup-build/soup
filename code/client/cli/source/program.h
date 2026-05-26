@@ -22,7 +22,8 @@ namespace Soup::Client {
 	class Program {
 	public:
 		Program()
-			: _filter(nullptr) {}
+			: _filter(nullptr) {
+		}
 
 		/// <summary>
 		/// The main entry point of the program
@@ -30,42 +31,35 @@ namespace Soup::Client {
 		int Run(std::vector<std::string> args) {
 			try {
 				// Setup the filter
-				auto defaultTypes =
-					static_cast<uint32_t>(TraceEventFlag::HighPriority) |
-					static_cast<uint32_t>(TraceEventFlag::Warning) |
-					static_cast<uint32_t>(TraceEventFlag::Error) |
-					static_cast<uint32_t>(TraceEventFlag::Critical);
-				_filter = std::make_shared<EventTypeFilter>(
-					static_cast<TraceEventFlag>(defaultTypes));
+				auto defaultTypes = static_cast<uint32_t>(TraceEventFlag::HighPriority) |
+									static_cast<uint32_t>(TraceEventFlag::Warning) |
+									static_cast<uint32_t>(TraceEventFlag::Error) |
+									static_cast<uint32_t>(TraceEventFlag::Critical);
+				_filter =
+					std::make_shared<EventTypeFilter>(static_cast<TraceEventFlag>(defaultTypes));
 
 				// Setup the console listener
-				Log::RegisterListener(std::make_shared<ConsoleTraceListener>(
-					"Log", _filter, false, false));
+				Log::RegisterListener(
+					std::make_shared<ConsoleTraceListener>("Log", _filter, false, false));
 
 				// Setup the real services
-				System::ISystem::Register(
-					std::make_shared<System::STLSystem>());
-				System::IFileSystem::Register(
-					std::make_shared<System::STLFileSystem>());
+				System::ISystem::Register(std::make_shared<System::STLSystem>());
+				System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
 #if defined(_WIN32)
 				System::IProcessManager::Register(
 					std::make_shared<System::WindowsProcessManager>());
 				Monitor::IMonitorProcessManager::Register(
-					std::make_shared<
-						Monitor::Windows::WindowsMonitorProcessManager>());
+					std::make_shared<Monitor::Windows::WindowsMonitorProcessManager>());
 #elif defined(__linux__)
-				System::IProcessManager::Register(
-					std::make_shared<System::LinuxProcessManager>());
+				System::IProcessManager::Register(std::make_shared<System::LinuxProcessManager>());
 				Monitor::IMonitorProcessManager::Register(
-					std::make_shared<
-						Monitor::Linux::LinuxMonitorProcessManager>());
+					std::make_shared<Monitor::Linux::LinuxMonitorProcessManager>());
 #else
 #error "Unknown Platform"
 #endif
 
-				IO::IConsoleManager::Register(
-					std::make_shared<IO::SystemConsoleManager>());
+				IO::IConsoleManager::Register(std::make_shared<IO::SystemConsoleManager>());
 
 				// Attempt to parse the provided arguments
 				Log::Diag("ProgramStart");
@@ -89,8 +83,7 @@ namespace Soup::Client {
 				else if (arguments.IsA<RunOptions>())
 					command = Setup(arguments.ExtractResult<RunOptions>());
 				else if (arguments.IsA<InitializeOptions>())
-					command =
-						Setup(arguments.ExtractResult<InitializeOptions>());
+					command = Setup(arguments.ExtractResult<InitializeOptions>());
 				else if (arguments.IsA<InstallOptions>())
 					command = Setup(arguments.ExtractResult<InstallOptions>());
 				else if (arguments.IsA<PublishOptions>())
@@ -131,22 +124,21 @@ namespace Soup::Client {
 			Log::HighPriority("soup <command>:");
 			Log::HighPriority("  build   - Build the target package.");
 			Log::HighPriority("  run     - Run the target package.");
-			Log::HighPriority(
-				"  init    - Initialize wizard for creating a new package.");
-			Log::HighPriority(
-				"  install - Install a dependency to the target package.");
+			Log::HighPriority("  init    - Initialize wizard for creating a new package.");
+			Log::HighPriority("  install - Install a dependency to the target package.");
 			Log::HighPriority(
 				"  publish - Publish the contents of a package to "
 				"the public feed.");
-			Log::HighPriority("  release - Upload the build artifacts for the "
-							  "target package.");
+			Log::HighPriority(
+				"  release - Upload the build artifacts for the "
+				"target package.");
 			Log::HighPriority(
 				"  restore - Install all dependencies required by "
 				"the target package.");
-			Log::HighPriority("  target  - Print the output directory for the "
-							  "target package.");
 			Log::HighPriority(
-				"  version - Display the current version of this tool.");
+				"  target  - Print the output directory for the "
+				"target package.");
+			Log::HighPriority("  version - Display the current version of this tool.");
 			Log::HighPriority("  view    - Launch the view tool.");
 		}
 
