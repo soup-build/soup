@@ -17,21 +17,18 @@ import :GraphValue;
 
 import ftxui;
 
-namespace Soup::View
-{
+namespace Soup::View {
 	constexpr int maxSize = 13;
 
 	// Runtime state for laying out lines so they do not overlap
-	struct GraphLineSegment
-	{
+	struct GraphLineSegment {
 		int Start;
 		int End;
 		bool IsForward;
 	};
 
 	// Final layout for lined edges
-	enum class GraphLineTransition
-	{
+	enum class GraphLineTransition {
 		None,
 		Down,
 		Up,
@@ -39,15 +36,13 @@ namespace Soup::View
 	};
 
 	// Render state for a line section
-	struct GraphLineSectionState
-	{
+	struct GraphLineSectionState {
 		bool HasLeft;
 		bool HasRight;
 		GraphLineTransition Transition;
 	};
 
-	struct Charset
-	{
+	struct Charset {
 		std::string TopLeft;
 		std::string TopRight;
 		std::string BottomLeft;
@@ -58,56 +53,52 @@ namespace Soup::View
 	using Charsets = std::array<Charset, 6>;
 
 	static Charsets simple_border_charset = {
-		Charset{"┌", "┐", "└", "┘", "─", "│"},  // LIGHT
-		Charset{"┏", "┓", "┗", "┛", "╍", "╏"},  // DASHED
-		Charset{"┏", "┓", "┗", "┛", "━", "┃"},  // HEAVY
-		Charset{"╔", "╗", "╚", "╝", "═", "║"},  // DOUBLE
-		Charset{"╭", "╮", "╰", "╯", "─", "│"},  // ROUNDED
-		Charset{" ", " ", " ", " ", " ", " "},  // EMPTY
+		Charset{"┌", "┐", "└", "┘", "─", "│"}, // LIGHT
+		Charset{"┏", "┓", "┗", "┛", "╍", "╏"}, // DASHED
+		Charset{"┏", "┓", "┗", "┛", "━", "┃"}, // HEAVY
+		Charset{"╔", "╗", "╚", "╝", "═", "║"}, // DOUBLE
+		Charset{"╭", "╮", "╰", "╯", "─", "│"}, // ROUNDED
+		Charset{" ", " ", " ", " ", " ", " "}, // EMPTY
 	};
 
-	std::string repeat(const std::string& input, size_t n)
-	{
+	std::string repeat(const std::string &input, size_t n) {
 		if (n <= 0)
 			return "";
 		std::string result;
 		// Pre-allocate memory for performance
 		result.reserve(input.length() * n);
-		for (auto i = 0; i < n; ++i)
-		{
+		for (auto i = 0; i < n; ++i) {
 			result += input;
 		}
 
 		return result;
 	}
 
-	ftxui::Element DefaultOptionTransform(const ftxui::EntryState& state, bool hasInput, bool hasOutput)
-	{
+	ftxui::Element DefaultOptionTransform(
+		const ftxui::EntryState &state, bool hasInput, bool hasOutput) {
 		auto charsetType = state.active ? ftxui::BorderStyle::HEAVY : ftxui::ROUNDED;
-		auto& charset = simple_border_charset[charsetType];
+		auto &charset = simple_border_charset[charsetType];
 
 		std::string topBorder;
-		if (hasInput)
-		{
+		if (hasInput) {
 			auto prefix = static_cast<int>(state.label.size() / 2);
 			auto postfix = static_cast<int>(state.label.size() - 1 - prefix);
-			topBorder = charset.TopLeft + repeat(charset.Horizontal, prefix) + "┴" + repeat(charset.Horizontal, postfix) + charset.TopRight;
-		}
-		else
-		{
-			topBorder = charset.TopLeft + repeat(charset.Horizontal, state.label.size()) + charset.TopRight;
+			topBorder = charset.TopLeft + repeat(charset.Horizontal, prefix) + "┴" +
+						repeat(charset.Horizontal, postfix) + charset.TopRight;
+		} else {
+			topBorder =
+				charset.TopLeft + repeat(charset.Horizontal, state.label.size()) + charset.TopRight;
 		}
 
 		std::string bottomBorder;
-		if (hasOutput)
-		{
+		if (hasOutput) {
 			auto prefix = state.label.size() / 2;
 			auto postfix = state.label.size() - 1 - prefix;
-			bottomBorder = charset.BottomLeft + repeat(charset.Horizontal, prefix) + "┬" + repeat(charset.Horizontal, postfix) + charset.BottomRight;
-		}
-		else
-		{
-			bottomBorder = charset.BottomLeft + repeat(charset.Horizontal, state.label.size()) + charset.BottomRight;
+			bottomBorder = charset.BottomLeft + repeat(charset.Horizontal, prefix) + "┬" +
+						   repeat(charset.Horizontal, postfix) + charset.BottomRight;
+		} else {
+			bottomBorder = charset.BottomLeft + repeat(charset.Horizontal, state.label.size()) +
+						   charset.BottomRight;
 		}
 
 		auto labelElement = ftxui::text(std::move(state.label));
@@ -118,42 +109,39 @@ namespace Soup::View
 			labelElement |= ftxui::bold;
 		}
 
-		ftxui::Element element = ftxui::vbox({
-			ftxui::text(std::move(topBorder)),
-			ftxui::hbox({
-				ftxui::text(charset.Vertical),
-				std::move(labelElement),
-				ftxui::text(charset.Vertical),
-			}),
-			ftxui::text(std::move(bottomBorder)),
-		});
+		ftxui::Element element = ftxui::vbox(
+			{
+				ftxui::text(std::move(topBorder)),
+				ftxui::hbox(
+					{
+						ftxui::text(charset.Vertical),
+						std::move(labelElement),
+						ftxui::text(charset.Vertical),
+					}),
+				ftxui::text(std::move(bottomBorder)),
+			});
 
 		return element;
 	}
 
-	ftxui::Element DefaultOptionEdgeTransform(const GraphLineSectionState& state)
-	{
+	ftxui::Element DefaultOptionEdgeTransform(const GraphLineSectionState &state) {
 		auto charsetType = ftxui::ROUNDED;
-		auto& charset = simple_border_charset[charsetType];
+		auto &charset = simple_border_charset[charsetType];
 
 		auto half = maxSize / 2 + 1;
 
 		std::string content;
-		if (state.HasLeft)
-		{
+		if (state.HasLeft) {
 			content += repeat(charset.Horizontal, half);
-		}
-		else
-		{
+		} else {
 			content += std::string(half, ' ');
 		}
-		
-		switch (state.Transition)
-		{
+
+		switch (state.Transition) {
 			case GraphLineTransition::None:
-				if (state.HasLeft != state.HasRight)
-				{
-					throw new std::runtime_error("None transition must have same on left and right");
+				if (state.HasLeft != state.HasRight) {
+					throw new std::runtime_error(
+						"None transition must have same on left and right");
 				}
 
 				content += state.HasLeft ? charset.Horizontal : " ";
@@ -184,52 +172,41 @@ namespace Soup::View
 				throw new std::runtime_error("Unknown transition type");
 		}
 
-		if (state.HasRight)
-		{
+		if (state.HasRight) {
 			content += repeat(charset.Horizontal, half);
-		}
-		else
-		{
+		} else {
 			content += std::string(half, ' ');
 		}
 
 		return ftxui::text(std::move(content));
 	}
 
-	bool IsOverlapping(GraphLineSegment a, GraphLineSegment b)
-	{
+	bool IsOverlapping(GraphLineSegment a, GraphLineSegment b) {
 		return a.Start <= b.End && b.Start <= a.End;
 	}
 
-	bool TryInsertSegment(GraphLineSegment segment, std::vector<GraphLineSegment>& line)
-	{
+	bool TryInsertSegment(GraphLineSegment segment, std::vector<GraphLineSegment> &line) {
 		auto source = segment.IsForward ? segment.Start : segment.End;
 		auto target = segment.IsForward ? segment.End : segment.Start;
-		for (auto current = line.begin(); current != line.end(); ++current)
-		{
+		for (auto current = line.begin(); current != line.end(); ++current) {
 			auto currentSource = current->IsForward ? current->Start : current->End;
 			auto currentTarget = current->IsForward ? current->End : current->Start;
-			if (current->Start > segment.End)
-			{
+			if (current->Start > segment.End) {
 				// Fits entirely before this one
 				line.insert(current, segment);
 				return true;
 			}
 
 			// Check if they have the same source
-			if (source == currentSource)
-			{
+			if (source == currentSource) {
 				// Add if ends before the current
 				// Otherwise check the next iteration
-				if (target < currentTarget)
-				{
+				if (target < currentTarget) {
 					// The new overlap ends after the current
 					line.insert(current, segment);
 					return true;
 				}
-			}
-			else if (IsOverlapping(*current, segment))
-			{
+			} else if (IsOverlapping(*current, segment)) {
 				return false;
 			}
 		}
@@ -239,33 +216,27 @@ namespace Soup::View
 		return true;
 	}
 
-	void InsertSegment(GraphLineSegment segment, std::vector<std::vector<GraphLineSegment>>& lines)
-	{
-		for (auto& line : lines)
-		{
-			if (TryInsertSegment(segment, line))
-			{
+	void InsertSegment(
+		GraphLineSegment segment, std::vector<std::vector<GraphLineSegment>> &lines) {
+		for (auto &line : lines) {
+			if (TryInsertSegment(segment, line)) {
 				return;
 			}
 		}
 
 		// Need an entire new line
-		lines.push_back(std::vector<GraphLineSegment>({ segment }));
+		lines.push_back(std::vector<GraphLineSegment>({segment}));
 	}
 
-	void VerifyAddTransition(GraphLineSectionState& state, GraphLineTransition transition)
-	{
-		if (state.Transition != transition)
-		{
-			switch (state.Transition)
-			{
+	void VerifyAddTransition(GraphLineSectionState &state, GraphLineTransition transition) {
+		if (state.Transition != transition) {
+			switch (state.Transition) {
 				case GraphLineTransition::None:
 					// Safe to force replace
 					state.Transition = transition;
 					break;
 				case GraphLineTransition::Bidirectional:
-					switch (transition)
-					{
+					switch (transition) {
 						case GraphLineTransition::Up:
 						case GraphLineTransition::Down:
 							// Leave as bidirectional
@@ -275,8 +246,7 @@ namespace Soup::View
 					}
 					break;
 				case GraphLineTransition::Up:
-					switch (transition)
-					{
+					switch (transition) {
 						case GraphLineTransition::Down:
 						case GraphLineTransition::Bidirectional:
 							// Combine with up
@@ -287,8 +257,7 @@ namespace Soup::View
 					}
 					break;
 				case GraphLineTransition::Down:
-					switch (transition)
-					{
+					switch (transition) {
 						case GraphLineTransition::Up:
 						case GraphLineTransition::Bidirectional:
 							// Combine with down
@@ -305,96 +274,69 @@ namespace Soup::View
 	}
 
 	void SetPassThrough(
-		std::vector<std::vector<GraphLineSectionState>>& layers,
-		int startY,
-		int endY,
-		int x)
-	{
-		for (auto y = startY; y <= endY; y++)
-		{
-			VerifyAddTransition(
-				layers[y][x],
-				GraphLineTransition::Bidirectional);
+		std::vector<std::vector<GraphLineSectionState>> &layers, int startY, int endY, int x) {
+		for (auto y = startY; y <= endY; y++) {
+			VerifyAddTransition(layers[y][x], GraphLineTransition::Bidirectional);
 		}
 	}
 
 	std::vector<std::vector<GraphLineSectionState>> LayoutEdges(
-		int width, const std::vector<GraphNode>& layer)
-	{
+		int width, const std::vector<GraphNode> &layer) {
 		// Insert the edges on as few of rows so they do not collide
 		auto activeLines = std::vector<std::vector<GraphLineSegment>>();
-		for (auto x = 0; x < layer.size(); x++)
-		{
-			auto& node = layer[x];
-			for (auto& target : node.Edges)
-			{
+		for (auto x = 0; x < layer.size(); x++) {
+			auto &node = layer[x];
+			for (auto &target : node.Edges) {
 				bool isForward = target > x;
 				auto start = isForward ? x : target;
 				auto end = isForward ? target : x;
-				GraphLineSegment segment = { start, end, isForward };
+				GraphLineSegment segment = {start, end, isForward};
 				InsertSegment(segment, activeLines);
 			}
 		}
 
 		// Convert to rendering states
 		auto result = std::vector<std::vector<GraphLineSectionState>>();
-		for (auto y = 0; y < activeLines.size(); y++)
-		{
+		for (auto y = 0; y < activeLines.size(); y++) {
 			result.push_back(
 				std::vector<GraphLineSectionState>(
 					width,
-					{ false, false, GraphLineTransition::None, }));
+					{
+						false,
+						false,
+						GraphLineTransition::None,
+					}));
 		}
 
-		for (auto y = 0; y < activeLines.size(); y++)
-		{
-			auto& line = activeLines[y];
-			auto& layoutSegments = result[y];
-			for (auto segment : line)
-			{
-				for (auto x = segment.Start; x <= segment.End; x++)
-				{
+		for (auto y = 0; y < activeLines.size(); y++) {
+			auto &line = activeLines[y];
+			auto &layoutSegments = result[y];
+			for (auto segment : line) {
+				for (auto x = segment.Start; x <= segment.End; x++) {
 					layoutSegments[x].HasLeft |= x > segment.Start;
 					layoutSegments[x].HasRight |= x < segment.End;
 
-					if (segment.Start == segment.End)
-					{
-						VerifyAddTransition(
-							layoutSegments[x],
-							GraphLineTransition::Bidirectional);
+					if (segment.Start == segment.End) {
+						VerifyAddTransition(layoutSegments[x], GraphLineTransition::Bidirectional);
 						SetPassThrough(result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
-					}
-					else if (x == segment.Start)
-					{
-						auto transition = segment.IsForward ?
-							GraphLineTransition::Up :
-							GraphLineTransition::Down;
-						VerifyAddTransition(
-							layoutSegments[x],
-							transition);
-						if (segment.IsForward)
-						{
+					} else if (x == segment.Start) {
+						auto transition =
+							segment.IsForward ? GraphLineTransition::Up : GraphLineTransition::Down;
+						VerifyAddTransition(layoutSegments[x], transition);
+						if (segment.IsForward) {
 							SetPassThrough(result, 0, y, x);
+						} else {
+							SetPassThrough(
+								result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
 						}
-						else
-						{
-							SetPassThrough(result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
-						}
-					}
-					else if (x == segment.End)
-					{
-						auto transition = segment.IsForward ?
-							GraphLineTransition::Down :
-							GraphLineTransition::Up;
-						VerifyAddTransition(
-							layoutSegments[x],
-							transition);
-						if (segment.IsForward)
-						{
-							SetPassThrough(result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
-						}
-						else
-						{
+					} else if (x == segment.End) {
+						auto transition =
+							segment.IsForward ? GraphLineTransition::Down : GraphLineTransition::Up;
+						VerifyAddTransition(layoutSegments[x], transition);
+						if (segment.IsForward) {
+							SetPassThrough(
+								result, y + 1, static_cast<int>(activeLines.size()) - 1, x);
+						} else {
 							SetPassThrough(result, 0, y, x);
 						}
 					}
@@ -407,48 +349,38 @@ namespace Soup::View
 
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
-	export ftxui::Component GraphView(
-		Graph&& graph,
-		ftxui::ConstStringListRef nodeValues)
-	{
-		class Impl : public ftxui::ComponentBase
-		{
+	export ftxui::Component GraphView(Graph &&graph, ftxui::ConstStringListRef nodeValues) {
+		class Impl : public ftxui::ComponentBase {
 		public:
-			Impl(Graph&& graph, ftxui::ConstStringListRef nodeValues)
-			 : _graph(graph), _nodeValues(nodeValues)
-			{
+			Impl(Graph &&graph, ftxui::ConstStringListRef nodeValues)
+				: _graph(graph),
+				  _nodeValues(nodeValues) {
 			}
 
 		private:
-			static std::string TruncateCenterLabel(std::string_view label)
-			{
-				if (label.size() > maxSize)
-				{
+			static std::string TruncateCenterLabel(std::string_view label) {
+				if (label.size() > maxSize) {
 					return std::string(label.substr(0, maxSize));
-				}
-				else
-				{
+				} else {
 					auto prefix = (maxSize - label.size()) / 2;
 					auto postfix = maxSize - label.size() - prefix;
-					auto content = std::string(prefix, ' ') + std::string(label) + std::string(postfix, ' ');
+					auto content =
+						std::string(prefix, ' ') + std::string(label) + std::string(postfix, ' ');
 					return content;
 				}
 			}
 
- 			ftxui::Element OnRender() override
-			{
+			ftxui::Element OnRender() override {
 				// TODO: Can this be only on resize?
 				auto layers = LayoutDAG(_graph);
-				
+
 				auto content = ftxui::Elements();
-				for (auto y = 0; y < layers.size(); y++)
-				{
-					auto& layer = layers[y];
+				for (auto y = 0; y < layers.size(); y++) {
+					auto &layer = layers[y];
 					auto layerElements = ftxui::Elements();
 
-					for (auto x = 0; x < layer.size(); x++)
-					{
-						auto& node = layer[x];
+					for (auto x = 0; x < layer.size(); x++) {
+						auto &node = layer[x];
 
 						auto isSelected = false;
 						auto isFocused = false;
@@ -457,7 +389,11 @@ namespace Soup::View
 						auto hasOutput = node.Edges.size() > 0;
 
 						const ftxui::EntryState state = {
-							TruncateCenterLabel(_nodeValues[node.Index]), false, isSelected, isFocused, (int)node.Index,
+							TruncateCenterLabel(_nodeValues[node.Index]),
+							false,
+							isSelected,
+							isFocused,
+							(int)node.Index,
 						};
 
 						auto element = DefaultOptionTransform(state, hasInput, hasOutput);
@@ -467,17 +403,14 @@ namespace Soup::View
 					content.push_back(ftxui::hbox(std::move(layerElements)));
 
 					// Build the edges if we are not on the last row
-					if (y + 1 != layers.size())
-					{
+					if (y + 1 != layers.size()) {
 						// Make sure we have enough space
-						auto width = static_cast<int>(std::max(layer.size(), layers[y+1].size()));
+						auto width = static_cast<int>(std::max(layer.size(), layers[y + 1].size()));
 						auto lines = LayoutEdges(width, layer);
 
-						for (auto& line : lines)
-						{
+						for (auto &line : lines) {
 							auto lineElements = ftxui::Elements();
-							for (auto& lineSection : line)
-							{
+							for (auto &lineSection : line) {
 								lineElements.push_back(DefaultOptionEdgeTransform(lineSection));
 							}
 

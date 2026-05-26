@@ -4,8 +4,8 @@
 
 module;
 
-#include <optional>
 #include <format>
+#include <optional>
 #include <regex>
 #include <sstream>
 #include <stdexcept>
@@ -19,14 +19,12 @@ import :PackageIdentifier;
 using namespace Opal;
 using namespace Soup::SML;
 
-namespace Soup::SML
-{
+namespace Soup::SML {
 	/// <summary>
 	/// A package reference object which will consist of a name version pair that
 	/// refers to a published package or a path to a local recipe
 	/// </summary>
-	export class PackageReference
-	{
+	export class PackageReference {
 	private:
 		std::optional<PackageIdentifier> _identifier;
 		std::optional<SemanticVersion> _version;
@@ -36,27 +34,24 @@ namespace Soup::SML
 		/// <summary>
 		/// Try parse a package reference from the provided string
 		/// </summary>
-		static bool TryParse(const std::string& value, PackageReference& result)
-		{
+		static bool TryParse(const std::string &value, PackageReference &result) {
 			// Reuse regex between runs
-			static auto nameRegex = std::regex(R"(^(?:\[([A-Za-z#\+]+)\])?(?:([a-z0-9]+(?:-[a-z0-9]+)*)\|)?([a-z0-9]+(?:-[a-z0-9]+)*)(?:@(\d+(?:.\d+)?(?:.\d+)?))?$)");
+			static auto nameRegex = std::regex(
+				R"(^(?:\[([A-Za-z#\+]+)\])?(?:([a-z0-9]+(?:-[a-z0-9]+)*)\|)?([a-z0-9]+(?:-[a-z0-9]+)*)(?:@(\d+(?:.\d+)?(?:.\d+)?))?$)");
 
 			// Attempt to parse Named reference
 			auto nameMatch = std::smatch();
-			if (std::regex_match(value, nameMatch, nameRegex))
-			{
+			if (std::regex_match(value, nameMatch, nameRegex)) {
 				// The package is a published reference
 				std::optional<std::string> language = std::nullopt;
 				auto languageMatch = nameMatch[1];
-				if (languageMatch.matched)
-				{
+				if (languageMatch.matched) {
 					language = languageMatch.str();
 				}
 
 				std::optional<std::string> owner = std::nullopt;
 				auto ownerMatch = nameMatch[2];
-				if (ownerMatch.matched)
-				{
+				if (ownerMatch.matched) {
 					owner = ownerMatch.str();
 				}
 
@@ -64,26 +59,20 @@ namespace Soup::SML
 
 				std::optional<SemanticVersion> version = std::nullopt;
 				auto versionMatch = nameMatch[4];
-				if (versionMatch.matched)
-				{
+				if (versionMatch.matched) {
 					version = SemanticVersion::Parse(versionMatch.str());
 				}
 
 				result = PackageReference(
 					std::move(language), std::move(owner), std::move(name), version);
 				return true;
-			}
-			else
-			{
-				try
-				{
+			} else {
+				try {
 					// Assume that this package is a relative path reference
 					// TODO: Add a try parse Path
 					result = PackageReference(Path(value));
 					return true;
-				}
-				catch (const std::runtime_error&)
-				{
+				} catch (const std::runtime_error &) {
 					result = PackageReference();
 					return false;
 				}
@@ -93,15 +82,11 @@ namespace Soup::SML
 		/// <summary>
 		/// Parse a package reference from the provided string.
 		/// </summary>
-		static PackageReference Parse(const std::string& value)
-		{
+		static PackageReference Parse(const std::string &value) {
 			PackageReference result;
-			if (TryParse(value, result))
-			{
+			if (TryParse(value, result)) {
 				return result;
-			}
-			else
-			{
+			} else {
 				throw std::runtime_error("Invalid package reference");
 			}
 		}
@@ -110,68 +95,62 @@ namespace Soup::SML
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PackageReference"/> class.
 		/// </summary>
-		PackageReference() :
-			_identifier(std::nullopt),
-			_version(std::nullopt),
-			_path(std::nullopt)
-		{
+		PackageReference()
+			: _identifier(std::nullopt),
+			  _version(std::nullopt),
+			  _path(std::nullopt) {
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PackageReference"/> class.
 		/// </summary>
 		PackageReference(
-			const std::optional<std::string>& language,
-			const std::optional<std::string>& owner,
-			const std::string& name,
-			std::optional<SemanticVersion> version) :
-			_identifier(PackageIdentifier(language, owner, name)),
-			_version(version),
-			_path(std::nullopt)
-		{
+			const std::optional<std::string> &language,
+			const std::optional<std::string> &owner,
+			const std::string &name,
+			std::optional<SemanticVersion> version)
+			: _identifier(PackageIdentifier(language, owner, name)),
+			  _version(version),
+			  _path(std::nullopt) {
 		}
 		PackageReference(
-			std::optional<std::string>&& language,
-			std::optional<std::string>&& owner,
-			std::string&& name,
-			std::optional<SemanticVersion> version) :
-			_identifier(PackageIdentifier(std::move(language), std::move(owner), std::move(name))),
-			_version(version),
-			_path(std::nullopt)
-		{
+			std::optional<std::string> &&language,
+			std::optional<std::string> &&owner,
+			std::string &&name,
+			std::optional<SemanticVersion> version)
+			: _identifier(
+				  PackageIdentifier(std::move(language), std::move(owner), std::move(name))),
+			  _version(version),
+			  _path(std::nullopt) {
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PackageReference"/> class.
 		/// </summary>
-		PackageReference(Path&& path) :
-			_identifier(std::nullopt),
-			_version(std::nullopt),
-			_path(std::move(path))
-		{
+		PackageReference(Path &&path)
+			: _identifier(std::nullopt),
+			  _version(std::nullopt),
+			  _path(std::move(path)) {
 		}
 
 		/// <summary>
 		/// Gets a value indicating whether the reference is local or not
 		/// </summary>
-		bool IsLocal() const
-		{
+		bool IsLocal() const {
 			return _path.has_value();
 		}
 
 		/// <summary>
 		/// Gets or sets the Language.
 		/// </summary>
-		bool HasLanguage() const
-		{
+		bool HasLanguage() const {
 			return _identifier.has_value() && _identifier.value().HasLanguage();
 		}
 
 		/// <summary>
 		/// Gets or sets the Language.
 		/// </summary>
-		const std::string& GetLanguage() const
-		{
+		const std::string &GetLanguage() const {
 			if (!_identifier.has_value())
 				throw std::runtime_error("PackageReference does not have an identifier.");
 			return _identifier.value().GetLanguage();
@@ -180,16 +159,14 @@ namespace Soup::SML
 		/// <summary>
 		/// Gets or sets the Owner.
 		/// </summary>
-		bool HasOwner() const
-		{
+		bool HasOwner() const {
 			return _identifier.has_value() && _identifier.value().HasOwner();
 		}
 
 		/// <summary>
 		/// Gets or sets the Owner.
 		/// </summary>
-		const std::string& GetOwner() const
-		{
+		const std::string &GetOwner() const {
 			if (!_identifier.has_value())
 				throw std::runtime_error("PackageReference does not have an identifier.");
 			return _identifier.value().GetOwner();
@@ -198,8 +175,7 @@ namespace Soup::SML
 		/// <summary>
 		/// Gets or sets the Name.
 		/// </summary>
-		const std::string& GetName() const
-		{
+		const std::string &GetName() const {
 			if (!_identifier.has_value())
 				throw std::runtime_error("PackageReference does not have an identifier.");
 			return _identifier.value().GetName();
@@ -208,16 +184,14 @@ namespace Soup::SML
 		/// <summary>
 		/// Gets or sets the Version.
 		/// </summary>
-		bool HasVersion() const
-		{
+		bool HasVersion() const {
 			return _version.has_value();
 		}
 
 		/// <summary>
 		/// Gets or sets the Version.
 		/// </summary>
-		const SemanticVersion& GetVersion() const
-		{
+		const SemanticVersion &GetVersion() const {
 			if (!_version.has_value())
 				throw std::runtime_error("PackageReference does not have a Version value.");
 			return _version.value();
@@ -226,8 +200,7 @@ namespace Soup::SML
 		/// <summary>
 		/// Gets or sets the Path.
 		/// </summary>
-		const Path& GetPath() const
-		{
+		const Path &GetPath() const {
 			if (!_path.has_value())
 				throw std::runtime_error("Cannot get the path of a non-local reference.");
 			return _path.value();
@@ -236,50 +209,39 @@ namespace Soup::SML
 		/// <summary>
 		/// Equality operator
 		/// </summary>
-		bool operator ==(const PackageReference& rhs) const
-		{
-			return _identifier == rhs._identifier &&
-				_version == rhs._version &&
-				_path == rhs._path;
+		bool operator==(const PackageReference &rhs) const {
+			return _identifier == rhs._identifier && _version == rhs._version && _path == rhs._path;
 		}
 
 		/// <summary>
 		/// Inequality operator
 		/// </summary>
-		bool operator !=(const PackageReference& rhs) const
-		{
-			return _identifier != rhs._identifier ||
-				_version != rhs._version ||
-				_path != rhs._path;
+		bool operator!=(const PackageReference &rhs) const {
+			return _identifier != rhs._identifier || _version != rhs._version || _path != rhs._path;
 		}
 
 		/// <summary>
 		/// Less Than operator
 		/// </summary>
-		bool operator<(const PackageReference& other) const
-		{
-			return std::tie(_identifier, _version, _path) < std::tie(other._identifier, other._version, other._path);
+		bool operator<(const PackageReference &other) const {
+			return std::tie(_identifier, _version, _path) <
+				   std::tie(other._identifier, other._version, other._path);
 		}
 
 		/// <summary>
 		/// Convert to string
 		/// </summary>
-		std::string ToString() const
-		{
+		std::string ToString() const {
 			// If the reference is a path then just return that
-			if (IsLocal())
-			{
+			if (IsLocal()) {
 				return _path.value().ToString();
-			}
-			else
-			{
+			} else {
 				// Build up the language/name/version reference
 				std::stringstream stringBuilder;
 
 				stringBuilder << _identifier.value().ToString();
 
-				if (_version.has_value())
-				{
+				if (_version.has_value()) {
 					stringBuilder << '@' << _version.value().ToString();
 				}
 

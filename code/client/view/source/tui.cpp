@@ -45,30 +45,31 @@ namespace Soup::View {
 
 			auto asciiArt = AppAsciiArt(&_state.ShowAsciiArt);
 
-			auto packagesMenu = ScrollFrame(CreateSingleItemMenu(
-				_state.PackagesList, &_state.PackagesListSelected));
+			auto packagesMenu = ScrollFrame(
+				CreateSingleItemMenu(_state.PackagesList, &_state.PackagesListSelected));
 
-			auto tabComponents =
-				CreateAllPackageTabs(fileSystemState, packageProvider);
+			auto tabComponents = CreateAllPackageTabs(fileSystemState, packageProvider);
 
-			auto packagesPropertiesView = ftxui::Container::Tab(
-				std::move(tabComponents), &_state.PackagesListSelected);
+			auto packagesPropertiesView =
+				ftxui::Container::Tab(std::move(tabComponents), &_state.PackagesListSelected);
 
-			auto packagesView = ftxui::Container::Horizontal({
-				packagesMenu,
-				packagesPropertiesView,
-			});
+			auto packagesView = ftxui::Container::Horizontal(
+				{
+					packagesMenu,
+					packagesPropertiesView,
+				});
 
 			auto packagesViewRenderer = ftxui::Renderer(packagesView, [&] {
-				return ftxui::hbox({
-					packagesMenu->Render(),
-					ftxui::separator(),
-					packagesPropertiesView->Render() | ftxui::flex,
-				});
+				return ftxui::hbox(
+					{
+						packagesMenu->Render(),
+						ftxui::separator(),
+						packagesPropertiesView->Render() | ftxui::flex,
+					});
 			});
 
-			auto packagesGraphView = ScrollFrame(
-				GraphView(std::move(packagesGraph), _state.PackagesNameList));
+			auto packagesGraphView =
+				ScrollFrame(GraphView(std::move(packagesGraph), _state.PackagesNameList));
 
 			auto packagesToggle = ftxui::Container::Tab(
 				{
@@ -77,31 +78,30 @@ namespace Soup::View {
 				},
 				&_state.ShowPackagesGraphView);
 
-			auto statusBar = ftxui::Renderer([] {
-				return ftxui::text(
-					"<v> Toggle Graph View | <c> Toggle Child Graph View");
-			});
+			auto statusBar = ftxui::Renderer(
+				[] { return ftxui::text("<v> Toggle Graph View | <c> Toggle Child Graph View"); });
 
 			auto appView = ftxui::Renderer(packagesView, [&] {
 				// Allow for small screens to use optimal space
 				// Hide pretty artwork
 				_state.ShowAsciiArt = app.dimy() > 30;
 
-				return ftxui::vbox({
-					asciiArt->Render(),
-					ftxui::vbox({
-						packagesToggle->Render() | ftxui::yflex,
-						ftxui::separator(),
-						statusBar->Render(),
-					}) | ftxui::border |
-						ftxui::yflex,
-				});
+				return ftxui::vbox(
+					{
+						asciiArt->Render(),
+						ftxui::vbox(
+							{
+								packagesToggle->Render() | ftxui::yflex,
+								ftxui::separator(),
+								statusBar->Render(),
+							}) |
+							ftxui::border | ftxui::yflex,
+					});
 			});
 
 			appView |= ftxui::CatchEvent([&](ftxui::Event event) {
 				if (event == ftxui::Event::v) {
-					_state.ShowPackagesGraphView =
-						!_state.ShowPackagesGraphView;
+					_state.ShowPackagesGraphView = !_state.ShowPackagesGraphView;
 					return true;
 				} else if (event == ftxui::Event::c) {
 					_state.ShowChildGraphView = !_state.ShowChildGraphView;
@@ -115,8 +115,8 @@ namespace Soup::View {
 		}
 
 	private:
-		int InitializeGraph(Core::PackageProvider &packageProvider,
-							Graph &packagesGraph, int packageId) {
+		int InitializeGraph(
+			Core::PackageProvider &packageProvider, Graph &packagesGraph, int packageId) {
 			auto &packageInfo = packageProvider.GetPackageInfo(packageId);
 
 			auto packageIndex = static_cast<int>(_state.PackagesIdList.size());
@@ -125,22 +125,19 @@ namespace Soup::View {
 			_state.PackagesNameList.push_back(packageInfo.Name.GetName());
 			_state.PackagesIdList.push_back(packageInfo.Id);
 
-			for (auto &[dependencyType, dependencyTypeSet] :
-				 packageInfo.Dependencies) {
+			for (auto &[dependencyType, dependencyTypeSet] : packageInfo.Dependencies) {
 				for (auto &dependency : dependencyTypeSet) {
 					// Stop at the edge of the graph and ignore duplicates
 					if (!dependency.IsSubGraph &&
-						std::find(_state.PackagesIdList.begin(),
-								  _state.PackagesIdList.end(),
-								  dependency.PackageId) ==
-							_state.PackagesIdList.end()) {
+						std::find(
+							_state.PackagesIdList.begin(),
+							_state.PackagesIdList.end(),
+							dependency.PackageId) == _state.PackagesIdList.end()) {
 						auto childIndex =
-							InitializeGraph(packageProvider, packagesGraph,
-											dependency.PackageId);
+							InitializeGraph(packageProvider, packagesGraph, dependency.PackageId);
 
 						// Add an edge for the graph
-						packagesGraph.Edges.push_back(
-							{packageIndex, childIndex});
+						packagesGraph.Edges.push_back({packageIndex, childIndex});
 					}
 				}
 			}
@@ -148,13 +145,10 @@ namespace Soup::View {
 			return packageIndex;
 		}
 
-		void InitializeState(Core::PackageProvider &packageProvider,
-							 Graph &packagesGraph) {
+		void InitializeState(Core::PackageProvider &packageProvider, Graph &packagesGraph) {
 			auto &packageGraph = packageProvider.GetRootPackageGraph();
-			InitializeGraph(packageProvider, packagesGraph,
-							packageGraph.RootPackageId);
-			packagesGraph.Vertices =
-				static_cast<int>(_state.PackagesIdList.size());
+			InitializeGraph(packageProvider, packagesGraph, packageGraph.RootPackageId);
+			packagesGraph.Vertices = static_cast<int>(_state.PackagesIdList.size());
 
 			_state.ShowAsciiArt = true;
 			_state.ShowPackagesGraphView = 0;
@@ -163,9 +157,8 @@ namespace Soup::View {
 			_state.PackageTabSelected = 0;
 		}
 
-		ftxui::Components
-		CreateAllPackageTabs(Core::FileSystemState &fileSystemState,
-							 Core::PackageProvider &packageProvider) {
+		ftxui::Components CreateAllPackageTabs(
+			Core::FileSystemState &fileSystemState, Core::PackageProvider &packageProvider) {
 			auto rootPackageGraphId = packageProvider.GetRootPackageGraphId();
 
 			_state.PackagesState.resize(_state.PackagesIdList.size());
@@ -177,33 +170,29 @@ namespace Soup::View {
 
 				auto &packageInfo = packageProvider.GetPackageInfo(packageId);
 				auto packageLoadState =
-					LoadPackage(fileSystemState, packageProvider,
-								rootPackageGraphId, packageId);
+					LoadPackage(fileSystemState, packageProvider, rootPackageGraphId, packageId);
 
 				auto propertiesList = LayoutProperties(packageInfo);
 
 				auto packageTabList = std::vector<std::string>({
 					"Properties",
 				});
-				auto packageTabComponents = ftxui::Components({
-					propertiesList,
-				});
+				auto packageTabComponents = ftxui::Components(
+					{
+						propertiesList,
+					});
 
 				auto hasPreprocessor =
 					packageLoadState.GeneratePhase1Result.has_value() &&
-					packageLoadState.GeneratePhase1Result.value()
-						.HasPreprocessor();
+					packageLoadState.GeneratePhase1Result.value().HasPreprocessor();
 
 				if (packageLoadState.GeneratePhase1Info.has_value()) {
-					auto &generatePhase1Info =
-						packageLoadState.GeneratePhase1Info.value();
-					auto selected = hasPreprocessor
-										? &packageState.SelectedPreprocessorTask
-										: &packageState.SelectedTask;
+					auto &generatePhase1Info = packageLoadState.GeneratePhase1Info.value();
+					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessorTask
+													: &packageState.SelectedTask;
 
-					auto tasksViewRenderer =
-						LayoutGeneratePhaseTasks(generatePhase1Info, selected,
-												 &_state.ShowChildGraphView);
+					auto tasksViewRenderer = LayoutGeneratePhaseTasks(
+						generatePhase1Info, selected, &_state.ShowChildGraphView);
 
 					if (hasPreprocessor) {
 						packageTabList.push_back("Preprocessor Tasks");
@@ -215,14 +204,13 @@ namespace Soup::View {
 				}
 
 				if (packageLoadState.GeneratePhase1Result.has_value()) {
-					auto selected = hasPreprocessor
-										? &packageState.SelectedPreprocessor
-										: &packageState.SelectedOperation;
+					auto selected = hasPreprocessor ? &packageState.SelectedPreprocessor
+													: &packageState.SelectedOperation;
 
 					auto operationsView = LayoutOperations(
-						packageLoadState.GeneratePhase1Result.value()
-							.GetGraph(),
-						selected, &_state.ShowChildGraphView);
+						packageLoadState.GeneratePhase1Result.value().GetGraph(),
+						selected,
+						&_state.ShowChildGraphView);
 
 					if (hasPreprocessor) {
 						packageTabList.push_back("Preprocessors");
@@ -234,13 +222,11 @@ namespace Soup::View {
 				}
 
 				if (packageLoadState.GeneratePhase2Info.has_value()) {
-					auto &generatePhase2Info =
-						packageLoadState.GeneratePhase2Info.value();
+					auto &generatePhase2Info = packageLoadState.GeneratePhase2Info.value();
 					auto selected = &packageState.SelectedTask;
 
-					auto tasksViewRenderer =
-						LayoutGeneratePhaseTasks(generatePhase2Info, selected,
-												 &_state.ShowChildGraphView);
+					auto tasksViewRenderer = LayoutGeneratePhaseTasks(
+						generatePhase2Info, selected, &_state.ShowChildGraphView);
 
 					packageTabList.push_back("Tasks");
 					packageTabComponents.push_back(tasksViewRenderer);
@@ -250,33 +236,34 @@ namespace Soup::View {
 					auto selected = &packageState.SelectedOperation;
 
 					auto operationsView = LayoutOperations(
-						packageLoadState.GeneratePhase2Result.value(), selected,
+						packageLoadState.GeneratePhase2Result.value(),
+						selected,
 						&_state.ShowChildGraphView);
 
 					packageTabList.push_back("Operations");
 					packageTabComponents.push_back(operationsView);
 				}
 
-				auto tab_toggle = CustomToggle(std::move(packageTabList),
-											   &_state.PackageTabSelected);
+				auto tab_toggle =
+					CustomToggle(std::move(packageTabList), &_state.PackageTabSelected);
 
-				auto tab_container =
-					ftxui::Container::Tab(std::move(packageTabComponents),
-										  &_state.PackageTabSelected);
+				auto tab_container = ftxui::Container::Tab(
+					std::move(packageTabComponents), &_state.PackageTabSelected);
 
-				auto container = ftxui::Container::Vertical({
-					tab_toggle,
-					tab_container,
-				});
+				auto container = ftxui::Container::Vertical(
+					{
+						tab_toggle,
+						tab_container,
+					});
 
-				auto renderer =
-					ftxui::Renderer(container, [tab_toggle, tab_container] {
-						return ftxui::vbox({
+				auto renderer = ftxui::Renderer(container, [tab_toggle, tab_container] {
+					return ftxui::vbox(
+						{
 							tab_toggle->Render(),
 							ftxui::separator(),
 							tab_container->Render(),
 						});
-					});
+				});
 
 				tabComponents.push_back(renderer);
 			}
