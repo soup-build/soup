@@ -15,6 +15,10 @@ BreakAfterOpenBracketFunction: true
 # Never place function name on new line
 BreakAfterReturnType: Automatic
 PenaltyReturnTypeOnItsOwnLine: 1000
+# Either place everything on the same line,
+# everything on two lines or one parameter per line
+PackArguments:
+  BinPack: OnePerLine
 
 ###########################################
 # Comments

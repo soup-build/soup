@@ -12,40 +12,40 @@ module;
 
 #pragma warning(push)
 #if _MSC_VER > 1400
-#pragma warning(disable:6102 6103)
+#pragma warning(disable : 6102 6103)
 #endif
 #include <strsafe.h>
 #pragma warning(pop)
 
 #elif defined(__linux__)
 
-#include <sys/user.h>
+#include <cstring>
+#include <fcntl.h>
+#include <poll.h>
 #include <sys/ptrace.h>
+#include <sys/reg.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/user.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <sys/reg.h>
-#include <sys/syscall.h>
-#include <sys/uio.h>
-#include <sys/stat.h>
-#include <poll.h>
-#include <fcntl.h>
-#include <cstring>
 
 #include <elf.h>
 
-#include <seccomp.h>
 #include "linux/environment.h"
+#include <seccomp.h>
 
 #endif
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
 
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#include <atomic>
 #include <array>
+#include <atomic>
 #include <codecvt>
 #include <filesystem>
 #include <format>
@@ -54,8 +54,8 @@ module;
 #include <locale>
 #include <map>
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
 #include <thread>
 #include <vector>
 

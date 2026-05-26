@@ -5,28 +5,23 @@
 #pragma once
 #include "imonitor-process-manager.h"
 
-namespace Monitor
-{
+namespace Monitor {
 	/// <summary>
 	/// A scoped process manager registration helper
 	/// </summary>
-	export class ScopedMonitorProcessManagerRegister
-	{
+	export class ScopedMonitorProcessManagerRegister {
 	public:
 		/// <summary>
-		/// Initializes a new instance of the <see cref='ScopedMonitorProcessManagerRegister'/> class.
+		/// Initializes a new instance of the <see cref='ScopedMonitorProcessManagerRegister'/>
+		/// class.
 		/// </summary>
-		ScopedMonitorProcessManagerRegister(std::shared_ptr<IMonitorProcessManager> listener)
-		{
+		ScopedMonitorProcessManagerRegister(std::shared_ptr<IMonitorProcessManager> listener) {
 			IMonitorProcessManager::Register(std::move(listener));
 		}
 
 		/// <summary>
 		/// Finalizes an instance of the <see cref='ScopedMonitorProcessManagerRegister'/> class.
 		/// </summary>
-		~ScopedMonitorProcessManagerRegister()
-		{
-			IMonitorProcessManager::Register(nullptr);
-		}
+		~ScopedMonitorProcessManagerRegister() { IMonitorProcessManager::Register(nullptr); }
 	};
 }
