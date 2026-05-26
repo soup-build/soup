@@ -62,9 +62,11 @@ namespace Monitor {
 			std::cout << "DETOUR-CLIENT-ERROR: " << message << std::endl;
 		}
 #else
-		void DebugError(std::string_view /*message*/, uint32_t /*value*/) {}
+		void DebugError(std::string_view /*message*/, uint32_t /*value*/) {
+		}
 
-		void DebugError(std::string_view /*message*/) {}
+		void DebugError(std::string_view /*message*/) {
+		}
 #endif
 
 #ifdef TRACE_DETOUR_CLIENT

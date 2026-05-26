@@ -4,16 +4,14 @@
 
 #pragma once
 
-namespace Soup::Core::Generate
-{
+namespace Soup::Core::Generate {
 	/// <summary>
 	/// The cached operation graph that is used to track input/output mappings for previous build
 	/// executions to support incremental builds
 	/// </summary>
-	class OperationGraphGenerator
-	{
+	class OperationGraphGenerator {
 	private:
-		FileSystemState& _fileSystemState;
+		FileSystemState &_fileSystemState;
 		std::vector<Path> _readAccessList;
 		std::vector<Path> _writeAccessList;
 		OperationId _uniqueId;
@@ -26,18 +24,17 @@ namespace Soup::Core::Generate
 
 	public:
 		OperationGraphGenerator(
-			FileSystemState& fileSystemState,
+			FileSystemState &fileSystemState,
 			std::vector<Path> readAccessList,
-			std::vector<Path> writeAccessList) :
-			_fileSystemState(fileSystemState),
-			_readAccessList(std::move(readAccessList)),
-			_writeAccessList(std::move(writeAccessList)),
-			_uniqueId(0),
-			_result(),
-			_inputFileLookup(),
-			_outputFileLookup(),
-			_outputDirectoryLookup()
-		{
+			std::vector<Path> writeAccessList)
+			: _fileSystemState(fileSystemState),
+			  _readAccessList(std::move(readAccessList)),
+			  _writeAccessList(std::move(writeAccessList)),
+			  _uniqueId(0),
+			  _result(),
+			  _inputFileLookup(),
+			  _outputFileLookup(),
+			  _outputDirectoryLookup() {
 		}
 
 		/// <summary>
@@ -50,8 +47,7 @@ namespace Soup::Core::Generate
 			std::vector<std::string> arguments,
 			Path workingDirectory,
 			std::vector<Path> declaredInput,
-			std::vector<Path> declaredOutput)
-		{
+			std::vector<Path> declaredOutput) {
 			Log::Diag("Create Operation: {}", title);
 
 			if (!workingDirectory.HasRoot())
@@ -59,34 +55,31 @@ namespace Soup::Core::Generate
 
 			// Build up the operation unique command
 			auto commandInfo = CommandInfo(
-				std::move(workingDirectory),
-				std::move(executable),
-				std::move(arguments));
+				std::move(workingDirectory), std::move(executable), std::move(arguments));
 
 			// Ensure this is the a unique operation
-			if (_result.HasCommand(commandInfo))
-			{
+			if (_result.HasCommand(commandInfo)) {
 				throw std::runtime_error("Operation with this command already exists.");
 			}
 
 			// Verify allowed read access
-			if (!IsAllowedAccess(_readAccessList, declaredInput, commandInfo.WorkingDirectory))
-			{
-				throw std::runtime_error("Operation does not have permission to read requested input.");
+			if (!IsAllowedAccess(_readAccessList, declaredInput, commandInfo.WorkingDirectory)) {
+				throw std::runtime_error(
+					"Operation does not have permission to read requested input.");
 			}
 
 			Log::Diag("Read Access Subset:");
-			for (auto& file : _readAccessList)
+			for (auto &file : _readAccessList)
 				Log::Diag(file.ToString());
 
 			// Verify allowed write access
-			if (!IsAllowedAccess(_writeAccessList, declaredOutput, commandInfo.WorkingDirectory))
-			{
-				throw std::runtime_error("Operation does not have permission to write requested output.");
+			if (!IsAllowedAccess(_writeAccessList, declaredOutput, commandInfo.WorkingDirectory)) {
+				throw std::runtime_error(
+					"Operation does not have permission to write requested output.");
 			}
 
 			Log::Diag("Write Access Subset:");
-			for (auto& file : _writeAccessList)
+			for (auto &file : _writeAccessList)
 				Log::Diag(file.ToString());
 
 			// Generate a unique id for this new operation
@@ -94,10 +87,14 @@ namespace Soup::Core::Generate
 			auto operationId = _uniqueId;
 
 			// Resolve the requested files to unique ids
-			auto declaredInputFileIds = _fileSystemState.ToFileIds(declaredInput, commandInfo.WorkingDirectory);
-			auto declaredOutputFileIds = _fileSystemState.ToFileIds(declaredOutput, commandInfo.WorkingDirectory);
-			auto readAccessFileIds = _fileSystemState.ToFileIds(_readAccessList, commandInfo.WorkingDirectory);
-			auto writeAccessFileIds = _fileSystemState.ToFileIds(_writeAccessList, commandInfo.WorkingDirectory);
+			auto declaredInputFileIds =
+				_fileSystemState.ToFileIds(declaredInput, commandInfo.WorkingDirectory);
+			auto declaredOutputFileIds =
+				_fileSystemState.ToFileIds(declaredOutput, commandInfo.WorkingDirectory);
+			auto readAccessFileIds =
+				_fileSystemState.ToFileIds(_readAccessList, commandInfo.WorkingDirectory);
+			auto writeAccessFileIds =
+				_fileSystemState.ToFileIds(_writeAccessList, commandInfo.WorkingDirectory);
 
 			// Build up the declared build operation
 			auto operationInfo = OperationInfo(
@@ -108,20 +105,17 @@ namespace Soup::Core::Generate
 				std::move(declaredOutputFileIds),
 				std::move(readAccessFileIds),
 				std::move(writeAccessFileIds));
-			auto& operationInfoReference = _result.AddOperation(std::move(operationInfo));
+			auto &operationInfoReference = _result.AddOperation(std::move(operationInfo));
 
 			StoreLookupInfo(operationInfoReference);
 			ResolveDependencies(operationInfoReference);
 		}
 
-		OperationGraph FinalizeState()
-		{
+		OperationGraph FinalizeState() {
 			// Add any operation with zero dependencies to the root
 			auto rootOperations = std::vector<OperationId>();
-			for (auto& [_, activeOperationInfo] : _result.GetOperations())
-			{
-				if (activeOperationInfo.DependencyCount == 0)
-				{
+			for (auto &[_, activeOperationInfo] : _result.GetOperations()) {
+				if (activeOperationInfo.DependencyCount == 0) {
 					activeOperationInfo.DependencyCount = 1;
 					rootOperations.push_back(activeOperationInfo.Id);
 				}
@@ -132,39 +126,31 @@ namespace Soup::Core::Generate
 			// Remove extra dependency references that are already covered by upstream references
 			auto recursiveChildren = std::map<OperationId, std::set<OperationId>>();
 			BuildRecursiveChildSets(recursiveChildren, _result.GetRootOperationIds());
-			for (auto& [_, operation] : _result.GetOperations())
-			{
+			for (auto &[_, operation] : _result.GetOperations()) {
 				// Check each child to see if it is already covered by another child
-				for (auto iterator = operation.Children.begin(); iterator != operation.Children.end();)
-				{
+				for (auto iterator = operation.Children.begin();
+					 iterator != operation.Children.end();) {
 					auto childId = *iterator;
 					auto isDuplicate = std::any_of(
 						operation.Children.cbegin(),
 						operation.Children.cend(),
-						[&](OperationId secondChildId)
-						{
-							if (secondChildId != childId)
-							{
+						[&](OperationId secondChildId) {
+							if (secondChildId != childId) {
 								auto childRecursiveSet = recursiveChildren[secondChildId];
 								return childRecursiveSet.contains(childId);
-							}
-							else
-							{
+							} else {
 								return false;
 							}
 						});
 
-					if (isDuplicate)
-					{
+					if (isDuplicate) {
 						// Update the child dependency count
-						auto& childOperation = _result.GetOperationInfo(childId);
+						auto &childOperation = _result.GetOperationInfo(childId);
 						childOperation.DependencyCount--;
 
 						// Remove the duplicate
 						iterator = operation.Children.erase(iterator);
-					}
-					else
-					{
+					} else {
 						iterator++;
 					}
 				}
@@ -174,104 +160,91 @@ namespace Soup::Core::Generate
 		}
 
 	private:
-		void StoreLookupInfo(const OperationInfo& operationInfo)
-		{
+		void StoreLookupInfo(const OperationInfo &operationInfo) {
 			// Store the operation in the required file lookups to ensure single target
 			// and help build up the dependency graph
-			for (auto file : operationInfo.DeclaredOutput)
-			{
-				auto& filePath = _fileSystemState.GetFilePath(file);
-				if (filePath.HasFileName())
-				{
+			for (auto file : operationInfo.DeclaredOutput) {
+				auto &filePath = _fileSystemState.GetFilePath(file);
+				if (filePath.HasFileName()) {
 					CheckSetOutputFileOperation(file, operationInfo);
-				}
-				else
-				{
+				} else {
 					CheckSetOutputDirectoryOperation(file, operationInfo);
 				}
 			}
 
-			for (auto file : operationInfo.DeclaredInput)
-			{
-				auto& filePath = _fileSystemState.GetFilePath(file);
-				if (filePath.HasFileName())
-				{
+			for (auto file : operationInfo.DeclaredInput) {
+				auto &filePath = _fileSystemState.GetFilePath(file);
+				if (filePath.HasFileName()) {
 					AddInputFileOperation(file, operationInfo);
 				}
 			}
 		}
 
-		void ResolveDependencies(OperationInfo& operationInfo)
-		{
-			// Build up the child dependencies based on the operations that use this operations output files
+		void ResolveDependencies(OperationInfo &operationInfo) {
+			// Build up the child dependencies based on the operations that use this operations
+			// output files
 
 			// Check for inputs that match previous output files
-			for (auto file : operationInfo.DeclaredInput)
-			{
+			for (auto file : operationInfo.DeclaredInput) {
 				OperationId matchedOperation;
-				if (TryGetOutputFileOperation(file, matchedOperation))
-				{
+				if (TryGetOutputFileOperation(file, matchedOperation)) {
 					// The active operation must run after the matched output operation
-					CheckAddChildOperation(_result.GetOperationInfo(matchedOperation), operationInfo);
+					CheckAddChildOperation(
+						_result.GetOperationInfo(matchedOperation), operationInfo);
 				}
 			}
 
 			// Check for outputs that match previous input files
-			for (auto file : operationInfo.DeclaredOutput)
-			{
+			for (auto file : operationInfo.DeclaredOutput) {
 				std::vector<OperationId> matchedOperations;
-				if (TryGetInputFileOperations(file, matchedOperations))
-				{
-					for (auto matchedOperation : matchedOperations)
-					{
+				if (TryGetInputFileOperations(file, matchedOperations)) {
+					for (auto matchedOperation : matchedOperations) {
 						// The active operation must run before the matched output operation
-						CheckAddChildOperation(operationInfo, _result.GetOperationInfo(matchedOperation));
+						CheckAddChildOperation(
+							operationInfo, _result.GetOperationInfo(matchedOperation));
 					}
 				}
 			}
 
 			// Check for output directories that are under previous output files
-			for (auto file : operationInfo.DeclaredOutput)
-			{
-				auto& filePath = _fileSystemState.GetFilePath(file);
+			for (auto file : operationInfo.DeclaredOutput) {
+				auto &filePath = _fileSystemState.GetFilePath(file);
 
 				// If this is a directory output check if under previous output files
-				if (!filePath.HasFileName())
-				{
-					for (auto outputFile : _outputFileLookup)
-					{
-						auto& outputFilePath = _fileSystemState.GetFilePath(outputFile.first);
-						if (outputFilePath.ToString().starts_with(filePath.ToString()))
-						{
-							// The active operation must run before the matched file output operation
-							CheckAddChildOperation(operationInfo, _result.GetOperationInfo(outputFile.second));
+				if (!filePath.HasFileName()) {
+					for (auto outputFile : _outputFileLookup) {
+						auto &outputFilePath = _fileSystemState.GetFilePath(outputFile.first);
+						if (outputFilePath.ToString().starts_with(filePath.ToString())) {
+							// The active operation must run before the matched file output
+							// operation
+							CheckAddChildOperation(
+								operationInfo, _result.GetOperationInfo(outputFile.second));
 						}
 					}
 				}
 			}
 
 			// Check for output files that are under previous output directories
-			for (auto file : operationInfo.DeclaredOutput)
-			{
-				auto& filePath = _fileSystemState.GetFilePath(file);
+			for (auto file : operationInfo.DeclaredOutput) {
+				auto &filePath = _fileSystemState.GetFilePath(file);
 				auto parentDirectory = filePath.GetParent();
 				auto done = false;
-				while (!done)
-				{
+				while (!done) {
 					FileId parentDirectoryId;
-					if (_fileSystemState.TryFindFileId(parentDirectory, parentDirectoryId))
-					{
+					if (_fileSystemState.TryFindFileId(parentDirectory, parentDirectoryId)) {
 						OperationId matchedOperation;
-						if (TryGetOutputDirectoryOperation(parentDirectoryId, matchedOperation))
-						{
-							// The matched directory output operation must run before the active operation
-							CheckAddChildOperation(_result.GetOperationInfo(matchedOperation), operationInfo);
+						if (TryGetOutputDirectoryOperation(parentDirectoryId, matchedOperation)) {
+							// The matched directory output operation must run before the active
+							// operation
+							CheckAddChildOperation(
+								_result.GetOperationInfo(matchedOperation), operationInfo);
 						}
 					}
 
 					// Get the next parent directory
 					auto nextParentDirectory = parentDirectory.GetParent();
-					done = nextParentDirectory.ToString().size() == parentDirectory.ToString().size();
+					done =
+						nextParentDirectory.ToString().size() == parentDirectory.ToString().size();
 					parentDirectory = nextParentDirectory;
 				}
 			}
@@ -279,50 +252,47 @@ namespace Soup::Core::Generate
 			// Ensure there are no circular references
 			auto closure = std::set<OperationId>();
 			BuildChildClosure(operationInfo.Children, closure);
-			if (closure.contains(operationInfo.Id))
-			{
+			if (closure.contains(operationInfo.Id)) {
 				throw std::runtime_error("Operation introduced circular reference");
 			}
 		}
 
 		void BuildChildClosure(
-			const std::vector<OperationId>& operations,
-			std::set<OperationId>& closure)
-		{
-			for (auto operationId : operations)
-			{
+			const std::vector<OperationId> &operations, std::set<OperationId> &closure) {
+			for (auto operationId : operations) {
 				// Check if this node was already handled in a different branch
-				if (!closure.contains(operationId))
-				{
+				if (!closure.contains(operationId)) {
 					closure.insert(operationId);
 
-					auto& operation = _result.GetOperationInfo(operationId);
+					auto &operation = _result.GetOperationInfo(operationId);
 					BuildChildClosure(operation.Children, closure);
 				}
 			}
 		}
 
 		void BuildRecursiveChildSets(
-			std::map<OperationId, std::set<OperationId>>& recursiveChildren,
-			const std::vector<OperationId>& operations)
-		{
-			for (auto operationId : operations)
-			{
-				auto& operation = _result.GetOperationInfo(operationId);
+			std::map<OperationId, std::set<OperationId>> &recursiveChildren,
+			const std::vector<OperationId> &operations) {
+			for (auto operationId : operations) {
+				auto &operation = _result.GetOperationInfo(operationId);
 				BuildRecursiveChildSets(recursiveChildren, operation.Children);
 
 				// Check if this node was already handled in a different branch
-				if (!recursiveChildren.contains(operationId))
-				{
+				if (!recursiveChildren.contains(operationId)) {
 					auto childSet = std::set<OperationId>();
-					std::copy(operation.Children.begin(), operation.Children.end(), std::inserter(childSet, childSet.end()));
-					for (auto childId : operation.Children)
-					{
+					std::copy(
+						operation.Children.begin(),
+						operation.Children.end(),
+						std::inserter(childSet, childSet.end()));
+					for (auto childId : operation.Children) {
 						auto findChildRecursiveSet = recursiveChildren.find(childId);
 						if (findChildRecursiveSet == recursiveChildren.end())
 							throw std::runtime_error("Recursive child was missing");
-						auto& childRecursiveSet = findChildRecursiveSet->second;
-						std::copy(childRecursiveSet.begin(), childRecursiveSet.end(), std::inserter(childSet, childSet.end()));
+						auto &childRecursiveSet = findChildRecursiveSet->second;
+						std::copy(
+							childRecursiveSet.begin(),
+							childRecursiveSet.end(),
+							std::inserter(childSet, childSet.end()));
 					}
 
 					recursiveChildren.emplace(operationId, std::move(childSet));
@@ -331,22 +301,17 @@ namespace Soup::Core::Generate
 		}
 
 		bool IsAllowedAccess(
-			const std::vector<Path>& accessList,
-			const std::vector<Path>& files,
-			const Path& workingDirectory)
-		{
+			const std::vector<Path> &accessList,
+			const std::vector<Path> &files,
+			const Path &workingDirectory) {
 			auto accessSet = std::set<Path>();
-			for (auto& file : files)
-			{
+			for (auto &file : files) {
 				auto accessDirectory = GetAllowedAccess(accessList, file, workingDirectory);
-				if (!accessDirectory.has_value())
-				{
+				if (!accessDirectory.has_value()) {
 					// The file was not under any of the provided directories
 					Log::Error("File access denied: {}", file.ToString());
 					return false;
-				}
-				else
-				{
+				} else {
 					accessSet.insert(std::move(accessDirectory.value()));
 				}
 			}
@@ -355,20 +320,15 @@ namespace Soup::Core::Generate
 		}
 
 		std::optional<Path> GetAllowedAccess(
-			const std::vector<Path>& accessList,
-			const Path& file,
-			const Path& workingDirectory)
-		{
+			const std::vector<Path> &accessList, const Path &file, const Path &workingDirectory) {
 			// Combine the working directory if a relative file path
 			auto absoluteFile = file;
 			if (!absoluteFile.HasRoot())
 				absoluteFile = workingDirectory + absoluteFile;
 
-			auto& fileString = absoluteFile.ToString();
-			for (auto& accessDirectory : accessList)
-			{
-				if (fileString.starts_with(accessDirectory.ToString()))
-				{
+			auto &fileString = absoluteFile.ToString();
+			for (auto &accessDirectory : accessList) {
+				if (fileString.starts_with(accessDirectory.ToString())) {
 					return accessDirectory;
 				}
 			}
@@ -376,129 +336,91 @@ namespace Soup::Core::Generate
 			return std::nullopt;
 		}
 
-		void CheckAddChildOperation(OperationInfo& parentOperation, OperationInfo& childOperation)
-		{
+		void CheckAddChildOperation(OperationInfo &parentOperation, OperationInfo &childOperation) {
 			// Check if this item is already known
 			auto findResult = std::find(
 				parentOperation.Children.begin(),
 				parentOperation.Children.end(),
 				childOperation.Id);
-			if (findResult == parentOperation.Children.end())
-			{
+			if (findResult == parentOperation.Children.end()) {
 				// Keep track of the parent child references
 				parentOperation.Children.push_back(childOperation.Id);
 				childOperation.DependencyCount++;
 			}
 		}
 
-		bool TryGetInputFileOperations(
-			FileId file,
-			std::vector<OperationId>& operations)
-		{
+		bool TryGetInputFileOperations(FileId file, std::vector<OperationId> &operations) {
 			auto findResult = _inputFileLookup.find(file);
-			if (findResult != _inputFileLookup.end())
-			{
+			if (findResult != _inputFileLookup.end()) {
 				operations = findResult->second;
 				return true;
-			}
-			else
-			{
+			} else {
 				operations.clear();
 				return false;
 			}
 		}
 
-		bool TryGetOutputFileOperation(
-			FileId file,
-			OperationId& operationId)
-		{
+		bool TryGetOutputFileOperation(FileId file, OperationId &operationId) {
 			auto findResult = _outputFileLookup.find(file);
-			if (findResult != _outputFileLookup.end())
-			{
+			if (findResult != _outputFileLookup.end()) {
 				operationId = findResult->second;
 				return true;
-			}
-			else
-			{
+			} else {
 				operationId = 0;
 				return false;
 			}
 		}
 
-		bool TryGetOutputDirectoryOperation(
-			FileId file,
-			OperationId& operationId)
-		{
+		bool TryGetOutputDirectoryOperation(FileId file, OperationId &operationId) {
 			auto findResult = _outputDirectoryLookup.find(file);
-			if (findResult != _outputDirectoryLookup.end())
-			{
+			if (findResult != _outputDirectoryLookup.end()) {
 				operationId = findResult->second;
 				return true;
-			}
-			else
-			{
+			} else {
 				operationId = 0;
 				return false;
 			}
 		}
 
-		void CheckSetOutputFileOperation(
-			FileId file,
-			const OperationInfo& operation)
-		{
+		void CheckSetOutputFileOperation(FileId file, const OperationInfo &operation) {
 			auto findResult = _outputFileLookup.find(file);
-			if (findResult != _outputFileLookup.end())
-			{
-				auto& filePath = _fileSystemState.GetFilePath(file);
-				auto& existingOperation = _result.GetOperationInfo(findResult->second);
+			if (findResult != _outputFileLookup.end()) {
+				auto &filePath = _fileSystemState.GetFilePath(file);
+				auto &existingOperation = _result.GetOperationInfo(findResult->second);
 				throw std::runtime_error(
-					std::format("File \"{}\" already written to by operation \"{}\"",
-					filePath.ToString(),
-					existingOperation.Title));
-			}
-			else
-			{
+					std::format(
+						"File \"{}\" already written to by operation \"{}\"",
+						filePath.ToString(),
+						existingOperation.Title));
+			} else {
 				_outputFileLookup.emplace(file, operation.Id);
 			}
 		}
 
-		void CheckSetOutputDirectoryOperation(
-			FileId file,
-			const OperationInfo& operation)
-		{
+		void CheckSetOutputDirectoryOperation(FileId file, const OperationInfo &operation) {
 			auto findResult = _outputDirectoryLookup.find(file);
-			if (findResult != _outputDirectoryLookup.end())
-			{
-				auto& filePath = _fileSystemState.GetFilePath(file);
-				auto& existingOperation = _result.GetOperationInfo(findResult->second);
+			if (findResult != _outputDirectoryLookup.end()) {
+				auto &filePath = _fileSystemState.GetFilePath(file);
+				auto &existingOperation = _result.GetOperationInfo(findResult->second);
 				throw std::runtime_error(
 					std::format(
 						"Directory \"{}\" already written to by operation \"{}\"",
 						filePath.ToString(),
 						existingOperation.Title));
-			}
-			else
-			{
+			} else {
 				_outputDirectoryLookup.emplace(file, operation.Id);
 			}
 		}
 
-		void AddInputFileOperation(
-			FileId file,
-			const OperationInfo& operation)
-		{
+		void AddInputFileOperation(FileId file, const OperationInfo &operation) {
 			auto findResult = _inputFileLookup.find(file);
-			if (findResult != _inputFileLookup.end())
-			{
-				auto& operations = findResult->second;
+			if (findResult != _inputFileLookup.end()) {
+				auto &operations = findResult->second;
 				operations.push_back(operation.Id);
-			}
-			else
-			{
+			} else {
 				_inputFileLookup.emplace(
 					file,
-					std::vector<OperationId>(
-					{
+					std::vector<OperationId>({
 						operation.Id,
 					}));
 			}

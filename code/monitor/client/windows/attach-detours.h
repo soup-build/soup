@@ -3,7 +3,8 @@
 namespace Monitor::Windows {
 	// TODO: This exported method forces a lib to be generated to allow for linking...
 	// Soup should allow runtime references to dlls that have no external symbols
-	DllExport void Noop() {}
+	DllExport void Noop() {
+	}
 
 	void AttachDetours() {
 		ThrowIfFailed(DetourTransactionBegin(), "AttachDetours DetourTransactionBegin Failed");
@@ -1985,9 +1986,13 @@ namespace Monitor::Windows {
 		ThrowIfFailed(DetourTransactionCommit(), "DetachDetours DetourTransactionCommit Failed");
 	}
 
-	bool ThreadAttach(HMODULE /*hDll*/) { return true; }
+	bool ThreadAttach(HMODULE /*hDll*/) {
+		return true;
+	}
 
-	bool ThreadDetach(HMODULE /*hDll*/) { return true; }
+	bool ThreadDetach(HMODULE /*hDll*/) {
+		return true;
+	}
 
 	std::vector<std::string> ExtractStringList(const char *rawValues, uint64_t length) {
 		auto result = std::vector<std::string>();

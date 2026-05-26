@@ -24,7 +24,8 @@ namespace Monitor {
 		MockMonitorProcessManager()
 			: m_uniqueId(1),
 			  _requests(),
-			  _executeResults() {}
+			  _executeResults() {
+		}
 
 		/// <summary>
 		/// Create a result
@@ -44,7 +45,9 @@ namespace Monitor {
 		/// <summary>
 		/// Get the load requests
 		/// </summary>
-		const std::vector<std::string> &GetRequests() const { return _requests; }
+		const std::vector<std::string> &GetRequests() const {
+			return _requests;
+		}
 
 		/// <summary>
 		/// Creates a process for the provided executable path

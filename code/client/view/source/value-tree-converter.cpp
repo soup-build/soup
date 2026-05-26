@@ -4,26 +4,22 @@
 
 module;
 
-#include <string>
 #include <stdexcept>
+#include <string>
 
 export module Soup.View:ValueTreeConverter;
 
 import Soup.Core;
 import :TreeValue;
 
-namespace Soup::View
-{
+namespace Soup::View {
 	/// <summary>
 	/// Converter from values to tree values
 	/// </summary>
-	export class ValueTreeConverter
-	{
+	export class ValueTreeConverter {
 	public:
-		static TreeValue ToTreeValue(const Core::Value& value)
-		{
-			switch (value.GetType())
-			{
+		static TreeValue ToTreeValue(const Core::Value &value) {
+			switch (value.GetType()) {
 				case Core::ValueType::Table:
 					return TreeValue(ToTreeValue(value.AsTable()));
 				case Core::ValueType::List:
@@ -47,11 +43,9 @@ namespace Soup::View
 			}
 		}
 
-		static TreeValueTable ToTreeValue(const Core::ValueTable& table)
-		{
+		static TreeValueTable ToTreeValue(const Core::ValueTable &table) {
 			auto valueTable = TreeValueTable();
-			for (auto& [key, value] : table)
-			{
+			for (auto &[key, value] : table) {
 				auto valueValue = ToTreeValue(value);
 				valueTable.Insert(key, std::move(valueValue));
 			}
@@ -59,11 +53,9 @@ namespace Soup::View
 			return valueTable;
 		}
 
-		static TreeValueList ToTreeValue(const Core::ValueList& list)
-		{
+		static TreeValueList ToTreeValue(const Core::ValueList &list) {
 			auto valueList = TreeValueList();
-			for (auto& value : list)
-			{
+			for (auto &value : list) {
 				auto valueValue = ToTreeValue(value);
 				valueList.push_back(std::move(valueValue));
 			}

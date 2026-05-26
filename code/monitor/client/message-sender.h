@@ -13,11 +13,17 @@ namespace Monitor {
 			message.ContentSize = 0;
 		}
 
-		~MessageSender() { connectionManager.WriteMessage(message); }
+		~MessageSender() {
+			connectionManager.WriteMessage(message);
+		}
 
-		void AppendValue(const char *value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(const char *value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 
-		void AppendValue(const wchar_t *value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(const wchar_t *value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 
 		void AppendValue(void *value) {
 			auto startIndex = message.ContentSize;
@@ -29,14 +35,24 @@ namespace Monitor {
 			*reinterpret_cast<void **>(message.Content + startIndex) = value;
 		}
 
-		void AppendValue(int value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(int value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 
-		void AppendValue(long value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(long value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 
-		void AppendValue(unsigned int value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(unsigned int value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 
-		void AppendValue(unsigned long value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(unsigned long value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 
-		void AppendValue(unsigned long long value) { MessageBuilder::AppendValue(message, value); }
+		void AppendValue(unsigned long long value) {
+			MessageBuilder::AppendValue(message, value);
+		}
 	};
 }

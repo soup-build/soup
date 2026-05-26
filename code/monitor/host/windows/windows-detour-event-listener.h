@@ -20,9 +20,12 @@ namespace Monitor::Windows {
 		/// Initializes a new instance of the <see cref='EventListener'/> class.
 		/// </summary>
 		WindowsDetourEventListener(std::shared_ptr<IWindowsSystemMonitor> monitor)
-			: m_monitor(std::move(monitor)) {}
+			: m_monitor(std::move(monitor)) {
+		}
 
-		void LogError(std::string_view message) { m_monitor->OnError(message); }
+		void LogError(std::string_view message) {
+			m_monitor->OnError(message);
+		}
 
 		void SafeLogMessage(Message &message) {
 			try {

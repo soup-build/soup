@@ -243,10 +243,18 @@ namespace Monitor::Windows {
 
 			// Create the requested process with our Monitor dll loaded
 			if (!DetourCreateProcessWithDllExA(
-					m_executable.ToString().c_str(), argumentsString.data(), processAttributes,
-					threadAttributes, inheritHandles, creationFlags, (LPTSTR)environment.c_str(),
+					m_executable.ToString().c_str(),
+					argumentsString.data(),
+					processAttributes,
+					threadAttributes,
+					inheritHandles,
+					creationFlags,
+					(LPTSTR)environment.c_str(),
 					m_workingDirectory.IsEmpty() ? nullptr : m_workingDirectory.ToString().c_str(),
-					&startupInfo, &processInfo, dllPathString.c_str(), nullptr)) {
+					&startupInfo,
+					&processInfo,
+					dllPathString.c_str(),
+					nullptr)) {
 				auto error = GetLastError();
 				switch (error) {
 					case ERROR_FILE_NOT_FOUND:
@@ -282,11 +290,15 @@ namespace Monitor::Windows {
 			// Pass along the read/write access lists
 			payload.EnableAccessChecks = m_enableAccessChecks;
 			LoadStringList(
-				m_allowedReadAccess, payload.zReadAccessDirectories, payload.cReadAccessDirectories,
+				m_allowedReadAccess,
+				payload.zReadAccessDirectories,
+				payload.cReadAccessDirectories,
 				4096);
 			LoadStringList(
-				m_allowedWriteAccess, payload.zWriteAccessDirectories,
-				payload.cWriteAccessDirectories, 4096);
+				m_allowedWriteAccess,
+				payload.zWriteAccessDirectories,
+				payload.cWriteAccessDirectories,
+				4096);
 
 			if (!DetourCopyPayloadToProcess(
 					m_processHandle.Get(), ProcessPayloadResourceId, &payload, sizeof(payload))) {
@@ -458,8 +470,10 @@ namespace Monitor::Windows {
 					DWORD timeoutMilliseconds = 1000;
 					DebugTrace("WorkerThread WaitForMultipleObjects");
 					auto waitResult = WaitForMultipleObjects(
-						static_cast<DWORD>(m_rawEventHandles.size()), m_rawEventHandles.data(),
-						waitForAll, timeoutMilliseconds);
+						static_cast<DWORD>(m_rawEventHandles.size()),
+						m_rawEventHandles.data(),
+						waitForAll,
+						timeoutMilliseconds);
 					switch (waitResult) {
 						case WAIT_TIMEOUT:
 							if (!m_processRunning) {
@@ -560,8 +574,14 @@ namespace Monitor::Windows {
 			DWORD inBufferSize = 0;
 			DWORD defaultTimeOut = 20000;
 			HANDLE hPipe = CreateNamedPipeA(
-				pipeNameString.c_str(), openMode, pipeMode, maxInstances, outBufferSize,
-				inBufferSize, defaultTimeOut, nullptr);
+				pipeNameString.c_str(),
+				openMode,
+				pipeMode,
+				maxInstances,
+				outBufferSize,
+				inBufferSize,
+				defaultTimeOut,
+				nullptr);
 			if (hPipe == INVALID_HANDLE_VALUE) {
 				DWORD error = GetLastError();
 				throw std::runtime_error(std::format("CreateNamedPipeA failed: {}", error));
@@ -682,7 +702,10 @@ namespace Monitor::Windows {
 				DebugTrace("HandlePipeEvent - ReadFile");
 				DWORD bytesRead = 0;
 				if (!ReadFile(
-						pipe.PipeHandle.Get(), &pipe.Message, sizeof(pipe.Message), &bytesRead,
+						pipe.PipeHandle.Get(),
+						&pipe.Message,
+						sizeof(pipe.Message),
+						&bytesRead,
 						&pipe.Overlap)) {
 					DWORD error = GetLastError();
 					switch (error) {

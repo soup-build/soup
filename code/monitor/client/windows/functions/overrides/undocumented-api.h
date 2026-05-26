@@ -2,7 +2,9 @@
 #include "../cache/undocumented-api.h"
 
 namespace Monitor::Windows::Functions::Overrides::UndocumentedApi {
-	int WINAPI EntryPoint(void) { return Cache::UndocumentedApi::EntryPoint(); }
+	int WINAPI EntryPoint(void) {
+		return Cache::UndocumentedApi::EntryPoint();
+	}
 
 	BOOL WINAPI PrivCopyFileExA(
 		LPCSTR lpExistingFileName,

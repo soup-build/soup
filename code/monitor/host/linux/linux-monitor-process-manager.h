@@ -15,7 +15,8 @@ namespace Monitor::Linux {
 		/// <summary>
 		/// Initializes a new instance of the <see cref='LinuxMonitorProcessManager'/> class.
 		/// </summary>
-		LinuxMonitorProcessManager() {}
+		LinuxMonitorProcessManager() {
+		}
 
 		/// <summary>
 		/// Creates a process for the provided executable path

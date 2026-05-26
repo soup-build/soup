@@ -33,9 +33,12 @@ namespace Monitor::Linux {
 		/// Initializes a new instance of the <see cref='LinuxTraceEventListener'/> class.
 		/// </summary>
 		LinuxTraceEventListener(std::shared_ptr<ILinuxSystemMonitor> monitor)
-			: m_monitor(std::move(monitor)) {}
+			: m_monitor(std::move(monitor)) {
+		}
 
-		void LogError(std::string_view message) { m_monitor->OnError(message); }
+		void LogError(std::string_view message) {
+			m_monitor->OnError(message);
+		}
 
 		void ProcessSysCall(pid_t pid) {
 			auto registers = GetSysCallArgs(pid);

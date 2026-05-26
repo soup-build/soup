@@ -15,7 +15,8 @@ namespace Monitor::Windows {
 		/// <summary>
 		/// Initializes a new instance of the <see cref='WindowsMonitorProcessManager'/> class.
 		/// </summary>
-		WindowsMonitorProcessManager() {}
+		WindowsMonitorProcessManager() {
+		}
 
 		/// <summary>
 		/// Creates a process for the provided executable path
@@ -31,9 +32,15 @@ namespace Monitor::Windows {
 			std::vector<Path> allowedReadAccess,
 			std::vector<Path> allowedWriteAccess) override final {
 			return std::make_shared<WindowsMonitorProcess>(
-				executable, std::move(arguments), workingDirectory, environmentVariables,
-				std::move(monitor), enableAccessChecks, partialMonitor,
-				std::move(allowedReadAccess), std::move(allowedWriteAccess));
+				executable,
+				std::move(arguments),
+				workingDirectory,
+				environmentVariables,
+				std::move(monitor),
+				enableAccessChecks,
+				partialMonitor,
+				std::move(allowedReadAccess),
+				std::move(allowedWriteAccess));
 		}
 	};
 }

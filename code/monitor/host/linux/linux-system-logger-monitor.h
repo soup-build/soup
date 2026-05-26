@@ -8,9 +8,12 @@ namespace Monitor::Linux {
 
 	public:
 		LinuxSystemLoggerMonitor(std::ostream &stream)
-			: m_stream(stream) {}
+			: m_stream(stream) {
+		}
 
-		virtual void OnInitialize() override final { m_stream << "Initialize: " << std::endl; }
+		virtual void OnInitialize() override final {
+			m_stream << "Initialize: " << std::endl;
+		}
 
 		virtual void OnShutdown(bool hadError) override final {
 			m_stream << "Shutdown: " << hadError << std::endl;

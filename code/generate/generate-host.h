@@ -7,61 +7,52 @@
 #include "extension-task-details.h"
 #include "generate-state.h"
 
-namespace Soup::Core::Generate
-{
-	class GenerateHost : public WrenHost
-	{
+namespace Soup::Core::Generate {
+	class GenerateHost : public WrenHost {
 	private:
-		static inline const char* SoupModuleName = "soup";
-		static inline const char* SoupClassName = "Soup";
-		static inline const char* SoupTaskClassName = "SoupTask";
-		static inline const char* SoupPreprocessorTaskClassName = "SoupPreprocessorTask";
+		static inline const char *SoupModuleName = "soup";
+		static inline const char *SoupClassName = "Soup";
+		static inline const char *SoupTaskClassName = "SoupTask";
+		static inline const char *SoupPreprocessorTaskClassName = "SoupPreprocessorTask";
 
 	private:
-		GenerateState* _state;
+		GenerateState *_state;
 
 	public:
-		GenerateHost(Path scriptFile, std::optional<Path> bundlesFile) :
-			WrenHost(std::move(scriptFile), std::move(bundlesFile)),
-			_state(nullptr)
-		{
+		GenerateHost(Path scriptFile, std::optional<Path> bundlesFile)
+			: WrenHost(std::move(scriptFile), std::move(bundlesFile)),
+			  _state(nullptr) {
 		}
 
-		void SetState(GenerateState& state)
-		{
+		void SetState(GenerateState &state) {
 			_state = &state;
 		}
 
-		std::vector<ExtensionTaskDetails> DiscoverTasks()
-		{
+		std::vector<ExtensionTaskDetails> DiscoverTasks() {
 			auto extensions = std::vector<ExtensionTaskDetails>();
 
 			// Discover all class types
 			wrenEnsureSlots(_vm, 1);
 			auto variableCount = wrenGetVariableCount(_vm, _scriptFile.ToString().c_str());
-			for (auto i = 0; i < variableCount; i++)
-			{
+			for (auto i = 0; i < variableCount; i++) {
 				wrenGetVariableAt(_vm, _scriptFile.ToString().c_str(), i, 0);
 
 				// Check if a class
 				auto type = wrenGetSlotType(_vm, 0);
-				if (type == WREN_TYPE_UNKNOWN)
-				{
+				if (type == WREN_TYPE_UNKNOWN) {
 					auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
-					if (WrenHelpers::HasParentType(_vm, classHandle, SoupTaskClassName))
-					{
+					if (WrenHelpers::HasParentType(_vm, classHandle, SoupTaskClassName)) {
 						Log::Diag("Found Build Task");
 						auto className = WrenHelpers::GetClassName(_vm, classHandle);
 						auto runBeforeList = CallRunBeforeGetter(classHandle);
 						auto runAfterList = CallRunAfterGetter(classHandle);
 
-						extensions.push_back(
-							ExtensionTaskDetails(
-								std::move(className),
-								_scriptFile,
-								_bundlesFile,
-								std::move(runBeforeList),
-								std::move(runAfterList)));
+						extensions.push_back(ExtensionTaskDetails(
+							std::move(className),
+							_scriptFile,
+							_bundlesFile,
+							std::move(runBeforeList),
+							std::move(runAfterList)));
 					}
 				}
 			}
@@ -69,34 +60,26 @@ namespace Soup::Core::Generate
 			return extensions;
 		}
 
-		std::vector<ExtensionTaskDetails> DiscoverPreprocessorTasks()
-		{
+		std::vector<ExtensionTaskDetails> DiscoverPreprocessorTasks() {
 			auto extensions = std::vector<ExtensionTaskDetails>();
 
 			// Discover all class types
 			wrenEnsureSlots(_vm, 1);
 			auto variableCount = wrenGetVariableCount(_vm, _scriptFile.ToString().c_str());
-			for (auto i = 0; i < variableCount; i++)
-			{
+			for (auto i = 0; i < variableCount; i++) {
 				wrenGetVariableAt(_vm, _scriptFile.ToString().c_str(), i, 0);
 
 				// Check if a class
 				auto type = wrenGetSlotType(_vm, 0);
-				if (type == WREN_TYPE_UNKNOWN)
-				{
+				if (type == WREN_TYPE_UNKNOWN) {
 					auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
-					if (WrenHelpers::HasParentType(_vm, classHandle, SoupPreprocessorTaskClassName))
-					{
+					if (WrenHelpers::HasParentType(
+							_vm, classHandle, SoupPreprocessorTaskClassName)) {
 						Log::Diag("Found Build Finalizer Task");
 						auto className = WrenHelpers::GetClassName(_vm, classHandle);
 
-						extensions.push_back(
-							ExtensionTaskDetails(
-								std::move(className),
-								_scriptFile,
-								_bundlesFile,
-								{},
-								{}));
+						extensions.push_back(ExtensionTaskDetails(
+							std::move(className), _scriptFile, _bundlesFile, {}, {}));
 					}
 				}
 			}
@@ -104,8 +87,7 @@ namespace Soup::Core::Generate
 			return extensions;
 		}
 
-		void EvaluateTask(const std::string& className)
-		{
+		void EvaluateTask(const std::string &className) {
 			// Load up the class
 			wrenEnsureSlots(_vm, 1);
 			wrenGetVariable(_vm, _scriptFile.ToString().c_str(), className.c_str(), 0);
@@ -125,8 +107,8 @@ namespace Soup::Core::Generate
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
 		}
 
-		void EvaluateFinalizerTask(const std::string& className, const ValueTable& state, const std::string& result)
-		{
+		void EvaluateFinalizerTask(
+			const std::string &className, const ValueTable &state, const std::string &result) {
 			// Load up the class
 			wrenEnsureSlots(_vm, 3);
 			wrenGetVariable(_vm, _scriptFile.ToString().c_str(), className.c_str(), 0);
@@ -152,8 +134,7 @@ namespace Soup::Core::Generate
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, evaluateMethodHandle));
 		}
 
-		ValueTable GetUpdatedActiveState()
-		{
+		ValueTable GetUpdatedActiveState() {
 			Log::Diag("GetUpdatedActiveState");
 			wrenEnsureSlots(_vm, 1);
 			wrenGetVariable(_vm, SoupModuleName, SoupClassName, 0);
@@ -170,13 +151,10 @@ namespace Soup::Core::Generate
 			wrenSetSlotHandle(_vm, 0, soupClassHandle);
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, activeStateGetterHandle));
 
-			try
-			{
+			try {
 				auto result = WrenValueTable::GetSlotTable(_vm, 0);
 				return result;
-			}
-			catch(const InvalidTypeException& exception)
-			{
+			} catch (const InvalidTypeException &exception) {
 				// Unwrap the type error
 				auto stringBuilder = std::stringstream();
 				stringBuilder << "Invalid type in ActiveState:" << exception.what();
@@ -184,8 +162,7 @@ namespace Soup::Core::Generate
 			}
 		}
 
-		ValueTable GetUpdatedSharedState()
-		{
+		ValueTable GetUpdatedSharedState() {
 			Log::Diag("GetUpdatedSharedState");
 			wrenEnsureSlots(_vm, 1);
 			wrenGetVariable(_vm, SoupModuleName, SoupClassName, 0);
@@ -202,13 +179,10 @@ namespace Soup::Core::Generate
 			wrenSetSlotHandle(_vm, 0, soupClassHandle);
 			WrenHelpers::ThrowIfFailed(wrenCall(_vm, sharedStateGetterHandle));
 
-			try
-			{
+			try {
 				auto result = WrenValueTable::GetSlotTable(_vm, 0);
 				return result;
-			}
-			catch(const InvalidTypeException& exception)
-			{
+			} catch (const InvalidTypeException &exception) {
 				// Unwrap the type error
 				auto stringBuilder = std::stringstream();
 				stringBuilder << "Invalid type in SharedState:" << exception.what();
@@ -217,28 +191,21 @@ namespace Soup::Core::Generate
 		}
 
 	private:
-		virtual bool IsBuiltInModule(std::string_view moduleName) override final
-		{
-			if (moduleName == std::string_view(SoupModuleName))
-			{
+		virtual bool IsBuiltInModule(std::string_view moduleName) override final {
+			if (moduleName == std::string_view(SoupModuleName)) {
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
 
-		virtual bool TryGetBuiltInModule(std::string_view moduleName, const char*& source) override final
-		{
+		virtual bool TryGetBuiltInModule(
+			std::string_view moduleName, const char *&source) override final {
 			// Inject Soup module
-			if (moduleName == SoupModuleName)
-			{
+			if (moduleName == SoupModuleName) {
 				source = GetSoupModuleSource();
 				return true;
-			}
-			else
-			{
+			} else {
 				source = nullptr;
 				return false;
 			}
@@ -248,13 +215,10 @@ namespace Soup::Core::Generate
 			std::string_view moduleName,
 			std::string_view className,
 			bool isStatic,
-			std::string_view signature) override final
-		{
+			std::string_view signature) override final {
 			// There is only one foreign method in the soup module.
-			if (moduleName == SoupModuleName)
-			{
-				if (className == SoupClassName && isStatic)
-				{
+			if (moduleName == SoupModuleName) {
+				if (className == SoupClassName && isStatic) {
 					if (signature == "loadGlobalState_()")
 						return SoupLoadGlobalState;
 					else if (signature == "loadActiveState_()")
@@ -275,8 +239,7 @@ namespace Soup::Core::Generate
 			return nullptr;
 		}
 
-		std::vector<std::string> CallRunBeforeGetter(WrenHandle* classHandle)
-		{
+		std::vector<std::string> CallRunBeforeGetter(WrenHandle *classHandle) {
 			// Call RunBefore
 			auto runBeforeGetterHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "runBefore"));
 
@@ -286,8 +249,7 @@ namespace Soup::Core::Generate
 			return WrenHelpers::GetSlotStringList(_vm, 0, 1);
 		}
 
-		std::vector<std::string> CallRunAfterGetter(WrenHandle* classHandle)
-		{
+		std::vector<std::string> CallRunAfterGetter(WrenHandle *classHandle) {
 			// Call RunAfter
 			auto runBeforeGetterHandle = SmartHandle(_vm, wrenMakeCallHandle(_vm, "runAfter"));
 
@@ -297,95 +259,87 @@ namespace Soup::Core::Generate
 			return WrenHelpers::GetSlotStringList(_vm, 0, 1);
 		}
 
-		void SoupLoadGlobalState()
-		{
-			try
-			{
+		void SoupLoadGlobalState() {
+			try {
 				Log::Diag("SoupLoadGlobalState");
 				if (_state == nullptr)
 					throw std::runtime_error("Cannot load GlobalState at this time");
 
 				WrenValueTable::SetSlotTable(_vm, 0, _state->GetGlobalState());
-			}
-			catch(const std::exception& ex)
-			{
+			} catch (const std::exception &ex) {
 				WrenHelpers::GenerateRuntimeError(_vm, ex.what());
 			}
 		}
 
-		void SoupLoadActiveState()
-		{
-			try
-			{
+		void SoupLoadActiveState() {
+			try {
 				Log::Diag("SoupLoadActiveState");
 				if (_state == nullptr)
 					throw std::runtime_error("Cannot load ActiveState at this time");
 
 				WrenValueTable::SetSlotTable(_vm, 0, _state->GetActiveState());
-			}
-			catch(const std::exception& exception)
-			{
+			} catch (const std::exception &exception) {
 				WrenHelpers::GenerateRuntimeError(_vm, exception.what());
 			}
 		}
 
-		void SoupLoadSharedState()
-		{
-			try
-			{
+		void SoupLoadSharedState() {
+			try {
 				Log::Diag("SoupLoadSharedState");
 				if (_state == nullptr)
 					throw std::runtime_error("Cannot load SharedState at this time");
 
 				WrenValueTable::SetSlotTable(_vm, 0, _state->GetSharedState());
-			}
-			catch(const std::exception& exception)
-			{
+			} catch (const std::exception &exception) {
 				WrenHelpers::GenerateRuntimeError(_vm, exception.what());
 			}
 		}
 
-		void SoupCreateOperation()
-		{
-			try
-			{
+		void SoupCreateOperation() {
+			try {
 				Log::Diag("SoupCreateOperation");
 				if (_state == nullptr)
 					throw std::runtime_error("Cannot CreateOperation at this time");
 
 				auto parameter1 = wrenGetSlotType(_vm, 1);
 				if (parameter1 != WREN_TYPE_STRING) {
-					throw std::runtime_error("SoupCreateOperation parameter 1 must be of type string");
+					throw std::runtime_error(
+						"SoupCreateOperation parameter 1 must be of type string");
 				}
 				auto title = std::string(wrenGetSlotString(_vm, 1));
 
 				auto parameter2 = wrenGetSlotType(_vm, 2);
 				if (parameter2 != WREN_TYPE_STRING) {
-					throw std::runtime_error("SoupCreateOperation parameter 2 must be of type string");
+					throw std::runtime_error(
+						"SoupCreateOperation parameter 2 must be of type string");
 				}
 				auto executable = std::string(wrenGetSlotString(_vm, 2));
 
 				auto parameter3 = wrenGetSlotType(_vm, 3);
 				if (parameter3 != WREN_TYPE_LIST) {
-					throw std::runtime_error("SoupCreateOperation parameter 3 must be of type list");
+					throw std::runtime_error(
+						"SoupCreateOperation parameter 3 must be of type list");
 				}
 				auto arguments = WrenHelpers::GetSlotStringList(_vm, 3, 7);
-				
+
 				auto parameter4 = wrenGetSlotType(_vm, 4);
 				if (parameter4 != WREN_TYPE_STRING) {
-					throw std::runtime_error("SoupCreateOperation parameter 4 must be of type string");
+					throw std::runtime_error(
+						"SoupCreateOperation parameter 4 must be of type string");
 				}
 				auto workingDirectory = std::string(wrenGetSlotString(_vm, 4));
 
 				auto parameter5 = wrenGetSlotType(_vm, 5);
 				if (parameter5 != WREN_TYPE_LIST) {
-					throw std::runtime_error("SoupCreateOperation parameter 5 must be of type list");
+					throw std::runtime_error(
+						"SoupCreateOperation parameter 5 must be of type list");
 				}
 				auto declaredInput = WrenHelpers::GetSlotStringList(_vm, 5, 7);
 
 				auto parameter6 = wrenGetSlotType(_vm, 6);
 				if (parameter6 != WREN_TYPE_LIST) {
-					throw std::runtime_error("SoupCreateOperation parameter 6 must be of type list");
+					throw std::runtime_error(
+						"SoupCreateOperation parameter 6 must be of type list");
 				}
 				auto declaredOutput = WrenHelpers::GetSlotStringList(_vm, 6, 7);
 
@@ -400,82 +354,69 @@ namespace Soup::Core::Generate
 				// No return value
 				wrenEnsureSlots(_vm, 1);
 				wrenSetSlotNull(_vm, 0);
-			}
-			catch(const std::exception& ex)
-			{
+			} catch (const std::exception &ex) {
 				WrenHelpers::GenerateRuntimeError(_vm, ex.what());
 			}
 		}
 
-		void SoupLogInfo()
-		{
+		void SoupLogInfo() {
 			auto message = wrenGetSlotString(_vm, 1);
 			Log::Info(message);
 			wrenSetSlotNull(_vm, 0);
 		}
 
-		void SoupLogWarning()
-		{
+		void SoupLogWarning() {
 			auto message = wrenGetSlotString(_vm, 1);
 			Log::Warning(message);
 			wrenSetSlotNull(_vm, 0);
 		}
 
-		void SoupLogError()
-		{
+		void SoupLogError() {
 			auto message = wrenGetSlotString(_vm, 1);
 			Log::Error(message);
 			wrenSetSlotNull(_vm, 0);
 		}
 
-		static void SoupLoadGlobalState(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupLoadGlobalState(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLoadGlobalState();
 		}
 
-		static void SoupLoadActiveState(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupLoadActiveState(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLoadActiveState();
 		}
 
-		static void SoupLoadSharedState(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupLoadSharedState(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLoadSharedState();
 		}
 
-		static void SoupCreateOperation(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupCreateOperation(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupCreateOperation();
 		}
 
-		static void SoupLogInfo(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupLogInfo(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLogInfo();
 		}
 
-		static void SoupLogWarning(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupLogWarning(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLogWarning();
 		}
 
-		static void SoupLogError(WrenVM* vm)
-		{
-			auto host = (GenerateHost*)wrenGetUserData(vm);
+		static void SoupLogError(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLogError();
 		}
 
-		static const char* GetSoupModuleSource()
-		{
+		static const char *GetSoupModuleSource() {
 			return soupModuleSource;
 		}
 
-		static inline const char* soupModuleSource =
+		static inline const char *soupModuleSource =
 			"class SoupTask {\n"
 			"	static runBefore { [] }\n"
 			"	static runAfter { [] }\n"
@@ -501,14 +442,18 @@ namespace Soup::Core::Generate
 			"		return __sharedState\n"
 			"	}\n"
 			"\n"
-			"	static createOperation(title, executable, arguments, workingDirectory, declaredInput, declaredOutput) {\n"
+			"	static createOperation(title, executable, arguments, workingDirectory, "
+			"declaredInput, declaredOutput) {\n"
 			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
 			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
 			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
-			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a string.\")\n"
+			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a "
+			"string.\")\n"
 			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
-			"		if (!(declaredOutput is List)) Fiber.abort(\"DeclaredOutput must be a list.\")\n"
-			"		createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
+			"		if (!(declaredOutput is List)) Fiber.abort(\"DeclaredOutput must be a "
+			"list.\")\n"
+			"		createOperation_(title, executable, arguments, workingDirectory, "
+			"declaredInput, declaredOutput)\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"
@@ -529,7 +474,8 @@ namespace Soup::Core::Generate
 			"	foreign static loadGlobalState_()\n"
 			"	foreign static loadActiveState_()\n"
 			"	foreign static loadSharedState_()\n"
-			"	foreign static createOperation_(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
+			"	foreign static createOperation_(title, executable, arguments, workingDirectory, "
+			"declaredInput, declaredOutput)\n"
 			"	foreign static info_(message)\n"
 			"	foreign static warning_(message)\n"
 			"	foreign static error_(message)\n"

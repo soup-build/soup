@@ -9,7 +9,8 @@ namespace Monitor::Windows {
 	public:
 		ConnectionManager()
 			: ConnectionManagerBase(),
-			  pipeHandle(INVALID_HANDLE_VALUE) {}
+			  pipeHandle(INVALID_HANDLE_VALUE) {
+		}
 
 	private:
 		virtual void Connect(int32_t traceProcessId, int32_t traceChildId) {

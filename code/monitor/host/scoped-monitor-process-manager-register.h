@@ -22,6 +22,8 @@ namespace Monitor {
 		/// <summary>
 		/// Finalizes an instance of the <see cref='ScopedMonitorProcessManagerRegister'/> class.
 		/// </summary>
-		~ScopedMonitorProcessManagerRegister() { IMonitorProcessManager::Register(nullptr); }
+		~ScopedMonitorProcessManagerRegister() {
+			IMonitorProcessManager::Register(nullptr);
+		}
 	};
 }

@@ -6,28 +6,24 @@
 #include "extension-manager.h"
 #include "generate-state.h"
 
-namespace Soup::Core::Generate
-{
-	class GenerateEngine
-	{
+namespace Soup::Core::Generate {
+	class GenerateEngine {
 	private:
 		FileSystemState _fileSystemState;
+
 	public:
-		GenerateEngine() :
-			_fileSystemState()
-		{
+		GenerateEngine()
+			: _fileSystemState() {
 		}
 
-		void Run(bool isFirstRun, const Path& soupTargetDirectory)
-		{
+		void Run(bool isFirstRun, const Path &soupTargetDirectory) {
 			// Run all build operations in the correct order with incremental build checks
 			Log::Diag("Build generate core: {}", soupTargetDirectory.ToString());
 
 			// Load the input file
 			auto inputFile = soupTargetDirectory + Build::Constants::GenerateInputFileName();
 			auto inputTable = ValueTable();
-			if (!ValueTableManager::TryLoadState(inputFile, inputTable))
-			{
+			if (!ValueTableManager::TryLoadState(inputFile, inputTable)) {
 				Log::Error("Failed to load the input file: {}", inputFile.ToString());
 				throw std::runtime_error("Failed to load input file.");
 			}
@@ -43,39 +39,38 @@ namespace Soup::Core::Generate
 			// Load the recipe file
 			auto recipeFile = packageRoot + Build::Constants::RecipeFileName();
 			Recipe recipe;
-			if (!RecipeExtensions::TryLoadRecipeFromFile(recipeFile, recipe))
-			{
+			if (!RecipeExtensions::TryLoadRecipeFromFile(recipeFile, recipe)) {
 				Log::Error("Failed to load the recipe: {}", recipeFile.ToString());
 				throw std::runtime_error("Failed to load recipe.");
 			}
 
 			// Load the input macro definition
 			auto generateMacros = std::map<std::string, std::string>();
-			for (auto& [key, value] : inputTable.at("GenerateMacros").AsTable())
+			for (auto &[key, value] : inputTable.at("GenerateMacros").AsTable())
 				generateMacros.emplace(key, value.AsString());
 
 			// Load the input macro definition
 			auto generateSubGraphMacros = std::map<std::string, std::string>();
-			for (auto& [key, value] : inputTable.at("GenerateSubGraphMacros").AsTable())
+			for (auto &[key, value] : inputTable.at("GenerateSubGraphMacros").AsTable())
 				generateSubGraphMacros.emplace(key, value.AsString());
 
 			// Load the input read access list
 			auto evaluateAllowedReadAccess = std::vector<Path>();
-			for (auto& value : inputTable.at("EvaluateReadAccess").AsList())
+			for (auto &value : inputTable.at("EvaluateReadAccess").AsList())
 				evaluateAllowedReadAccess.push_back(Path(value.AsString()));
 
 			// Load the input write access list
 			auto evaluateAllowedWriteAccess = std::vector<Path>();
-			for (auto& value : inputTable.at("EvaluateWriteAccess").AsList())
+			for (auto &value : inputTable.at("EvaluateWriteAccess").AsList())
 				evaluateAllowedWriteAccess.push_back(Path(value.AsString()));
 
 			// Load the input macro definition
 			auto evaluateMacros = std::map<std::string, std::string>();
-			for (auto& [key, value] : inputTable.at("EvaluateMacros").AsTable())
+			for (auto &[key, value] : inputTable.at("EvaluateMacros").AsTable())
 				evaluateMacros.emplace(key, value.AsString());
 
 			// Allow read access for all sdk directories
-			for (auto& value : sdkReadAccess)
+			for (auto &value : sdkReadAccess)
 				evaluateAllowedReadAccess.push_back(std::move(value));
 
 			// Setup a macro manager to resolve macros
@@ -84,14 +79,12 @@ namespace Soup::Core::Generate
 			auto evaluateMacroManager = MacroManager(evaluateMacros);
 
 			// Combine all the dependencies shared state
-			auto dependenciesSharedState = LoadDependenciesSharedState(
-				generateSubGraphMacroManager,
-				inputTable);
+			auto dependenciesSharedState =
+				LoadDependenciesSharedState(generateSubGraphMacroManager, inputTable);
 
 			// Generate the set of build extension libraries
-			auto buildExtensionLibraries = GenerateBuildExtensionSet(
-				generateMacroManager,
-				dependenciesSharedState);
+			auto buildExtensionLibraries =
+				GenerateBuildExtensionSet(generateMacroManager, dependenciesSharedState);
 
 			// Start a new global state
 			auto globalState = ValueTable();
@@ -104,79 +97,84 @@ namespace Soup::Core::Generate
 			globalState.emplace("Recipe", Value(std::move(recipeState)));
 
 			// Initialize input global state
-			for (auto& [key, value] : inputTable.at("GlobalState").AsTable())
-			{
+			for (auto &[key, value] : inputTable.at("GlobalState").AsTable()) {
 				globalState.emplace(key, std::move(value));
 			}
 
 			// Merge the dependencies state
-			auto& globalDependenciesTable = globalState.at("Dependencies").AsTable();
-			for (auto& [dependencyType, dependencyTypeValue] : dependenciesSharedState)
-			{
-				auto& globalDependenciesType = globalDependenciesTable.at(dependencyType).AsTable();
-				auto& sharedStateDependenciesType = dependencyTypeValue.AsTable();
-				for (auto& [dependencyName, dependencySharedState] : sharedStateDependenciesType)
-				{
-					auto& globalDependency = globalDependenciesType.at(dependencyName).AsTable();
+			auto &globalDependenciesTable = globalState.at("Dependencies").AsTable();
+			for (auto &[dependencyType, dependencyTypeValue] : dependenciesSharedState) {
+				auto &globalDependenciesType = globalDependenciesTable.at(dependencyType).AsTable();
+				auto &sharedStateDependenciesType = dependencyTypeValue.AsTable();
+				for (auto &[dependencyName, dependencySharedState] : sharedStateDependenciesType) {
+					auto &globalDependency = globalDependenciesType.at(dependencyName).AsTable();
 					globalDependency.emplace("SharedState", std::move(dependencySharedState));
 				}
 			}
 
-			if (!isFirstRun)
-			{
+			if (!isFirstRun) {
 				// Load up the preprocessor results
 				auto generatePhase1Result = GenerateResult();
-				auto generatePhase1ResultFile = soupTargetDirectory + Build::Constants::GeneratePhase1ResultFileName();
-				if (!GenerateResultManager::TryLoadState(generatePhase1ResultFile, generatePhase1Result, _fileSystemState))
-				{
-					Log::Error("Failed to load the result from phase 1: {}", generatePhase1ResultFile.ToString());
+				auto generatePhase1ResultFile =
+					soupTargetDirectory + Build::Constants::GeneratePhase1ResultFileName();
+				if (!GenerateResultManager::TryLoadState(
+						generatePhase1ResultFile, generatePhase1Result, _fileSystemState)) {
+					Log::Error(
+						"Failed to load the result from phase 1: {}",
+						generatePhase1ResultFile.ToString());
 					throw std::runtime_error("Failed to load phase 1 result.");
 				}
 
-				if (!generatePhase1Result.HasPreprocessor())
-				{
-					Log::Error("Phase 1 was not for a preprocessor, why are you running a phase 2?");
+				if (!generatePhase1Result.HasPreprocessor()) {
+					Log::Error(
+						"Phase 1 was not for a preprocessor, why are you running a phase 2?");
 					throw std::runtime_error("Invalid phase 1 result.");
 				}
 
 				auto evaluatePhase1Results = OperationResults();
-				auto evaluatePhase1ResultsFile = soupTargetDirectory + Build::Constants::EvaluatePhase1ResultsFileName();
-				if (!OperationResultsManager::TryLoadState(evaluatePhase1ResultsFile, evaluatePhase1Results, _fileSystemState))
-				{
-					Log::Error("Failed to load the evaluate results from phase 1: {}", evaluatePhase1ResultsFile.ToString());
+				auto evaluatePhase1ResultsFile =
+					soupTargetDirectory + Build::Constants::EvaluatePhase1ResultsFileName();
+				if (!OperationResultsManager::TryLoadState(
+						evaluatePhase1ResultsFile, evaluatePhase1Results, _fileSystemState)) {
+					Log::Error(
+						"Failed to load the evaluate results from phase 1: {}",
+						evaluatePhase1ResultsFile.ToString());
 					throw std::runtime_error("Failed to load phase 1 evaluate results.");
 				}
 
 				auto preprocessorResults = ValueList();
-				for (auto& [_, operation] : generatePhase1Result.GetGraph().GetOperations())
-				{
+				for (auto &[_, operation] : generatePhase1Result.GetGraph().GetOperations()) {
 					// Get the matching operation result
-					OperationResult* operationResult;
-					if (!evaluatePhase1Results.TryFindResult(operation.Id, operationResult))
-					{
-						Log::Error("Failed to load the evaluate results from phase 1: {}", evaluatePhase1ResultsFile.ToString());
+					OperationResult *operationResult;
+					if (!evaluatePhase1Results.TryFindResult(operation.Id, operationResult)) {
+						Log::Error(
+							"Failed to load the evaluate results from phase 1: {}",
+							evaluatePhase1ResultsFile.ToString());
 						throw std::runtime_error("Failed to load phase 1 evaluate results.");
 					}
 
-					if (!operationResult->ObservedValues.has_value())
-					{
-						Log::Error("Preprocessor operation is missing observed values: {}", operation.Id);
-						throw std::runtime_error("Preprocessor operation is missing observed values.");
+					if (!operationResult->ObservedValues.has_value()) {
+						Log::Error(
+							"Preprocessor operation is missing observed values: {}", operation.Id);
+						throw std::runtime_error(
+							"Preprocessor operation is missing observed values.");
 					}
 
 					auto preprocessorOperationResult = ValueTable();
 
 					preprocessorOperationResult.emplace("Title", Value(operation.Title));
-					preprocessorOperationResult.emplace("Executable", Value(operation.Command.Executable.ToString()));
+					preprocessorOperationResult.emplace(
+						"Executable", Value(operation.Command.Executable.ToString()));
 
 					auto operationArguments = ValueList();
-					for (auto& argument : operation.Command.Arguments)
-					{
+					for (auto &argument : operation.Command.Arguments) {
 						operationArguments.push_back(Value(std::move(argument)));
 					}
 
-					preprocessorOperationResult.emplace("Arguments", Value(std::move(operationArguments)));
-					preprocessorOperationResult.emplace("Result", Value(operationResult->ObservedValues.value()));
+					preprocessorOperationResult.emplace(
+						"Arguments", Value(std::move(operationArguments)));
+					preprocessorOperationResult.emplace(
+						"Result", Value(operationResult->ObservedValues.value()));
 
 					preprocessorResults.push_back(Value(std::move(preprocessorOperationResult)));
 				}
@@ -188,31 +186,27 @@ namespace Soup::Core::Generate
 			auto extensionManager = ExtensionManager();
 
 			// Run all build extension register callbacks
-			for (auto buildExtension : buildExtensionLibraries)
-			{
+			for (auto buildExtension : buildExtensionLibraries) {
 				Log::Info("Loading Extension Script: {}", buildExtension.first.ToString());
-				if (buildExtension.second.has_value())
-				{
+				if (buildExtension.second.has_value()) {
 					Log::Info("Bundles: {}", buildExtension.second.value().ToString());
 				}
 
 				// Create a temporary Wren Host to discover all build extensions
-				auto host = std::make_unique<GenerateHost>(buildExtension.first, buildExtension.second);
+				auto host =
+					std::make_unique<GenerateHost>(buildExtension.first, buildExtension.second);
 				host->InterpretMain();
 
 				// Check if there are optional preprocessing tasks on the first run
-				if (isFirstRun)
-				{
+				if (isFirstRun) {
 					auto preprocessorTasks = host->DiscoverPreprocessorTasks();
-					for (auto& task : preprocessorTasks)
-					{
+					for (auto &task : preprocessorTasks) {
 						extensionManager.RegisterPreprocessorTask(std::move(task));
 					}
 				}
 
 				auto extensionTasks = host->DiscoverTasks();
-				for (auto& task : extensionTasks)
-				{
+				for (auto &task : extensionTasks) {
 					extensionManager.RegisterExtensionTask(std::move(task));
 				}
 			}
@@ -224,26 +218,22 @@ namespace Soup::Core::Generate
 				evaluateAllowedReadAccess,
 				evaluateAllowedWriteAccess);
 
-			if (extensionManager.HasPreprocessorTasks())
-			{
+			if (extensionManager.HasPreprocessorTasks()) {
 				extensionManager.ExecutePreprocessorTasks(buildState);
-			}
-			else
-			{
+			} else {
 				extensionManager.ExecuteExtensionTasks(buildState);
 			}
 
 			// Grab the build results
 			auto generateInfoTable = buildState.GetGenerateInfo();
 			auto generateResult = GenerateResult(
-				buildState.BuildOperationGraph(),
-				extensionManager.HasPreprocessorTasks());
+				buildState.BuildOperationGraph(), extensionManager.HasPreprocessorTasks());
 			auto sharedState = buildState.GetSharedState();
 
 			// Save the runtime information so Soup View can easily visualize runtime
-			auto generateInfoStateFile = isFirstRun ?
-				soupTargetDirectory + Build::Constants::GeneratePhase1InfoFileName()
-				: soupTargetDirectory + Build::Constants::GeneratePhase2InfoFileName();
+			auto generateInfoStateFile =
+				isFirstRun ? soupTargetDirectory + Build::Constants::GeneratePhase1InfoFileName()
+						   : soupTargetDirectory + Build::Constants::GeneratePhase2InfoFileName();
 			Log::Info("Save Generate Info State: {}", generateInfoStateFile.ToString());
 			ValueTableManager::SaveState(generateInfoStateFile, generateInfoTable);
 
@@ -251,25 +241,26 @@ namespace Soup::Core::Generate
 			Log::Diag("Resolve build macros in evaluate graph");
 			ResolveMacros(evaluateMacroManager, generateResult);
 
-			if (isFirstRun)
-			{
+			if (isFirstRun) {
 				// Save the operation graph so the evaluate phase can load it
-				auto generatePhase1ResultFile = soupTargetDirectory + Build::Constants::GeneratePhase1ResultFileName();
+				auto generatePhase1ResultFile =
+					soupTargetDirectory + Build::Constants::GeneratePhase1ResultFileName();
 				Log::Info("Save Generate Phase 1 Result: {}", generatePhase1ResultFile.ToString());
-				GenerateResultManager::SaveState(generatePhase1ResultFile, generateResult, _fileSystemState);
-			}
-			else
-			{
+				GenerateResultManager::SaveState(
+					generatePhase1ResultFile, generateResult, _fileSystemState);
+			} else {
 				// Save the operation graph so the evaluate phase can load it
-				auto generatePhase2ResultFile = soupTargetDirectory + Build::Constants::GeneratePhase2ResultFileName();
+				auto generatePhase2ResultFile =
+					soupTargetDirectory + Build::Constants::GeneratePhase2ResultFileName();
 				Log::Info("Save Generate Phase 2 Result: {}", generatePhase2ResultFile.ToString());
-				OperationGraphManager::SaveState(generatePhase2ResultFile, generateResult.GetGraph(), _fileSystemState);
+				OperationGraphManager::SaveState(
+					generatePhase2ResultFile, generateResult.GetGraph(), _fileSystemState);
 			}
 
-			if (!generateResult.HasPreprocessor() || !isFirstRun)
-			{
+			if (!generateResult.HasPreprocessor() || !isFirstRun) {
 				// Save the shared state that is to be passed to the downstream builds
-				auto sharedStateFile = soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
+				auto sharedStateFile =
+					soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
 				Log::Info("Save Generate Shared State: {}", sharedStateFile.ToString());
 				ValueTableManager::SaveState(sharedStateFile, sharedState);
 			}
@@ -282,31 +273,24 @@ namespace Soup::Core::Generate
 		/// Load Local User Config and process any known state
 		/// </summary>
 		static void LoadLocalUserConfig(
-			const Path& userDataPath,
-			ValueList& sdkParameters,
-			std::vector<Path>& sdkReadAccess)
-		{
+			const Path &userDataPath, ValueList &sdkParameters, std::vector<Path> &sdkReadAccess) {
 			// Load the local user config
 			auto localUserConfigPath = userDataPath + Build::Constants::LocalUserConfigFileName();
 			LocalUserConfig localUserConfig = {};
-			if (!LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(localUserConfigPath, localUserConfig))
-			{
+			if (!LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(
+					localUserConfigPath, localUserConfig)) {
 				Log::Warning("Local User Config invalid");
 			}
 
 			// Process the SDKs
-			if (localUserConfig.HasSDKs())
-			{
+			if (localUserConfig.HasSDKs()) {
 				Log::Info("Checking SDKs for read access");
 				auto sdks = localUserConfig.GetSDKs();
-				for (auto& sdk : sdks)
-				{
+				for (auto &sdk : sdks) {
 					auto sdkName = sdk.GetName();
 					Log::Info("Found SDK: {}", sdkName);
-					if (sdk.HasSourceDirectories())
-					{
-						for (auto& sourceDirectory : sdk.GetSourceDirectories())
-						{
+					if (sdk.HasSourceDirectories()) {
+						for (auto &sourceDirectory : sdk.GetSourceDirectories()) {
 							Log::Info("  Read Access: {}", sourceDirectory.ToString());
 							sdkReadAccess.push_back(sourceDirectory);
 						}
@@ -314,8 +298,7 @@ namespace Soup::Core::Generate
 
 					auto sdkParameter = ValueTable();
 					sdkParameter.emplace("Name", Value(sdkName));
-					if (sdk.HasProperties())
-					{
+					if (sdk.HasProperties()) {
 						sdkParameter.emplace(
 							"Properties",
 							RecipeBuildStateConverter::ConvertToBuildState(sdk.GetProperties()));
@@ -327,43 +310,42 @@ namespace Soup::Core::Generate
 		}
 
 		/// <summary>
-		/// Using the parameters to resolve the dependency output folders, load up the shared state table and
-		/// combine them into a single value table to be used as input the this generate phase.
+		/// Using the parameters to resolve the dependency output folders, load up the shared state
+		/// table and combine them into a single value table to be used as input the this generate
+		/// phase.
 		/// </summary>
 		static ValueTable LoadDependenciesSharedState(
-			MacroManager& generateSubGraphMacroManager,
-			const ValueTable& inputTable)
-		{
+			MacroManager &generateSubGraphMacroManager, const ValueTable &inputTable) {
 			auto hackMacros = std::map<std::string, std::string>({
-				{ "/(TARGET_Cpp)/", "/(TARGET_Soup|Cpp)/" },
-				{ "/(TARGET_C)/", "/(TARGET_Soup|C)/" },
-				{ "/(TARGET_Wren)/", "/(TARGET_Soup|Wren)/" },
-				{ "/(TARGET_mkdir)/", "/(TARGET_mwasplund|mkdir)/" },
-				{ "/(TARGET_copy)/", "/(TARGET_mwasplund|copy)/" },
-				{ "/(TARGET_parse.modules)/", "/(TARGET_mwasplund|parse.modules)/" },
+				{"/(TARGET_Cpp)/", "/(TARGET_Soup|Cpp)/"},
+				{"/(TARGET_C)/", "/(TARGET_Soup|C)/"},
+				{"/(TARGET_Wren)/", "/(TARGET_Soup|Wren)/"},
+				{"/(TARGET_mkdir)/", "/(TARGET_mwasplund|mkdir)/"},
+				{"/(TARGET_copy)/", "/(TARGET_mwasplund|copy)/"},
+				{"/(TARGET_parse.modules)/", "/(TARGET_mwasplund|parse.modules)/"},
 			});
 			auto hackMacroManager = MacroManager(hackMacros);
 
 			auto sharedDependenciesTable = ValueTable();
 			auto dependencyTableValue = inputTable.find("Dependencies");
-			if (dependencyTableValue != inputTable.end())
-			{
-				auto& dependenciesTable = dependencyTableValue->second.AsTable();
-				for (auto& [dependencyType, dependencyTypeValue] : dependenciesTable)
-				{
+			if (dependencyTableValue != inputTable.end()) {
+				auto &dependenciesTable = dependencyTableValue->second.AsTable();
+				for (auto &[dependencyType, dependencyTypeValue] : dependenciesTable) {
 					bool isSubGraphType = dependencyType == "Build" || dependencyType == "Tool";
-					auto& dependencies = dependencyTypeValue.AsTable();
-					for (auto& [dependencyName, dependencyValue] : dependencies)
-					{
-						auto& dependency = dependencyValue.AsTable();
-						auto soupTargetDirectory = Path(dependency.at("SoupTargetDirectory").AsString());
-						auto sharedStateFile = soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
+					auto &dependencies = dependencyTypeValue.AsTable();
+					for (auto &[dependencyName, dependencyValue] : dependencies) {
+						auto &dependency = dependencyValue.AsTable();
+						auto soupTargetDirectory =
+							Path(dependency.at("SoupTargetDirectory").AsString());
+						auto sharedStateFile =
+							soupTargetDirectory + Build::Constants::GenerateSharedStateFileName();
 
 						// Load the shared state file
 						auto sharedStateTable = ValueTable();
-						if (!ValueTableManager::TryLoadState(sharedStateFile, sharedStateTable))
-						{
-							Log::Error("Failed to load the shared state file: {}", sharedStateFile.ToString());
+						if (!ValueTableManager::TryLoadState(sharedStateFile, sharedStateTable)) {
+							Log::Error(
+								"Failed to load the shared state file: {}",
+								sharedStateFile.ToString());
 							throw std::runtime_error("Failed to load shared state file.");
 						}
 
@@ -371,17 +353,16 @@ namespace Soup::Core::Generate
 						sharedStateTable = ResolveMacros(hackMacroManager, sharedStateTable);
 
 						// Ensure SubGraph macros are unique
-						if (isSubGraphType)
-						{
-							sharedStateTable = ResolveMacros(generateSubGraphMacroManager, sharedStateTable);
+						if (isSubGraphType) {
+							sharedStateTable =
+								ResolveMacros(generateSubGraphMacroManager, sharedStateTable);
 						}
 
 						// Add the shared build state from this child build into the correct
 						// table depending on the build type
-						auto& typedDependenciesTable = EnsureValueTable(sharedDependenciesTable, dependencyType);
-						typedDependenciesTable.emplace(
-							dependencyName,
-							Value(sharedStateTable));
+						auto &typedDependenciesTable =
+							EnsureValueTable(sharedDependenciesTable, dependencyType);
+						typedDependenciesTable.emplace(dependencyName, Value(sharedStateTable));
 					}
 				}
 			}
@@ -389,15 +370,11 @@ namespace Soup::Core::Generate
 			return sharedDependenciesTable;
 		}
 
-		static ValueTable& EnsureValueTable(ValueTable& table, const std::string& key)
-		{
+		static ValueTable &EnsureValueTable(ValueTable &table, const std::string &key) {
 			auto findResult = table.find(key);
-			if (findResult != table.end())
-			{
+			if (findResult != table.end()) {
 				return findResult->second.AsTable();
-			}
-			else
-			{
+			} else {
 				auto insertResult = table.emplace(key, Value(ValueTable()));
 				return insertResult.first->second.AsTable();
 			}
@@ -407,87 +384,70 @@ namespace Soup::Core::Generate
 		/// Generate the collection of build extensions
 		/// </summary>
 		static std::vector<std::pair<Path, std::optional<Path>>> GenerateBuildExtensionSet(
-			MacroManager& macroManager,
-			const ValueTable& dependenciesSharedState)
-		{
+			MacroManager &macroManager, const ValueTable &dependenciesSharedState) {
 			auto buildExtensionLibraries = std::vector<std::pair<Path, std::optional<Path>>>();
 
 			// Check for any dynamic libraries in the shared state
 			Log::Info("Check Extensions");
 			auto buildDependenciesValue = dependenciesSharedState.find("Build");
-			if (buildDependenciesValue != dependenciesSharedState.end())
-			{
-				for (auto& [dependencyKey, dependencyValue] : buildDependenciesValue->second.AsTable())
-				{
+			if (buildDependenciesValue != dependenciesSharedState.end()) {
+				for (auto &[dependencyKey, dependencyValue] :
+					 buildDependenciesValue->second.AsTable()) {
 					Log::Info("Check Build Dependency: {}", dependencyKey);
-					if (dependencyValue.IsTable())
-					{
-						auto& dependency = dependencyValue.AsTable();
+					if (dependencyValue.IsTable()) {
+						auto &dependency = dependencyValue.AsTable();
 						auto buildTableValue = dependency.find("Build");
-						if (buildTableValue != dependency.end())
-						{
-							auto& buildTable = buildTableValue->second.AsTable();
+						if (buildTableValue != dependency.end()) {
+							auto &buildTable = buildTableValue->second.AsTable();
 
 							Path targetDirectory;
 							auto targetDirectoryValue = buildTable.find("TargetDirectory");
-							if (targetDirectoryValue != buildTable.end())
-							{
-								if (targetDirectoryValue->second.IsString())
-								{
-									auto macroTargetDirectory = targetDirectoryValue->second.AsString();
-									targetDirectory = Path(macroManager.ResolveMacros(macroTargetDirectory));
-								}
-								else
-								{
-									Log::Warning("Build dependency TargetDirectory property was not a string.");
+							if (targetDirectoryValue != buildTable.end()) {
+								if (targetDirectoryValue->second.IsString()) {
+									auto macroTargetDirectory =
+										targetDirectoryValue->second.AsString();
+									targetDirectory =
+										Path(macroManager.ResolveMacros(macroTargetDirectory));
+								} else {
+									Log::Warning(
+										"Build dependency TargetDirectory property was not a "
+										"string.");
 								}
 							}
 
 							std::optional<Path> moduleBundle = std::nullopt;
 							auto moduleBundleValue = buildTable.find("ModuleBundle");
-							if (moduleBundleValue != buildTable.end())
-							{
-								if (moduleBundleValue->second.IsString())
-								{
+							if (moduleBundleValue != buildTable.end()) {
+								if (moduleBundleValue->second.IsString()) {
 									auto macroModuleBundle = moduleBundleValue->second.AsString();
-									moduleBundle = Path(macroManager.ResolveMacros(macroModuleBundle));
-								}
-								else
-								{
-									Log::Warning("Build dependency ModuleBundle property was not a string.");
+									moduleBundle =
+										Path(macroManager.ResolveMacros(macroModuleBundle));
+								} else {
+									Log::Warning(
+										"Build dependency ModuleBundle property was not a string.");
 								}
 							}
 
 							auto sourceValue = buildTable.find("Source");
-							if (sourceValue != buildTable.end())
-							{
-								if (sourceValue->second.IsList())
-								{
+							if (sourceValue != buildTable.end()) {
+								if (sourceValue->second.IsList()) {
 									auto files = std::vector<Path>();
-									for (auto& file : sourceValue->second.AsList())
-									{
+									for (auto &file : sourceValue->second.AsList()) {
 										auto scriptFile = targetDirectory + Path(file.AsString());
 										buildExtensionLibraries.push_back(
 											std::make_pair(std::move(scriptFile), moduleBundle));
 									}
+								} else {
+									Log::Warning(
+										"Build dependency Source property was not a list.");
 								}
-								else
-								{
-									Log::Warning("Build dependency Source property was not a list.");
-								}
-							}
-							else
-							{
+							} else {
 								Log::Warning("Found build dependency with no target file.");
 							}
-						}
-						else
-						{
+						} else {
 							Log::Warning("Found build dependency with no build table.");
 						}
-					}
-					else
-					{
+					} else {
 						Log::Warning("Dependency shared state was not a table.");
 					}
 				}
@@ -496,15 +456,13 @@ namespace Soup::Core::Generate
 			return buildExtensionLibraries;
 		}
 
-		void ResolveMacros(
-			MacroManager& macroManager,
-			GenerateResult& generateResult)
-		{
-			for (auto& [operationId, operation] : generateResult.GetGraph().GetOperations())
-			{
+		void ResolveMacros(MacroManager &macroManager, GenerateResult &generateResult) {
+			for (auto &[operationId, operation] : generateResult.GetGraph().GetOperations()) {
 				ResolveMacros(macroManager, operation.Command.Arguments);
-				operation.Command.WorkingDirectory = macroManager.ResolveMacros(std::move(operation.Command.WorkingDirectory));
-				operation.Command.Executable = macroManager.ResolveMacros(std::move(operation.Command.Executable));
+				operation.Command.WorkingDirectory =
+					macroManager.ResolveMacros(std::move(operation.Command.WorkingDirectory));
+				operation.Command.Executable =
+					macroManager.ResolveMacros(std::move(operation.Command.Executable));
 				ResolveMacros(macroManager, operation.DeclaredInput);
 				ResolveMacros(macroManager, operation.DeclaredOutput);
 				ResolveMacros(macroManager, operation.ReadAccess);
@@ -512,30 +470,24 @@ namespace Soup::Core::Generate
 			}
 		}
 
-		void ResolveMacros(MacroManager& macroManager, std::vector<std::string>& value)
-		{
-			for(size_t i = 0; i < value.size(); i++)
-			{
+		void ResolveMacros(MacroManager &macroManager, std::vector<std::string> &value) {
+			for (size_t i = 0; i < value.size(); i++) {
 				auto resolvedValue = macroManager.ResolveMacros(value[i]);
 				value[i] = std::move(resolvedValue);
 			}
 		}
 
-		void ResolveMacros(MacroManager& macroManager, std::vector<FileId>& value)
-		{
-			for(size_t i = 0; i < value.size(); i++)
-			{
+		void ResolveMacros(MacroManager &macroManager, std::vector<FileId> &value) {
+			for (size_t i = 0; i < value.size(); i++) {
 				Path file = _fileSystemState.GetFilePath(value[i]);
 				auto resolvedFile = macroManager.ResolveMacros(file);
 				value[i] = _fileSystemState.ToFileId(resolvedFile);
 			}
 		}
 
-		static ValueTable ResolveMacros(MacroManager& macroManager, const ValueTable& table)
-		{
+		static ValueTable ResolveMacros(MacroManager &macroManager, const ValueTable &table) {
 			auto result = ValueTable();
-			for (auto& [key, value] : table)
-			{
+			for (auto &[key, value] : table) {
 				// Resolve the key
 				auto resolvedKey = macroManager.ResolveMacros(key);
 
@@ -548,21 +500,17 @@ namespace Soup::Core::Generate
 			return result;
 		}
 
-		static ValueList ResolveMacros(MacroManager& macroManager, const ValueList& list)
-		{
+		static ValueList ResolveMacros(MacroManager &macroManager, const ValueList &list) {
 			auto result = ValueList();
-			for (auto& value : list)
-			{
+			for (auto &value : list) {
 				result.push_back(ResolveMacros(macroManager, value));
 			}
 
 			return result;
 		}
 
-		static Value ResolveMacros(MacroManager& macroManager, const Value& value)
-		{
-			switch (value.GetType())
-			{
+		static Value ResolveMacros(MacroManager &macroManager, const Value &value) {
+			switch (value.GetType()) {
 				case ValueType::Table:
 					return Value(ResolveMacros(macroManager, value.AsTable()));
 				case ValueType::List:

@@ -10,7 +10,8 @@ namespace Monitor::Windows {
 
 	public:
 		WindowsSystemAccessMonitor(std::shared_ptr<ISystemAccessMonitor> monitor)
-			: _monitor(std::move(monitor)) {}
+			: _monitor(std::move(monitor)) {
+		}
 
 		void OnInitialize() override final {
 			Log::Diag("WindowsSystemAccessMonitor::OnInitialize");
@@ -25,9 +26,11 @@ namespace Monitor::Windows {
 		}
 
 		// FileApi
-		void OnAreFileApisANSI(bool /*result*/) override final {}
+		void OnAreFileApisANSI(bool /*result*/) override final {
+		}
 
-		void OnCompareFileTime(int32_t /*result*/) override final {}
+		void OnCompareFileTime(int32_t /*result*/) override final {
+		}
 
 		void OnCreateDirectoryA(
 			std::string_view pathName, bool /*result*/, bool wasBlocked) override final {
@@ -107,7 +110,8 @@ namespace Monitor::Windows {
 			uint32_t /*flags*/,
 			std::wstring_view /*deviceName*/,
 			std::wstring_view /*targetPath*/,
-			bool /*result*/) override final {}
+			bool /*result*/) override final {
+		}
 
 		void OnDeleteFileA(
 			std::string_view fileName, bool /*result*/, bool wasBlocked) override final {
@@ -120,13 +124,17 @@ namespace Monitor::Windows {
 		}
 
 		void OnDeleteVolumeMountPointW(
-			std::wstring_view /*volumeMountPoint*/, bool /*result*/) override final {}
+			std::wstring_view /*volumeMountPoint*/, bool /*result*/) override final {
+		}
 
-		void OnFileTimeToLocalFileTime(bool /*result*/) override final {}
+		void OnFileTimeToLocalFileTime(bool /*result*/) override final {
+		}
 
-		void OnFindClose(bool /*result*/) override final {}
+		void OnFindClose(bool /*result*/) override final {
+		}
 
-		void OnFindCloseChangeNotification(bool /*result*/) override final {}
+		void OnFindCloseChangeNotification(bool /*result*/) override final {
+		}
 
 		void OnFindFirstChangeNotificationA(
 			std::string_view /*pathName*/,
@@ -167,23 +175,32 @@ namespace Monitor::Windows {
 			// TODO: Track search /*path*/s
 		}
 
-		void OnFindFirstVolumeW(std::wstring_view /*fileName*/) override final {}
+		void OnFindFirstVolumeW(std::wstring_view /*fileName*/) override final {
+		}
 
-		void OnFindNextChangeNotification(bool /*result*/) override final {}
+		void OnFindNextChangeNotification(bool /*result*/) override final {
+		}
 
-		void OnFindNextFileA(bool /*result*/) override final {}
+		void OnFindNextFileA(bool /*result*/) override final {
+		}
 
-		void OnFindNextFileW(bool /*result*/) override final {}
+		void OnFindNextFileW(bool /*result*/) override final {
+		}
 
-		void OnFindNextFileNameW(bool /*result*/) override final {}
+		void OnFindNextFileNameW(bool /*result*/) override final {
+		}
 
-		void OnFindNextStreamW(bool /*result*/) override final {}
+		void OnFindNextStreamW(bool /*result*/) override final {
+		}
 
-		void OnFindNextVolumeW(bool /*result*/) override final {}
+		void OnFindNextVolumeW(bool /*result*/) override final {
+		}
 
-		void OnFindVolumeClose(bool /*result*/) override final {}
+		void OnFindVolumeClose(bool /*result*/) override final {
+		}
 
-		void OnFlushFileBuffers(bool /*result*/) override final {}
+		void OnFlushFileBuffers(bool /*result*/) override final {
+		}
 
 		void OnGetCompressedFileSizeA(
 			std::string_view /*fileName*/, uint32_t /*result*/) override final {
@@ -196,22 +213,28 @@ namespace Monitor::Windows {
 		}
 
 		void OnGetDiskFreeSpaceA(
-			std::string_view /*rootPathName*/, bool /*result*/) override final {}
+			std::string_view /*rootPathName*/, bool /*result*/) override final {
+		}
 
 		void OnGetDiskFreeSpaceW(
-			std::wstring_view /*rootPathName*/, bool /*result*/) override final {}
+			std::wstring_view /*rootPathName*/, bool /*result*/) override final {
+		}
 
 		void OnGetDiskFreeSpaceExA(
-			std::string_view /*directoryName*/, bool /*result*/) override final {}
+			std::string_view /*directoryName*/, bool /*result*/) override final {
+		}
 
 		void OnGetDiskFreeSpaceExW(
-			std::wstring_view /*directoryName*/, bool /*result*/) override final {}
+			std::wstring_view /*directoryName*/, bool /*result*/) override final {
+		}
 
 		void OnGetDriveTypeA(
-			std::string_view /*rootPathName*/, uint32_t /*result*/) override final {}
+			std::string_view /*rootPathName*/, uint32_t /*result*/) override final {
+		}
 
 		void OnGetDriveTypeW(
-			std::wstring_view /*rootPathName*/, uint32_t /*result*/) override final {}
+			std::wstring_view /*rootPathName*/, uint32_t /*result*/) override final {
+		}
 
 		void OnGetFileAttributesA(
 			std::string_view fileName, uint32_t result, bool wasBlocked) override final {
@@ -235,19 +258,26 @@ namespace Monitor::Windows {
 			TouchFileRead(fileName, result, wasBlocked);
 		}
 
-		void OnGetFileInformationByHandle(bool /*result*/) override final {}
+		void OnGetFileInformationByHandle(bool /*result*/) override final {
+		}
 
-		void OnGetFileSize(uint32_t /*result*/) override final {}
+		void OnGetFileSize(uint32_t /*result*/) override final {
+		}
 
-		void OnGetFileSizeEx(uint32_t /*result*/) override final {}
+		void OnGetFileSizeEx(uint32_t /*result*/) override final {
+		}
 
-		void OnGetFileTime(bool /*result*/) override final {}
+		void OnGetFileTime(bool /*result*/) override final {
+		}
 
-		void OnGetFileType(uint32_t /*result*/) override final {}
+		void OnGetFileType(uint32_t /*result*/) override final {
+		}
 
-		void OnGetFinalPathNameByHandleA(uint32_t /*result*/) override final {}
+		void OnGetFinalPathNameByHandleA(uint32_t /*result*/) override final {
+		}
 
-		void OnGetFinalPathNameByHandleW(uint32_t /*result*/) override final {}
+		void OnGetFinalPathNameByHandleW(uint32_t /*result*/) override final {
+		}
 
 		void OnGetFullPathNameA(std::string_view /*fileName*/, uint32_t /*result*/) override final {
 		}
@@ -255,72 +285,95 @@ namespace Monitor::Windows {
 		void OnGetFullPathNameW(
 			std::wstring_view /*fileName*/,
 			std::wstring_view /*buffer*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
-		void OnGetLogicalDrives(uint32_t /*result*/) override final {}
+		void OnGetLogicalDrives(uint32_t /*result*/) override final {
+		}
 
 		void OnGetLogicalDriveStringsW(
-			std::wstring_view /*buffer*/, uint32_t /*result*/) override final {}
+			std::wstring_view /*buffer*/, uint32_t /*result*/) override final {
+		}
 
 		void OnGetLongPathNameA(
 			std::string_view /*shortPath*/,
 			std::string_view /*longPath*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
 		void OnGetLongPathNameW(
 			std::wstring_view /*shortPath*/,
 			std::wstring_view /*longPath*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
 		void OnGetShortPathNameW(
 			std::wstring_view /*longPath*/,
 			std::wstring_view /*shortPath*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
 		void OnGetTempFileNameA(
 			std::string_view /*pathName*/,
 			std::string_view /*prefixString*/,
 			uint32_t /*unique*/,
 			std::string_view /*tempFileName*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
 		void OnGetTempFileNameW(
 			std::wstring_view /*pathName*/,
 			std::wstring_view /*prefixString*/,
 			uint32_t /*unique*/,
 			std::wstring_view /*tempFileName*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
-		void OnGetTempPathA(std::string_view /*buffer*/, uint32_t /*result*/) override final {}
+		void OnGetTempPathA(std::string_view /*buffer*/, uint32_t /*result*/) override final {
+		}
 
-		void OnGetTempPathW(std::wstring_view /*buffer*/, uint32_t /*result*/) override final {}
+		void OnGetTempPathW(std::wstring_view /*buffer*/, uint32_t /*result*/) override final {
+		}
 
-		void OnGetVolumeInformationA(bool /*result*/) override final {}
+		void OnGetVolumeInformationA(bool /*result*/) override final {
+		}
 
-		void OnGetVolumeInformationW(bool /*result*/) override final {}
+		void OnGetVolumeInformationW(bool /*result*/) override final {
+		}
 
-		void OnGetVolumeInformationByHandleW(bool /*result*/) override final {}
+		void OnGetVolumeInformationByHandleW(bool /*result*/) override final {
+		}
 
-		void OnGetVolumeNameForVolumeMountPointW(bool /*result*/) override final {}
+		void OnGetVolumeNameForVolumeMountPointW(bool /*result*/) override final {
+		}
 
-		void OnGetVolumePathNamesForVolumeNameW(bool /*result*/) override final {}
+		void OnGetVolumePathNamesForVolumeNameW(bool /*result*/) override final {
+		}
 
-		void OnGetVolumePathNameW(std::wstring_view /*fileName*/, bool /*result*/) override final {}
+		void OnGetVolumePathNameW(std::wstring_view /*fileName*/, bool /*result*/) override final {
+		}
 
-		void OnLocalFileTimeToFileTime(bool /*result*/) override final {}
+		void OnLocalFileTimeToFileTime(bool /*result*/) override final {
+		}
 
-		void OnLockFile(bool /*result*/) override final {}
+		void OnLockFile(bool /*result*/) override final {
+		}
 
-		void OnLockFileEx(bool /*result*/) override final {}
+		void OnLockFileEx(bool /*result*/) override final {
+		}
 
 		void OnQueryDosDeviceW(
-			std::wstring_view /*deviceName*/, uint32_t /*result*/) override final {}
+			std::wstring_view /*deviceName*/, uint32_t /*result*/) override final {
+		}
 
-		void OnReadFile(bool /*result*/) override final {}
+		void OnReadFile(bool /*result*/) override final {
+		}
 
-		void OnReadFileEx(bool /*result*/) override final {}
+		void OnReadFileEx(bool /*result*/) override final {
+		}
 
-		void OnReadFileScatter(bool /*result*/) override final {}
+		void OnReadFileScatter(bool /*result*/) override final {
+		}
 
 		void OnRemoveDirectoryA(
 			std::string_view /*pathName*/, bool /*result*/, bool /*wasBlocked*/) override final {
@@ -332,11 +385,14 @@ namespace Monitor::Windows {
 			throw std::runtime_error("OnRemoveDirectoryW Not implemented");
 		}
 
-		void OnSetEndOfFile(bool /*result*/) override final {}
+		void OnSetEndOfFile(bool /*result*/) override final {
+		}
 
-		void OnSetFileApisToANSI() override final {}
+		void OnSetFileApisToANSI() override final {
+		}
 
-		void OnSetFileApisToOEM() override final {}
+		void OnSetFileApisToOEM() override final {
+		}
 
 		void OnSetFileAttributesA(
 			std::string_view fileName, bool /*result*/, bool wasBlocked) override final {
@@ -348,36 +404,51 @@ namespace Monitor::Windows {
 			TouchFileWrite(fileName, wasBlocked);
 		}
 
-		void OnSetFileInformationByHandle(bool /*result*/) override final {}
+		void OnSetFileInformationByHandle(bool /*result*/) override final {
+		}
 
-		void OnSetFileIoOverlappedRange(bool /*result*/) override final {}
+		void OnSetFileIoOverlappedRange(bool /*result*/) override final {
+		}
 
-		void OnSetFilePointer(uint32_t /*result*/) override final {}
+		void OnSetFilePointer(uint32_t /*result*/) override final {
+		}
 
-		void OnSetFilePointerEx(bool /*result*/) override final {}
+		void OnSetFilePointerEx(bool /*result*/) override final {
+		}
 
-		void OnSetFileTime(bool /*result*/) override final {}
+		void OnSetFileTime(bool /*result*/) override final {
+		}
 
-		void OnSetFileValidData(bool /*result*/) override final {}
+		void OnSetFileValidData(bool /*result*/) override final {
+		}
 
-		void OnUnlockFile(bool /*result*/) override final {}
+		void OnUnlockFile(bool /*result*/) override final {
+		}
 
-		void OnUnlockFileEx(bool /*result*/) override final {}
+		void OnUnlockFileEx(bool /*result*/) override final {
+		}
 
-		void OnWriteFile(bool /*result*/) override final {}
+		void OnWriteFile(bool /*result*/) override final {
+		}
 
-		void OnWriteFileEx(bool /*result*/) override final {}
+		void OnWriteFileEx(bool /*result*/) override final {
+		}
 
-		void OnWriteFileGather(bool /*result*/) override final {}
+		void OnWriteFileGather(bool /*result*/) override final {
+		}
 
 		// LibLoaderApi
-		void OnLoadLibraryA(std::string_view /*libFileName*/) override final {}
+		void OnLoadLibraryA(std::string_view /*libFileName*/) override final {
+		}
 
-		void OnLoadLibraryW(std::wstring_view /*libFileName*/) override final {}
+		void OnLoadLibraryW(std::wstring_view /*libFileName*/) override final {
+		}
 
-		void OnLoadLibraryExA(std::string_view /*libFileName*/) override final {}
+		void OnLoadLibraryExA(std::string_view /*libFileName*/) override final {
+		}
 
-		void OnLoadLibraryExW(std::wstring_view /*libFileName*/) override final {}
+		void OnLoadLibraryExW(std::wstring_view /*libFileName*/) override final {
+		}
 
 		// ProcessEnv
 		void OnSearchPathA(
@@ -701,10 +772,12 @@ namespace Monitor::Windows {
 		}
 
 		void OnGetBinaryTypeA(
-			std::string_view /*applicationName*/, bool /*result*/) override final {}
+			std::string_view /*applicationName*/, bool /*result*/) override final {
+		}
 
 		void OnGetBinaryTypeW(
-			std::wstring_view /*applicationName*/, bool /*result*/) override final {}
+			std::wstring_view /*applicationName*/, bool /*result*/) override final {
+		}
 
 		void OnGetCompressedFileSizeTransactedA(
 			std::string_view /*fileName*/, uint32_t /*result*/) override final {
@@ -716,15 +789,19 @@ namespace Monitor::Windows {
 			throw std::runtime_error("OnGetCompressedFileSizeTransactedW Not implemented");
 		}
 
-		void OnGetDllDirectoryA(uint32_t /*result*/) override final {}
+		void OnGetDllDirectoryA(uint32_t /*result*/) override final {
+		}
 
-		void OnGetDllDirectoryW(uint32_t /*result*/) override final {}
+		void OnGetDllDirectoryW(uint32_t /*result*/) override final {
+		}
 
 		void OnGetEnvironmentVariableA(
-			std::string_view /*name*/, uint32_t /*result*/) override final {}
+			std::string_view /*name*/, uint32_t /*result*/) override final {
+		}
 
 		void OnGetEnvironmentVariableW(
-			std::wstring_view /*name*/, uint32_t /*result*/) override final {}
+			std::wstring_view /*name*/, uint32_t /*result*/) override final {
+		}
 
 		void OnGetFileAttributesTransactedA(
 			std::string_view fileName, uint32_t result, bool wasBlocked) override final {
@@ -738,9 +815,11 @@ namespace Monitor::Windows {
 			TouchFileRead(fileName, exists, wasBlocked);
 		}
 
-		void OnGetFileBandwidthReservation(bool /*result*/) override final {}
+		void OnGetFileBandwidthReservation(bool /*result*/) override final {
+		}
 
-		void OnGetFileInformationByHandleEx(bool /*result*/) override final {}
+		void OnGetFileInformationByHandleEx(bool /*result*/) override final {
+		}
 
 		void OnGetFileSecurityA(
 			std::string_view fileName, bool result, bool wasBlocked) override final {
@@ -760,25 +839,32 @@ namespace Monitor::Windows {
 		void OnGetLongPathNameTransactedA(
 			std::string_view /*shortPath*/,
 			std::string_view /*longPath*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
 		void OnGetLongPathNameTransactedW(
 			std::wstring_view /*shortPath*/,
 			std::wstring_view /*longPath*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
-		void OnGetQueuedCompletionStatus(bool /*result*/) override final {}
+		void OnGetQueuedCompletionStatus(bool /*result*/) override final {
+		}
 
-		void OnGetQueuedCompletionStatusEx(bool /*result*/) override final {}
+		void OnGetQueuedCompletionStatusEx(bool /*result*/) override final {
+		}
 
 		void OnGetShortPathNameA(
 			std::string_view /*longPath*/,
 			std::string_view /*shortPath*/,
-			uint32_t /*result*/) override final {}
+			uint32_t /*result*/) override final {
+		}
 
-		void OnLoadModule(std::string_view /*moduleName*/, uint32_t /*result*/) override final {}
+		void OnLoadModule(std::string_view /*moduleName*/, uint32_t /*result*/) override final {
+		}
 
-		void OnLoadPackagedLibrary(std::string_view /*libFileName*/) override final {}
+		void OnLoadPackagedLibrary(std::string_view /*libFileName*/) override final {
+		}
 
 		void OnMoveFileA(
 			std::string_view existingFileName,
@@ -886,7 +972,8 @@ namespace Monitor::Windows {
 			throw std::runtime_error("OnOpenFileById Not implemented");
 		}
 
-		void OnReadEncryptedFileRaw(uint32_t /*result*/) override final {}
+		void OnReadEncryptedFileRaw(uint32_t /*result*/) override final {
+		}
 
 		void OnRemoveDirectoryTransactedA(
 			std::string_view /*pathName*/, bool /*result*/, bool /*wasBlocked*/) override final {
@@ -959,7 +1046,8 @@ namespace Monitor::Windows {
 			throw std::runtime_error("OnSetFileBandwidthReservation Not implemented");
 		}
 
-		void OnSetFileCompletionNotificationModes(bool /*result*/) override final {}
+		void OnSetFileCompletionNotificationModes(bool /*result*/) override final {
+		}
 
 		void OnSetFileSecurityA(std::string_view /*fileName*/, bool /*result*/) override final {
 			throw std::runtime_error("OnSetFileSecurityA Not implemented");
@@ -973,9 +1061,11 @@ namespace Monitor::Windows {
 			throw std::runtime_error("OnSetFileShortNameW Not implemented");
 		}
 
-		void OnSetSearchPathMode(uint32_t /*flags*/, bool /*result*/) override final {}
+		void OnSetSearchPathMode(uint32_t /*flags*/, bool /*result*/) override final {
+		}
 
-		void OnWriteEncryptedFileRaw(uint32_t /*result*/) override final {}
+		void OnWriteEncryptedFileRaw(uint32_t /*result*/) override final {
+		}
 
 	private:
 		void OnCreateProcess(bool wasDetoured, std::wstring_view applicationName) {

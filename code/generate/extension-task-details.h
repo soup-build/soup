@@ -4,25 +4,22 @@
 
 #pragma once
 
-namespace Soup::Core::Generate
-{
-	class ExtensionTaskDetails
-	{
+namespace Soup::Core::Generate {
+	class ExtensionTaskDetails {
 	public:
 		ExtensionTaskDetails(
 			std::string name,
 			Path scriptFile,
 			std::optional<Path> bundlesFile,
 			std::vector<std::string> runBeforeList,
-			std::vector<std::string> runAfterList) :
-			Name(std::move(name)),
-			ScriptFile(std::move(scriptFile)),
-			BundlesFile(std::move(bundlesFile)),
-			RunBeforeList(std::move(runBeforeList)),
-			RunAfterList(std::move(runAfterList)),
-			RunAfterClosureList(),
-			HasRun(false)
-		{
+			std::vector<std::string> runAfterList)
+			: Name(std::move(name)),
+			  ScriptFile(std::move(scriptFile)),
+			  BundlesFile(std::move(bundlesFile)),
+			  RunBeforeList(std::move(runBeforeList)),
+			  RunAfterList(std::move(runAfterList)),
+			  RunAfterClosureList(),
+			  HasRun(false) {
 		}
 
 		std::string Name;

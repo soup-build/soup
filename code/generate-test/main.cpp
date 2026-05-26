@@ -9,9 +9,9 @@
 #include <map>
 #include <optional>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
 #include <vector>
 
 #include <wren/wren.hpp>
@@ -23,36 +23,26 @@ using namespace Opal;
 
 #include "generate-test-host.h"
 
-int main(int argc, char** argv)
-{
-	try
-	{
+int main(int argc, char **argv) {
+	try {
 		// Setup the filter
-		auto defaultTypes =
-			static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
-			static_cast<uint32_t>(TraceEventFlag::Information) |
-			static_cast<uint32_t>(TraceEventFlag::HighPriority) |
-			static_cast<uint32_t>(TraceEventFlag::Warning) |
-			static_cast<uint32_t>(TraceEventFlag::Error) |
-			static_cast<uint32_t>(TraceEventFlag::Critical);
-		auto filter = std::make_shared<EventTypeFilter>(
-			static_cast<TraceEventFlag>(defaultTypes));
+		auto defaultTypes = static_cast<uint32_t>(TraceEventFlag::Diagnostic) |
+							static_cast<uint32_t>(TraceEventFlag::Information) |
+							static_cast<uint32_t>(TraceEventFlag::HighPriority) |
+							static_cast<uint32_t>(TraceEventFlag::Warning) |
+							static_cast<uint32_t>(TraceEventFlag::Error) |
+							static_cast<uint32_t>(TraceEventFlag::Critical);
+		auto filter = std::make_shared<EventTypeFilter>(static_cast<TraceEventFlag>(defaultTypes));
 
 		// Setup the console listener
-		Log::RegisterListener(
-			std::make_shared<ConsoleTraceListener>(
-				"Log",
-				filter,
-				false,
-				false));
+		Log::RegisterListener(std::make_shared<ConsoleTraceListener>("Log", filter, false, false));
 
 		// Setup the real services
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
 
 		Log::Diag("ProgramStart");
 
-		if (argc < 2 || argc > 3)
-		{
+		if (argc < 2 || argc > 3) {
 			Log::Error("Invalid parameters. Expected one or two parameter.");
 			return -1;
 		}
@@ -60,20 +50,16 @@ int main(int argc, char** argv)
 		auto scriptFile = Path::Parse(argv[1]);
 
 		std::optional<Path> bundlesFile;
-		if (argc > 2)
-		{
+		if (argc > 2) {
 			bundlesFile = Path::Parse(argv[2]);
 		}
 
 		auto host = std::make_unique<Soup::Core::Generate::GenerateTestHost>(
-			std::move(scriptFile),
-			std::move(bundlesFile));
+			std::move(scriptFile), std::move(bundlesFile));
 		host->InterpretMain();
 
 		return 0;
-	}
-	catch (const std::exception& ex)
-	{
+	} catch (const std::exception &ex) {
 		Log::Error(ex.what());
 		return -1;
 	}

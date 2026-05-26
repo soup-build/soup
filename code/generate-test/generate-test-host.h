@@ -4,51 +4,39 @@
 
 #pragma once
 
-namespace Soup::Core::Generate
-{
-	class GenerateTestHost : public WrenHost
-	{
+namespace Soup::Core::Generate {
+	class GenerateTestHost : public WrenHost {
 	private:
-		static inline const char* SoupModuleName = "soup";
-		static inline const char* SoupTestModuleName = "soup-test";
-		static inline const char* SoupClassName = "Soup";
-		static inline const char* SoupTaskClassName = "SoupTask";
+		static inline const char *SoupModuleName = "soup";
+		static inline const char *SoupTestModuleName = "soup-test";
+		static inline const char *SoupClassName = "Soup";
+		static inline const char *SoupTaskClassName = "SoupTask";
 
 	public:
-		GenerateTestHost(Path scriptFile, std::optional<Path> bundlesFile) :
-			WrenHost(std::move(scriptFile), std::move(bundlesFile))
-		{
+		GenerateTestHost(Path scriptFile, std::optional<Path> bundlesFile)
+			: WrenHost(std::move(scriptFile), std::move(bundlesFile)) {
 		}
 
 	private:
-		virtual bool IsBuiltInModule(std::string_view moduleName) override final
-		{
+		virtual bool IsBuiltInModule(std::string_view moduleName) override final {
 			if (moduleName == std::string_view(SoupModuleName) ||
-				moduleName == std::string_view(SoupTestModuleName))
-			{
+				moduleName == std::string_view(SoupTestModuleName)) {
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
 
-		virtual bool TryGetBuiltInModule(std::string_view moduleName, const char*& source) override final
-		{
+		virtual bool TryGetBuiltInModule(
+			std::string_view moduleName, const char *&source) override final {
 			// Inject Soup module
-			if (moduleName == SoupModuleName)
-			{
+			if (moduleName == SoupModuleName) {
 				source = GetSoupModuleSource();
 				return true;
-			}
-			else if (moduleName == SoupTestModuleName)
-			{
+			} else if (moduleName == SoupTestModuleName) {
 				source = GetSoupTestModuleSource();
 				return true;
-			}
-			else
-			{
+			} else {
 				source = nullptr;
 				return false;
 			}
@@ -58,24 +46,22 @@ namespace Soup::Core::Generate
 			std::string_view /*moduleName*/,
 			std::string_view /*className*/,
 			bool /*isStatic*/,
-			std::string_view /*signature*/) override final
-		{
+			std::string_view /*signature*/) override final {
 			return nullptr;
 		}
 
-		static const char* GetSoupTestModuleSource()
-		{
+		static const char *GetSoupTestModuleSource() {
 			return soupTestModuleSource;
 		}
 
-		static const char* GetSoupModuleSource()
-		{
+		static const char *GetSoupModuleSource() {
 			return soupModuleSource;
 		}
 
-		static inline const char* soupTestModuleSource =
+		static inline const char *soupTestModuleSource =
 			"class SoupTestOperation {\n"
-			"	construct new(title, executable, arguments, workingDirectory, declaredInput, declaredOutput) {\n"
+			"	construct new(title, executable, arguments, workingDirectory, declaredInput, "
+			"declaredOutput) {\n"
 			"		_title = title\n"
 			"		_executable = executable\n"
 			"		_arguments = arguments\n"
@@ -96,7 +82,9 @@ namespace Soup::Core::Generate
 			"	}\n"
 			"\n"
 			"	toString {\n"
-			"		return \"SoupTestOperation { Title=%(_title), Executable=%(_executable), Arguments=%(_arguments), WorkingDirectory=%(_workingDirectory), DeclaredInput=%(_declaredInput), DeclaredOutput=%(_declaredOutput) }\"\n"
+			"		return \"SoupTestOperation { Title=%(_title), Executable=%(_executable), "
+			"Arguments=%(_arguments), WorkingDirectory=%(_workingDirectory), "
+			"DeclaredInput=%(_declaredInput), DeclaredOutput=%(_declaredOutput) }\"\n"
 			"	}\n"
 			"}\n"
 			"\n"
@@ -113,23 +101,28 @@ namespace Soup::Core::Generate
 			"	static logs { __logs }\n"
 			"\n"
 			"	static globalState {\n"
-			"		if (__globalState is Null) Fiber.abort(\"Must initialize global state before access\")\n"
+			"		if (__globalState is Null) Fiber.abort(\"Must initialize global state before "
+			"access\")\n"
 			"		return __globalState\n"
 			"	}\n"
 			"\n"
 			"	static activeState {\n"
-			"		if (__activeState is Null) Fiber.abort(\"Must initialize active state before access\")\n"
+			"		if (__activeState is Null) Fiber.abort(\"Must initialize active state before "
+			"access\")\n"
 			"		return __activeState\n"
 			"	}\n"
 			"\n"
 			"	static sharedState {\n"
-			"		if (__sharedState is Null) Fiber.abort(\"Must initialize shared state before access\")\n"
+			"		if (__sharedState is Null) Fiber.abort(\"Must initialize shared state before "
+			"access\")\n"
 			"		return __sharedState\n"
 			"	}\n"
 			"\n"
-			"	static createOperation(title, executable, arguments, workingDirectory, declaredInput, declaredOutput) {\n"
+			"	static createOperation(title, executable, arguments, workingDirectory, "
+			"declaredInput, declaredOutput) {\n"
 			"		if (__operations is Null) Fiber.abort(\"Operations not initialized.\")\n"
-			"		__operations.add(SoupTestOperation.new(title, executable, arguments, workingDirectory, declaredInput, declaredOutput))\n"
+			"		__operations.add(SoupTestOperation.new(title, executable, arguments, "
+			"workingDirectory, declaredInput, declaredOutput))\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"
@@ -148,7 +141,7 @@ namespace Soup::Core::Generate
 			"	}\n"
 			"}\n";
 
-		static inline const char* soupModuleSource =
+		static inline const char *soupModuleSource =
 			"import \"soup-test\" for SoupTest\n"
 			"\n"
 			"class SoupTask {\n"
@@ -170,14 +163,18 @@ namespace Soup::Core::Generate
 			"		return SoupTest.sharedState\n"
 			"	}\n"
 			"\n"
-			"	static createOperation(title, executable, arguments, workingDirectory, declaredInput, declaredOutput) {\n"
+			"	static createOperation(title, executable, arguments, workingDirectory, "
+			"declaredInput, declaredOutput) {\n"
 			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
 			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
 			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
-			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a string.\")\n"
+			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a "
+			"string.\")\n"
 			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
-			"		if (!(declaredOutput is List)) Fiber.abort(\"DeclaredOutput must be a list.\")\n"
-			"		SoupTest.createOperation(title, executable, arguments, workingDirectory, declaredInput, declaredOutput)\n"
+			"		if (!(declaredOutput is List)) Fiber.abort(\"DeclaredOutput must be a "
+			"list.\")\n"
+			"		SoupTest.createOperation(title, executable, arguments, workingDirectory, "
+			"declaredInput, declaredOutput)\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"

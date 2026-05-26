@@ -9,9 +9,12 @@ namespace Monitor::Linux {
 
 	public:
 		LinuxSystemAccessMonitor(std::shared_ptr<ISystemAccessMonitor> monitor)
-			: _monitor(std::move(monitor)) {}
+			: _monitor(std::move(monitor)) {
+		}
 
-		void OnInitialize() override final { Log::Diag("LinuxSystemAccessMonitor::OnInitialize"); }
+		void OnInitialize() override final {
+			Log::Diag("LinuxSystemAccessMonitor::OnInitialize");
+		}
 
 		void OnShutdown(bool hadError) override final {
 			Log::Diag("LinuxSystemAccessMonitor::OnShutdown {}", hadError);
@@ -30,7 +33,8 @@ namespace Monitor::Linux {
 		}
 
 		void OnLink(
-			std::string_view oldpath, std::string_view newpath, int32_t result) override final {}
+			std::string_view oldpath, std::string_view newpath, int32_t result) override final {
+		}
 
 		void OnLinkAt(
 			int32_t olddirfd,
@@ -38,7 +42,8 @@ namespace Monitor::Linux {
 			int32_t newdirfd,
 			std::string_view newpath,
 			int32_t flags,
-			int32_t result) override final {}
+			int32_t result) override final {
+		}
 
 		void OnMkdir(std::string_view path, uint32_t mode, int32_t result) override final {
 			bool wasBlocked = false;
@@ -155,17 +160,23 @@ namespace Monitor::Linux {
 		}
 
 		// ProcessApi
-		void OnClone(int32_t result) override final {}
+		void OnClone(int32_t result) override final {
+		}
 
-		void OnClone3(int32_t result) override final {}
+		void OnClone3(int32_t result) override final {
+		}
 
-		void OnExecve(std::string_view file, int32_t result) override final {}
+		void OnExecve(std::string_view file, int32_t result) override final {
+		}
 
-		void OnExecveAt(std::string_view file, int32_t result) override final {}
+		void OnExecveAt(std::string_view file, int32_t result) override final {
+		}
 
-		void OnFork(int32_t result) override final {}
+		void OnFork(int32_t result) override final {
+		}
 
-		void OnVFork(int32_t result) override final {}
+		void OnVFork(int32_t result) override final {
+		}
 
 	private:
 		void OnCreateProcess(bool wasDetoured, std::wstring_view applicationName) {

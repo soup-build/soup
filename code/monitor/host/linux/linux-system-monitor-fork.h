@@ -11,7 +11,8 @@ namespace Monitor::Linux {
 			std::shared_ptr<ILinuxSystemMonitor> monitor1,
 			std::shared_ptr<ILinuxSystemMonitor> monitor2)
 			: _monitor1(std::move(monitor1)),
-			  _monitor2(std::move(monitor2)) {}
+			  _monitor2(std::move(monitor2)) {
+		}
 
 		void OnInitialize() override final {
 			_monitor1->OnInitialize();

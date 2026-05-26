@@ -5,9 +5,12 @@ namespace Monitor::Windows {
 	class WindowsSystemLoggerMonitor : public IWindowsSystemMonitor {
 	public:
 		WindowsSystemLoggerMonitor(std::ostream &stream)
-			: m_stream(stream) {}
+			: m_stream(stream) {
+		}
 
-		virtual void OnInitialize() override final { m_stream << "Initialize: " << std::endl; }
+		virtual void OnInitialize() override final {
+			m_stream << "Initialize: " << std::endl;
+		}
 
 		virtual void OnShutdown(bool hadError) override final {
 			m_stream << "Shutdown: " << hadError << std::endl;
@@ -1087,7 +1090,9 @@ namespace Monitor::Windows {
 			m_stream << "OpenFile: " << fileName << " " << wasBlocked << std::endl;
 		}
 
-		virtual void OnOpenFileById() override final { m_stream << "OpenFileById: " << std::endl; }
+		virtual void OnOpenFileById() override final {
+			m_stream << "OpenFileById: " << std::endl;
+		}
 
 		virtual void OnReadEncryptedFileRaw(uint32_t /*result*/) override final {
 			m_stream << "ReadEncryptedFileRaw: " << std::endl;
@@ -1106,7 +1111,9 @@ namespace Monitor::Windows {
 					 << wasBlocked << std::endl;
 		}
 
-		virtual void OnReOpenFile() override final { m_stream << "ReOpenFile: " << std::endl; }
+		virtual void OnReOpenFile() override final {
+			m_stream << "ReOpenFile: " << std::endl;
+		}
 
 		virtual void OnReplaceFileA(
 			std::string_view replacedFileName,

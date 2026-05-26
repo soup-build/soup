@@ -17,12 +17,12 @@ namespace Monitor::Linux {
 				// Extract the allowed read/write directories
 				auto workingDirectory = Opal::Path(); // Opal::Path(s_Payload.zWorkingDirectory);
 				bool enableAccessChecks = false; // s_Payload.EnableAccessChecks;
-				auto allowedReadDirectories =
-					std::vector<std::string>(); // ExtractStringList(s_Payload.zReadAccessDirectories,
-												// s_Payload.cReadAccessDirectories);
-				auto allowedWriteDirectories =
-					std::vector<std::string>(); // ExtractStringList(s_Payload.zWriteAccessDirectories,
-												// s_Payload.cWriteAccessDirectories);
+				auto allowedReadDirectories = std::vector<
+					std::string>(); // ExtractStringList(s_Payload.zReadAccessDirectories,
+									// s_Payload.cReadAccessDirectories);
+				auto allowedWriteDirectories = std::vector<
+					std::string>(); // ExtractStringList(s_Payload.zWriteAccessDirectories,
+									// s_Payload.cWriteAccessDirectories);
 
 				AttachDetours();
 

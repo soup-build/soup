@@ -8,7 +8,8 @@ namespace Monitor::Linux {
 	public:
 		ConnectionManager()
 			: ConnectionManagerBase(),
-			  pipeHandle() {}
+			  pipeHandle() {
+		}
 
 	protected:
 		virtual void Connect(int32_t traceProcessId, int32_t traceChildId) {

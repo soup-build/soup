@@ -11,7 +11,8 @@ namespace Monitor::Windows {
 			std::shared_ptr<IWindowsSystemMonitor> monitor1,
 			std::shared_ptr<IWindowsSystemMonitor> monitor2)
 			: _monitor1(std::move(monitor1)),
-			  _monitor2(std::move(monitor2)) {}
+			  _monitor2(std::move(monitor2)) {
+		}
 
 		void OnInitialize() override final {
 			_monitor1->OnInitialize();
@@ -73,11 +74,21 @@ namespace Monitor::Windows {
 			uint64_t result,
 			bool wasBlocked) override final {
 			_monitor1->OnCreateFileA(
-				fileName, desiredAccess, sharedMode, creationDisposition, flagsAndAttributes,
-				result, wasBlocked);
+				fileName,
+				desiredAccess,
+				sharedMode,
+				creationDisposition,
+				flagsAndAttributes,
+				result,
+				wasBlocked);
 			_monitor2->OnCreateFileA(
-				fileName, desiredAccess, sharedMode, creationDisposition, flagsAndAttributes,
-				result, wasBlocked);
+				fileName,
+				desiredAccess,
+				sharedMode,
+				creationDisposition,
+				flagsAndAttributes,
+				result,
+				wasBlocked);
 		}
 
 		void OnCreateFileW(
@@ -89,11 +100,21 @@ namespace Monitor::Windows {
 			uint64_t result,
 			bool wasBlocked) override final {
 			_monitor1->OnCreateFileW(
-				fileName, desiredAccess, sharedMode, creationDisposition, flagsAndAttributes,
-				result, wasBlocked);
+				fileName,
+				desiredAccess,
+				sharedMode,
+				creationDisposition,
+				flagsAndAttributes,
+				result,
+				wasBlocked);
 			_monitor2->OnCreateFileW(
-				fileName, desiredAccess, sharedMode, creationDisposition, flagsAndAttributes,
-				result, wasBlocked);
+				fileName,
+				desiredAccess,
+				sharedMode,
+				creationDisposition,
+				flagsAndAttributes,
+				result,
+				wasBlocked);
 		}
 
 		void OnDefineDosDeviceW(
