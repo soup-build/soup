@@ -25,14 +25,11 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class OperationResultsTests
-	{
+namespace Soup::Core::UnitTests {
+	export class OperationResultsTests {
 	public:
 		// [[Fact]]
-		void Initialize_Default()
-		{
+		void Initialize_Default() {
 			auto uut = OperationResults();
 
 			Assert::AreEqual(
@@ -42,44 +39,39 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void Initialize_ListOperations_Single()
-		{
-			auto uut = OperationResults({
+		void Initialize_ListOperations_Single() {
+			auto uut = OperationResults(
 				{
-					1,
-					OperationResult(
-						false,
-						std::chrono::clock_cast<std::chrono::file_clock>(
-							std::chrono::time_point<std::chrono::system_clock>()),
-						{ },
-						{ },
-						std::nullopt)
-				},
-			});
+					{1,
+					 OperationResult(
+						 false,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::time_point<std::chrono::system_clock>()),
+						 {},
+						 {},
+						 std::nullopt)},
+				});
 
 			Assert::AreEqual(
 				std::map<OperationId, OperationResult>({
-					{
-						1,
-						OperationResult(
-							false,
-							std::chrono::clock_cast<std::chrono::file_clock>(
-								std::chrono::time_point<std::chrono::system_clock>()),
-							{ },
-							{ },
-							std::nullopt)
-					},
+					{1,
+					 OperationResult(
+						 false,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::time_point<std::chrono::system_clock>()),
+						 {},
+						 {},
+						 std::nullopt)},
 				}),
 				uut.GetResults(),
 				"Verify results match expected.");
 		}
 
 		// [[Fact]]
-		void TryFindResult_Missing()
-		{
+		void TryFindResult_Missing() {
 			auto uut = OperationResults();
 
-			OperationResult* operationResult = nullptr;
+			OperationResult *operationResult = nullptr;
 			auto result = uut.TryFindResult(1, operationResult);
 
 			Assert::IsFalse(result, "Verify result is false.");
@@ -87,22 +79,20 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void TryFindResult_Found()
-		{
-			auto uut = OperationResults({
+		void TryFindResult_Found() {
+			auto uut = OperationResults(
 				{
-					1,
-					OperationResult(
-						false,
-						std::chrono::clock_cast<std::chrono::file_clock>(
-							std::chrono::time_point<std::chrono::system_clock>()),
-						{ },
-						{ },
-						std::nullopt)
-				},
-			});
+					{1,
+					 OperationResult(
+						 false,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::time_point<std::chrono::system_clock>()),
+						 {},
+						 {},
+						 std::nullopt)},
+				});
 
-			OperationResult* operationResult;
+			OperationResult *operationResult;
 			auto result = uut.TryFindResult(1, operationResult);
 
 			Assert::IsTrue(result, "Verify result is true.");
@@ -112,16 +102,15 @@ namespace Soup::Core::UnitTests
 					false,
 					std::chrono::clock_cast<std::chrono::file_clock>(
 						std::chrono::time_point<std::chrono::system_clock>()),
-					{ },
-					{ },
+					{},
+					{},
 					std::nullopt),
 				*operationResult,
 				"Verify operationResult is correct.");
 		}
 
 		// [[Fact]]
-		void AddOrUpdateOperationResult()
-		{
+		void AddOrUpdateOperationResult() {
 			auto uut = OperationResults();
 
 			uut.AddOrUpdateOperationResult(
@@ -130,8 +119,8 @@ namespace Soup::Core::UnitTests
 					false,
 					std::chrono::clock_cast<std::chrono::file_clock>(
 						std::chrono::time_point<std::chrono::system_clock>()),
-					{ },
-					{ },
+					{},
+					{},
 					std::nullopt));
 
 			Assert::AreEqual(
@@ -142,8 +131,8 @@ namespace Soup::Core::UnitTests
 							false,
 							std::chrono::clock_cast<std::chrono::file_clock>(
 								std::chrono::time_point<std::chrono::system_clock>()),
-							{ },
-							{ },
+							{},
+							{},
 							std::nullopt),
 					},
 				}),

@@ -22,22 +22,18 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class LocalUserConfigTests
-	{
+namespace Soup::Core::UnitTests {
+	export class LocalUserConfigTests {
 	public:
 		// [[Fact]]
-		void InitializerDefault()
-		{
+		void InitializerDefault() {
 			auto uut = LocalUserConfig();
 
 			Assert::IsFalse(uut.HasSDKs(), "Verify has no SDKs.");
 		}
 
 		// [[Fact]]
-		void OperatorEqualDefault()
-		{
+		void OperatorEqualDefault() {
 			auto uut = LocalUserConfig();
 
 			Assert::AreEqual(LocalUserConfig(), uut, "Verify equal.");

@@ -27,14 +27,11 @@ using namespace Opal::System;
 using namespace Soup::SML;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class RecipeSMLTests
-	{
+namespace Soup::Core::UnitTests {
+	export class RecipeSMLTests {
 	public:
 		// [[Fact]]
-		void Deserialize_GarbageThrows()
-		{
+		void Deserialize_GarbageThrows() {
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream("garbage");
 			auto exception = Assert::Throws<std::runtime_error>([&recipeFile, &recipe]() {
@@ -43,8 +40,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void Deserialize_Simple()
-		{
+		void Deserialize_Simple() {
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
@@ -54,17 +50,16 @@ namespace Soup::Core::UnitTests
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 
 			auto expected = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+				}));
 
 			Assert::AreEqual(expected, actual, "Verify matches expected.");
 		}
 
 		// [[Fact]]
-		void Deserialize_Comments()
-		{
+		void Deserialize_Comments() {
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
@@ -75,17 +70,16 @@ namespace Soup::Core::UnitTests
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 
 			auto expected = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+				}));
 
 			Assert::AreEqual(expected, actual, "Verify matches expected.");
 		}
 
 		// [[Fact]]
-		void Deserialize_AllProperties()
-		{
+		void Deserialize_AllProperties() {
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = std::stringstream(
 				R"(
@@ -107,45 +101,44 @@ namespace Soup::Core::UnitTests
 			auto actual = Recipe(RecipeSML::Deserialize(recipeFile, recipe));
 
 			auto expected = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-				{ "Version", SemanticVersion(1, 2, 3) },
-				{ "IntegerValue", (int64_t)55 },
-				{ "FloatValue", 1.2 },
-				{ "TrueValue", true },
-				{ "FalseValue", false },
-				{ "PackageLanguageRef", PackageReference("C++", "User1", "Package1", SemanticVersion(1, 2)) },
-				{ "PackageRef", PackageReference(std::nullopt, "User1", "Package1", SemanticVersion(1)) },
 				{
-					"Dependencies",
-					RecipeTable(
-					{
-						{ "Runtime", RecipeList() },
-						{ "Build", RecipeList() },
-						{ "Test", RecipeList() },
-					})
-				},
-			}));
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+					{"Version", SemanticVersion(1, 2, 3)},
+					{"IntegerValue", (int64_t)55},
+					{"FloatValue", 1.2},
+					{"TrueValue", true},
+					{"FalseValue", false},
+					{"PackageLanguageRef",
+					 PackageReference("C++", "User1", "Package1", SemanticVersion(1, 2))},
+					{"PackageRef",
+					 PackageReference(std::nullopt, "User1", "Package1", SemanticVersion(1))},
+					{"Dependencies",
+					 RecipeTable(
+						 {
+							 {"Runtime", RecipeList()},
+							 {"Build", RecipeList()},
+							 {"Test", RecipeList()},
+						 })},
+				}));
 
 			Assert::AreEqual(expected, actual, "Verify matches expected.");
 		}
 
 		// [[Fact]]
-		void Serialize_Simple()
-		{
+		void Serialize_Simple() {
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+				}));
 
 			std::stringstream actual;
 			RecipeSML::Serialize(recipe.GetTable(), actual);
 
-			auto expected = 
-R"(Name: 'my-package'
+			auto expected =
+				R"(Name: 'my-package'
 Language: (C++@1)
 )";
 
@@ -153,34 +146,31 @@ Language: (C++@1)
 		}
 
 		// [[Fact]]
-		void Serialize_AllProperties()
-		{
+		void Serialize_AllProperties() {
 			auto recipeFile = Path("./recipe.sml");
 			auto recipe = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-				{ "Version", SemanticVersion(1, 2, 3) },
-				{ "IntegerValue", (int64_t)55 },
-				{ "FloatValue", 1.2 },
-				{ "TrueValue", true },
-				{ "FalseValue", false },
 				{
-					"Dependencies",
-					RecipeTable(
-					{
-						{ "Runtime", RecipeList() },
-						{ "Build", RecipeList() },
-						{ "Test", RecipeList() },
-					})
-				},
-			}));
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+					{"Version", SemanticVersion(1, 2, 3)},
+					{"IntegerValue", (int64_t)55},
+					{"FloatValue", 1.2},
+					{"TrueValue", true},
+					{"FalseValue", false},
+					{"Dependencies",
+					 RecipeTable(
+						 {
+							 {"Runtime", RecipeList()},
+							 {"Build", RecipeList()},
+							 {"Test", RecipeList()},
+						 })},
+				}));
 
 			std::stringstream actual;
 			RecipeSML::Serialize(recipe.GetTable(), actual);
 
-			auto expected = 
-R"(Name: 'my-package'
+			auto expected =
+				R"(Name: 'my-package'
 Language: (C++@1)
 Version: 1.2.3
 IntegerValue: 55

@@ -24,14 +24,11 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class LocalUserConfigExtensionsTests
-	{
+namespace Soup::Core::UnitTests {
+	export class LocalUserConfigExtensionsTests {
 	public:
 		// [[Fact]]
-		void TryLoadLocalUserConfigFromFile_MissingFile()
-		{
+		void TryLoadLocalUserConfigFromFile_MissingFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -42,7 +39,8 @@ namespace Soup::Core::UnitTests
 
 			auto directory = Path("./TestFiles/NoFile/local-user-config.sml");
 			LocalUserConfig actual;
-			auto result = LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(directory, actual);
+			auto result =
+				LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(directory, actual);
 
 			Assert::IsFalse(result, "Verify result is false.");
 
@@ -59,14 +57,13 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"DIAG: Load Local User Config: ./TestFiles/NoFile/local-user-config.sml",
 					"WARN: Local User Config file does not exist",
-				}), 
+				}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
-		
+
 		// [[Fact]]
-		void TryLoadLocalUserConfigFromFile_GarbageFile()
-		{
+		void TryLoadLocalUserConfigFromFile_GarbageFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -80,7 +77,8 @@ namespace Soup::Core::UnitTests
 
 			auto directory = Path("./TestFiles/GarbageLocalUserConfig/local-user-config.sml");
 			LocalUserConfig actual;
-			auto result = LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(directory, actual);
+			auto result =
+				LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(directory, actual);
 
 			Assert::IsFalse(result, "Verify result is false.");
 
@@ -95,17 +93,18 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Load Local User Config: ./TestFiles/GarbageLocalUserConfig/local-user-config.sml",
-					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at 1:7  ./TestFiles/GarbageLocalUserConfig/local-user-config.sml",
+					"DIAG: Load Local User Config: "
+					"./TestFiles/GarbageLocalUserConfig/local-user-config.sml",
+					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at "
+					"1:7  ./TestFiles/GarbageLocalUserConfig/local-user-config.sml",
 					"INFO: Failed to parse local user config.",
-				}), 
+				}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
 
 		// [[Fact]]
-		void TryLoadLocalUserConfigFromFile_SimpleFile()
-		{
+		void TryLoadLocalUserConfigFromFile_SimpleFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -120,7 +119,8 @@ namespace Soup::Core::UnitTests
 
 			auto directory = Path("./TestFiles/SimpleLocalUserConfig/local-user-config.sml");
 			LocalUserConfig actual;
-			auto result = LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(directory, actual);
+			auto result =
+				LocalUserConfigExtensions::TryLoadLocalUserConfigFromFile(directory, actual);
 
 			Assert::IsTrue(result, "Verify result is false.");
 
@@ -139,8 +139,9 @@ namespace Soup::Core::UnitTests
 			// Verify expected logs
 			Assert::AreEqual(
 				std::vector<std::string>({
-					"DIAG: Load Local User Config: ./TestFiles/SimpleLocalUserConfig/local-user-config.sml",
-				}), 
+					"DIAG: Load Local User Config: "
+					"./TestFiles/SimpleLocalUserConfig/local-user-config.sml",
+				}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
