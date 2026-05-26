@@ -1,12 +1,11 @@
 #pragma once
 
-namespace Monitor::Windows::Functions::Cache::ProcessThreadsApi
-{
+namespace Monitor::Windows::Functions::Cache::ProcessThreadsApi {
 	/// <summary>
 	/// Creates a new process and its primary thread. The new process runs
 	/// in the security context of the calling process.
 	/// </summary>
-	BOOL (WINAPI* CreateProcessA)(
+	BOOL(WINAPI *CreateProcessA)(
 		LPCSTR lpApplicationName,
 		LPSTR lpCommandLine,
 		LPSECURITY_ATTRIBUTES lpProcessAttributes,
@@ -17,7 +16,7 @@ namespace Monitor::Windows::Functions::Cache::ProcessThreadsApi
 		LPCSTR lpCurrentDirectory,
 		LPSTARTUPINFOA lpStartupInfo,
 		LPPROCESS_INFORMATION lpProcessInformation) = ::CreateProcessA;
-	BOOL (WINAPI* CreateProcessW)(
+	BOOL(WINAPI *CreateProcessW)(
 		LPCWSTR lpApplicationName,
 		LPWSTR lpCommandLine,
 		LPSECURITY_ATTRIBUTES lpProcessAttributes,
@@ -33,7 +32,7 @@ namespace Monitor::Windows::Functions::Cache::ProcessThreadsApi
 	/// Creates a new process and its primary thread. The new process runs
 	/// in the security context of the user represented by the specified token.
 	/// </summary>
-	BOOL (WINAPI* CreateProcessAsUserA)(
+	BOOL(WINAPI *CreateProcessAsUserA)(
 		HANDLE hToken,
 		LPCSTR lpApplicationName,
 		LPSTR lpCommandLine,
@@ -45,7 +44,7 @@ namespace Monitor::Windows::Functions::Cache::ProcessThreadsApi
 		LPCSTR lpCurrentDirectory,
 		LPSTARTUPINFOA lpStartupInfo,
 		LPPROCESS_INFORMATION lpProcessInformation) = ::CreateProcessAsUserA;
-	BOOL (WINAPI* CreateProcessAsUserW)(
+	BOOL(WINAPI *CreateProcessAsUserW)(
 		HANDLE hToken,
 		LPCWSTR lpApplicationName,
 		LPWSTR lpCommandLine,
@@ -61,6 +60,5 @@ namespace Monitor::Windows::Functions::Cache::ProcessThreadsApi
 	/// <summary>
 	/// Ends the calling process and all its threads.
 	/// </summary>
-	void (WINAPI* ExitProcess)(
-		UINT uExitCode) = ::ExitProcess;
+	void(WINAPI *ExitProcess)(UINT uExitCode) = ::ExitProcess;
 }

@@ -2,8 +2,7 @@
 
 #include "../cache/process-api.h"
 
-int system(const char *command)
-{
+int system(const char *command) {
 	connectionManager.DebugTrace("system");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::system));
@@ -16,8 +15,7 @@ int system(const char *command)
 	return result;
 }
 
-pid_t fork()
-{
+pid_t fork() {
 	connectionManager.DebugTrace("fork");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::fork));
@@ -29,8 +27,7 @@ pid_t fork()
 	return result;
 }
 
-pid_t vfork()
-{
+pid_t vfork() {
 	connectionManager.DebugTrace("vfork");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::vfork));
@@ -42,8 +39,7 @@ pid_t vfork()
 	return result;
 }
 
-int clone(int (*fn)(void *), void *stack, int flags, void * arg, ...)
-{
+int clone(int (*fn)(void *), void *stack, int flags, void *arg, ...) {
 	connectionManager.DebugTrace("clone");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::clone));
@@ -58,15 +54,15 @@ int clone(int (*fn)(void *), void *stack, int flags, void * arg, ...)
 	return result;
 }
 
-int __clone2(int (*fn)(void *), void *stack, int flags, void * arg, ...)
-{
+int __clone2(int (*fn)(void *), void *stack, int flags, void *arg, ...) {
 	connectionManager.DebugTrace("__clone2");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::__clone2));
 
 	va_list args;
 	va_start(args, arg);
-	auto result = Monitor::Linux::Functions::Cache::ProcessApi::__clone2(fn, stack, flags, arg, args);
+	auto result =
+		Monitor::Linux::Functions::Cache::ProcessApi::__clone2(fn, stack, flags, arg, args);
 	va_end(args);
 
 	message.AppendValue(result);
@@ -74,8 +70,7 @@ int __clone2(int (*fn)(void *), void *stack, int flags, void * arg, ...)
 	return result;
 }
 
-int clone3(int (*fn)(void *), void *stack, int flags, void * arg, ...)
-{
+int clone3(int (*fn)(void *), void *stack, int flags, void *arg, ...) {
 	connectionManager.DebugTrace("clone3");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::clone3));
@@ -90,8 +85,7 @@ int clone3(int (*fn)(void *), void *stack, int flags, void * arg, ...)
 	return result;
 }
 
-int execl(const char *path, const char *arg, ...)
-{
+int execl(const char *path, const char *arg, ...) {
 	connectionManager.DebugTrace("execl");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execl));
@@ -107,8 +101,7 @@ int execl(const char *path, const char *arg, ...)
 	return result;
 }
 
-int execlp(const char *file, const char *arg, ...)
-{
+int execlp(const char *file, const char *arg, ...) {
 	connectionManager.DebugTrace("execlp");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execlp));
@@ -124,8 +117,7 @@ int execlp(const char *file, const char *arg, ...)
 	return result;
 }
 
-int execle(const char *path, const char *arg, ...)
-{
+int execle(const char *path, const char *arg, ...) {
 	connectionManager.DebugTrace("execle");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execle));
@@ -141,8 +133,7 @@ int execle(const char *path, const char *arg, ...)
 	return result;
 }
 
-int execv(const char *path, char *const argv[])
-{
+int execv(const char *path, char *const argv[]) {
 	connectionManager.DebugTrace("execv");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execv));
@@ -155,8 +146,7 @@ int execv(const char *path, char *const argv[])
 	return result;
 }
 
-int execvp(const char *file, char *const argv[])
-{
+int execvp(const char *file, char *const argv[]) {
 	connectionManager.DebugTrace("execvp");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execvp));
@@ -169,8 +159,7 @@ int execvp(const char *file, char *const argv[])
 	return result;
 }
 
-int execvpe(const char *file, char *const argv[], char *const envp[])
-{
+int execvpe(const char *file, char *const argv[], char *const envp[]) {
 	connectionManager.DebugTrace("execvpe");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execvpe));
@@ -183,8 +172,7 @@ int execvpe(const char *file, char *const argv[], char *const envp[])
 	return result;
 }
 
-int execve(const char *pathname, char *const argv[], char *const envp[])
-{
+int execve(const char *pathname, char *const argv[], char *const envp[]) {
 	connectionManager.DebugTrace("execve");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execve));
@@ -197,13 +185,13 @@ int execve(const char *pathname, char *const argv[], char *const envp[])
 	return result;
 }
 
-int execveat(int dirfd, const char *pathname, char *const argv[], char *const envp[], int flags)
-{
+int execveat(int dirfd, const char *pathname, char *const argv[], char *const envp[], int flags) {
 	connectionManager.DebugTrace("execveat");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::execveat));
 
-	auto result = Monitor::Linux::Functions::Cache::ProcessApi::execveat(dirfd, pathname, argv, envp, flags);
+	auto result =
+		Monitor::Linux::Functions::Cache::ProcessApi::execveat(dirfd, pathname, argv, envp, flags);
 
 	message.AppendValue(pathname);
 	message.AppendValue(result);
@@ -211,8 +199,7 @@ int execveat(int dirfd, const char *pathname, char *const argv[], char *const en
 	return result;
 }
 
-int fexecve(int fd, char *const argv[], char *const envp[])
-{
+int fexecve(int fd, char *const argv[], char *const envp[]) {
 	connectionManager.DebugTrace("fexecve");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::fexecve));

@@ -1,30 +1,29 @@
 #pragma once
 
-extern "C"
-{
-	typedef int (*system_ptr) (const char *command);
+extern "C" {
+typedef int (*system_ptr)(const char *command);
 
-	typedef pid_t (*fork_ptr) (void);
-	typedef pid_t (*vfork_ptr) (void);
+typedef pid_t (*fork_ptr)(void);
+typedef pid_t (*vfork_ptr)(void);
 
-	typedef int (*clone_ptr) (int (*fn)(void*), void *stack, int flags, void * arg, ...);
-	typedef int (*__clone2_ptr) (int (*fn)(void*), void *stack, int flags, void * arg, ...);
-	typedef int (*clone3_ptr) (int (*fn)(void*), void *stack, int flags, void * arg, ...);
-	
-	typedef int (*execl_ptr) (const char *path, const char *arg, ...);
-	typedef int (*execlp_ptr) (const char *file, const char *arg, ...);
-	typedef int (*execle_ptr) (const char *path, const char *arg, ...);
-	typedef int (*execv_ptr) (const char *path, char *const argv[]);
-	typedef int (*execvp_ptr) (const char *file, char *const argv[]);
-	typedef int (*execvpe_ptr) (const char *file, char *const argv[], char *const envp[]);
+typedef int (*clone_ptr)(int (*fn)(void *), void *stack, int flags, void *arg, ...);
+typedef int (*__clone2_ptr)(int (*fn)(void *), void *stack, int flags, void *arg, ...);
+typedef int (*clone3_ptr)(int (*fn)(void *), void *stack, int flags, void *arg, ...);
 
-	typedef int (*execve_ptr) (const char *pathname, char *const argv[], char *const envp[]);
-	typedef int (*execveat_ptr) (int dirfd, const char *pathname, char *const argv[], char *const envp[], int flags);
-	typedef int (*fexecve_ptr) (int fd, char *const argv[], char *const envp[]);
+typedef int (*execl_ptr)(const char *path, const char *arg, ...);
+typedef int (*execlp_ptr)(const char *file, const char *arg, ...);
+typedef int (*execle_ptr)(const char *path, const char *arg, ...);
+typedef int (*execv_ptr)(const char *path, char *const argv[]);
+typedef int (*execvp_ptr)(const char *file, char *const argv[]);
+typedef int (*execvpe_ptr)(const char *file, char *const argv[], char *const envp[]);
+
+typedef int (*execve_ptr)(const char *pathname, char *const argv[], char *const envp[]);
+typedef int (*execveat_ptr)(
+	int dirfd, const char *pathname, char *const argv[], char *const envp[], int flags);
+typedef int (*fexecve_ptr)(int fd, char *const argv[], char *const envp[]);
 }
 
-namespace Monitor::Linux::Functions::Cache::ProcessApi
-{
+namespace Monitor::Linux::Functions::Cache::ProcessApi {
 	system_ptr system;
 
 	fork_ptr fork;

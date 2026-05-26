@@ -3,52 +3,39 @@
 #include "../connection-manager-base.h"
 #include "functions/cache/file-api.h"
 
-namespace Monitor::Linux
-{
-	class ConnectionManager : public ConnectionManagerBase
-	{
+namespace Monitor::Linux {
+	class ConnectionManager : public ConnectionManagerBase {
 	public:
-		ConnectionManager() :
-		 	ConnectionManagerBase(),
-			pipeHandle()
-		{
-		}
+		ConnectionManager()
+			: ConnectionManagerBase(),
+			  pipeHandle() {}
 
 	protected:
-		virtual void Connect(int32_t traceProcessId, int32_t traceChildId)
-		{
+		virtual void Connect(int32_t traceProcessId, int32_t traceChildId) {
 			DebugTrace("ConnectionManager::Connect");
 
 			auto pipeName = std::string("/tmp/soupbuildfifo");
 			pipeHandle = Functions::Cache::FileApi::open(pipeName.c_str(), O_WRONLY);
 		}
 
-		virtual void Disconnect()
-		{
+		virtual void Disconnect() {
 			DebugTrace("ConnectionManager::Disconnect");
 			close(pipeHandle);
 		}
 
-		virtual bool TryUnsafeWriteMessage(const Message& message)
-		{
+		virtual bool TryUnsafeWriteMessage(const Message &message) {
 			DebugTrace("ConnectionManager::TryUnsafeWriteMessage");
 
 			// Write the message
-			size_t countBytesToWrite = message.ContentSize +
-				sizeof(Message::Type) +
-				sizeof(Message::ContentSize);
-			auto countBytesWritten = write(
-				pipeHandle,
-				&message,
-				countBytesToWrite);
-			if (countBytesWritten == -1)
-			{
+			size_t countBytesToWrite =
+				message.ContentSize + sizeof(Message::Type) + sizeof(Message::ContentSize);
+			auto countBytesWritten = write(pipeHandle, &message, countBytesToWrite);
+			if (countBytesWritten == -1) {
 				DebugError("Failed write event logger");
 				return false;
 			}
 
-			if (countBytesWritten != countBytesToWrite)
-			{
+			if (countBytesWritten != countBytesToWrite) {
 				DebugError("Did not write the expected number of bytes");
 				return false;
 			}

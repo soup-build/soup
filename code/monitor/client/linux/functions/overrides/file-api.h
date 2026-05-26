@@ -2,8 +2,7 @@
 
 #include "../cache/file-api.h"
 
-int open(const char* path, int oflag, ... /* mode_t mode */ )
-{
+int open(const char *path, int oflag, ... /* mode_t mode */) {
 	connectionManager.DebugTrace("open");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::open));
@@ -12,16 +11,13 @@ int open(const char* path, int oflag, ... /* mode_t mode */ )
 	// To whomever thought variadic optional parameters were a good idea. Why?
 	bool requiresMode = (oflag & O_CREAT) != 0 || (oflag & __O_TMPFILE) == __O_TMPFILE;
 	int result;
-	if (requiresMode)
-	{
+	if (requiresMode) {
 		va_list args;
 		va_start(args, oflag);
 		auto mode = va_arg(args, mode_t);
 		va_end(args);
 		result = Monitor::Linux::Functions::Cache::FileApi::open(path, oflag, mode);
-	}
-	else
-	{
+	} else {
 		result = Monitor::Linux::Functions::Cache::FileApi::open(path, oflag);
 	}
 
@@ -32,8 +28,7 @@ int open(const char* path, int oflag, ... /* mode_t mode */ )
 	return result;
 }
 
-int creat(const char *pathname, mode_t mode)
-{
+int creat(const char *pathname, mode_t mode) {
 	connectionManager.DebugTrace("create");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::creat));
@@ -46,8 +41,7 @@ int creat(const char *pathname, mode_t mode)
 	return result;
 }
 
-int openat(int dirfd, const char *pathname, int flags, ... /* mode_t mode */ )
-{
+int openat(int dirfd, const char *pathname, int flags, ... /* mode_t mode */) {
 	connectionManager.DebugTrace("openat");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::openat));
@@ -56,16 +50,13 @@ int openat(int dirfd, const char *pathname, int flags, ... /* mode_t mode */ )
 	// To whomever thought variadic optional parameters were a good idea. Why?
 	bool requiresMode = (flags & O_CREAT) != 0 || (flags & __O_TMPFILE) == __O_TMPFILE;
 	int result;
-	if (requiresMode)
-	{
+	if (requiresMode) {
 		va_list args;
 		va_start(args, flags);
 		auto mode = va_arg(args, mode_t);
 		va_end(args);
 		result = Monitor::Linux::Functions::Cache::FileApi::openat(dirfd, pathname, flags, mode);
-	}
-	else
-	{
+	} else {
 		result = Monitor::Linux::Functions::Cache::FileApi::openat(dirfd, pathname, flags);
 	}
 
@@ -77,8 +68,7 @@ int openat(int dirfd, const char *pathname, int flags, ... /* mode_t mode */ )
 	return result;
 }
 
-int link(const char *oldpath, const char *newpath)
-{
+int link(const char *oldpath, const char *newpath) {
 	connectionManager.DebugTrace("link");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::link));
@@ -92,13 +82,13 @@ int link(const char *oldpath, const char *newpath)
 	return result;
 }
 
-int linkat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, int flags)
-{
+int linkat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, int flags) {
 	connectionManager.DebugTrace("unlink");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::linkat));
 
-	auto result = Monitor::Linux::Functions::Cache::FileApi::linkat(olddirfd, oldpath, newdirfd, newpath, flags);
+	auto result = Monitor::Linux::Functions::Cache::FileApi::linkat(
+		olddirfd, oldpath, newdirfd, newpath, flags);
 
 	message.AppendValue(olddirfd);
 	message.AppendValue(oldpath);
@@ -110,8 +100,7 @@ int linkat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath,
 	return result;
 }
 
-int rename(const char *oldpath, const char *newpath)
-{
+int rename(const char *oldpath, const char *newpath) {
 	connectionManager.DebugTrace("rename");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::rename));
@@ -125,8 +114,7 @@ int rename(const char *oldpath, const char *newpath)
 	return result;
 }
 
-int unlink(const char *pathname)
-{
+int unlink(const char *pathname) {
 	connectionManager.DebugTrace("unlink");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::unlink));
@@ -139,8 +127,7 @@ int unlink(const char *pathname)
 	return result;
 }
 
-int remove(const char *pathname)
-{
+int remove(const char *pathname) {
 	connectionManager.DebugTrace("remove");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::remove));
@@ -153,8 +140,7 @@ int remove(const char *pathname)
 	return result;
 }
 
-FILE* fopen(const char * pathname, const char * mode)
-{
+FILE *fopen(const char *pathname, const char *mode) {
 	connectionManager.DebugTrace("fopen");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::fopen));
@@ -168,8 +154,7 @@ FILE* fopen(const char * pathname, const char * mode)
 	return result;
 }
 
-FILE* fdopen(int fd, const char *mode)
-{
+FILE *fdopen(int fd, const char *mode) {
 	connectionManager.DebugTrace("fdopen");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::fdopen));
@@ -183,11 +168,7 @@ FILE* fdopen(int fd, const char *mode)
 	return result;
 }
 
-FILE* freopen(
-	const char * pathname,
-	const char * mode,
-	FILE*  stream)
-{
+FILE *freopen(const char *pathname, const char *mode, FILE *stream) {
 	connectionManager.DebugTrace("freopen");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::freopen));
@@ -200,8 +181,7 @@ FILE* freopen(
 	return result;
 }
 
-int mkdir(const char *path, mode_t mode)
-{
+int mkdir(const char *path, mode_t mode) {
 	connectionManager.DebugTrace("mkdir");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::mkdir));
@@ -214,8 +194,7 @@ int mkdir(const char *path, mode_t mode)
 	return result;
 }
 
-int rmdir(const char *pathname)
-{
+int rmdir(const char *pathname) {
 	connectionManager.DebugTrace("rmdir");
 	auto message = Monitor::MessageSender(Monitor::MessageType::Detour);
 	message.AppendValue(static_cast<uint32_t>(Monitor::Linux::DetourEventType::rmdir));

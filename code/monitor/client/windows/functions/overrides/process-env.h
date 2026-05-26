@@ -2,26 +2,19 @@
 #include "../cache/process-env.h"
 #include "windows/connection-manager.h"
 
-namespace Monitor::Windows::Functions::Overrides::ProcessEnv
-{
+namespace Monitor::Windows::Functions::Overrides::ProcessEnv {
 	DWORD WINAPI SearchPathA(
 		LPCSTR lpPath,
 		LPCSTR lpFileName,
 		LPCSTR lpExtension,
 		DWORD nBufferLength,
 		LPSTR lpBuffer,
-		LPSTR *lpFilePart)
-	{
+		LPSTR *lpFilePart) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SearchPathA));
 
 		DWORD result = Cache::ProcessEnv::SearchPathA(
-			lpPath,
-			lpFileName,
-			lpExtension,
-			nBufferLength,
-			lpBuffer,
-			lpFilePart);
+			lpPath, lpFileName, lpExtension, nBufferLength, lpBuffer, lpFilePart);
 
 		message.AppendValue(lpPath);
 		message.AppendValue(lpFileName);
@@ -37,18 +30,12 @@ namespace Monitor::Windows::Functions::Overrides::ProcessEnv
 		LPCWSTR lpExtension,
 		DWORD nBufferLength,
 		LPWSTR lpBuffer,
-		LPWSTR *lpFilePart)
-	{
+		LPWSTR *lpFilePart) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SearchPathW));
 
 		DWORD result = Cache::ProcessEnv::SearchPathW(
-			lpPath,
-			lpFileName,
-			lpExtension,
-			nBufferLength,
-			lpBuffer,
-			lpFilePart);
+			lpPath, lpFileName, lpExtension, nBufferLength, lpBuffer, lpFilePart);
 
 		message.AppendValue(lpPath);
 		message.AppendValue(lpFileName);

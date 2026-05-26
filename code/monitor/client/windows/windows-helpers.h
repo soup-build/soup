@@ -8,8 +8,7 @@ static Monitor::Windows::ProcessPayload s_ChildPayload;
 static CRITICAL_SECTION s_csChildPayload;
 static LONG s_nChildCnt = 0;
 
-bool CreateProcessInternals(HANDLE hProcess)
-{
+bool CreateProcessInternals(HANDLE hProcess) {
 	EnterCriticalSection(&s_csChildPayload);
 
 	ZeroMemory(&s_ChildPayload, sizeof(s_ChildPayload));
@@ -31,14 +30,14 @@ bool CreateProcessInternals(HANDLE hProcess)
 	return true;
 }
 
-bool IsWhiteListProcess(std::string_view applicationName)
-{
-	// VCTIP is the Visual Studio telemetry service, they really need to stop looking at user folders...
+bool IsWhiteListProcess(std::string_view applicationName) {
+	// VCTIP is the Visual Studio telemetry service, they really need to stop looking at user
+	// folders...
 	return EndsWithIgnoreCase(applicationName, "VCTIP.EXE");
 }
 
-bool IsWhiteListProcess(std::wstring_view applicationName)
-{
-	// VCTIP is the Visual Studio telemetry service, they really need to stop looking at user folders...
+bool IsWhiteListProcess(std::wstring_view applicationName) {
+	// VCTIP is the Visual Studio telemetry service, they really need to stop looking at user
+	// folders...
 	return EndsWithIgnoreCase(applicationName, L"VCTIP.EXE");
 }

@@ -55,8 +55,7 @@ namespace Monitor {
 
 #ifdef TRACE_DETOUR_CLIENT
 		void DebugError(std::string_view message, uint32_t value) {
-			std::cout << "DETOUR-CLIENT-ERROR: " << message << " " << value
-					  << std::endl;
+			std::cout << "DETOUR-CLIENT-ERROR: " << message << " " << value << std::endl;
 		}
 
 		void DebugError(std::string_view message) {
@@ -75,8 +74,7 @@ namespace Monitor {
 			std::cout << "DETOUR-CLIENT: " << result << std::endl;
 		}
 #else
-		template <typename... Args>
-		static void DebugTrace(std::string_view, Args &&...) {
+		template <typename... Args> static void DebugTrace(std::string_view, Args &&...) {
 			// NO-OP
 		}
 #endif

@@ -3,10 +3,8 @@
 #include "functions/cache/file-api.h"
 #include "functions/cache/process-api.h"
 
-namespace Monitor::Linux
-{
-	void AttachDetours()
-	{
+namespace Monitor::Linux {
+	void AttachDetours() {
 		// FileApi
 		Functions::Cache::FileApi::open = (open_ptr)dlsym(RTLD_NEXT, "open");
 		Functions::Cache::FileApi::creat = (creat_ptr)dlsym(RTLD_NEXT, "creat");
@@ -35,7 +33,7 @@ namespace Monitor::Linux
 		Functions::Cache::ProcessApi::execv = (execv_ptr)dlsym(RTLD_NEXT, "execv");
 		Functions::Cache::ProcessApi::execvp = (execvp_ptr)dlsym(RTLD_NEXT, "execvp");
 		Functions::Cache::ProcessApi::execvpe = (execvpe_ptr)dlsym(RTLD_NEXT, "execvpe");
-		
+
 		Functions::Cache::ProcessApi::execve = (execve_ptr)dlsym(RTLD_NEXT, "execve");
 		Functions::Cache::ProcessApi::execveat = (execveat_ptr)dlsym(RTLD_NEXT, "execveat");
 		Functions::Cache::ProcessApi::fexecve = (fexecve_ptr)dlsym(RTLD_NEXT, "fexecve");

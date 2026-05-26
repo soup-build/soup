@@ -1,12 +1,10 @@
 #pragma once
 #include "../cache/file-api.h"
-#include "windows/connection-manager.h"
 #include "file-system-access-sandbox.h"
+#include "windows/connection-manager.h"
 
-namespace Monitor::Windows::Functions::Overrides::FileApi
-{
-	BOOL WINAPI AreFileApisANSI()
-	{
+namespace Monitor::Windows::Functions::Overrides::FileApi {
+	BOOL WINAPI AreFileApisANSI() {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::AreFileApisANSI));
 
@@ -17,10 +15,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	LONG WINAPI CompareFileTime(
-		const FILETIME *lpFileTime1,
-		const FILETIME *lpFileTime2)
-	{
+	LONG WINAPI CompareFileTime(const FILETIME *lpFileTime1, const FILETIME *lpFileTime2) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CompareFileTime));
 
@@ -31,10 +26,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI CreateDirectoryA(
-		LPCSTR lpPathName,
-		LPSECURITY_ATTRIBUTES lpSecurityAttributes)
-	{
+	BOOL WINAPI CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateDirectoryA));
 
@@ -42,16 +34,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpPathName);
 		BOOL result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::CreateDirectoryA(
-				lpPathName,
-				lpSecurityAttributes);
+		} else {
+			result = Cache::FileApi::CreateDirectoryA(lpPathName, lpSecurityAttributes);
 		}
 
 		message.AppendValue(lpPathName);
@@ -61,10 +48,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI CreateDirectoryW(
-		LPCWSTR lpPathName,
-		LPSECURITY_ATTRIBUTES lpSecurityAttributes)
-	{
+	BOOL WINAPI CreateDirectoryW(LPCWSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateDirectoryW));
 
@@ -72,16 +56,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpPathName);
 		BOOL result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::CreateDirectoryW(
-				lpPathName,
-				lpSecurityAttributes);
+		} else {
+			result = Cache::FileApi::CreateDirectoryW(lpPathName, lpSecurityAttributes);
 		}
 
 		message.AppendValue(lpPathName);
@@ -96,8 +75,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		DWORD dwDesiredAccess,
 		DWORD dwShareMode,
 		DWORD dwCreationDisposition,
-		LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams)
-	{
+		LPCREATEFILE2_EXTENDED_PARAMETERS pCreateExParams) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateFile2));
 
@@ -105,19 +83,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsAllowed(lpFileName, dwDesiredAccess);
 		HANDLE result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = INVALID_HANDLE_VALUE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::CreateFile2(
-				lpFileName,
-				dwDesiredAccess,
-				dwShareMode,
-				dwCreationDisposition,
-				pCreateExParams);
+				lpFileName, dwDesiredAccess, dwShareMode, dwCreationDisposition, pCreateExParams);
 		}
 
 		message.AppendValue(lpFileName);
@@ -137,8 +108,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPSECURITY_ATTRIBUTES lpSecurityAttributes,
 		DWORD dwCreationDisposition,
 		DWORD dwFlagsAndAttributes,
-		HANDLE hTemplateFile)
-	{
+		HANDLE hTemplateFile) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateFileA));
 
@@ -146,13 +116,10 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsAllowed(lpFileName, dwDesiredAccess);
 		HANDLE result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = INVALID_HANDLE_VALUE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::CreateFileA(
 				lpFileName,
 				dwDesiredAccess,
@@ -162,7 +129,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 				dwFlagsAndAttributes,
 				hTemplateFile);
 		}
-		
+
 		message.AppendValue(lpFileName);
 		message.AppendValue(dwDesiredAccess);
 		message.AppendValue(dwShareMode);
@@ -181,8 +148,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPSECURITY_ATTRIBUTES lpSecurityAttributes,
 		DWORD dwCreationDisposition,
 		DWORD dwFlagsAndAttributes,
-		HANDLE hTemplateFile)
-	{
+		HANDLE hTemplateFile) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateFileW));
 
@@ -190,13 +156,10 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsAllowed(lpFileName, dwDesiredAccess);
 		HANDLE result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = INVALID_HANDLE_VALUE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::CreateFileW(
 				lpFileName,
 				dwDesiredAccess,
@@ -218,18 +181,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI DefineDosDeviceW(
-		DWORD dwFlags,
-		LPCWSTR lpDeviceName,
-		LPCWSTR lpTargetPath)
-	{
+	BOOL WINAPI DefineDosDeviceW(DWORD dwFlags, LPCWSTR lpDeviceName, LPCWSTR lpTargetPath) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::DefineDosDeviceW));
 
-		BOOL result = Cache::FileApi::DefineDosDeviceW(
-				dwFlags,
-				lpDeviceName,
-				lpTargetPath);
+		BOOL result = Cache::FileApi::DefineDosDeviceW(dwFlags, lpDeviceName, lpTargetPath);
 
 		message.AppendValue(dwFlags);
 		message.AppendValue(lpDeviceName);
@@ -239,9 +195,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI DeleteFileA(
-		LPCSTR lpFileName)
-	{
+	BOOL WINAPI DeleteFileA(LPCSTR lpFileName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::DeleteFileA));
 
@@ -249,13 +203,10 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpFileName);
 		BOOL result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::DeleteFileA(lpFileName);
 		}
 
@@ -266,9 +217,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI DeleteFileW(
-		LPCWSTR lpFileName)
-	{
+	BOOL WINAPI DeleteFileW(LPCWSTR lpFileName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::DeleteFileW));
 
@@ -276,13 +225,10 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpFileName);
 		BOOL result = 0;
 
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::DeleteFileW(lpFileName);
 		}
 
@@ -293,9 +239,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI DeleteVolumeMountPointW(
-		LPCWSTR lpszVolumeMountPoint)
-	{
+	BOOL WINAPI DeleteVolumeMountPointW(LPCWSTR lpszVolumeMountPoint) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::DeleteVolumeMountPointW));
 
@@ -307,10 +251,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FileTimeToLocalFileTime(
-		const FILETIME *lpFileTime,
-		LPFILETIME lpLocalFileTime)
-	{
+	BOOL WINAPI FileTimeToLocalFileTime(const FILETIME *lpFileTime, LPFILETIME lpLocalFileTime) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FileTimeToLocalFileTime));
 
@@ -321,9 +262,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FindClose(
-		HANDLE hFindFile)
-	{
+	BOOL WINAPI FindClose(HANDLE hFindFile) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindClose));
 
@@ -334,9 +273,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FindCloseChangeNotification(
-		HANDLE hChangeHandle)
-	{
+	BOOL WINAPI FindCloseChangeNotification(HANDLE hChangeHandle) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindCloseChangeNotification));
 
@@ -347,18 +284,13 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	HANDLE WINAPI FindFirstChangeNotificationA(
-		LPCSTR lpPathName,
-		BOOL bWatchSubtree,
-		DWORD dwNotifyFilter)
-	{
+	HANDLE WINAPI
+	FindFirstChangeNotificationA(LPCSTR lpPathName, BOOL bWatchSubtree, DWORD dwNotifyFilter) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstChangeNotificationA));
 
-		HANDLE result = Cache::FileApi::FindFirstChangeNotificationA(
-			lpPathName,
-			bWatchSubtree,
-			dwNotifyFilter);
+		HANDLE result =
+			Cache::FileApi::FindFirstChangeNotificationA(lpPathName, bWatchSubtree, dwNotifyFilter);
 
 		message.AppendValue(lpPathName);
 		message.AppendValue(bWatchSubtree);
@@ -367,18 +299,13 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	HANDLE WINAPI FindFirstChangeNotificationW(
-		LPCWSTR lpPathName,
-		BOOL bWatchSubtree,
-		DWORD dwNotifyFilter)
-	{
+	HANDLE WINAPI
+	FindFirstChangeNotificationW(LPCWSTR lpPathName, BOOL bWatchSubtree, DWORD dwNotifyFilter) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstChangeNotificationW));
 
-		HANDLE result = Cache::FileApi::FindFirstChangeNotificationW(
-			lpPathName,
-			bWatchSubtree,
-			dwNotifyFilter);
+		HANDLE result =
+			Cache::FileApi::FindFirstChangeNotificationW(lpPathName, bWatchSubtree, dwNotifyFilter);
 
 		message.AppendValue(lpPathName);
 		message.AppendValue(bWatchSubtree);
@@ -387,10 +314,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	HANDLE WINAPI FindFirstFileA(
-		LPCSTR lpFileName,
-		LPWIN32_FIND_DATAA lpFindFileData)
-	{
+	HANDLE WINAPI FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstFileA));
 
@@ -401,10 +325,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	HANDLE WINAPI FindFirstFileW(
-		LPCWSTR lpFileName,
-		LPWIN32_FIND_DATAW lpFindFileData)
-	{
+	HANDLE WINAPI FindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileData) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstFileW));
 
@@ -421,18 +342,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPVOID lpFindFileData,
 		FINDEX_SEARCH_OPS fSearchOp,
 		LPVOID lpSearchFilter,
-		DWORD dwAdditionalFlags)
-	{
+		DWORD dwAdditionalFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstFileExA));
 
 		HANDLE result = Cache::FileApi::FindFirstFileExA(
-			lpFileName,
-			fInfoLevelId,
-			lpFindFileData,
-			fSearchOp,
-			lpSearchFilter,
-			dwAdditionalFlags);
+			lpFileName, fInfoLevelId, lpFindFileData, fSearchOp, lpSearchFilter, dwAdditionalFlags);
 
 		message.AppendValue(lpFileName);
 
@@ -445,38 +360,25 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPVOID lpFindFileData,
 		FINDEX_SEARCH_OPS fSearchOp,
 		LPVOID lpSearchFilter,
-		DWORD dwAdditionalFlags)
-	{
+		DWORD dwAdditionalFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstFileExW));
 
 		HANDLE result = Cache::FileApi::FindFirstFileExW(
-			lpFileName,
-			fInfoLevelId,
-			lpFindFileData,
-			fSearchOp,
-			lpSearchFilter,
-			dwAdditionalFlags);
+			lpFileName, fInfoLevelId, lpFindFileData, fSearchOp, lpSearchFilter, dwAdditionalFlags);
 
 		message.AppendValue(lpFileName);
 
 		return result;
 	}
 
-	HANDLE WINAPI FindFirstFileNameW(
-		LPCWSTR lpFileName,
-		DWORD dwFlags,
-		LPDWORD StringLength,
-		PWSTR LinkName)
-	{
+	HANDLE WINAPI
+	FindFirstFileNameW(LPCWSTR lpFileName, DWORD dwFlags, LPDWORD StringLength, PWSTR LinkName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstFileNameW));
 
-		HANDLE result = Cache::FileApi::FindFirstFileNameW(
-			lpFileName,
-			dwFlags,
-			StringLength,
-			LinkName);
+		HANDLE result =
+			Cache::FileApi::FindFirstFileNameW(lpFileName, dwFlags, StringLength, LinkName);
 
 		message.AppendValue(lpFileName);
 		message.AppendValue(dwFlags);
@@ -485,44 +387,30 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 	}
 
 	HANDLE WINAPI FindFirstStreamW(
-		LPCWSTR lpFileName,
-		STREAM_INFO_LEVELS InfoLevel,
-		LPVOID lpFindStreamData,
-		DWORD dwFlags)
-	{
+		LPCWSTR lpFileName, STREAM_INFO_LEVELS InfoLevel, LPVOID lpFindStreamData, DWORD dwFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstStreamW));
 
-		HANDLE result = Cache::FileApi::FindFirstStreamW(
-			lpFileName,
-			InfoLevel,
-			lpFindStreamData,
-			dwFlags);
+		HANDLE result =
+			Cache::FileApi::FindFirstStreamW(lpFileName, InfoLevel, lpFindStreamData, dwFlags);
 
 		message.AppendValue(lpFileName);
 
 		return result;
 	}
 
-	HANDLE WINAPI FindFirstVolumeW(
-		LPWSTR lpszVolumeName,
-		DWORD cchBufferLength)
-	{
+	HANDLE WINAPI FindFirstVolumeW(LPWSTR lpszVolumeName, DWORD cchBufferLength) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindFirstVolumeW));
 
-		HANDLE result = Cache::FileApi::FindFirstVolumeW(
-			lpszVolumeName,
-			cchBufferLength);
+		HANDLE result = Cache::FileApi::FindFirstVolumeW(lpszVolumeName, cchBufferLength);
 
 		message.AppendValue(lpszVolumeName);
 
 		return result;
 	}
 
-	BOOL WINAPI FindNextChangeNotification(
-		HANDLE hChangeHandle)
-	{
+	BOOL WINAPI FindNextChangeNotification(HANDLE hChangeHandle) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindNextChangeNotification));
 
@@ -533,10 +421,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FindNextFileA(
-		HANDLE hFindFile,
-		LPWIN32_FIND_DATAA lpFindFileData)
-	{
+	BOOL WINAPI FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindNextFileA));
 
@@ -547,10 +432,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FindNextFileW(
-		HANDLE hFindFile,
-		LPWIN32_FIND_DATAW lpFindFileData)
-	{
+	BOOL WINAPI FindNextFileW(HANDLE hFindFile, LPWIN32_FIND_DATAW lpFindFileData) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindNextFileW));
 
@@ -561,28 +443,18 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FindNextFileNameW(
-		HANDLE hFindStream,
-		LPDWORD StringLength,
-		PWSTR LinkName)
-	{
+	BOOL WINAPI FindNextFileNameW(HANDLE hFindStream, LPDWORD StringLength, PWSTR LinkName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindNextFileNameW));
 
-		BOOL result = Cache::FileApi::FindNextFileNameW(
-			hFindStream,
-			StringLength,
-			LinkName);
+		BOOL result = Cache::FileApi::FindNextFileNameW(hFindStream, StringLength, LinkName);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	BOOL WINAPI FindNextStreamW(
-		HANDLE hFindStream,
-		LPVOID lpFindStreamData)
-	{
+	BOOL WINAPI FindNextStreamW(HANDLE hFindStream, LPVOID lpFindStreamData) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindNextStreamW));
 
@@ -593,27 +465,18 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FindNextVolumeW(
-		HANDLE hFindVolume,
-		LPWSTR lpszVolumeName,
-		DWORD cchBufferLength)
-	{
+	BOOL WINAPI FindNextVolumeW(HANDLE hFindVolume, LPWSTR lpszVolumeName, DWORD cchBufferLength) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindNextVolumeW));
 
-		BOOL result = Cache::FileApi::FindNextVolumeW(
-			hFindVolume,
-			lpszVolumeName,
-			cchBufferLength);
+		BOOL result = Cache::FileApi::FindNextVolumeW(hFindVolume, lpszVolumeName, cchBufferLength);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	BOOL WINAPI FindVolumeClose(
-		HANDLE hFindVolume)
-	{
+	BOOL WINAPI FindVolumeClose(HANDLE hFindVolume) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FindVolumeClose));
 
@@ -624,9 +487,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI FlushFileBuffers(
-		HANDLE hFile)
-	{
+	BOOL WINAPI FlushFileBuffers(HANDLE hFile) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::FlushFileBuffers));
 
@@ -637,10 +498,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetCompressedFileSizeA(
-		LPCSTR lpFileName,
-		LPDWORD lpFileSizeHigh)
-	{
+	DWORD WINAPI GetCompressedFileSizeA(LPCSTR lpFileName, LPDWORD lpFileSizeHigh) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetCompressedFileSizeA));
 
@@ -652,10 +510,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetCompressedFileSizeW(
-		LPCWSTR lpFileName,
-		LPDWORD lpFileSizeHigh)
-	{
+	DWORD WINAPI GetCompressedFileSizeW(LPCWSTR lpFileName, LPDWORD lpFileSizeHigh) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetCompressedFileSizeW));
 
@@ -672,8 +527,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPDWORD lpSectorsPerCluster,
 		LPDWORD lpBytesPerSector,
 		LPDWORD lpNumberOfFreeClusters,
-		LPDWORD lpTotalNumberOfClusters)
-	{
+		LPDWORD lpTotalNumberOfClusters) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetDiskFreeSpaceA));
 
@@ -695,8 +549,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPDWORD lpSectorsPerCluster,
 		LPDWORD lpBytesPerSector,
 		LPDWORD lpNumberOfFreeClusters,
-		LPDWORD lpTotalNumberOfClusters)
-	{
+		LPDWORD lpTotalNumberOfClusters) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetDiskFreeSpaceW));
 
@@ -717,8 +570,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPCSTR lpDirectoryName,
 		PULARGE_INTEGER lpFreeBytesAvailableToCaller,
 		PULARGE_INTEGER lpTotalNumberOfBytes,
-		PULARGE_INTEGER lpTotalNumberOfFreeBytes)
-	{
+		PULARGE_INTEGER lpTotalNumberOfFreeBytes) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetDiskFreeSpaceExA));
 
@@ -738,8 +590,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPCWSTR lpDirectoryName,
 		PULARGE_INTEGER lpFreeBytesAvailableToCaller,
 		PULARGE_INTEGER lpTotalNumberOfBytes,
-		PULARGE_INTEGER lpTotalNumberOfFreeBytes)
-	{
+		PULARGE_INTEGER lpTotalNumberOfFreeBytes) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetDiskFreeSpaceExW));
 
@@ -755,9 +606,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	UINT WINAPI GetDriveTypeA(
-		LPCSTR lpRootPathName)
-	{
+	UINT WINAPI GetDriveTypeA(LPCSTR lpRootPathName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetDriveTypeA));
 
@@ -769,9 +618,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	UINT WINAPI GetDriveTypeW(
-		LPCWSTR lpRootPathName)
-	{
+	UINT WINAPI GetDriveTypeW(LPCWSTR lpRootPathName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetDriveTypeW));
 
@@ -783,24 +630,18 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetFileAttributesA(
-		LPCSTR lpFileName)
-	{
+	DWORD WINAPI GetFileAttributesA(LPCSTR lpFileName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileAttributesA));
 
 		// Check if this file is allowed read access
 		bool blockAccess = !FileSystemAccessSandbox::IsReadAllowed(lpFileName);
 		DWORD result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = INVALID_FILE_ATTRIBUTES;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::GetFileAttributesA(
-				lpFileName);
+		} else {
+			result = Cache::FileApi::GetFileAttributesA(lpFileName);
 		}
 
 		message.AppendValue(lpFileName);
@@ -810,22 +651,17 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetFileAttributesW(
-		LPCWSTR lpFileName)
-	{
+	DWORD WINAPI GetFileAttributesW(LPCWSTR lpFileName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileAttributesW));
 
 		// Check if this file is allowed read access
 		bool blockAccess = !FileSystemAccessSandbox::IsReadAllowed(lpFileName);
 		DWORD result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = INVALID_FILE_ATTRIBUTES;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::GetFileAttributesW(lpFileName);
 		}
 
@@ -837,27 +673,19 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 	}
 
 	BOOL WINAPI GetFileAttributesExA(
-		LPCSTR lpFileName,
-		GET_FILEEX_INFO_LEVELS fInfoLevelId,
-		LPVOID lpFileInformation)
-	{
+		LPCSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileAttributesExA));
 
 		// Check if this file is allowed read access
 		bool blockAccess = !FileSystemAccessSandbox::IsReadAllowed(lpFileName);
 		BOOL result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::GetFileAttributesExA(
-				lpFileName,
-				fInfoLevelId,
-				lpFileInformation);
+		} else {
+			result =
+				Cache::FileApi::GetFileAttributesExA(lpFileName, fInfoLevelId, lpFileInformation);
 		}
 
 		message.AppendValue(lpFileName);
@@ -868,27 +696,19 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 	}
 
 	BOOL WINAPI GetFileAttributesExW(
-		LPCWSTR lpFileName,
-		GET_FILEEX_INFO_LEVELS fInfoLevelId,
-		LPVOID lpFileInformation)
-	{
+		LPCWSTR lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, LPVOID lpFileInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileAttributesExW));
 
 		// Check if this file is allowed read access
 		bool blockAccess = !FileSystemAccessSandbox::IsReadAllowed(lpFileName);
 		BOOL result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::GetFileAttributesExW(
-				lpFileName,
-				fInfoLevelId,
-				lpFileInformation);
+		} else {
+			result =
+				Cache::FileApi::GetFileAttributesExW(lpFileName, fInfoLevelId, lpFileInformation);
 		}
 
 		message.AppendValue(lpFileName);
@@ -898,10 +718,8 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI GetFileInformationByHandle(
-		HANDLE hFile,
-		LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
-	{
+	BOOL WINAPI
+	GetFileInformationByHandle(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATION lpFileInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileInformationByHandle));
 
@@ -912,10 +730,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetFileSize(
-		HANDLE hFile,
-		LPDWORD lpFileSizeHigh)
-	{
+	DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileSize));
 
@@ -926,10 +741,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI GetFileSizeEx(
-		HANDLE hFile,
-		PLARGE_INTEGER lpFileSize)
-	{
+	BOOL WINAPI GetFileSizeEx(HANDLE hFile, PLARGE_INTEGER lpFileSize) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileSizeEx));
 
@@ -944,25 +756,19 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		HANDLE hFile,
 		LPFILETIME lpCreationTime,
 		LPFILETIME lpLastAccessTime,
-		LPFILETIME lpLastWriteTime)
-	{
+		LPFILETIME lpLastWriteTime) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileTime));
 
-		BOOL result = Cache::FileApi::GetFileTime(
-			hFile,
-			lpCreationTime,
-			lpLastAccessTime,
-			lpLastWriteTime);
+		BOOL result =
+			Cache::FileApi::GetFileTime(hFile, lpCreationTime, lpLastAccessTime, lpLastWriteTime);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	DWORD WINAPI GetFileType(
-		HANDLE hFile)
-	{
+	DWORD WINAPI GetFileType(HANDLE hFile) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFileType));
 
@@ -973,60 +779,39 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetFinalPathNameByHandleA(
-		HANDLE hFile,
-		LPSTR lpszFilePath,
-		DWORD cchFilePath,
-		DWORD dwFlags)
-	{
+	DWORD WINAPI
+	GetFinalPathNameByHandleA(HANDLE hFile, LPSTR lpszFilePath, DWORD cchFilePath, DWORD dwFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFinalPathNameByHandleA));
 
-		DWORD result = Cache::FileApi::GetFinalPathNameByHandleA(
-			hFile,
-			lpszFilePath,
-			cchFilePath,
-			dwFlags);
+		DWORD result =
+			Cache::FileApi::GetFinalPathNameByHandleA(hFile, lpszFilePath, cchFilePath, dwFlags);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	DWORD WINAPI GetFinalPathNameByHandleW(
-		HANDLE hFile,
-		LPWSTR lpszFilePath,
-		DWORD cchFilePath,
-		DWORD dwFlags)
-	{
+	DWORD WINAPI
+	GetFinalPathNameByHandleW(HANDLE hFile, LPWSTR lpszFilePath, DWORD cchFilePath, DWORD dwFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFinalPathNameByHandleW));
 
-		DWORD result = Cache::FileApi::GetFinalPathNameByHandleW(
-			hFile,
-			lpszFilePath,
-			cchFilePath,
-			dwFlags);
+		DWORD result =
+			Cache::FileApi::GetFinalPathNameByHandleW(hFile, lpszFilePath, cchFilePath, dwFlags);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	DWORD WINAPI GetFullPathNameA(
-		LPCSTR lpFileName,
-		DWORD nBufferLength,
-		LPSTR lpBuffer,
-		LPSTR *lpFilePart)
-	{
+	DWORD WINAPI
+	GetFullPathNameA(LPCSTR lpFileName, DWORD nBufferLength, LPSTR lpBuffer, LPSTR *lpFilePart) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFullPathNameA));
 
-		DWORD result = Cache::FileApi::GetFullPathNameA(
-			lpFileName,
-			nBufferLength,
-			lpBuffer,
-			lpFilePart);
+		DWORD result =
+			Cache::FileApi::GetFullPathNameA(lpFileName, nBufferLength, lpBuffer, lpFilePart);
 
 		message.AppendValue(lpFileName);
 		message.AppendValue(result);
@@ -1034,20 +819,13 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetFullPathNameW(
-		LPCWSTR lpFileName,
-		DWORD nBufferLength,
-		LPWSTR lpBuffer,
-		LPWSTR *lpFilePart)
-	{
+	DWORD WINAPI
+	GetFullPathNameW(LPCWSTR lpFileName, DWORD nBufferLength, LPWSTR lpBuffer, LPWSTR *lpFilePart) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetFullPathNameW));
 
-		DWORD result = Cache::FileApi::GetFullPathNameW(
-			lpFileName,
-			nBufferLength,
-			lpBuffer,
-			lpFilePart);
+		DWORD result =
+			Cache::FileApi::GetFullPathNameW(lpFileName, nBufferLength, lpBuffer, lpFilePart);
 
 		message.AppendValue(lpFileName);
 		message.AppendValue(lpBuffer);
@@ -1056,8 +834,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetLogicalDrives()
-	{
+	DWORD WINAPI GetLogicalDrives() {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetLogicalDrives));
 
@@ -1068,10 +845,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetLogicalDriveStringsW(
-		DWORD nBufferLength,
-		LPWSTR lpBuffer)
-	{
+	DWORD WINAPI GetLogicalDriveStringsW(DWORD nBufferLength, LPWSTR lpBuffer) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetLogicalDriveStringsW));
 
@@ -1083,18 +857,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetLongPathNameA(
-		LPCSTR lpszShortPath,
-		LPSTR lpszLongPath,
-		DWORD cchBuffer)
-	{
+	DWORD WINAPI GetLongPathNameA(LPCSTR lpszShortPath, LPSTR lpszLongPath, DWORD cchBuffer) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetLongPathNameA));
 
-		DWORD result = Cache::FileApi::GetLongPathNameA(
-			lpszShortPath,
-			lpszLongPath,
-			cchBuffer);
+		DWORD result = Cache::FileApi::GetLongPathNameA(lpszShortPath, lpszLongPath, cchBuffer);
 
 		message.AppendValue(lpszShortPath);
 		message.AppendValue(lpszLongPath);
@@ -1103,18 +870,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetLongPathNameW(
-		LPCWSTR lpszShortPath,
-		LPWSTR lpszLongPath,
-		DWORD cchBuffer)
-	{
+	DWORD WINAPI GetLongPathNameW(LPCWSTR lpszShortPath, LPWSTR lpszLongPath, DWORD cchBuffer) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetLongPathNameW));
 
-		DWORD result = Cache::FileApi::GetLongPathNameW(
-			lpszShortPath,
-			lpszLongPath,
-			cchBuffer);
+		DWORD result = Cache::FileApi::GetLongPathNameW(lpszShortPath, lpszLongPath, cchBuffer);
 
 		message.AppendValue(lpszShortPath);
 		message.AppendValue(lpszLongPath);
@@ -1123,18 +883,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetShortPathNameW(
-		LPCWSTR lpszLongPath,
-		LPWSTR lpszShortPath,
-		DWORD cchBuffer)
-	{
+	DWORD WINAPI GetShortPathNameW(LPCWSTR lpszLongPath, LPWSTR lpszShortPath, DWORD cchBuffer) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetShortPathNameW));
 
-		DWORD result = Cache::FileApi::GetShortPathNameW(
-			lpszLongPath,
-			lpszShortPath,
-			cchBuffer);
+		DWORD result = Cache::FileApi::GetShortPathNameW(lpszLongPath, lpszShortPath, cchBuffer);
 
 		message.AppendValue(lpszLongPath);
 		message.AppendValue(lpszShortPath);
@@ -1143,20 +896,13 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	UINT WINAPI GetTempFileNameA(
-		LPCSTR lpPathName,
-		LPCSTR lpPrefixString,
-		UINT uUnique,
-		LPSTR lpTempFileName)
-	{
+	UINT WINAPI
+	GetTempFileNameA(LPCSTR lpPathName, LPCSTR lpPrefixString, UINT uUnique, LPSTR lpTempFileName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetTempFileNameA));
 
-		UINT result = Cache::FileApi::GetTempFileNameA(
-			lpPathName,
-			lpPrefixString,
-			uUnique,
-			lpTempFileName);
+		UINT result =
+			Cache::FileApi::GetTempFileNameA(lpPathName, lpPrefixString, uUnique, lpTempFileName);
 
 		message.AppendValue(lpPathName);
 		message.AppendValue(lpPrefixString);
@@ -1168,19 +914,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 	}
 
 	UINT WINAPI GetTempFileNameW(
-		LPCWSTR lpPathName,
-		LPCWSTR lpPrefixString,
-		UINT uUnique,
-		LPWSTR lpTempFileName)
-	{
+		LPCWSTR lpPathName, LPCWSTR lpPrefixString, UINT uUnique, LPWSTR lpTempFileName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetTempFileNameW));
 
-		UINT result = Cache::FileApi::GetTempFileNameW(
-			lpPathName,
-			lpPrefixString,
-			uUnique,
-			lpTempFileName);
+		UINT result =
+			Cache::FileApi::GetTempFileNameW(lpPathName, lpPrefixString, uUnique, lpTempFileName);
 
 		message.AppendValue(lpPathName);
 		message.AppendValue(lpPrefixString);
@@ -1191,10 +930,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetTempPathA(
-		DWORD nBufferLength,
-		LPSTR lpBuffer)
-	{
+	DWORD WINAPI GetTempPathA(DWORD nBufferLength, LPSTR lpBuffer) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetTempPathA));
 
@@ -1206,10 +942,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI GetTempPathW(
-		DWORD nBufferLength,
-		LPWSTR lpBuffer)
-	{
+	DWORD WINAPI GetTempPathW(DWORD nBufferLength, LPWSTR lpBuffer) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetTempPathW));
 
@@ -1229,8 +962,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPDWORD lpMaximumComponentLength,
 		LPDWORD lpFileSystemFlags,
 		LPSTR lpFileSystemNameBuffer,
-		DWORD nFileSystemNameSize)
-	{
+		DWORD nFileSystemNameSize) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetVolumeInformationA));
 
@@ -1257,8 +989,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPDWORD lpMaximumComponentLength,
 		LPDWORD lpFileSystemFlags,
 		LPWSTR lpFileSystemNameBuffer,
-		DWORD nFileSystemNameSize)
-	{
+		DWORD nFileSystemNameSize) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetVolumeInformationW));
 
@@ -1285,8 +1016,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPDWORD lpMaximumComponentLength,
 		LPDWORD lpFileSystemFlags,
 		LPWSTR lpFileSystemNameBuffer,
-		DWORD nFileSystemNameSize)
-	{
+		DWORD nFileSystemNameSize) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetVolumeInformationByHandleW));
 
@@ -1306,17 +1036,13 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 	}
 
 	BOOL WINAPI GetVolumeNameForVolumeMountPointW(
-		LPCWSTR lpszVolumeMountPoint,
-		LPWSTR lpszVolumeName,
-		DWORD cchBufferLength)
-	{
+		LPCWSTR lpszVolumeMountPoint, LPWSTR lpszVolumeName, DWORD cchBufferLength) {
 		auto message = MessageSender(MessageType::Detour);
-		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetVolumeNameForVolumeMountPointW));
+		message.AppendValue(
+			static_cast<uint32_t>(DetourEventType::GetVolumeNameForVolumeMountPointW));
 
 		BOOL result = Cache::FileApi::GetVolumeNameForVolumeMountPointW(
-			lpszVolumeMountPoint,
-			lpszVolumeName,
-			cchBufferLength);
+			lpszVolumeMountPoint, lpszVolumeName, cchBufferLength);
 
 		message.AppendValue(result);
 
@@ -1327,34 +1053,26 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPCWSTR lpszVolumeName,
 		LPWCH lpszVolumePathNames,
 		DWORD cchBufferLength,
-		PDWORD lpcchReturnLength)
-	{
+		PDWORD lpcchReturnLength) {
 		auto message = MessageSender(MessageType::Detour);
-		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetVolumePathNamesForVolumeNameW));
+		message.AppendValue(
+			static_cast<uint32_t>(DetourEventType::GetVolumePathNamesForVolumeNameW));
 
 		BOOL result = Cache::FileApi::GetVolumePathNamesForVolumeNameW(
-			lpszVolumeName,
-			lpszVolumePathNames,
-			cchBufferLength,
-			lpcchReturnLength);
+			lpszVolumeName, lpszVolumePathNames, cchBufferLength, lpcchReturnLength);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	BOOL WINAPI GetVolumePathNameW(
-		LPCWSTR lpszFileName,
-		LPWSTR lpszVolumePathName,
-		DWORD cchBufferLength)
-	{
+	BOOL WINAPI
+	GetVolumePathNameW(LPCWSTR lpszFileName, LPWSTR lpszVolumePathName, DWORD cchBufferLength) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::GetVolumePathNameW));
 
-		BOOL result = Cache::FileApi::GetVolumePathNameW(
-			lpszFileName,
-			lpszVolumePathName,
-			cchBufferLength);
+		BOOL result =
+			Cache::FileApi::GetVolumePathNameW(lpszFileName, lpszVolumePathName, cchBufferLength);
 
 		message.AppendValue(lpszFileName);
 		message.AppendValue(result);
@@ -1362,10 +1080,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI LocalFileTimeToFileTime(
-		const FILETIME *lpLocalFileTime,
-		LPFILETIME lpFileTime)
-	{
+	BOOL WINAPI LocalFileTimeToFileTime(const FILETIME *lpLocalFileTime, LPFILETIME lpFileTime) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::LocalFileTimeToFileTime));
 
@@ -1381,8 +1096,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		DWORD dwFileOffsetLow,
 		DWORD dwFileOffsetHigh,
 		DWORD nNumberOfBytesToLockLow,
-		DWORD nNumberOfBytesToLockHigh)
-	{
+		DWORD nNumberOfBytesToLockHigh) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::LockFile));
 
@@ -1404,8 +1118,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		DWORD dwReserved,
 		DWORD nNumberOfBytesToLockLow,
 		DWORD nNumberOfBytesToLockHigh,
-		LPOVERLAPPED lpOverlapped)
-	{
+		LPOVERLAPPED lpOverlapped) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::LockFileEx));
 
@@ -1422,18 +1135,11 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	DWORD WINAPI QueryDosDeviceW(
-		LPCWSTR lpDeviceName,
-		LPWSTR lpTargetPath,
-		DWORD ucchMax)
-	{
+	DWORD WINAPI QueryDosDeviceW(LPCWSTR lpDeviceName, LPWSTR lpTargetPath, DWORD ucchMax) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::QueryDosDeviceW));
 
-		DWORD result = Cache::FileApi::QueryDosDeviceW(
-			lpDeviceName,
-			lpTargetPath,
-			ucchMax);
+		DWORD result = Cache::FileApi::QueryDosDeviceW(lpDeviceName, lpTargetPath, ucchMax);
 
 		message.AppendValue(lpDeviceName);
 		message.AppendValue(result);
@@ -1446,17 +1152,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPVOID lpBuffer,
 		DWORD nNumberOfBytesToRead,
 		LPDWORD lpNumberOfBytesRead,
-		LPOVERLAPPED lpOverlapped)
-	{
+		LPOVERLAPPED lpOverlapped) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::ReadFile));
 
 		BOOL result = Cache::FileApi::ReadFile(
-			hFile,
-			lpBuffer,
-			nNumberOfBytesToRead,
-			lpNumberOfBytesRead,
-			lpOverlapped);
+			hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
 
 		message.AppendValue(result);
 
@@ -1468,17 +1169,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPVOID lpBuffer,
 		DWORD nNumberOfBytesToRead,
 		LPOVERLAPPED lpOverlapped,
-		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
-	{
+		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::ReadFileEx));
 
 		BOOL result = Cache::FileApi::ReadFileEx(
-			hFile,
-			lpBuffer,
-			nNumberOfBytesToRead,
-			lpOverlapped,
-			lpCompletionRoutine);
+			hFile, lpBuffer, nNumberOfBytesToRead, lpOverlapped, lpCompletionRoutine);
 
 		message.AppendValue(result);
 
@@ -1490,39 +1186,29 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		FILE_SEGMENT_ELEMENT aSegmentArray[],
 		DWORD nNumberOfBytesToRead,
 		LPDWORD lpReserved,
-		LPOVERLAPPED lpOverlapped)
-	{
+		LPOVERLAPPED lpOverlapped) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::ReadFileScatter));
 
 		BOOL result = Cache::FileApi::ReadFileScatter(
-			hFile,
-			aSegmentArray,
-			nNumberOfBytesToRead,
-			lpReserved,
-			lpOverlapped);
+			hFile, aSegmentArray, nNumberOfBytesToRead, lpReserved, lpOverlapped);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	BOOL WINAPI RemoveDirectoryA(
-		LPCSTR lpPathName)
-	{
+	BOOL WINAPI RemoveDirectoryA(LPCSTR lpPathName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::RemoveDirectoryA));
 
 		// Check if this file is allowed write access
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpPathName);
 		BOOL result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::RemoveDirectoryA(lpPathName);
 		}
 
@@ -1533,22 +1219,17 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI RemoveDirectoryW(
-		LPCWSTR lpPathName)
-	{
+	BOOL WINAPI RemoveDirectoryW(LPCWSTR lpPathName) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::RemoveDirectoryW));
 
 		// Check if this file is allowed write access
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpPathName);
 		BOOL result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::FileApi::RemoveDirectoryW(lpPathName);
 		}
 
@@ -1559,9 +1240,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI SetEndOfFile(
-		HANDLE hFile)
-	{
+	BOOL WINAPI SetEndOfFile(HANDLE hFile) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetEndOfFile));
 
@@ -1572,42 +1251,32 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	void WINAPI SetFileApisToANSI()
-	{
+	void WINAPI SetFileApisToANSI() {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileApisToANSI));
 
 		Cache::FileApi::SetFileApisToANSI();
 	}
 
-	void WINAPI SetFileApisToOEM()
-	{
+	void WINAPI SetFileApisToOEM() {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileApisToOEM));
 
 		Cache::FileApi::SetFileApisToOEM();
 	}
 
-	BOOL WINAPI SetFileAttributesA(
-		LPCSTR lpFileName,
-		DWORD  dwFileAttributes)
-	{
+	BOOL WINAPI SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileAttributesA));
 
 		// Check if this file is allowed write access
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpFileName);
 		BOOL result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::SetFileAttributesA(
-				lpFileName,
-				dwFileAttributes);
+		} else {
+			result = Cache::FileApi::SetFileAttributesA(lpFileName, dwFileAttributes);
 		}
 
 		message.AppendValue(lpFileName);
@@ -1617,26 +1286,18 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		return result;
 	}
 
-	BOOL WINAPI SetFileAttributesW(
-		LPCWSTR lpFileName,
-		DWORD  dwFileAttributes)
-	{
+	BOOL WINAPI SetFileAttributesW(LPCWSTR lpFileName, DWORD dwFileAttributes) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileAttributesW));
 
 		// Check if this file is allowed write access
 		bool blockAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpFileName);
 		BOOL result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
-			result = Cache::FileApi::SetFileAttributesW(
-				lpFileName,
-				dwFileAttributes);
+		} else {
+			result = Cache::FileApi::SetFileAttributesW(lpFileName, dwFileAttributes);
 		}
 
 		message.AppendValue(lpFileName);
@@ -1650,34 +1311,25 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		HANDLE hFile,
 		FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
 		LPVOID lpFileInformation,
-		DWORD dwBufferSize)
-	{
+		DWORD dwBufferSize) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileInformationByHandle));
 
 		BOOL result = Cache::FileApi::SetFileInformationByHandle(
-			hFile,
-			FileInformationClass,
-			lpFileInformation,
-			dwBufferSize);
+			hFile, FileInformationClass, lpFileInformation, dwBufferSize);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	BOOL WINAPI SetFileIoOverlappedRange(
-		HANDLE FileHandle,
-		PUCHAR OverlappedRangeStart,
-		ULONG Length)
-	{
+	BOOL WINAPI
+	SetFileIoOverlappedRange(HANDLE FileHandle, PUCHAR OverlappedRangeStart, ULONG Length) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileIoOverlappedRange));
 
-		BOOL result = Cache::FileApi::SetFileIoOverlappedRange(
-			FileHandle,
-			OverlappedRangeStart,
-			Length);
+		BOOL result =
+			Cache::FileApi::SetFileIoOverlappedRange(FileHandle, OverlappedRangeStart, Length);
 
 		message.AppendValue(result);
 
@@ -1685,19 +1337,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 	}
 
 	DWORD WINAPI SetFilePointer(
-		HANDLE hFile,
-		LONG lDistanceToMove,
-		PLONG lpDistanceToMoveHigh,
-		DWORD dwMoveMethod)
-	{
+		HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFilePointer));
 
 		DWORD result = Cache::FileApi::SetFilePointer(
-			hFile,
-			lDistanceToMove,
-			lpDistanceToMoveHigh,
-			dwMoveMethod);
+			hFile, lDistanceToMove, lpDistanceToMoveHigh, dwMoveMethod);
 
 		message.AppendValue(result);
 
@@ -1708,16 +1353,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		HANDLE hFile,
 		LARGE_INTEGER liDistanceToMove,
 		PLARGE_INTEGER lpNewFilePointer,
-		DWORD dwMoveMethod)
-	{
+		DWORD dwMoveMethod) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFilePointerEx));
 
 		BOOL result = Cache::FileApi::SetFilePointerEx(
-			hFile,
-			liDistanceToMove,
-			lpNewFilePointer,
-			dwMoveMethod);
+			hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
 
 		message.AppendValue(result);
 
@@ -1728,26 +1369,19 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		HANDLE hFile,
 		const FILETIME *lpCreationTime,
 		const FILETIME *lpLastAccessTime,
-		const FILETIME *lpLastWriteTime)
-	{
+		const FILETIME *lpLastWriteTime) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileTime));
 
-		BOOL result = Cache::FileApi::SetFileTime(
-			hFile,
-			lpCreationTime,
-			lpLastAccessTime,
-			lpLastWriteTime);
+		BOOL result =
+			Cache::FileApi::SetFileTime(hFile, lpCreationTime, lpLastAccessTime, lpLastWriteTime);
 
 		message.AppendValue(result);
 
 		return result;
 	}
 
-	BOOL WINAPI SetFileValidData(
-		HANDLE   hFile,
-		LONGLONG ValidDataLength)
-	{
+	BOOL WINAPI SetFileValidData(HANDLE hFile, LONGLONG ValidDataLength) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::SetFileValidData));
 
@@ -1763,8 +1397,7 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		DWORD dwFileOffsetLow,
 		DWORD dwFileOffsetHigh,
 		DWORD nNumberOfBytesToUnlockLow,
-		DWORD nNumberOfBytesToUnlockHigh)
-	{
+		DWORD nNumberOfBytesToUnlockHigh) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::UnlockFile));
 
@@ -1785,17 +1418,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		DWORD dwReserved,
 		DWORD nNumberOfBytesToUnlockLow,
 		DWORD nNumberOfBytesToUnlockHigh,
-		LPOVERLAPPED lpOverlapped)
-	{
+		LPOVERLAPPED lpOverlapped) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::UnlockFileEx));
 
 		BOOL result = Cache::FileApi::UnlockFileEx(
-			hFile,
-			dwReserved,
-			nNumberOfBytesToUnlockLow,
-			nNumberOfBytesToUnlockHigh,
-			lpOverlapped);
+			hFile, dwReserved, nNumberOfBytesToUnlockLow, nNumberOfBytesToUnlockHigh, lpOverlapped);
 
 		message.AppendValue(result);
 
@@ -1807,17 +1435,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPCVOID lpBuffer,
 		DWORD nNumberOfBytesToWrite,
 		LPDWORD lpNumberOfBytesWritten,
-		LPOVERLAPPED lpOverlapped)
-	{
+		LPOVERLAPPED lpOverlapped) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::WriteFile));
 
 		BOOL result = Cache::FileApi::WriteFile(
-			hFile,
-			lpBuffer,
-			nNumberOfBytesToWrite,
-			lpNumberOfBytesWritten,
-			lpOverlapped);
+			hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
 
 		message.AppendValue(result);
 
@@ -1829,17 +1452,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		LPCVOID lpBuffer,
 		DWORD nNumberOfBytesToWrite,
 		LPOVERLAPPED lpOverlapped,
-		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
-	{
+		LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::WriteFileEx));
 
 		BOOL result = Cache::FileApi::WriteFileEx(
-			hFile,
-			lpBuffer,
-			nNumberOfBytesToWrite,
-			lpOverlapped,
-			lpCompletionRoutine);
+			hFile, lpBuffer, nNumberOfBytesToWrite, lpOverlapped, lpCompletionRoutine);
 
 		message.AppendValue(result);
 
@@ -1851,17 +1469,12 @@ namespace Monitor::Windows::Functions::Overrides::FileApi
 		FILE_SEGMENT_ELEMENT aSegmentArray[],
 		DWORD nNumberOfBytesToWrite,
 		LPDWORD lpReserved,
-		LPOVERLAPPED lpOverlapped)
-	{
+		LPOVERLAPPED lpOverlapped) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::WriteFileGather));
 
 		BOOL result = Cache::FileApi::WriteFileGather(
-			hFile,
-			aSegmentArray,
-			nNumberOfBytesToWrite,
-			lpReserved,
-			lpOverlapped);
+			hFile, aSegmentArray, nNumberOfBytesToWrite, lpReserved, lpOverlapped);
 
 		message.AppendValue(result);
 
