@@ -22,8 +22,7 @@ namespace Soup::Core {
 	export class SDKConfig {
 	private:
 		static constexpr const char *Property_Name = "Name";
-		static constexpr const char *Property_SourceDirectories =
-			"SourceDirectories";
+		static constexpr const char *Property_SourceDirectories = "SourceDirectories";
 		static constexpr const char *Property_Properties = "Properties";
 
 	public:
@@ -31,18 +30,22 @@ namespace Soup::Core {
 		/// Initializes a new instance of the <see cref="SDKConfig"/> class.
 		/// </summary>
 		SDKConfig()
-			: _table() {}
+			: _table() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SDKConfig"/> class.
 		/// </summary>
 		SDKConfig(RecipeTable table)
-			: _table(std::move(table)) {}
+			: _table(std::move(table)) {
+		}
 
 		/// <summary>
 		/// Gets or sets the Name
 		/// </summary>
-		bool HasName() const { return HasValue(Property_Name); }
+		bool HasName() const {
+			return HasValue(Property_Name);
+		}
 
 		std::string GetName() const {
 			if (!HasName())
@@ -74,7 +77,9 @@ namespace Soup::Core {
 		/// <summary>
 		/// Gets or sets the properties table
 		/// </summary>
-		bool HasProperties() { return HasValue(Property_Properties); }
+		bool HasProperties() {
+			return HasValue(Property_Properties);
+		}
 
 		RecipeTable GetProperties() {
 			if (!HasSourceDirectories())
@@ -86,7 +91,9 @@ namespace Soup::Core {
 		/// <summary>
 		/// Raw access
 		/// </summary>
-		RecipeTable &GetTable() { return _table; }
+		RecipeTable &GetTable() {
+			return _table;
+		}
 
 		/// <summary>
 		/// Equality operator
@@ -98,7 +105,9 @@ namespace Soup::Core {
 		/// <summary>
 		/// Inequality operator
 		/// </summary>
-		bool operator!=(const SDKConfig &rhs) const { return !(*this == rhs); }
+		bool operator!=(const SDKConfig &rhs) const {
+			return !(*this == rhs);
+		}
 
 	private:
 		bool HasValue(std::string_view key) const {

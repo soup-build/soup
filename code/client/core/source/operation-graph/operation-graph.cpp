@@ -36,14 +36,15 @@ namespace Soup::Core {
 		OperationGraph()
 			: _rootOperations(),
 			  _operations(),
-			  _operationLookup() {}
+			  _operationLookup() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OperationGraph"/>
 		/// class.
 		/// </summary>
-		OperationGraph(std::vector<OperationId> rootOperations,
-					   std::vector<OperationInfo> operations)
+		OperationGraph(
+			std::vector<OperationId> rootOperations, std::vector<OperationInfo> operations)
 			: _rootOperations(std::move(rootOperations)),
 			  _operations(),
 			  _operationLookup() {
@@ -92,8 +93,7 @@ namespace Soup::Core {
 		/// <summary>
 		/// Find an operation info
 		/// </summary>
-		bool TryFindOperation(const CommandInfo &command,
-							  OperationId &operationId) const {
+		bool TryFindOperation(const CommandInfo &command, OperationId &operationId) const {
 			auto findResult = _operationLookup.find(command);
 			if (findResult != _operationLookup.end()) {
 				operationId = findResult->second;
@@ -111,8 +111,7 @@ namespace Soup::Core {
 			if (findResult != _operations.end()) {
 				return findResult->second;
 			} else {
-				throw std::runtime_error(
-					"The provided operation id does not exist");
+				throw std::runtime_error("The provided operation id does not exist");
 			}
 		}
 		const OperationInfo &GetOperationInfo(OperationId operationId) const {
@@ -120,8 +119,7 @@ namespace Soup::Core {
 			if (findResult != _operations.end()) {
 				return findResult->second;
 			} else {
-				throw std::runtime_error(
-					"The provided operation id does not exist");
+				throw std::runtime_error("The provided operation id does not exist");
 			}
 		}
 
@@ -129,17 +127,13 @@ namespace Soup::Core {
 		/// Add an operation info
 		/// </summary>
 		OperationInfo &AddOperation(OperationInfo info) {
-			auto insertLookupResult =
-				_operationLookup.emplace(info.Command, info.Id);
+			auto insertLookupResult = _operationLookup.emplace(info.Command, info.Id);
 			if (!insertLookupResult.second)
-				throw std::runtime_error(
-					"The provided command already exists in the graph");
+				throw std::runtime_error("The provided command already exists in the graph");
 
-			auto [insertIterator, wasInserted] =
-				_operations.emplace(info.Id, std::move(info));
+			auto [insertIterator, wasInserted] = _operations.emplace(info.Id, std::move(info));
 			if (!wasInserted)
-				throw std::runtime_error(
-					"The provided operation id already exists in the graph");
+				throw std::runtime_error("The provided operation id already exists in the graph");
 
 			return insertIterator->second;
 		}
@@ -148,8 +142,7 @@ namespace Soup::Core {
 		/// Equality operator
 		/// </summary>
 		bool operator==(const OperationGraph &rhs) const {
-			return _rootOperations == rhs._rootOperations &&
-				   _operations == rhs._operations;
+			return _rootOperations == rhs._rootOperations && _operations == rhs._operations;
 		}
 
 		/// <summary>

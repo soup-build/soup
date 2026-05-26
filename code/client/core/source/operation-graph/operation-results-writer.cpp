@@ -32,14 +32,14 @@ namespace Soup::Core {
 		// Time, time since 00:00:00 Coordinated Universal Time (UTC), Thursday,
 		// 1 January 1970, not counting leap seconds
 		using ContentTimePeriod = std::ratio<1, 10'000'000>;
-		using ContentDuration =
-			std::chrono::duration<long long, ContentTimePeriod>;
+		using ContentDuration = std::chrono::duration<long long, ContentTimePeriod>;
 
 	public:
-		static void Serialize(const OperationResults &state,
-							  const std::set<FileId> &files,
-							  const FileSystemState &fileSystemState,
-							  std::ostream &stream) {
+		static void Serialize(
+			const OperationResults &state,
+			const std::set<FileId> &files,
+			const FileSystemState &fileSystemState,
+			std::ostream &stream) {
 			// Write the File Header with version
 			stream.write("BOR\0", 4);
 			WriteValue(stream, FileVersion);
@@ -50,8 +50,7 @@ namespace Soup::Core {
 			for (auto fileId : files) {
 				// Write the file id + path length + path
 				WriteValue(stream, fileId);
-				WriteValue(stream,
-						   fileSystemState.GetFilePath(fileId).ToString());
+				WriteValue(stream, fileSystemState.GetFilePath(fileId).ToString());
 			}
 
 			// Write out the set of results
@@ -64,9 +63,8 @@ namespace Soup::Core {
 		}
 
 	private:
-		static void WriteOperationResult(std::ostream &stream,
-										 OperationId operationId,
-										 const OperationResult &result) {
+		static void WriteOperationResult(
+			std::ostream &stream, OperationId operationId, const OperationResult &result) {
 			// Write out the operation id
 			WriteValue(stream, operationId);
 
@@ -76,17 +74,14 @@ namespace Soup::Core {
 // Use system clock with a known epoch
 #ifdef _WIN32
 			auto evaluateTimeSystem =
-				std::chrono::clock_cast<std::chrono::system_clock>(
-					result.EvaluateTime);
+				std::chrono::clock_cast<std::chrono::system_clock>(result.EvaluateTime);
 #else
-			auto evaluateTimeSystem =
-				std::chrono::file_clock::to_sys(result.EvaluateTime);
+			auto evaluateTimeSystem = std::chrono::file_clock::to_sys(result.EvaluateTime);
 #endif
 
 			// Write the tick offset of the system clock since its epoch
 			auto evaluateTimeDuration =
-				std::chrono::duration_cast<ContentDuration>(
-					evaluateTimeSystem.time_since_epoch());
+				std::chrono::duration_cast<ContentDuration>(evaluateTimeSystem.time_since_epoch());
 			int64_t evaluateTimeCount = evaluateTimeDuration.count();
 			WriteValue(stream, evaluateTimeCount);
 
@@ -99,8 +94,7 @@ namespace Soup::Core {
 			// Write out the optional observed values
 			WriteValue(stream, result.ObservedValues.has_value());
 			if (result.ObservedValues.has_value()) {
-				ValueTableWriter::WriteValueTable(
-					stream, result.ObservedValues.value());
+				ValueTableWriter::WriteValueTable(stream, result.ObservedValues.value());
 			}
 		}
 
@@ -114,8 +108,7 @@ namespace Soup::Core {
 
 		static void WriteValue(std::ostream &stream, bool value) {
 			uint32_t integerValue = value ? 1u : 0u;
-			stream.write(reinterpret_cast<char *>(&integerValue),
-						 sizeof(uint32_t));
+			stream.write(reinterpret_cast<char *>(&integerValue), sizeof(uint32_t));
 		}
 
 		static void WriteValue(std::ostream &stream, std::string_view value) {
@@ -123,8 +116,7 @@ namespace Soup::Core {
 			stream.write(value.data(), value.size());
 		}
 
-		static void WriteValues(std::ostream &stream,
-								const std::vector<uint32_t> &values) {
+		static void WriteValues(std::ostream &stream, const std::vector<uint32_t> &values) {
 			WriteValue(stream, static_cast<uint32_t>(values.size()));
 			for (auto &value : values) {
 				WriteValue(stream, value);

@@ -29,14 +29,16 @@ namespace Soup::Core {
 		/// class.
 		/// </summary>
 		OperationResults()
-			: _results() {}
+			: _results() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OperationResults"/>
 		/// class.
 		/// </summary>
 		OperationResults(std::map<OperationId, OperationResult> results)
-			: _results(std::move(results)) {}
+			: _results(std::move(results)) {
+		}
 
 		/// <summary>
 		/// Get Results
@@ -64,8 +66,8 @@ namespace Soup::Core {
 		/// <summary>
 		/// Add an operation result
 		/// </summary>
-		OperationResult &AddOrUpdateOperationResult(OperationId operationId,
-													OperationResult result) {
+		OperationResult &AddOrUpdateOperationResult(
+			OperationId operationId, OperationResult result) {
 			auto [insertIterator, wasInserted] =
 				_results.insert_or_assign(operationId, std::move(result));
 			return insertIterator->second;

@@ -21,18 +21,17 @@ namespace Soup::Core {
 
 	public:
 		BuildHistoryChecker(FileSystemState &fileSystemState)
-			: _fileSystemState(fileSystemState) {}
+			: _fileSystemState(fileSystemState) {
+		}
 
 		/// <summary>
 		/// Perform a check if the last evaluate time is outdated with
 		/// respect to the input files
 		/// </summary>
 		bool IsOutdated(
-			std::chrono::time_point<std::chrono::file_clock> lastEvaluateTime,
-			FileId inputFile) {
+			std::chrono::time_point<std::chrono::file_clock> lastEvaluateTime, FileId inputFile) {
 			auto lastWriteTime = _fileSystemState.GetLastWriteTime(inputFile);
-			const auto &targetFilePath =
-				_fileSystemState.GetFilePath(inputFile);
+			const auto &targetFilePath = _fileSystemState.GetFilePath(inputFile);
 
 			// Perform the final check
 			if (!lastWriteTime.has_value()) {
@@ -41,8 +40,7 @@ namespace Soup::Core {
 				return true;
 			} else if (targetFilePath.HasFileName()) {
 				if (lastWriteTime.value() > lastEvaluateTime) {
-					Log::Info("File altered after last evaluate [{}]",
-							  targetFilePath.ToString());
+					Log::Info("File altered after last evaluate [{}]", targetFilePath.ToString());
 					return true;
 				} else {
 					return false;

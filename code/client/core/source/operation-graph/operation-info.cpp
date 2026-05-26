@@ -46,13 +46,17 @@ export namespace Soup::Core {
 			  ReadAccess(),
 			  WriteAccess(),
 			  Children(),
-			  DependencyCount(0) {}
+			  DependencyCount(0) {
+		}
 
-		OperationInfo(OperationId id, std::string title, CommandInfo command,
-					  std::vector<FileId> declaredInput,
-					  std::vector<FileId> declaredOutput,
-					  std::vector<FileId> readAccess,
-					  std::vector<FileId> writeAccess)
+		OperationInfo(
+			OperationId id,
+			std::string title,
+			CommandInfo command,
+			std::vector<FileId> declaredInput,
+			std::vector<FileId> declaredOutput,
+			std::vector<FileId> readAccess,
+			std::vector<FileId> writeAccess)
 			: Id(id),
 			  Title(std::move(title)),
 			  Command(std::move(command)),
@@ -61,15 +65,19 @@ export namespace Soup::Core {
 			  ReadAccess(std::move(readAccess)),
 			  WriteAccess(std::move(writeAccess)),
 			  Children(),
-			  DependencyCount(0) {}
+			  DependencyCount(0) {
+		}
 
-		OperationInfo(OperationId id, std::string title, CommandInfo command,
-					  std::vector<FileId> declaredInput,
-					  std::vector<FileId> declaredOutput,
-					  std::vector<FileId> readAccess,
-					  std::vector<FileId> writeAccess,
-					  std::vector<OperationId> children,
-					  uint32_t dependencyCount)
+		OperationInfo(
+			OperationId id,
+			std::string title,
+			CommandInfo command,
+			std::vector<FileId> declaredInput,
+			std::vector<FileId> declaredOutput,
+			std::vector<FileId> readAccess,
+			std::vector<FileId> writeAccess,
+			std::vector<OperationId> children,
+			uint32_t dependencyCount)
 			: Id(id),
 			  Title(std::move(title)),
 			  Command(std::move(command)),
@@ -78,16 +86,14 @@ export namespace Soup::Core {
 			  ReadAccess(std::move(readAccess)),
 			  WriteAccess(std::move(writeAccess)),
 			  Children(std::move(children)),
-			  DependencyCount(dependencyCount) {}
+			  DependencyCount(dependencyCount) {
+		}
 
 		bool operator==(const OperationInfo &rhs) const {
-			return Id == rhs.Id && Title == rhs.Title &&
-				   Command == rhs.Command &&
-				   DeclaredInput == rhs.DeclaredInput &&
-				   DeclaredOutput == rhs.DeclaredOutput &&
-				   ReadAccess == rhs.ReadAccess &&
-				   WriteAccess == rhs.WriteAccess && Children == rhs.Children &&
-				   DependencyCount == rhs.DependencyCount;
+			return Id == rhs.Id && Title == rhs.Title && Command == rhs.Command &&
+				   DeclaredInput == rhs.DeclaredInput && DeclaredOutput == rhs.DeclaredOutput &&
+				   ReadAccess == rhs.ReadAccess && WriteAccess == rhs.WriteAccess &&
+				   Children == rhs.Children && DependencyCount == rhs.DependencyCount;
 		}
 	};
 }

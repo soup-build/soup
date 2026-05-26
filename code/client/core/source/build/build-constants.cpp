@@ -100,8 +100,8 @@ export namespace Soup::Core::Build::Constants {
 
 	// TODO: Find a better place for this
 	Path GetSoupUserDataPath() {
-		auto result = System::IFileSystem::Current().GetUserProfileDirectory() +
-					  SoupLocalStoreDirectory();
+		auto result =
+			System::IFileSystem::Current().GetUserProfileDirectory() + SoupLocalStoreDirectory();
 		return result;
 	}
 

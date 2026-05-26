@@ -34,34 +34,41 @@ namespace Soup::Core {
 		/// </summary>
 		PackageWithArtifactReference()
 			: _packageReference(),
-			  _artifactDigest(std::nullopt) {}
+			  _artifactDigest(std::nullopt) {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see
 		/// cref="PackageWithArtifactReference"/> class.
 		/// </summary>
-		PackageWithArtifactReference(PackageReference packageReference,
-									 std::optional<Digest> artifactDigest)
+		PackageWithArtifactReference(
+			PackageReference packageReference, std::optional<Digest> artifactDigest)
 			: _packageReference(std::move(packageReference)),
-			  _artifactDigest(std::move(artifactDigest)) {}
+			  _artifactDigest(std::move(artifactDigest)) {
+		}
 
 		/// <summary>
 		/// Gets or sets the PackageReference.
 		/// </summary>
-		const PackageReference &GetPackage() const { return _packageReference; }
+		const PackageReference &GetPackage() const {
+			return _packageReference;
+		}
 
 		/// <summary>
 		/// Gets or sets the artifact digest.
 		/// </summary>
-		bool HasArtifactDigest() const { return _artifactDigest.has_value(); }
+		bool HasArtifactDigest() const {
+			return _artifactDigest.has_value();
+		}
 
 		/// <summary>
 		/// Gets or sets the artifact digest.
 		/// </summary>
 		const Digest &GetArtifactDigest() const {
 			if (!_artifactDigest.has_value())
-				throw std::runtime_error("PackageWithArtifactReference does "
-										 "not have an artifact digest.");
+				throw std::runtime_error(
+					"PackageWithArtifactReference does "
+					"not have an artifact digest.");
 			return _artifactDigest.value();
 		}
 		const std::optional<Digest> &GetArtifactDigestValue() const {

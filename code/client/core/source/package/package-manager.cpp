@@ -53,9 +53,8 @@ namespace Soup::Core {
 		/// <summary>
 		/// Install a package
 		/// </summary>
-		static void
-		InstallPackageReference(const Path &workingDirectory,
-								const std::string &packageReference) {
+		static void InstallPackageReference(
+			const Path &workingDirectory, const std::string &packageReference) {
 			Log::Info("InstallPackageReference");
 
 			auto arguments = std::vector<std::string>({
@@ -84,8 +83,7 @@ namespace Soup::Core {
 		/// <summary>
 		/// Publish a package artifact
 		/// </summary>
-		static void PublishArtifact(const Path &workingDirectory,
-									const Path &targetDirectory) {
+		static void PublishArtifact(const Path &workingDirectory, const Path &targetDirectory) {
 			Log::Info("PublishArtifact");
 
 			auto arguments = std::vector<std::string>({
@@ -99,13 +97,11 @@ namespace Soup::Core {
 
 	private:
 		static void RunCommand(std::vector<std::string> arguments) {
-			auto moduleName =
-				System::IProcessManager::Current().GetCurrentProcessFileName();
+			auto moduleName = System::IProcessManager::Current().GetCurrentProcessFileName();
 			auto moduleFolder = moduleName.GetParent();
 #if defined(_WIN32)
 			auto packageManagerFolder = moduleFolder;
-			auto executable =
-				packageManagerFolder + Path("./package-manager.exe");
+			auto executable = packageManagerFolder + Path("./package-manager.exe");
 #elif defined(__linux__)
 			auto packageManagerFolder = moduleFolder + Path("../lib/soup/");
 			auto executable = packageManagerFolder + Path("./package-manager");
