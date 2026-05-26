@@ -1,13 +1,15 @@
 #include <iostream>
+#include <memory>
 
-import json11;
+import BSP;
 
 int main() {
-	std::cout << "Hello World" << std::endl;
+	auto inStream = std::make_unique<BSP::StdInStream>();
+	auto outStream = std::make_unique<BSP::StdOutStream>();
+	auto connection = BSP::Connection(std::move(inStream), std::move(outStream));
 
-	// Parse the json
-	std::string errorMessage;
-	auto json = json11::Json::parse(jsonContent, errorMessage);
+	auto testMessage = BSP::Message("1234", "dowork");
+	connection.SendMessage(testMessage);
 
 	return 0;
 }
