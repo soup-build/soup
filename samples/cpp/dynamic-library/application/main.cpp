@@ -3,8 +3,7 @@
 
 using namespace Sample::DynamicLibrary::Library;
 
-int main()
-{
+int main() {
 	std::cout << "Hello World, " << Helper::GetName() << " Style!" << std::endl;
 	return 0;
 }

@@ -1,2 +1,2 @@
 
-const char* GetName();
+const char *GetName();
