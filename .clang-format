@@ -2,27 +2,41 @@
 UseTab: Always
 IndentWidth: 4
 TabWidth: 4
+ColumnLimit: 100
 
-BinPackArguments: true
-# TODO: Clang-Format 23
-# Either place everthing on the same line or one per line
-#PackParameters:
-#  BinPack: OnePerLine
+###########################################
+# Functions
+###########################################
+# Either place everything on the same line,
+# everything on two lines or one parameter per line
+PackParameters:
+  BinPack: OnePerLine
+BreakAfterOpenBracketFunction: true
+# Never place function name on new line
+BreakAfterReturnType: Automatic
+PenaltyReturnTypeOnItsOwnLine: 1000
 
+###########################################
+# Comments
+###########################################
 # Do not try to be cute with comments.
 AlignTrailingComments:
   Kind: Never
 
+###########################################
+# Classes
+###########################################
 # Visually call out when access modifier scope changes
 IndentAccessModifiers: false
 AccessModifierOffset: -4
-
-# It is very buisy to have switch and cases on the same level
+# It is very busy to have switch and cases on the same level
 IndentCaseLabels: true
-
-# Consistent intializers on new lines
+# Consistent initializers on new lines
 PackConstructorInitializers: Never
 
+###########################################
+# Namespaces
+###########################################
 # Visually indicate when in namespace
 NamespaceIndentation: All
 # Visual noise that does not improve readability

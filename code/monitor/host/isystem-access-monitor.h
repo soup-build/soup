@@ -1,9 +1,7 @@
 ﻿#pragma once
 
-namespace Monitor
-{
-	export class ISystemAccessMonitor
-	{
+namespace Monitor {
+	export class ISystemAccessMonitor {
 	public:
 		virtual void OnCreateProcess(std::string_view applicationName, bool wasDetoured) = 0;
 		virtual void TouchFileRead(Path filePath, bool exists, bool wasBlocked) = 0;

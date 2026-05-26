@@ -3,19 +3,17 @@
 // </copyright>
 
 #pragma once
+#include "windows-detour-event-listener.h"
 #include "windows-system-access-monitor.h"
 #include "windows-system-logger-monitor.h"
 #include "windows-system-monitor-fork.h"
-#include "windows-detour-event-listener.h"
 
-namespace Monitor::Windows
-{
+namespace Monitor::Windows {
 	/// <summary>
-	/// The Pipe Server Instance that keeps track of the required state for each individual connection
-	/// to a client.
+	/// The Pipe Server Instance that keeps track of the required state for each individual
+	/// connection to a client.
 	/// </summary>
-	struct ServerPipeInstance
-	{
+	struct ServerPipeInstance {
 		OVERLAPPED Overlap;
 		Opal::System::SmartHandle EventHandle;
 		Opal::System::SmartHandle PipeHandle;
@@ -27,8 +25,7 @@ namespace Monitor::Windows
 	/// <summary>
 	/// A windows platform specific monitor process executable
 	/// </summary>
-	class WindowsMonitorProcess : public Opal::System::IProcess
-	{
+	class WindowsMonitorProcess : public Opal::System::IProcess {
 	private:
 		static std::atomic<int32_t> s_uniqueChildId;
 
@@ -75,59 +72,57 @@ namespace Monitor::Windows
 		/// Initializes a new instance of the <see cref='WindowsMonitorProcess'/> class.
 		/// </summary>
 		WindowsMonitorProcess(
-			const Path& executable,
+			const Path &executable,
 			std::vector<std::string> arguments,
-			const Path& workingDirectory,
-			const std::map<std::string, std::string>& environmentVariables,
+			const Path &workingDirectory,
+			const std::map<std::string, std::string> &environmentVariables,
 			std::shared_ptr<ISystemAccessMonitor> monitor,
 			bool enableAccessChecks,
 			bool partialMonitor,
 			std::vector<Path> allowedReadAccess,
-			std::vector<Path> allowedWriteAccess) :
-			m_executable(executable),
-			m_arguments(std::move(arguments)),
-			m_workingDirectory(workingDirectory),
-			m_environmentVariables(environmentVariables),
+			std::vector<Path> allowedWriteAccess)
+			: m_executable(executable),
+			  m_arguments(std::move(arguments)),
+			  m_workingDirectory(workingDirectory),
+			  m_environmentVariables(environmentVariables),
 #ifdef TRACE_DETOUR_SERVER
-			m_eventListener(std::make_shared<WindowsSystemMonitorFork>(
-				std::make_shared<WindowsSystemLoggerMonitor>(std::cout),
-				std::make_shared<WindowsSystemAccessMonitor>(std::move(monitor)))),
+			  m_eventListener(
+				  std::make_shared<WindowsSystemMonitorFork>(
+					  std::make_shared<WindowsSystemLoggerMonitor>(std::cout),
+					  std::make_shared<WindowsSystemAccessMonitor>(std::move(monitor)))),
 #else
-			m_eventListener(std::make_shared<WindowsSystemAccessMonitor>(std::move(monitor))),
+			  m_eventListener(std::make_shared<WindowsSystemAccessMonitor>(std::move(monitor))),
 #endif
-			m_enableAccessChecks(enableAccessChecks),
-			m_partialMonitor(partialMonitor),
-			m_allowedReadAccess(std::move(allowedReadAccess)),
-			m_allowedWriteAccess(std::move(allowedWriteAccess)),
-			m_pipes(),
-			m_rawEventHandles(),
-			m_workerThread(),
-			m_workerFailed(false),
-			m_threadHandle(),
-			m_processHandle(),
-			m_stdOutReadHandle(),
-			m_stdOutWriteHandle(),
-			m_stdErrReadHandle(),
-			m_stdErrWriteHandle(),
-			m_stdInReadHandle(),
-			m_stdInWriteHandle(),
-			m_isFinished(false),
-			m_stdOut(),
-			m_stdErr(),
-			m_exitCode(-1)
-		{
+			  m_enableAccessChecks(enableAccessChecks),
+			  m_partialMonitor(partialMonitor),
+			  m_allowedReadAccess(std::move(allowedReadAccess)),
+			  m_allowedWriteAccess(std::move(allowedWriteAccess)),
+			  m_pipes(),
+			  m_rawEventHandles(),
+			  m_workerThread(),
+			  m_workerFailed(false),
+			  m_threadHandle(),
+			  m_processHandle(),
+			  m_stdOutReadHandle(),
+			  m_stdOutWriteHandle(),
+			  m_stdErrReadHandle(),
+			  m_stdErrWriteHandle(),
+			  m_stdInReadHandle(),
+			  m_stdInWriteHandle(),
+			  m_isFinished(false),
+			  m_stdOut(),
+			  m_stdErr(),
+			  m_exitCode(-1) {
 		}
 
 		/// <summary>
 		/// Execute a process for the provided
 		/// </summary>
-		void Start() override final
-		{
+		void Start() override final {
 			DebugTrace("Start");
 			std::stringstream argumentsValue;
 			argumentsValue << "\"" << m_executable.ToAlternateString() << "\"";
-			for (auto& argument : m_arguments)
-			{
+			for (auto &argument : m_arguments) {
 				// TODO: Handle quotes better, for now do not add wrapper when double quotes exist
 				if (argument.find('"') != std::string::npos)
 					argumentsValue << " " << argument;
@@ -151,7 +146,8 @@ namespace Monitor::Windows
 			// Create a pipe for the child process's STDOUT.
 			HANDLE childStdOutRead;
 			HANDLE childStdOutWrite;
-			if (!CreatePipe(&childStdOutRead, &childStdOutWrite, &securityAttributes, pipeBufferSize))
+			if (!CreatePipe(
+					&childStdOutRead, &childStdOutWrite, &securityAttributes, pipeBufferSize))
 				throw std::runtime_error("Execute CreatePipe Failed");
 			if (!SetNamedPipeHandleState(childStdOutRead, &pipeMode, nullptr, nullptr))
 				throw std::runtime_error("Execute SetNamedPipeHandleState Failed");
@@ -165,7 +161,8 @@ namespace Monitor::Windows
 			// Create a pipe for the child process's STDERR.
 			HANDLE childStdErrRead;
 			HANDLE childStdErrWrite;
-			if (!CreatePipe(&childStdErrRead, &childStdErrWrite, &securityAttributes, pipeBufferSize))
+			if (!CreatePipe(
+					&childStdErrRead, &childStdErrWrite, &securityAttributes, pipeBufferSize))
 				throw std::runtime_error("Execute CreatePipe Failed");
 			if (!SetNamedPipeHandleState(childStdErrRead, &pipeMode, nullptr, nullptr))
 				throw std::runtime_error("Execute SetNamedPipeHandleState Failed");
@@ -196,21 +193,25 @@ namespace Monitor::Windows
 
 			// Build up the new environment
 			auto environmentBuilder = std::stringstream();
-			for (const auto& [key, value] : m_environmentVariables)
-			{
+			for (const auto &[key, value] : m_environmentVariables) {
 				environmentBuilder << key << '=' << value << (char)'\0';
 			}
 
 			// Add the required windows environment
 			environmentBuilder << "ALLUSERSPROFILE" << '=' << "C:\\ProgramData" << '\0';
-			environmentBuilder << "APPDATA" << '=' << "C:\\Users\\USERNAME\\AppData\\Roaming" << '\0';
-			environmentBuilder << "CommonProgramFiles" << '=' << "C:\\Program Files\\Common Files" << '\0';
-			environmentBuilder << "CommonProgramFiles(x86)" << '=' << "C:\\Program Files (x86)\\Common Files" << '\0';
-			environmentBuilder << "CommonProgramW6432" << '=' << "C:\\Program Files\\Common Files" << '\0';
+			environmentBuilder << "APPDATA" << '=' << "C:\\Users\\USERNAME\\AppData\\Roaming"
+							   << '\0';
+			environmentBuilder << "CommonProgramFiles" << '=' << "C:\\Program Files\\Common Files"
+							   << '\0';
+			environmentBuilder << "CommonProgramFiles(x86)" << '='
+							   << "C:\\Program Files (x86)\\Common Files" << '\0';
+			environmentBuilder << "CommonProgramW6432" << '=' << "C:\\Program Files\\Common Files"
+							   << '\0';
 			environmentBuilder << "ComSpec" << '=' << "C:\\Windows\\system32\\cmd.exe" << '\0';
 			environmentBuilder << "HOMEDRIVE" << '=' << "C:" << '\0';
 			environmentBuilder << "HOMEPATH" << '=' << "C:\\Users\\USERNAME" << '\0';
-			environmentBuilder << "LOCALAPPDATA" << '=' << "C:\\Users\\USERNAME\\AppData\\Local" << '\0';
+			environmentBuilder << "LOCALAPPDATA" << '=' << "C:\\Users\\USERNAME\\AppData\\Local"
+							   << '\0';
 			environmentBuilder << "ProgramData" << '=' << "C:\\ProgramData" << '\0';
 			environmentBuilder << "ProgramFiles(x86)" << '=' << "C:\\Program Files (x86)" << '\0';
 			environmentBuilder << "ProgramFiles" << '=' << "C:\\Program Files" << '\0';
@@ -242,28 +243,20 @@ namespace Monitor::Windows
 
 			// Create the requested process with our Monitor dll loaded
 			if (!DetourCreateProcessWithDllExA(
-				m_executable.ToString().c_str(),
-				argumentsString.data(),
-				processAttributes,
-				threadAttributes,
-				inheritHandles,
-				creationFlags,
-				(LPTSTR)environment.c_str(),
-				m_workingDirectory.IsEmpty() ? nullptr : m_workingDirectory.ToString().c_str(),
-				&startupInfo,
-				&processInfo,
-				dllPathString.c_str(),
-				nullptr))
-			{
+					m_executable.ToString().c_str(), argumentsString.data(), processAttributes,
+					threadAttributes, inheritHandles, creationFlags, (LPTSTR)environment.c_str(),
+					m_workingDirectory.IsEmpty() ? nullptr : m_workingDirectory.ToString().c_str(),
+					&startupInfo, &processInfo, dllPathString.c_str(), nullptr)) {
 				auto error = GetLastError();
-				switch (error)
-				{
-				case ERROR_FILE_NOT_FOUND:
-				case ERROR_PATH_NOT_FOUND:
-					throw std::runtime_error("Execute DetourCreateProcessWithDllExA the requested executable does not exist");
-				default:
-					throw std::runtime_error(
-						std::format("Execute DetourCreateProcessWithDllExA Failed: {}", error));
+				switch (error) {
+					case ERROR_FILE_NOT_FOUND:
+					case ERROR_PATH_NOT_FOUND:
+						throw std::runtime_error(
+							"Execute DetourCreateProcessWithDllExA the requested executable does "
+							"not exist");
+					default:
+						throw std::runtime_error(
+							std::format("Execute DetourCreateProcessWithDllExA Failed: {}", error));
 				}
 			}
 
@@ -288,15 +281,15 @@ namespace Monitor::Windows
 
 			// Pass along the read/write access lists
 			payload.EnableAccessChecks = m_enableAccessChecks;
-			LoadStringList(m_allowedReadAccess, payload.zReadAccessDirectories, payload.cReadAccessDirectories, 4096);
-			LoadStringList(m_allowedWriteAccess, payload.zWriteAccessDirectories, payload.cWriteAccessDirectories, 4096);
+			LoadStringList(
+				m_allowedReadAccess, payload.zReadAccessDirectories, payload.cReadAccessDirectories,
+				4096);
+			LoadStringList(
+				m_allowedWriteAccess, payload.zWriteAccessDirectories,
+				payload.cWriteAccessDirectories, 4096);
 
 			if (!DetourCopyPayloadToProcess(
-				m_processHandle.Get(),
-				ProcessPayloadResourceId,
-				&payload,
-				sizeof(payload)))
-			{
+					m_processHandle.Get(), ProcessPayloadResourceId, &payload, sizeof(payload))) {
 				throw std::runtime_error(
 					std::format("DetourCopyPayloadToProcess failed: {}", GetLastError()));
 			}
@@ -317,16 +310,14 @@ namespace Monitor::Windows
 		/// <summary>
 		/// Wait for the process to exit
 		/// </summary>
-		void WaitForExit() override final
-		{
+		void WaitForExit() override final {
 			// Wait until child process exits.
 			DebugTrace("WaitForExit");
 			auto waitResult = WaitForSingleObject(m_processHandle.Get(), INFINITE);
 
 			DebugTrace("WaitForExit Signal");
 			m_processRunning = false;
-			switch (waitResult)
-			{
+			switch (waitResult) {
 				case WAIT_OBJECT_0:
 					// All good
 					break;
@@ -346,8 +337,7 @@ namespace Monitor::Windows
 
 			// Get the exit code
 			DWORD exitCode;
-			if (!GetExitCodeProcess(m_processHandle.Get(), &exitCode))
-			{
+			if (!GetExitCodeProcess(m_processHandle.Get(), &exitCode)) {
 				auto error = GetLastError();
 				throw std::runtime_error(
 					std::format("Execute GetExitCodeProcess Failed: {}", error));
@@ -363,8 +353,7 @@ namespace Monitor::Windows
 			// Wait for the worker thread to exit
 			m_workerThread.join();
 
-			if (m_workerFailed)
-			{
+			if (m_workerFailed) {
 				std::rethrow_exception(m_workerException);
 			}
 
@@ -374,8 +363,7 @@ namespace Monitor::Windows
 		/// <summary>
 		/// Get the exit code
 		/// </summary>
-		int GetExitCode() override final
-		{
+		int GetExitCode() override final {
 			if (!m_isFinished)
 				throw std::runtime_error("Process has not finished.");
 			return m_exitCode;
@@ -384,8 +372,7 @@ namespace Monitor::Windows
 		/// <summary>
 		/// Get the standard output
 		/// </summary>
-		std::string GetStandardOutput() override final
-		{
+		std::string GetStandardOutput() override final {
 			if (!m_isFinished)
 				throw std::runtime_error("Process has not finished.");
 			return m_stdOut.str();
@@ -394,25 +381,22 @@ namespace Monitor::Windows
 		/// <summary>
 		/// Get the standard error output
 		/// </summary>
-		std::string GetStandardError() override final
-		{
+		std::string GetStandardError() override final {
 			if (!m_isFinished)
 				throw std::runtime_error("Process has not finished.");
 			return m_stdErr.str();
 		}
 
 	private:
-		void ReadAllAvailableStandardOutput()
-		{
+		void ReadAllAvailableStandardOutput() {
 			// Read all and write to stdout
 			DWORD dwRead;
 			const int BufferSize = 1024;
 			char buffer[BufferSize + 1];
 
 			// Read on output
-			while (true)
-			{
-				if(!ReadFile(m_stdOutReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
+			while (true) {
+				if (!ReadFile(m_stdOutReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
 					break;
 				if (dwRead == 0)
 					break;
@@ -421,9 +405,8 @@ namespace Monitor::Windows
 			}
 
 			// Read all errors
-			while (true)
-			{
-				if(!ReadFile(m_stdErrReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
+			while (true) {
+				if (!ReadFile(m_stdErrReadHandle.Get(), buffer, BufferSize, &dwRead, nullptr))
 					break;
 				if (dwRead == 0)
 					break;
@@ -434,16 +417,14 @@ namespace Monitor::Windows
 		}
 
 		static void LoadStringList(
-			const std::vector<Path>& values,
-			char* rawValues,
-			unsigned long& length,
-			uint64_t maxLength)
-		{
+			const std::vector<Path> &values,
+			char *rawValues,
+			unsigned long &length,
+			uint64_t maxLength) {
 			length = 0;
 			rawValues[0] = 0;
 
-			for (auto value : values)
-			{
+			for (auto value : values) {
 				auto stringValue = value.ToString();
 				auto newLength = length + static_cast<unsigned long>(stringValue.length()) + 1;
 				if (newLength > maxLength)
@@ -461,17 +442,14 @@ namespace Monitor::Windows
 		/// The main entry point for the worker thread that will monitor incoming messages from all
 		/// client connections.
 		/// </summary>
-		void WorkerThread()
-		{
-			try
-			{
+		void WorkerThread() {
+			try {
 				DebugTrace("WorkerThread Start");
 
 				// Read until we get a client and then all clients disconnect
 				m_hasAnyClients = false;
 				m_activeClientCount = 0;
-				while ((!m_hasAnyClients || m_activeClientCount > 0) && m_processRunning)
-				{
+				while ((!m_hasAnyClients || m_activeClientCount > 0) && m_processRunning) {
 					// Wait for any of the pipe instances to signal
 					// This indicates that either a client connected to wrote to
 					// and open connection.
@@ -480,23 +458,18 @@ namespace Monitor::Windows
 					DWORD timeoutMilliseconds = 1000;
 					DebugTrace("WorkerThread WaitForMultipleObjects");
 					auto waitResult = WaitForMultipleObjects(
-						static_cast<DWORD>(m_rawEventHandles.size()),
-						m_rawEventHandles.data(),
-						waitForAll,
-						timeoutMilliseconds);
-					switch (waitResult)
-					{
+						static_cast<DWORD>(m_rawEventHandles.size()), m_rawEventHandles.data(),
+						waitForAll, timeoutMilliseconds);
+					switch (waitResult) {
 						case WAIT_TIMEOUT:
-							if (!m_processRunning)
-							{
+							if (!m_processRunning) {
 								if (m_hasAnyClients)
-									m_eventListener.LogError("Main process exited while children still running");
+									m_eventListener.LogError(
+										"Main process exited while children still running");
 								else
 									m_eventListener.LogError("Main process never connected");
 								continue;
-							}
-							else
-							{
+							} else {
 								// Check for any standard output
 								// TODO: Look into using events or peeking
 								ReadAllAvailableStandardOutput();
@@ -513,8 +486,7 @@ namespace Monitor::Windows
 
 					// Determine which pipe completed the operation.
 					auto pipeIndex = waitResult - WAIT_OBJECT_0;
-					if (pipeIndex < 0 || pipeIndex > (m_rawEventHandles.size() - 1))
-					{
+					if (pipeIndex < 0 || pipeIndex > (m_rawEventHandles.size() - 1)) {
 						throw std::runtime_error("The event signaled outside the range of pipes");
 					}
 
@@ -522,9 +494,7 @@ namespace Monitor::Windows
 					DebugTrace("Handle Event ", pipeIndex);
 					HandlePipeEvent(m_pipes[pipeIndex]);
 				}
-			}
-			catch (...)
-			{
+			} catch (...) {
 				DebugTrace("WorkerThread Failed");
 				m_workerException = std::current_exception();
 				m_workerFailed = true;
@@ -537,23 +507,17 @@ namespace Monitor::Windows
 		/// <summary>
 		/// Initialize the default set of connections
 		/// </summary>
-		void InitializePipes(int32_t traceProcessId, int32_t traceChildId)
-		{
+		void InitializePipes(int32_t traceProcessId, int32_t traceChildId) {
 			DebugTrace("InitializePipes");
-			for (auto i = 0u; i < m_pipes.size(); i++)
-			{
+			for (auto i = 0u; i < m_pipes.size(); i++) {
 				// Create an unamed event object for this instance that is in the signaled state
-				SECURITY_ATTRIBUTES* eventAttributes = nullptr;
+				SECURITY_ATTRIBUTES *eventAttributes = nullptr;
 				bool isManualReset = true;
 				bool initialState = true;
-				const char* eventName = nullptr;
-				auto eventHandle = CreateEventA(
-					eventAttributes,
-					isManualReset,
-					initialState,
-					eventName);
-				if (eventHandle == NULL)
-				{
+				const char *eventName = nullptr;
+				auto eventHandle =
+					CreateEventA(eventAttributes, isManualReset, initialState, eventName);
+				if (eventHandle == NULL) {
 					throw std::runtime_error(
 						std::format("CreateEventA failed: {}", GetLastError()));
 				}
@@ -579,8 +543,8 @@ namespace Monitor::Windows
 		/// Create a single instance of the named pipe that will allow a
 		/// single client to connect to the pipe server.
 		/// </summary>
-		Opal::System::SmartHandle CreateNamedPipeInstance(int32_t traceProcessId, int32_t traceChildId)
-		{
+		Opal::System::SmartHandle CreateNamedPipeInstance(
+			int32_t traceProcessId, int32_t traceChildId) {
 			// Create a name for the pipe
 			DebugTrace("CreateNamedPipeInstance");
 			std::stringstream pipeName;
@@ -596,19 +560,11 @@ namespace Monitor::Windows
 			DWORD inBufferSize = 0;
 			DWORD defaultTimeOut = 20000;
 			HANDLE hPipe = CreateNamedPipeA(
-				pipeNameString.c_str(),
-				openMode,
-				pipeMode,
-				maxInstances,
-				outBufferSize,
-				inBufferSize,
-				defaultTimeOut,
-				nullptr);
-			if (hPipe == INVALID_HANDLE_VALUE)
-			{
+				pipeNameString.c_str(), openMode, pipeMode, maxInstances, outBufferSize,
+				inBufferSize, defaultTimeOut, nullptr);
+			if (hPipe == INVALID_HANDLE_VALUE) {
 				DWORD error = GetLastError();
-				throw std::runtime_error(
-					std::format("CreateNamedPipeA failed: {}", error));
+				throw std::runtime_error(std::format("CreateNamedPipeA failed: {}", error));
 			}
 
 			return Opal::System::SmartHandle(hPipe);
@@ -618,57 +574,52 @@ namespace Monitor::Windows
 		/// Attempt to connect to a new client or register the event callback when a client
 		/// connects in the future.
 		/// </summary>
-		void ConnectToNewClient(ServerPipeInstance& pipe)
-		{
+		void ConnectToNewClient(ServerPipeInstance &pipe) {
 			// Connect to the pipe
 			DebugTrace("ConnectNamedPipe");
-			if (ConnectNamedPipe(pipe.PipeHandle.Get(), &pipe.Overlap))
-			{
+			if (ConnectNamedPipe(pipe.PipeHandle.Get(), &pipe.Overlap)) {
 				// Asynchronous call to Connect Named Pipe always return zero
 				throw std::runtime_error("ConnectNamedPipe should not succeed.");
 			}
 
 			// Check the error to determine the actual result
 			auto error = GetLastError();
-			switch (error)
-			{
-			case ERROR_PIPE_CONNECTED:
-				// The client connected in the time between create named pipe and connect
-				// Rare, but possible.
-				DebugTrace("ConnectNamedPipe - Connected");
-				pipe.IsConnected = true;
-				pipe.HasPendingIO = false;
-				m_hasAnyClients = true;
-				m_activeClientCount++;
+			switch (error) {
+				case ERROR_PIPE_CONNECTED:
+					// The client connected in the time between create named pipe and connect
+					// Rare, but possible.
+					DebugTrace("ConnectNamedPipe - Connected");
+					pipe.IsConnected = true;
+					pipe.HasPendingIO = false;
+					m_hasAnyClients = true;
+					m_activeClientCount++;
 
-				// Signal the event manually to force the update loop to signal on wait all events
-				if (!SetEvent(pipe.EventHandle.Get()))
-				{
-					throw std::runtime_error(
-						std::format("Client already connected -> SetEvent failed: {}", GetLastError()));
-				}
-	
-				break;
-			case ERROR_IO_PENDING:
-				DebugTrace("ConnectNamedPipe - Pending");
-				pipe.IsConnected = false;
-				pipe.HasPendingIO = true;
-				break;
-			default:
-				throw std::runtime_error(
-					std::format("ConnectNamedPipe failed: {}", error));
+					// Signal the event manually to force the update loop to signal on wait all
+					// events
+					if (!SetEvent(pipe.EventHandle.Get())) {
+						throw std::runtime_error(
+							std::format(
+								"Client already connected -> SetEvent failed: {}", GetLastError()));
+					}
+
+					break;
+				case ERROR_IO_PENDING:
+					DebugTrace("ConnectNamedPipe - Pending");
+					pipe.IsConnected = false;
+					pipe.HasPendingIO = true;
+					break;
+				default:
+					throw std::runtime_error(std::format("ConnectNamedPipe failed: {}", error));
 			}
 		}
 
 		/// <summary>
 		/// Disconnect from a client and reset the pipe to prepare for a new client to connect.
 		/// </summary>
-		VOID DisconnectAndReconnect(ServerPipeInstance& pipe)
-		{
+		VOID DisconnectAndReconnect(ServerPipeInstance &pipe) {
 			// Disconnect the old pipe instance
 			DebugTrace("DisconnectAndReconnect");
-			if (!DisconnectNamedPipe(pipe.PipeHandle.Get()))
-			{
+			if (!DisconnectNamedPipe(pipe.PipeHandle.Get())) {
 				throw std::runtime_error(
 					std::format("DisconnectNamedPipe failed: {}", GetLastError()));
 			}
@@ -679,27 +630,21 @@ namespace Monitor::Windows
 			ConnectToNewClient(pipe);
 		}
 
-		void HandlePipeEvent(ServerPipeInstance& pipe)
-		{
+		void HandlePipeEvent(ServerPipeInstance &pipe) {
 			// Check if a pending IO operation requires a call to get Overlapped result
 			DebugTrace("HandlePipeEvent");
-			if (pipe.HasPendingIO)
-			{
+			if (pipe.HasPendingIO) {
 				bool shouldWait = false;
 				DWORD bytesTransferred = 0;
 				DebugTrace("HandlePipeEvent - GetOverlappedResult");
 				bool overlappedResult = GetOverlappedResult(
-					pipe.PipeHandle.Get(),
-					&pipe.Overlap,
-					&bytesTransferred,
-					shouldWait);
+					pipe.PipeHandle.Get(), &pipe.Overlap, &bytesTransferred, shouldWait);
 
-				if (!pipe.IsConnected)
-				{
-					if (!overlappedResult)
-					{
+				if (!pipe.IsConnected) {
+					if (!overlappedResult) {
 						throw std::runtime_error(
-							std::format("GetOverlappedResult failed when connecting: {}", GetLastError()));
+							std::format(
+								"GetOverlappedResult failed when connecting: {}", GetLastError()));
 					}
 
 					// Connected to a new client
@@ -708,23 +653,19 @@ namespace Monitor::Windows
 					pipe.IsConnected = true;
 					m_hasAnyClients = true;
 					m_activeClientCount++;
-				}
-				else
-				{
+				} else {
 					// Check if the client is gone
 					DebugTrace("HandlePipeEvent - GetOverlappedResult - Read Finished");
-					if (!overlappedResult || bytesTransferred == 0)
-					{
-						DebugTrace("HandlePipeEvent - GetOverlappedResult - Error: {}", GetLastError());
+					if (!overlappedResult || bytesTransferred == 0) {
+						DebugTrace(
+							"HandlePipeEvent - GetOverlappedResult - Error: {}", GetLastError());
 						DisconnectAndReconnect(pipe);
 						return;
 					}
 
-					DWORD expectedSize = pipe.Message.ContentSize +
-						sizeof(Message::Type) +
-						sizeof(Message::ContentSize);
-					if (bytesTransferred != expectedSize)
-					{
+					DWORD expectedSize = pipe.Message.ContentSize + sizeof(Message::Type) +
+										 sizeof(Message::ContentSize);
+					if (bytesTransferred != expectedSize) {
 						DebugTrace("HandlePipeEvent - GetOverlappedResult - Size Mismatched");
 						DisconnectAndReconnect(pipe);
 						return;
@@ -736,21 +677,15 @@ namespace Monitor::Windows
 			}
 
 			// If we are connected attempt to perform a read
-			if (pipe.IsConnected)
-			{
+			if (pipe.IsConnected) {
 				// Read the next message
 				DebugTrace("HandlePipeEvent - ReadFile");
 				DWORD bytesRead = 0;
 				if (!ReadFile(
-					pipe.PipeHandle.Get(),
-					&pipe.Message,
-					sizeof(pipe.Message),
-					&bytesRead,
-					&pipe.Overlap))
-				{
+						pipe.PipeHandle.Get(), &pipe.Message, sizeof(pipe.Message), &bytesRead,
+						&pipe.Overlap)) {
 					DWORD error = GetLastError();
-					switch (error)
-					{
+					switch (error) {
 						case ERROR_IO_PENDING:
 							DebugTrace("HandlePipeEvent - ReadFile - Pending");
 							pipe.HasPendingIO = true;
@@ -770,17 +705,15 @@ namespace Monitor::Windows
 					return;
 				}
 
-				if (bytesRead == 0)
-				{
+				if (bytesRead == 0) {
 					throw std::runtime_error("Bytes read did not match expected");
 				}
 
-				DWORD expectedSize = pipe.Message.ContentSize +
-					sizeof(Message::Type) +
-					sizeof(Message::ContentSize);
-				if (bytesRead != expectedSize)
-				{
-					throw std::runtime_error("HandlePipeEvent - GetOverlappedResult - Size Mismatched");
+				DWORD expectedSize =
+					pipe.Message.ContentSize + sizeof(Message::Type) + sizeof(Message::ContentSize);
+				if (bytesRead != expectedSize) {
+					throw std::runtime_error(
+						"HandlePipeEvent - GetOverlappedResult - Size Mismatched");
 				}
 
 				LogMessage(pipe.Message);
@@ -788,22 +721,18 @@ namespace Monitor::Windows
 			}
 		}
 
-		void LogMessage(Message& message)
-		{
+		void LogMessage(Message &message) {
 			DebugTrace("LogMessage");
 
 			// Ignore all messages if partial monitor is enabled
-			if (!m_partialMonitor)
-			{
+			if (!m_partialMonitor) {
 				m_eventListener.SafeLogMessage(message);
 			}
 		}
 
-		void CleanupConnections()
-		{
+		void CleanupConnections() {
 			DebugTrace("CleanupConnections");
-			for (auto i = 0u; i < m_pipes.size(); i++)
-			{
+			for (auto i = 0u; i < m_pipes.size(); i++) {
 				m_pipes[i].EventHandle.Close();
 				m_rawEventHandles[i] = NULL;
 				m_pipes[i].Overlap.hEvent = NULL;
@@ -811,8 +740,7 @@ namespace Monitor::Windows
 			}
 		}
 
-		void DebugTrace(std::string_view message, uint32_t value)
-		{
+		void DebugTrace(std::string_view message, uint32_t value) {
 #ifdef TRACE_MONITOR_HOST
 			std::cout << "Monitor-HOST: " << message << " " << value << std::endl;
 #else
@@ -821,8 +749,7 @@ namespace Monitor::Windows
 #endif
 		}
 
-		void DebugTrace(std::string_view message)
-		{
+		void DebugTrace(std::string_view message) {
 #ifdef TRACE_MONITOR_HOST
 			std::cout << "Monitor-HOST: " << message << std::endl;
 #else
