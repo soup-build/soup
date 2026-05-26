@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// View Command
 	/// </summary>
 	// TODO: [Verb("view")]
-	class ViewOptions : public SharedOptions
-	{
+	class ViewOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to run

@@ -1,7 +1,7 @@
 module;
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <sstream>
 #include <unordered_set>
 #include <vector>
@@ -11,17 +11,13 @@ export module PrintGraph;
 import Opal;
 import Soup.Core;
 
-namespace PrintGraph
-{
-	std::string ToString(const std::vector<std::string>& valueList)
-	{
+namespace PrintGraph {
+	std::string ToString(const std::vector<std::string> &valueList) {
 		auto builder = std::stringstream();
 		builder << "[";
 		bool isFirst = true;
-		for (auto value : valueList)
-		{
-			if (!isFirst)
-			{
+		for (auto value : valueList) {
+			if (!isFirst) {
 				builder << ", ";
 			}
 
@@ -33,15 +29,12 @@ namespace PrintGraph
 		return builder.str();
 	}
 
-	std::string ToString(const std::vector<uint32_t>& valueList)
-	{
+	std::string ToString(const std::vector<uint32_t> &valueList) {
 		auto builder = std::stringstream();
 		builder << "[";
 		bool isFirst = true;
-		for (auto value : valueList)
-		{
-			if (!isFirst)
-			{
+		for (auto value : valueList) {
+			if (!isFirst) {
 				builder << ", ";
 			}
 
@@ -53,26 +46,26 @@ namespace PrintGraph
 		return builder.str();
 	}
 
-	void PrintFiles(const Soup::Core::FileSystemState& fileSystemState)
-	{
-		for (const auto& [key, value] : fileSystemState.GetFiles())
-		{
+	void PrintFiles(const Soup::Core::FileSystemState &fileSystemState) {
+		for (const auto &[key, value] : fileSystemState.GetFiles()) {
 			std::cout << "File: " << key << " " << value.ToString() << std::endl;
 		}
 	}
 
-	void PrintOperations(Soup::Core::OperationGraph& graph)
-	{
-		for (auto operation : graph.GetOperations())
-		{
-			const auto& operationInfo = operation.second;
+	void PrintOperations(Soup::Core::OperationGraph &graph) {
+		for (auto operation : graph.GetOperations()) {
+			const auto &operationInfo = operation.second;
 			std::cout << "Operation: " << operationInfo.Id << std::endl;
 			std::cout << "  Title: " << operationInfo.Title << std::endl;
-			std::cout << "  Command-WorkingDirectory: " << operationInfo.Command.WorkingDirectory.ToString() << std::endl;
-			std::cout << "  Command-Executable: " << operationInfo.Command.Executable.ToString() << std::endl;
-			std::cout << "  Command-Arguments: " << ToString(operationInfo.Command.Arguments) << std::endl;
+			std::cout << "  Command-WorkingDirectory: "
+					  << operationInfo.Command.WorkingDirectory.ToString() << std::endl;
+			std::cout << "  Command-Executable: " << operationInfo.Command.Executable.ToString()
+					  << std::endl;
+			std::cout << "  Command-Arguments: " << ToString(operationInfo.Command.Arguments)
+					  << std::endl;
 			std::cout << "  DeclaredInput: " << ToString(operationInfo.DeclaredInput) << std::endl;
-			std::cout << "  DeclaredOutput: " << ToString(operationInfo.DeclaredOutput) << std::endl;
+			std::cout << "  DeclaredOutput: " << ToString(operationInfo.DeclaredOutput)
+					  << std::endl;
 			std::cout << "  ReadAccess: " << ToString(operationInfo.ReadAccess) << std::endl;
 			std::cout << "  WriteAccess: " << ToString(operationInfo.WriteAccess) << std::endl;
 			std::cout << "  Children: " << ToString(operationInfo.Children) << std::endl;
@@ -81,40 +74,34 @@ namespace PrintGraph
 	}
 
 	void PrintGraph(
-		const std::string& indent,
-		const std::vector<Soup::Core::OperationId>& operationIds,
-		Soup::Core::OperationGraph& graph,
-		const std::unordered_set<Soup::Core::OperationId>& parentOperationSet)
-	{
+		const std::string &indent,
+		const std::vector<Soup::Core::OperationId> &operationIds,
+		Soup::Core::OperationGraph &graph,
+		const std::unordered_set<Soup::Core::OperationId> &parentOperationSet) {
 		auto childIndent = indent + "  ";
-		for (auto operationId : operationIds)
-		{
-			const auto& operationInfo = graph.GetOperationInfo(operationId);
-			if (parentOperationSet.find(operationId) != parentOperationSet.end())
-			{
-				std::cerr << indent << "ERROR: CIRCULAR DEPENDENCIES -" << operationInfo.Title << std::endl;
-			}
-			else
-			{
+		for (auto operationId : operationIds) {
+			const auto &operationInfo = graph.GetOperationInfo(operationId);
+			if (parentOperationSet.find(operationId) != parentOperationSet.end()) {
+				std::cerr << indent << "ERROR: CIRCULAR DEPENDENCIES -" << operationInfo.Title
+						  << std::endl;
+			} else {
 				std::cout << indent << operationInfo.Title << std::endl;
-				auto updatedParentSet = std::unordered_set<Soup::Core::OperationId>(parentOperationSet);
+				auto updatedParentSet =
+					std::unordered_set<Soup::Core::OperationId>(parentOperationSet);
 				updatedParentSet.insert(operationId);
 				PrintGraph(childIndent, operationInfo.Children, graph, updatedParentSet);
 			}
 		}
 	}
 
-	void PrintGraph(Soup::Core::OperationGraph& graph)
-	{
+	void PrintGraph(Soup::Core::OperationGraph &graph) {
 		std::cout << "Graph:" << std::endl;
 		auto emptySet = std::unordered_set<Soup::Core::OperationId>();
 		PrintGraph("", graph.GetRootOperationIds(), graph, emptySet);
 	}
 
-	export void LoadAndPrintGenerateResult(const Opal::Path& generateResultFile)
-	{
-		if (!Opal::System::IFileSystem::Current().Exists(generateResultFile))
-		{
+	export void LoadAndPrintGenerateResult(const Opal::Path &generateResultFile) {
+		if (!Opal::System::IFileSystem::Current().Exists(generateResultFile)) {
 			throw std::runtime_error("Generate result file does not exist");
 		}
 
@@ -123,19 +110,19 @@ namespace PrintGraph
 
 		// Read the contents of the build state file
 		auto fileSystemState = Soup::Core::FileSystemState();
-		auto generateResult = Soup::Core::GenerateResultReader::Deserialize(file->GetInStream(), fileSystemState);
+		auto generateResult =
+			Soup::Core::GenerateResultReader::Deserialize(file->GetInStream(), fileSystemState);
 
 		PrintFiles(fileSystemState);
 		PrintOperations(generateResult.GetGraph());
 		PrintGraph(generateResult.GetGraph());
 
-		std::cout << "HasPreprocessor: " << (generateResult.HasPreprocessor() ? "true" : "false") << std::endl;
+		std::cout << "HasPreprocessor: " << (generateResult.HasPreprocessor() ? "true" : "false")
+				  << std::endl;
 	}
 
-	export void LoadAndPrintOperationGraph(const Opal::Path& operationGraphFile)
-	{
-		if (!Opal::System::IFileSystem::Current().Exists(operationGraphFile))
-		{
+	export void LoadAndPrintOperationGraph(const Opal::Path &operationGraphFile) {
+		if (!Opal::System::IFileSystem::Current().Exists(operationGraphFile)) {
 			throw std::runtime_error("Operation graph file does not exist");
 		}
 
@@ -144,7 +131,8 @@ namespace PrintGraph
 
 		// Read the contents of the build state file
 		auto fileSystemState = Soup::Core::FileSystemState();
-		auto graph = Soup::Core::OperationGraphReader::Deserialize(file->GetInStream(), fileSystemState);
+		auto graph =
+			Soup::Core::OperationGraphReader::Deserialize(file->GetInStream(), fileSystemState);
 
 		PrintFiles(fileSystemState);
 		PrintOperations(graph);

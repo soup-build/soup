@@ -5,17 +5,14 @@
 #pragma once
 #include "release-command.h"
 
-namespace Soup::Client::UnitTests
-{
+namespace Soup::Client::UnitTests {
 	/// <summary>
 	/// Release Command Tests
 	/// </summary>
-	class ReleaseCommandTests
-	{
+	class ReleaseCommandTests {
 	public:
 		// [[Fact]]
-		void Initialize()
-		{
+		void Initialize() {
 			auto options = ReleaseOptions();
 			auto uut = ReleaseCommand(options);
 		}

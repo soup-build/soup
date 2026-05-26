@@ -1,8 +1,7 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
-std::string_view GenerateContent()
-{
+std::string_view GenerateContent() {
 	// Maybe do something more interesting here
 	return R"(module;
 
@@ -21,15 +20,12 @@ public:
 };)";
 }
 
-void PrintUsage()
-{
+void PrintUsage() {
 	std::cout << "gen [path]" << std::endl;
 }
 
-int main(int argc, char** argv)
-{
-	if (argc != 2)
-	{
+int main(int argc, char **argv) {
+	if (argc != 2) {
 		PrintUsage();
 		return 1;
 	}

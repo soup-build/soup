@@ -28,13 +28,12 @@ namespace Soup::Core {
 		/// Execute the entire operation graph that is referenced by this build
 		/// evaluate engine Returns true if any of the operations were evaluated
 		/// </summary>
-		virtual bool
-		Evaluate(OperationGraph &operationGraph,
-				 OperationResults &operationResults,
-				 const Path &temporaryDirectory,
-				 const std::vector<Path> &globalAllowedReadAccess,
-				 const std::vector<Path> &globalAllowedWriteAccess,
-				 std::optional<std::function<ValueTable(std::string_view)>>
-					 processStdOut) = 0;
+		virtual bool Evaluate(
+			OperationGraph &operationGraph,
+			OperationResults &operationResults,
+			const Path &temporaryDirectory,
+			const std::vector<Path> &globalAllowedReadAccess,
+			const std::vector<Path> &globalAllowedWriteAccess,
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut) = 0;
 	};
 }

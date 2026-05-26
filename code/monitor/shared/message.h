@@ -1,10 +1,8 @@
 #pragma once
 #include "message-type.h"
 
-namespace Monitor
-{
-	export struct Message
-	{
+namespace Monitor {
+	export struct Message {
 	public:
 		MessageType Type;
 		uint32_t ContentSize;

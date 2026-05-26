@@ -68,71 +68,64 @@ export namespace Soup::Core {
 				std::ifstream bundlesFile(_bundlesFile.value().ToString());
 				if (!bundlesFile.is_open())
 					throw std::runtime_error(
-						std::format("Bundles does not exist: {0}",
-									_bundlesFile.value().ToString()));
+						std::format(
+							"Bundles does not exist: {0}", _bundlesFile.value().ToString()));
 
 				auto bundlesDocument = SMLDocument::Parse(bundlesFile);
 				if (!bundlesDocument.GetRoot().Contains("Bundles")) {
-					throw std::runtime_error(
-						"Bundles file is missing Bundles element");
+					throw std::runtime_error("Bundles file is missing Bundles element");
 				}
 
 				for (auto &[bundleName, bundle] :
-					 bundlesDocument.GetRoot()["Bundles"]
-						 .AsTable()
-						 .GetValue()) {
+					 bundlesDocument.GetRoot()["Bundles"].AsTable().GetValue()) {
 					auto &bundleTable = bundle.AsTable();
 					if (!bundleTable.Contains("Root")) {
-						throw std::runtime_error(
-							"Bundle missing Root property");
+						throw std::runtime_error("Bundle missing Root property");
 					}
 
-					_bundles.emplace(bundleName,
-									 Path(bundleTable["Root"].AsString()));
+					_bundles.emplace(bundleName, Path(bundleTable["Root"].AsString()));
 				}
 			}
 
 			// Load the script
 			std::ifstream scriptFile(_scriptFile.ToString());
 			if (!scriptFile.is_open())
-				throw std::runtime_error(std::format(
-					"Script does not exist {0}", _scriptFile.ToString()));
+				throw std::runtime_error(
+					std::format("Script does not exist {0}", _scriptFile.ToString()));
 
-			auto script =
-				std::string(std::istreambuf_iterator<char>(scriptFile),
-							std::istreambuf_iterator<char>());
+			auto script = std::string(
+				std::istreambuf_iterator<char>(scriptFile), std::istreambuf_iterator<char>());
 
 			// Interpret the script
-			WrenHelpers::ThrowIfFailed(wrenInterpret(
-				_vm, _scriptFile.ToString().c_str(), script.c_str()));
+			WrenHelpers::ThrowIfFailed(
+				wrenInterpret(_vm, _scriptFile.ToString().c_str(), script.c_str()));
 		}
 
 	private:
 		virtual bool IsBuiltInModule(std::string_view moduleName) = 0;
-		virtual bool TryGetBuiltInModule(std::string_view moduleName,
-										 const char *&source) = 0;
-		virtual WrenForeignMethodFn
-		TryBindForeignMethod(std::string_view moduleName,
-							 std::string_view className, bool isStatic,
-							 std::string_view signature) = 0;
+		virtual bool TryGetBuiltInModule(std::string_view moduleName, const char *&source) = 0;
+		virtual WrenForeignMethodFn TryBindForeignMethod(
+			std::string_view moduleName,
+			std::string_view className,
+			bool isStatic,
+			std::string_view signature) = 0;
 
-		WrenForeignMethodFn BindForeignMethod(std::string_view moduleName,
-											  std::string_view className,
-											  bool isStatic,
-											  std::string_view signature) {
+		WrenForeignMethodFn BindForeignMethod(
+			std::string_view moduleName,
+			std::string_view className,
+			bool isStatic,
+			std::string_view signature) {
 			WrenForeignMethodFn result = nullptr;
 
 			// Attempt to bind to the built in Module methods
-			result = TryBindForeignMethod(moduleName, className, isStatic,
-										  signature);
+			result = TryBindForeignMethod(moduleName, className, isStatic, signature);
 			if (result != nullptr)
 				return result;
 
 			return nullptr;
 		}
 
-		const char *ResolveModule(std::string_view importer,
-								  std::string_view moduleName) {
+		const char *ResolveModule(std::string_view importer, std::string_view moduleName) {
 			// Logical import strings are used as-is and need no resolution.
 			if (IsBuiltInModule(moduleName))
 				return moduleName.data();
@@ -159,8 +152,7 @@ export namespace Soup::Core {
 				// If relative path in root then resolve to bundles file
 				// location
 				if (!currentDirectory.HasRoot()) {
-					currentDirectory =
-						_bundlesFile.value().GetParent() + currentDirectory;
+					currentDirectory = _bundlesFile.value().GetParent() + currentDirectory;
 				}
 
 				moduleReference = Path(moduleName.substr(bundleSeparator + 1));
@@ -197,9 +189,9 @@ export namespace Soup::Core {
 				// Attempt to load the module as a script file
 				std::ifstream scriptFile(moduleName.data());
 				if (scriptFile.is_open()) {
-					auto script =
-						std::string(std::istreambuf_iterator<char>(scriptFile),
-									std::istreambuf_iterator<char>());
+					auto script = std::string(
+						std::istreambuf_iterator<char>(scriptFile),
+						std::istreambuf_iterator<char>());
 
 					result.onComplete = &FreeSourceOnLoaded;
 					result.source = ReturnRawString(script);
@@ -209,26 +201,30 @@ export namespace Soup::Core {
 			return result;
 		}
 
-		void WriteCallback(std::string_view text) { std::cout << text; }
+		void WriteCallback(std::string_view text) {
+			std::cout << text;
+		}
 
-		void ErrorCallback(WrenErrorType errorType,
-						   std::optional<std::string_view> moduleName, int line,
-						   std::string_view message) {
+		void ErrorCallback(
+			WrenErrorType errorType,
+			std::optional<std::string_view> moduleName,
+			int line,
+			std::string_view message) {
 			switch (errorType) {
-			case WREN_ERROR_COMPILE: {
-				std::cout << "[" << moduleName.value() << "(" << line
-						  << ")] [Error] " << message << std::endl;
-				break;
-			}
-			case WREN_ERROR_STACK_TRACE: {
-				std::cout << "[" << moduleName.value() << "(" << line
-						  << ")] in " << message << std::endl;
-				break;
-			}
-			case WREN_ERROR_RUNTIME: {
-				std::cout << "[Runtime Error] " << message << std::endl;
-				break;
-			}
+				case WREN_ERROR_COMPILE: {
+					std::cout << "[" << moduleName.value() << "(" << line << ")] [Error] "
+							  << message << std::endl;
+					break;
+				}
+				case WREN_ERROR_STACK_TRACE: {
+					std::cout << "[" << moduleName.value() << "(" << line << ")] in " << message
+							  << std::endl;
+					break;
+				}
+				case WREN_ERROR_RUNTIME: {
+					std::cout << "[Runtime Error] " << message << std::endl;
+					break;
+				}
 			}
 		}
 
@@ -239,29 +235,29 @@ export namespace Soup::Core {
 			return rawString;
 		}
 
-		static void FreeSourceOnLoaded(WrenVM * /*vm*/, const char * /*name*/,
-									   struct WrenLoadModuleResult result) {
+		static void FreeSourceOnLoaded(
+			WrenVM * /*vm*/, const char * /*name*/, struct WrenLoadModuleResult result) {
 			if (result.source != nullptr)
 				free((void *)result.source);
 		}
 
-		static WrenForeignMethodFn
-		WrenBindForeignMethod(WrenVM *vm, const char *moduleName,
-							  const char *className, bool isStatic,
-							  const char *signature) {
+		static WrenForeignMethodFn WrenBindForeignMethod(
+			WrenVM *vm,
+			const char *moduleName,
+			const char *className,
+			bool isStatic,
+			const char *signature) {
 			auto host = (WrenHost *)wrenGetUserData(vm);
-			return host->BindForeignMethod(moduleName, className, isStatic,
-										   signature);
+			return host->BindForeignMethod(moduleName, className, isStatic, signature);
 		}
 
-		static const char *WrenResolveModule(WrenVM *vm, const char *importer,
-											 const char *moduleName) {
+		static const char *WrenResolveModule(
+			WrenVM *vm, const char *importer, const char *moduleName) {
 			auto host = (WrenHost *)wrenGetUserData(vm);
 			return host->ResolveModule(importer, moduleName);
 		}
 
-		static WrenLoadModuleResult WrenLoadModule(WrenVM *vm,
-												   const char *moduleName) {
+		static WrenLoadModuleResult WrenLoadModule(WrenVM *vm, const char *moduleName) {
 			auto host = (WrenHost *)wrenGetUserData(vm);
 			return host->LoadModule(moduleName);
 		}
@@ -271,9 +267,12 @@ export namespace Soup::Core {
 			host->WriteCallback(text);
 		}
 
-		static void WrenErrorCallback(WrenVM *vm, WrenErrorType errorType,
-									  const char *module, const int line,
-									  const char *msg) {
+		static void WrenErrorCallback(
+			WrenVM *vm,
+			WrenErrorType errorType,
+			const char *module,
+			const int line,
+			const char *msg) {
 			auto host = (WrenHost *)wrenGetUserData(vm);
 			std::optional<std::string_view> moduleName = std::nullopt;
 			if (module != nullptr)

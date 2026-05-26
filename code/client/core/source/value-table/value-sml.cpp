@@ -35,8 +35,7 @@ namespace Soup::Core {
 
 				return table;
 			} catch (const std::exception &ex) {
-				throw std::runtime_error(
-					std::format("Parsing the SML failed: {}", ex.what()));
+				throw std::runtime_error(std::format("Parsing the SML failed: {}", ex.what()));
 			}
 		}
 

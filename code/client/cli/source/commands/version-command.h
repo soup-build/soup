@@ -17,7 +17,8 @@ namespace Soup::Client {
 		/// class.
 		/// </summary>
 		VersionCommand(VersionOptions options)
-			: _options(std::move(options)) {}
+			: _options(std::move(options)) {
+		}
 
 		/// <summary>
 		/// Main entry point for a unique command

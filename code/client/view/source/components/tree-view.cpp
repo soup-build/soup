@@ -16,17 +16,14 @@ import :CustomStyle;
 
 import ftxui;
 
-namespace Soup::View
-{
+namespace Soup::View {
 	// Create custom collapsible so we can style it
 	// TODO: Make collapsible extensible with options
-	export ftxui::Component TreeView(TreeValueTable&& root)
-	{
-		class Impl : public ftxui::ComponentBase
-		{
+	export ftxui::Component TreeView(TreeValueTable &&root) {
+		class Impl : public ftxui::ComponentBase {
 		public:
-			Impl(TreeValueTable&& root) : root_(std::move(root))
-			{
+			Impl(TreeValueTable &&root)
+				: root_(std::move(root)) {
 				auto components = ftxui::Components();
 
 				BuildTree("", root_, components);
@@ -35,13 +32,11 @@ namespace Soup::View
 			}
 
 		private:
-			static void BuildTree(std::string prefix, const TreeValueTable& table, ftxui::Components& components)
-			{
+			static void BuildTree(
+				std::string prefix, const TreeValueTable &table, ftxui::Components &components) {
 				auto childPrefix = prefix + "  ";
-				for (const auto& [key, value] : table)
-				{
-					switch (value.GetType())
-					{
+				for (const auto &[key, value] : table) {
+					switch (value.GetType()) {
 						case TreeValueType::Table:
 							components.push_back(CreateSingleItemMenuEntry(prefix + "▼ " + key));
 							BuildTree(childPrefix, value.AsTable(), components);
@@ -51,7 +46,8 @@ namespace Soup::View
 							BuildTree(childPrefix, value.AsList(), components);
 							break;
 						case TreeValueType::String:
-							components.push_back(CreateSingleItemMenuEntry(prefix + key + ": " + value.AsString()));
+							components.push_back(
+								CreateSingleItemMenuEntry(prefix + key + ": " + value.AsString()));
 							break;
 						default:
 							throw std::runtime_error("Unkown TreeValueType for comparison.");
@@ -59,13 +55,11 @@ namespace Soup::View
 				}
 			}
 
-			static void BuildTree(std::string prefix, const TreeValueList& list, ftxui::Components& components)
-			{
+			static void BuildTree(
+				std::string prefix, const TreeValueList &list, ftxui::Components &components) {
 				auto childPrefix = prefix + "  ";
-				for (const auto& value : list)
-				{
-					switch (value.GetType())
-					{
+				for (const auto &value : list) {
+					switch (value.GetType()) {
 						case TreeValueType::Table:
 							components.push_back(CreateSingleItemMenuEntry(prefix + "▼ "));
 							BuildTree(childPrefix, value.AsTable(), components);
@@ -75,7 +69,8 @@ namespace Soup::View
 							BuildTree(childPrefix, value.AsList(), components);
 							break;
 						case TreeValueType::String:
-							components.push_back(CreateSingleItemMenuEntry(prefix + value.AsString()));
+							components.push_back(
+								CreateSingleItemMenuEntry(prefix + value.AsString()));
 							break;
 						default:
 							throw std::runtime_error("Unkown TreeValueType for comparison.");

@@ -6,6 +6,7 @@ module;
 
 #include <chrono>
 #include <format>
+#include <iostream>
 #include <map>
 #include <memory>
 #include <set>
@@ -13,7 +14,6 @@ module;
 #include <string>
 #include <string_view>
 #include <vector>
-#include <iostream>
 
 export module Soup.Core.Tests:BuildTests;
 
@@ -28,14 +28,11 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
-{
-	export class BuildTests
-	{
+namespace Soup::Core::UnitTests {
+	export class BuildTests {
 	public:
 		// [[Fact]]
-		void Execute_NoDependencies()
-		{
+		void Execute_NoDependencies() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -150,40 +147,57 @@ namespace Soup::Core::UnitTests
 
 			// Register the test process manager
 			auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
-			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
+			auto scopedMonitorProcessManager =
+				Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
 			// Emulate generate phase
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
-				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
-				{
+				std::format(
+					"CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ "
+					"Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]",
+					GetGenerateExePath()),
+				[&](Monitor::ISystemAccessMonitor & /*monitor*/) {
 					auto myPackageGenerateResult = GenerateResult(
-						OperationGraph(
-							std::vector<OperationId>(),
-							std::vector<OperationInfo>()),
+						OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()),
 						false);
 					auto myPackageFiles = std::set<FileId>();
 					auto myPackageGenerateResultContent = std::stringstream();
-					GenerateResultWriter::Serialize(myPackageGenerateResult, myPackageFiles, fileSystemState, myPackageGenerateResultContent);
+					GenerateResultWriter::Serialize(
+						myPackageGenerateResult,
+						myPackageFiles,
+						fileSystemState,
+						myPackageGenerateResultContent);
 					fileSystem->CreateMockFile(
-						Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr"),
+						Path(
+							"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+							"generate-phase1.bgr"),
 						std::make_shared<MockFile>(std::move(myPackageGenerateResultContent)));
 				});
 
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
-				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
-				{
+				std::format(
+					"CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} "
+					"true "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] "
+					"AllowedWrite [1]",
+					GetGenerateExePath()),
+				[&](Monitor::ISystemAccessMonitor & /*monitor*/) {
 					auto soupCppGenerateResult = GenerateResult(
-						OperationGraph(
-							std::vector<OperationId>(),
-							std::vector<OperationInfo>()),
+						OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()),
 						false);
 					auto soupCppFiles = std::set<FileId>();
 					auto soupCppGenerateResultContent = std::stringstream();
-					GenerateResultWriter::Serialize(soupCppGenerateResult, soupCppFiles, fileSystemState, soupCppGenerateResultContent);
+					GenerateResultWriter::Serialize(
+						soupCppGenerateResult,
+						soupCppFiles,
+						fileSystemState,
+						soupCppGenerateResultContent);
 					fileSystem->CreateMockFile(
-						Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
+						Path(
+							"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+							"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
 						std::make_shared<MockFile>(std::move(soupCppGenerateResultContent)));
 				});
 
@@ -211,11 +225,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			Build::Execute(
-				packageProvider,
-				std::move(arguments),
-				userDataPath,
-				systemReadAccess,
-				recipeCache);
+				packageProvider, std::move(arguments), userDataPath, systemReadAccess, recipeCache);
 
 			// Verify expected logs
 			Assert::AreEqual(
@@ -224,24 +234,35 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/my-package/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"DIAG: Load PackageLock: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: 0>Package was prebuilt: soup|wren",
 					"DIAG: 2>Running Build: [Wren]soup|cpp",
 					"INFO: 2>Build 'soup|cpp'",
-					"INFO: 2>Preload Directory Missing: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"INFO: 2>Preload Directory Missing: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
 					"INFO: 2>Generate result file does not exist",
 					"INFO: 2>Phase1 no previous graph",
-					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"INFO: 2>Check outdated generate input file: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"INFO: 2>Create Directory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"INFO: 2>Check outdated generate input file: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
 					"INFO: 2>Value Table file does not exist",
 					"INFO: 2>Save Generate Input file",
 					"INFO: 2>Checking for existing Generate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					"INFO: 2>Operation results file does not exist",
 					"INFO: 2>No previous results found",
 					"DIAG: 2>Build evaluation start 1",
@@ -249,7 +270,12 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Operation has no successful previous invocation",
 					"HIGH: 2>Generate Core: [Wren]soup|cpp",
-					std::format("DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/", GetGenerateExePath()),
+					std::format(
+						"DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} "
+						"true "
+						"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+						"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+						GetGenerateExePath()),
 					"DIAG: 2>Allowed Read Access:",
 					std::format("DIAG: 2>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
@@ -257,31 +283,47 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Program Files/dotnet/",
 					"DIAG: 2>C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 2>Allowed Write Access:",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 2>Worker thread end 1",
 					"DIAG: 2>Build evaluation end",
 					"INFO: 2>Save operation results",
 					"INFO: 2>Loading updated Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
 					"DIAG: 2>Map previous operation graph observed results",
-					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"INFO: 2>Create Directory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
 					"DIAG: 2>Build evaluation skipped",
 					"INFO: 2>Nothing to do.",
 					"DIAG: 1>Running Build: [C++]my-package",
 					"INFO: 1>Build 'my-package'",
-					"INFO: 1>Preload Directory Missing: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
+					"INFO: 1>Preload Directory Missing: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"INFO: 1>Generate result file does not exist",
 					"INFO: 1>Phase1 no previous graph",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
+					"INFO: 1>Create Directory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+					"INFO: 1>Check outdated generate input file: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"DIAG: 1>Build evaluation start 1",
@@ -289,13 +331,18 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]my-package",
-					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/my-package/] {0} true C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExePath()),
+					std::format(
+						"DIAG: 1>Execute: [C:/WorkingDirectory/my-package/] {0} true "
+						"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+						GetGenerateExePath()),
 					"DIAG: 1>Allowed Read Access:",
 					std::format("DIAG: 1>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 1>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 1>C:/Windows/",
 					"DIAG: 1>C:/Program Files/dotnet/",
-					"DIAG: 1>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"1>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 1>C:/WorkingDirectory/my-package/",
 					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"DIAG: 1>Allowed Write Access:",
@@ -304,9 +351,12 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
+					"INFO: 1>Create Directory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 					"DIAG: 1>Build evaluation skipped",
 					"INFO: 1>Nothing to do.",
 				}),
@@ -329,7 +379,8 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/package-lock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -342,30 +393,69 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"CreateDirectory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"OpenWriteBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"OpenWriteBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"CreateDirectory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"CreateDirectory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"OpenWriteBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
+					"OpenWriteBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
-					"CreateDirectory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
+					"CreateDirectory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -381,13 +471,23 @@ namespace Soup::Core::UnitTests
 
 			Assert::AreEqual(
 				std::vector<std::string>({
-					std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
+					std::format(
+						"CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] "
+						"{0} true "
+						"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+						"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] "
+						"AllowedWrite [1]",
+						GetGenerateExePath()),
 					"ProcessStart: 1",
 					"WaitForExit: 1",
 					"GetStandardOutput: 1",
 					"GetStandardError: 1",
 					"GetExitCode: 1",
-					std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
+					std::format(
+						"CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true "
+						"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ "
+						"Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]",
+						GetGenerateExePath()),
 					"ProcessStart: 2",
 					"WaitForExit: 2",
 					"GetStandardOutput: 2",
@@ -398,296 +498,261 @@ namespace Soup::Core::UnitTests
 				"Verify monitor process manager requests match expected.");
 
 			// Verify files
-			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt"));
+			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(Path(
+				"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+				"generate-input.bvt"));
 			Assert::AreEqual(
-				ValueTable({
+				ValueTable(
 					{
-						"Dependencies",
-						ValueTable(
-						{
-							{
-								"Build",
-								ValueTable(
-								{
-									{
-										"soup|cpp",
-										ValueTable(
-										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/") },
-										})
-									},
-								})
-							},
-						})
-					},
-					{
-						"EvaluateMacros",
-						ValueTable(
-						{
-							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
-							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/") },
-						})
-					},
-					{
-						"EvaluateReadAccess",
-						ValueList(
-						{
-							std::string("/(PACKAGE_my-package)/"),
-							std::string("/(TARGET_my-package)/"),
-						})
-					},
-					{
-						"EvaluateWriteAccess",
-						ValueList(
-						{
-							std::string("/(TARGET_my-package)/"),
-						})
-					},
-					{
-						"GenerateMacros",
-						ValueTable(
-						{
-							{ "/(BUILD_TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-						})
-					},
-					{
-						"GenerateSubGraphMacros",
-						ValueTable(
-						{
-							{ "/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/") },
-						})
-					},
-					{
-						"GlobalState",
-						ValueTable(
-						{
-							{
-								"Context",
-								ValueTable(
-								{
-									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
-									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
-								})
-							},
-							{
-								"Dependencies",
-								ValueTable(
-								{
-									{
-										"Build",
-										ValueTable(
-										{
-											{
-												"soup|cpp",
-												ValueTable(
-												{
-													{
-														"Context",
-														ValueTable(
+						{"Dependencies",
+						 ValueTable(
+							 {
+								 {"Build",
+								  ValueTable(
+									  {
+										  {"soup|cpp",
+										   ValueTable(
+											   {
+												   {"SoupTargetDirectory",
+													std::string(
+														"C:/Users/Me/.soup/packages/Wren/soup/cpp/"
+														"0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+														".soup/")},
+											   })},
+									  })},
+							 })},
+						{"EvaluateMacros",
+						 ValueTable(
+							 {
+								 {"/(PACKAGE_my-package)/",
+								  std::string("C:/WorkingDirectory/my-package/")},
+								 {"/(TARGET_my-package)/",
+								  std::string(
+									  "C:/WorkingDirectory/my-package/out/"
+									  "J_HqSstV55vlb-x6RWC_hLRFRDU/")},
+							 })},
+						{"EvaluateReadAccess",
+						 ValueList(
+							 {
+								 std::string("/(PACKAGE_my-package)/"),
+								 std::string("/(TARGET_my-package)/"),
+							 })},
+						{"EvaluateWriteAccess",
+						 ValueList(
+							 {
+								 std::string("/(TARGET_my-package)/"),
+							 })},
+						{"GenerateMacros",
+						 ValueTable(
+							 {
+								 {"/(BUILD_TARGET_soup|cpp)/",
+								  std::string(
+									  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+									  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+							 })},
+						{"GenerateSubGraphMacros",
+						 ValueTable(
+							 {
+								 {"/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/")},
+							 })},
+						{"GlobalState",
+						 ValueTable(
+							 {
+								 {"Context",
+								  ValueTable(
+									  {
+										  {"HostPlatform", std::string("FakePlatform")},
+										  {"PackageDirectory",
+										   std::string("/(PACKAGE_my-package)/")},
+										  {"TargetDirectory", std::string("/(TARGET_my-package)/")},
+									  })},
+								 {"Dependencies",
+								  ValueTable(
+									  {
+										  {"Build",
+										   ValueTable(
+											   {
+												   {"soup|cpp",
+													ValueTable(
 														{
-															{ "Reference", std::string("[Wren]soup|cpp@0.8.2") },
-															{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-														})
-													},
-												})
-											},
-										})
-									},
-								})
-							},
-							{
-								"FileSystem",
-								ValueList({
-									std::string("recipe.sml"),
-								})
-							},
-							{ "Parameters", ValueTable() },
-						})
-					},
-					{
-						"PackageRoot",
-						std::string("C:/WorkingDirectory/my-package/")
-					},
-					{
-						"UserDataPath",
-						std::string("C:/Users/Me/.soup/")
-					},
-				}),
+															{"Context",
+															 ValueTable(
+																 {
+																	 {"Reference",
+																	  std::string(
+																		  "[Wren]soup|cpp@0.8.2")},
+																	 {"TargetDirectory",
+																	  std::string(
+																		  "/(TARGET_soup|cpp)/")},
+																 })},
+														})},
+											   })},
+									  })},
+								 {"FileSystem",
+								  ValueList(
+									  {
+										  std::string("recipe.sml"),
+									  })},
+								 {"Parameters", ValueTable()},
+							 })},
+						{"PackageRoot", std::string("C:/WorkingDirectory/my-package/")},
+						{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+					}),
 				ValueTableReader::Deserialize(myPackageGenerateInputMockFile->Content),
 				"Verify file content match expected.");
 
-			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor"));
-			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
+			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(Path(
+				"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+				"generate-phase1.bor"));
+			auto myPackageGenerateResults = OperationResultsReader::Deserialize(
+				myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
-				OperationResults({
+				OperationResults(
 					{
-						1,
-						OperationResult(
-							true,
-							std::chrono::clock_cast<std::chrono::file_clock>(
-								std::chrono::time_point<std::chrono::system_clock>()),
-							{ },
-							{ },
-							std::nullopt)
-					},
-				}),
+						{1,
+						 OperationResult(
+							 true,
+							 std::chrono::clock_cast<std::chrono::file_clock>(
+								 std::chrono::time_point<std::chrono::system_clock>()),
+							 {},
+							 {},
+							 std::nullopt)},
+					}),
 				myPackageGenerateResults,
 				"Verify my package generate results content match expected.");
 
-			auto soupCppGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt"));
+			auto soupCppGenerateInputMockFile = fileSystem->GetMockFile(Path(
+				"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+				".soup/generate-input.bvt"));
 			Assert::AreEqual(
-				ValueTable({
+				ValueTable(
 					{
-						"Dependencies",
-						ValueTable(
-						{
-							{
-								"Build",
-								ValueTable(
-								{
-									{
-										"soup|wren",
-										ValueTable(
-										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/.soup/") },
-										})
-									},
-								})
-							},
-						})
-					},
-					{
-						"EvaluateMacros",
-						ValueTable(
-						{
-							{ "/(PACKAGE_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/") },
-							{ "/(TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-						})
-					},
-					{
-						"EvaluateReadAccess",
-						ValueList(
-						{
-							std::string("/(PACKAGE_soup|cpp)/"),
-							std::string("/(TARGET_soup|cpp)/"),
-						})
-					},
-					{
-						"EvaluateWriteAccess",
-						ValueList(
-						{
-							std::string("/(TARGET_soup|cpp)/"),
-						})
-					},
-					{
-						"GenerateMacros",
-						ValueTable(
-						{
-							{ "/(BUILD_TARGET_soup|wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/") },
-						})
-					},
-					{
-						"GenerateSubGraphMacros",
-						ValueTable(
-						{
-							{ "/(TARGET_soup|wren)/", std::string("/(BUILD_TARGET_soup|wren)/") },
-						})
-					},
-					{
-						"GlobalState",
-						ValueTable(
-						{
-							{
-								"Context",
-								ValueTable(
-								{
-									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_soup|cpp)/") },
-									{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-								})
-							},
-							{
-								"Dependencies",
-								ValueTable(
-								{
-									{
-										"Build",
-										ValueTable(
-										{
-											{
-												"soup|wren",
-												ValueTable(
-												{
-													{
-														"Context",
-														ValueTable(
+						{"Dependencies",
+						 ValueTable(
+							 {
+								 {"Build",
+								  ValueTable(
+									  {
+										  {"soup|wren",
+										   ValueTable(
+											   {
+												   {"SoupTargetDirectory",
+													std::string(
+														"C:/Users/Me/.soup/artifacts/Wren/soup/"
+														"wren/0.5.4/soup-wren-artifact/.soup/")},
+											   })},
+									  })},
+							 })},
+						{"EvaluateMacros",
+						 ValueTable(
+							 {
+								 {"/(PACKAGE_soup|cpp)/",
+								  std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+								 {"/(TARGET_soup|cpp)/",
+								  std::string(
+									  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+									  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+							 })},
+						{"EvaluateReadAccess",
+						 ValueList(
+							 {
+								 std::string("/(PACKAGE_soup|cpp)/"),
+								 std::string("/(TARGET_soup|cpp)/"),
+							 })},
+						{"EvaluateWriteAccess",
+						 ValueList(
+							 {
+								 std::string("/(TARGET_soup|cpp)/"),
+							 })},
+						{"GenerateMacros",
+						 ValueTable(
+							 {
+								 {"/(BUILD_TARGET_soup|wren)/",
+								  std::string(
+									  "C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/"
+									  "soup-wren-artifact/")},
+							 })},
+						{"GenerateSubGraphMacros",
+						 ValueTable(
+							 {
+								 {"/(TARGET_soup|wren)/",
+								  std::string("/(BUILD_TARGET_soup|wren)/")},
+							 })},
+						{"GlobalState",
+						 ValueTable(
+							 {
+								 {"Context",
+								  ValueTable(
+									  {
+										  {"HostPlatform", std::string("FakePlatform")},
+										  {"PackageDirectory", std::string("/(PACKAGE_soup|cpp)/")},
+										  {"TargetDirectory", std::string("/(TARGET_soup|cpp)/")},
+									  })},
+								 {"Dependencies",
+								  ValueTable(
+									  {
+										  {"Build",
+										   ValueTable(
+											   {
+												   {"soup|wren",
+													ValueTable(
 														{
-															{ "Reference", std::string("[Wren]soup|wren@0.5.4") },
-															{ "TargetDirectory", std::string("/(TARGET_soup|wren)/") },
-														})
-													},
-												})
-											},
-										})
-									},
-								})
-							},
-							{
-								"FileSystem",
-								ValueList({
-									std::string("recipe.sml"),
-								})
-							},
-							{
-								"Parameters",
-								ValueTable(
-								{
-									{ "System", std::string("FakePlatform") },
-								})
-							},
-						})
-					},
-					{
-						"PackageRoot",
-						std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")
-					},
-					{
-						"UserDataPath",
-						std::string("C:/Users/Me/.soup/")
-					},
-				}),
+															{"Context",
+															 ValueTable(
+																 {
+																	 {"Reference",
+																	  std::string(
+																		  "[Wren]soup|wren@0.5.4")},
+																	 {"TargetDirectory",
+																	  std::string(
+																		  "/(TARGET_soup|wren)/")},
+																 })},
+														})},
+											   })},
+									  })},
+								 {"FileSystem",
+								  ValueList(
+									  {
+										  std::string("recipe.sml"),
+									  })},
+								 {"Parameters",
+								  ValueTable(
+									  {
+										  {"System", std::string("FakePlatform")},
+									  })},
+							 })},
+						{"PackageRoot",
+						 std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+						{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+					}),
 				ValueTableReader::Deserialize(soupCppGenerateInputMockFile->Content),
 				"Verify file content match expected.");
 
-			auto soupCppGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor"));
-			auto soupCppGenerateResults = OperationResultsReader::Deserialize(soupCppGenerateResultsMockFile->Content, fileSystemState);
+			auto soupCppGenerateResultsMockFile = fileSystem->GetMockFile(Path(
+				"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+				".soup/generate-phase1.bor"));
+			auto soupCppGenerateResults = OperationResultsReader::Deserialize(
+				soupCppGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
-				OperationResults({
+				OperationResults(
 					{
-						1,
-						OperationResult(
-							true,
-							std::chrono::clock_cast<std::chrono::file_clock>(
-								std::chrono::time_point<std::chrono::system_clock>()),
-							{ },
-							{ },
-							std::nullopt)
-					},
-				}),
+						{1,
+						 OperationResult(
+							 true,
+							 std::chrono::clock_cast<std::chrono::file_clock>(
+								 std::chrono::time_point<std::chrono::system_clock>()),
+							 {},
+							 {},
+							 std::nullopt)},
+					}),
 				soupCppGenerateResults,
 				"Verify my package generate results content match expected.");
 		}
 
 		// [[Fact]]
-		void Execute_NoDependencies_UpToDate()
-		{
+		void Execute_NoDependencies_UpToDate() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -702,9 +767,8 @@ namespace Soup::Core::UnitTests
 
 			fileSystem->CreateMockFile(
 				Path(GetGenerateExePath()),
-				std::make_shared<MockFile>(
-					std::chrono::clock_cast<std::chrono::file_clock>(
-						std::chrono::sys_days{January/9/2024} + 11h + 3min + 4s)));
+				std::make_shared<MockFile>(std::chrono::clock_cast<std::chrono::file_clock>(
+					std::chrono::sys_days{January / 9 / 2024} + 11h + 3min + 4s)));
 
 			fileSystem->CreateMockDirectory(
 				Path("C:/WorkingDirectory/my-package/"),
@@ -737,15 +801,21 @@ namespace Soup::Core::UnitTests
 				})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			// Create the Recipe to build
@@ -823,327 +893,315 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState();
 
 			auto myPackageGenerateResult = GenerateResult(
-				OperationGraph(
-					std::vector<OperationId>(),
-					std::vector<OperationInfo>()),
-				false);
+				OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()), false);
 			auto myPackageFiles = std::set<FileId>();
 			auto myPackageGenerateResultContent = std::stringstream();
-			GenerateResultWriter::Serialize(myPackageGenerateResult, myPackageFiles, fileSystemState, myPackageGenerateResultContent);
+			GenerateResultWriter::Serialize(
+				myPackageGenerateResult,
+				myPackageFiles,
+				fileSystemState,
+				myPackageGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(myPackageGenerateResultContent)));
 
 			auto soupCppGenerateResult = GenerateResult(
-				OperationGraph(
-					std::vector<OperationId>(),
-					std::vector<OperationInfo>()),
-				false);
+				OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()), false);
 			auto soupCppFiles = std::set<FileId>();
 			auto soupCppGenerateResultContent = std::stringstream();
-			GenerateResultWriter::Serialize(soupCppGenerateResult, soupCppFiles, fileSystemState, soupCppGenerateResultContent);
+			GenerateResultWriter::Serialize(
+				soupCppGenerateResult, soupCppFiles, fileSystemState, soupCppGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(soupCppGenerateResultContent)));
 
-			auto soupCppGenerateInput = ValueTable({
+			auto soupCppGenerateInput = ValueTable(
 				{
-					"Dependencies",
-					ValueTable(
-					{
-						{
-							"Build",
-							ValueTable(
-							{
-								{
-									"soup|wren",
-									ValueTable(
-									{
-										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/.soup/") },
-									})
-								},
-							})
-						},
-					})
-				},
-				{
-					"EvaluateMacros",
-					ValueTable(
-					{
-						{ "/(PACKAGE_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/") },
-						{ "/(TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-					})
-				},
-				{
-					"EvaluateReadAccess",
-					ValueList(
-					{
-						std::string("/(PACKAGE_soup|cpp)/"),
-						std::string("/(TARGET_soup|cpp)/"),
-					})
-				},
-				{
-					"EvaluateWriteAccess",
-					ValueList(
-					{
-						std::string("/(TARGET_soup|cpp)/"),
-					})
-				},
-				{
-					"GenerateMacros",
-					ValueTable(
-					{
-						{ "/(BUILD_TARGET_soup|wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/") },
-					})
-				},
-				{
-					"GenerateSubGraphMacros",
-					ValueTable(
-					{
-						{ "/(TARGET_soup|wren)/", std::string("/(BUILD_TARGET_soup|wren)/") },
-					})
-				},
-				{
-					"GlobalState",
-					ValueTable(
-					{
-						{
-							"Context",
-							ValueTable(
-							{
-								{ "HostPlatform", std::string("FakePlatform") },
-								{ "PackageDirectory", std::string("/(PACKAGE_soup|cpp)/") },
-								{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-							})
-						},
-						{
-							"Dependencies",
-							ValueTable(
-							{
-								{
-									"Build",
-									ValueTable(
-									{
-										{
-											"soup|wren",
-											ValueTable(
-											{
-												{
-													"Context",
-													ValueTable(
+					{"Dependencies",
+					 ValueTable(
+						 {
+							 {"Build",
+							  ValueTable(
+								  {
+									  {"soup|wren",
+									   ValueTable(
+										   {
+											   {"SoupTargetDirectory",
+												std::string(
+													"C:/Users/Me/.soup/artifacts/Wren/soup/wren/"
+													"0.5.4/soup-wren-artifact/.soup/")},
+										   })},
+								  })},
+						 })},
+					{"EvaluateMacros",
+					 ValueTable(
+						 {
+							 {"/(PACKAGE_soup|cpp)/",
+							  std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+							 {"/(TARGET_soup|cpp)/",
+							  std::string(
+								  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+								  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+						 })},
+					{"EvaluateReadAccess",
+					 ValueList(
+						 {
+							 std::string("/(PACKAGE_soup|cpp)/"),
+							 std::string("/(TARGET_soup|cpp)/"),
+						 })},
+					{"EvaluateWriteAccess",
+					 ValueList(
+						 {
+							 std::string("/(TARGET_soup|cpp)/"),
+						 })},
+					{"GenerateMacros",
+					 ValueTable(
+						 {
+							 {"/(BUILD_TARGET_soup|wren)/",
+							  std::string(
+								  "C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/"
+								  "soup-wren-artifact/")},
+						 })},
+					{"GenerateSubGraphMacros",
+					 ValueTable(
+						 {
+							 {"/(TARGET_soup|wren)/", std::string("/(BUILD_TARGET_soup|wren)/")},
+						 })},
+					{"GlobalState",
+					 ValueTable(
+						 {
+							 {"Context",
+							  ValueTable(
+								  {
+									  {"HostPlatform", std::string("FakePlatform")},
+									  {"PackageDirectory", std::string("/(PACKAGE_soup|cpp)/")},
+									  {"TargetDirectory", std::string("/(TARGET_soup|cpp)/")},
+								  })},
+							 {"Dependencies",
+							  ValueTable(
+								  {
+									  {"Build",
+									   ValueTable(
+										   {
+											   {"soup|wren",
+												ValueTable(
 													{
-														{ "Reference", std::string("[Wren]soup|wren@0.5.4") },
-														{ "TargetDirectory", std::string("/(TARGET_soup|wren)/") },
-													})
-												},
-											})
-										},
-									})
-								},
-							})
-						},
-						{
-							"FileSystem",
-							ValueList({
-								std::string("recipe.sml"),
-							})
-						},
-						{
-							"Parameters",
-							ValueTable(
-							{
-								{ "System", std::string("FakePlatform") },
-							})
-						},
-					})
-				},
-				{
-					"PackageRoot",
-					std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")
-				},
-				{
-					"UserDataPath",
-					std::string("C:/Users/Me/.soup/")
-				},
-			});
+														{"Context",
+														 ValueTable(
+															 {
+																 {"Reference",
+																  std::string(
+																	  "[Wren]soup|wren@0.5.4")},
+																 {"TargetDirectory",
+																  std::string(
+																	  "/(TARGET_soup|wren)/")},
+															 })},
+													})},
+										   })},
+								  })},
+							 {"FileSystem",
+							  ValueList(
+								  {
+									  std::string("recipe.sml"),
+								  })},
+							 {"Parameters",
+							  ValueTable(
+								  {
+									  {"System", std::string("FakePlatform")},
+								  })},
+						 })},
+					{"PackageRoot", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+					{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+				});
 			auto soupCppGenerateInputContent = std::stringstream();
 			ValueTableWriter::Serialize(soupCppGenerateInput, soupCppGenerateInputContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt"),
 				std::make_shared<MockFile>(std::move(soupCppGenerateInputContent)));
 
-			auto myPackageGenerateInput = ValueTable({
+			auto myPackageGenerateInput = ValueTable(
 				{
-					"Dependencies",
-					ValueTable(
-					{
-						{
-							"Build",
-							ValueTable(
-							{
-								{
-									"soup|cpp",
-									ValueTable(
-									{
-										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/") },
-									})
-								},
-							})
-						},
-					})
-				},
-				{
-					"EvaluateMacros",
-					ValueTable(
-					{
-						{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
-						{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/") },
-					})
-				},
-				{
-					"EvaluateReadAccess",
-					ValueList(
-					{
-						std::string("/(PACKAGE_my-package)/"),
-						std::string("/(TARGET_my-package)/"),
-					})
-				},
-				{
-					"EvaluateWriteAccess",
-					ValueList(
-					{
-						std::string("/(TARGET_my-package)/"),
-					})
-				},
-				{
-					"GenerateMacros",
-					ValueTable(
-					{
-						{ "/(BUILD_TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-					})
-				},
-				{
-					"GenerateSubGraphMacros",
-					ValueTable(
-					{
-						{ "/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/") },
-					})
-				},
-				{
-					"GlobalState",
-					ValueTable(
-					{
-						{
-							"Context",
-							ValueTable(
-							{
-								{ "HostPlatform", std::string("FakePlatform") },
-								{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
-								{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
-							})
-						},
-						{
-							"Dependencies",
-							ValueTable(
-							{
-								{
-									"Build",
-									ValueTable(
-									{
-										{
-											"soup|cpp",
-											ValueTable(
-											{
-												{
-													"Context",
-													ValueTable(
+					{"Dependencies",
+					 ValueTable(
+						 {
+							 {"Build",
+							  ValueTable(
+								  {
+									  {"soup|cpp",
+									   ValueTable(
+										   {
+											   {"SoupTargetDirectory",
+												std::string(
+													"C:/Users/Me/.soup/packages/Wren/soup/cpp/"
+													"0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+													".soup/")},
+										   })},
+								  })},
+						 })},
+					{"EvaluateMacros",
+					 ValueTable(
+						 {
+							 {"/(PACKAGE_my-package)/",
+							  std::string("C:/WorkingDirectory/my-package/")},
+							 {"/(TARGET_my-package)/",
+							  std::string(
+								  "C:/WorkingDirectory/my-package/out/"
+								  "J_HqSstV55vlb-x6RWC_hLRFRDU/")},
+						 })},
+					{"EvaluateReadAccess",
+					 ValueList(
+						 {
+							 std::string("/(PACKAGE_my-package)/"),
+							 std::string("/(TARGET_my-package)/"),
+						 })},
+					{"EvaluateWriteAccess",
+					 ValueList(
+						 {
+							 std::string("/(TARGET_my-package)/"),
+						 })},
+					{"GenerateMacros",
+					 ValueTable(
+						 {
+							 {"/(BUILD_TARGET_soup|cpp)/",
+							  std::string(
+								  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+								  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+						 })},
+					{"GenerateSubGraphMacros",
+					 ValueTable(
+						 {
+							 {"/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/")},
+						 })},
+					{"GlobalState",
+					 ValueTable(
+						 {
+							 {"Context",
+							  ValueTable(
+								  {
+									  {"HostPlatform", std::string("FakePlatform")},
+									  {"PackageDirectory", std::string("/(PACKAGE_my-package)/")},
+									  {"TargetDirectory", std::string("/(TARGET_my-package)/")},
+								  })},
+							 {"Dependencies",
+							  ValueTable(
+								  {
+									  {"Build",
+									   ValueTable(
+										   {
+											   {"soup|cpp",
+												ValueTable(
 													{
-														{ "Reference", std::string("[Wren]soup|cpp@0.8.2") },
-														{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-													})
-												},
-											})
-										},
-									})
-								},
-							})
-						},
-						{
-							"FileSystem",
-							ValueList({
-								std::string("recipe.sml"),
-							})
-						},
-						{ "Parameters", ValueTable() },
-					})
-				},
-				{
-					"PackageRoot",
-					std::string("C:/WorkingDirectory/my-package/")
-				},
-				{
-					"UserDataPath",
-					std::string("C:/Users/Me/.soup/")
-				},
-			});
+														{"Context",
+														 ValueTable(
+															 {
+																 {"Reference",
+																  std::string(
+																	  "[Wren]soup|cpp@0.8.2")},
+																 {"TargetDirectory",
+																  std::string(
+																	  "/(TARGET_soup|cpp)/")},
+															 })},
+													})},
+										   })},
+								  })},
+							 {"FileSystem",
+							  ValueList(
+								  {
+									  std::string("recipe.sml"),
+								  })},
+							 {"Parameters", ValueTable()},
+						 })},
+					{"PackageRoot", std::string("C:/WorkingDirectory/my-package/")},
+					{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+				});
 			auto myPackageGenerateInputContent = std::stringstream();
 			ValueTableWriter::Serialize(myPackageGenerateInput, myPackageGenerateInputContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt"),
 				std::make_shared<MockFile>(std::move(myPackageGenerateInputContent)));
 
-			auto myPackageGenerateResults = OperationResults({
+			auto myPackageGenerateResults = OperationResults(
 				{
-					1,
-					OperationResult(
-						true,
-						std::chrono::clock_cast<std::chrono::file_clock>(
-							std::chrono::sys_days{January/9/2024} + 12h + 35min + 34s),
-						{ },
-						{ },
-						std::nullopt)
-				},
-			});
+					{1,
+					 OperationResult(
+						 true,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::sys_days{January / 9 / 2024} + 12h + 35min + 34s),
+						 {},
+						 {},
+						 std::nullopt)},
+				});
 			auto myPackageGenerateResultsContent = std::stringstream();
 			auto myPackageGenerateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(myPackageGenerateResults, myPackageGenerateResultsFiles, fileSystemState,  myPackageGenerateResultsContent);
+			OperationResultsWriter::Serialize(
+				myPackageGenerateResults,
+				myPackageGenerateResultsFiles,
+				fileSystemState,
+				myPackageGenerateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(myPackageGenerateResultsContent)));
 
-			auto soupCppGenerateResults = OperationResults({
+			auto soupCppGenerateResults = OperationResults(
 				{
-					1,
-					OperationResult(
-						true,
-						std::chrono::clock_cast<std::chrono::file_clock>(
-							std::chrono::sys_days{January/9/2024} + 12h + 13min + 23s),
-						{ },
-						{ },
-						std::nullopt)
-				},
-			});
+					{1,
+					 OperationResult(
+						 true,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::sys_days{January / 9 / 2024} + 12h + 13min + 23s),
+						 {},
+						 {},
+						 std::nullopt)},
+				});
 			auto soupCppGenerateResultsContent = std::stringstream();
 			auto soupCppGenerateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(soupCppGenerateResults, soupCppGenerateResultsFiles, fileSystemState, soupCppGenerateResultsContent);
+			OperationResultsWriter::Serialize(
+				soupCppGenerateResults,
+				soupCppGenerateResultsFiles,
+				fileSystemState,
+				soupCppGenerateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(soupCppGenerateResultsContent)));
 
 			auto soupCppEvaluateResults = OperationResults();
 			auto soupCppEvaluateResultsContent = std::stringstream();
 			auto soupCppEvaluateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(soupCppEvaluateResults, soupCppEvaluateResultsFiles, fileSystemState, soupCppEvaluateResultsContent);
+			OperationResultsWriter::Serialize(
+				soupCppEvaluateResults,
+				soupCppEvaluateResultsFiles,
+				fileSystemState,
+				soupCppEvaluateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(soupCppEvaluateResultsContent)));
 
 			auto myPackageEvaluateResults = OperationResults();
 			auto myPackageEvaluateResultsContent = std::stringstream();
 			auto myPackageEvaluateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(myPackageEvaluateResults, myPackageEvaluateResultsFiles, fileSystemState, myPackageEvaluateResultsContent);
+			OperationResultsWriter::Serialize(
+				myPackageEvaluateResults,
+				myPackageEvaluateResultsFiles,
+				fileSystemState,
+				myPackageEvaluateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/evaluate-phase1.bor"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"evaluate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(myPackageEvaluateResultsContent)));
 
 			// Register the test process manager
@@ -1152,7 +1210,8 @@ namespace Soup::Core::UnitTests
 
 			// Register the test process manager
 			auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
-			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
+			auto scopedMonitorProcessManager =
+				Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
 			auto hostPlatform = "FakePlatform";
 
@@ -1164,7 +1223,7 @@ namespace Soup::Core::UnitTests
 			auto systemReadAccess = std::vector<Path>({
 				Path("C:/fake/system/"),
 			});
-	
+
 			// Load user config state
 			auto userDataPath = Build::Constants::GetSoupUserDataPath();
 			auto recipeCache = RecipeCache();
@@ -1178,11 +1237,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			Build::Execute(
-				packageProvider,
-				std::move(arguments),
-				userDataPath,
-				systemReadAccess,
-				recipeCache);
+				packageProvider, std::move(arguments), userDataPath, systemReadAccess, recipeCache);
 
 			// Verify expected logs
 			Assert::AreEqual(
@@ -1191,7 +1246,8 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/my-package/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"DIAG: Load PackageLock: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"INFO: Skip loading sub graph for prebuilt package",
@@ -1199,14 +1255,22 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Running Build: [Wren]soup|cpp",
 					"INFO: 2>Build 'soup|cpp'",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
 					"INFO: 2>Phase1 previous graph found",
 					"INFO: 2>Checking for existing Evaluate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
 					"INFO: 2>Phase1 previous results found",
-					"INFO: 2>Check outdated generate input file: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"INFO: 2>Check outdated generate input file: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
 					"INFO: 2>Checking for existing Generate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					"INFO: 2>Previous results found",
 					"DIAG: 2>Build evaluation start 1",
 					"DIAG: 2>Worker thread start 1",
@@ -1220,14 +1284,22 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Running Build: [C++]my-package",
 					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/evaluate-phase1.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"evaluate-phase1.bor",
 					"INFO: 1>Phase1 previous results found",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
+					"INFO: 1>Check outdated generate input file: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
 					"INFO: 1>Previous results found",
 					"DIAG: 1>Build evaluation start 1",
 					"DIAG: 1>Worker thread start 1",
@@ -1255,7 +1327,8 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/package-lock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -1268,22 +1341,47 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					std::format("TryGetLastWriteTime: {0}", GetGenerateExePath()),
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/evaluate-phase1.bor",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"evaluate-phase1.bor",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 				}),
 				fileSystem->GetRequests(),
@@ -1305,8 +1403,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void Execute_NoDependencies_HasPreprocessors()
-		{
+		void Execute_NoDependencies_HasPreprocessors() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -1417,55 +1514,80 @@ namespace Soup::Core::UnitTests
 
 			// Register the test process manager
 			auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
-			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
+			auto scopedMonitorProcessManager =
+				Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
 			// Emulate generate phase
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
-				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
-				{
+				std::format(
+					"CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ "
+					"Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]",
+					GetGenerateExePath()),
+				[&](Monitor::ISystemAccessMonitor & /*monitor*/) {
 					auto myPackageGenerateResult = GenerateResult(
-						OperationGraph(
-							std::vector<OperationId>(),
-							std::vector<OperationInfo>()),
+						OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()),
 						true);
 					auto myPackageFiles = std::set<FileId>();
 					auto myPackageGenerateResultContent = std::stringstream();
-					GenerateResultWriter::Serialize(myPackageGenerateResult, myPackageFiles, fileSystemState, myPackageGenerateResultContent);
+					GenerateResultWriter::Serialize(
+						myPackageGenerateResult,
+						myPackageFiles,
+						fileSystemState,
+						myPackageGenerateResultContent);
 					fileSystem->CreateMockFile(
-						Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr"),
+						Path(
+							"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+							"generate-phase1.bgr"),
 						std::make_shared<MockFile>(std::move(myPackageGenerateResultContent)));
 				});
 
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 3 [C:/WorkingDirectory/my-package/] {0} false C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
-				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
-				{
-					auto myPackageOperationGraph = OperationGraph(
-						std::vector<OperationId>(),
-						std::vector<OperationInfo>());
+				std::format(
+					"CreateMonitorProcess: 3 [C:/WorkingDirectory/my-package/] {0} false "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ "
+					"Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]",
+					GetGenerateExePath()),
+				[&](Monitor::ISystemAccessMonitor & /*monitor*/) {
+					auto myPackageOperationGraph =
+						OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>());
 					auto myPackageFiles = std::set<FileId>();
 					auto myPackageOperationGraphContent = std::stringstream();
-					OperationGraphWriter::Serialize(myPackageOperationGraph, myPackageFiles, fileSystemState, myPackageOperationGraphContent);
+					OperationGraphWriter::Serialize(
+						myPackageOperationGraph,
+						myPackageFiles,
+						fileSystemState,
+						myPackageOperationGraphContent);
 					fileSystem->CreateMockFile(
-						Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bog"),
+						Path(
+							"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+							"generate-phase2.bog"),
 						std::make_shared<MockFile>(std::move(myPackageOperationGraphContent)));
 				});
 
 			monitorProcessManager->RegisterExecuteCallback(
-				std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
-				[&](Monitor::ISystemAccessMonitor& /*monitor*/)
-				{
+				std::format(
+					"CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} "
+					"true "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] "
+					"AllowedWrite [1]",
+					GetGenerateExePath()),
+				[&](Monitor::ISystemAccessMonitor & /*monitor*/) {
 					auto soupCppGenerateResult = GenerateResult(
-						OperationGraph(
-							std::vector<OperationId>(),
-							std::vector<OperationInfo>()),
+						OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()),
 						false);
 					auto soupCppFiles = std::set<FileId>();
 					auto soupCppGenerateResultContent = std::stringstream();
-					GenerateResultWriter::Serialize(soupCppGenerateResult, soupCppFiles, fileSystemState, soupCppGenerateResultContent);
+					GenerateResultWriter::Serialize(
+						soupCppGenerateResult,
+						soupCppFiles,
+						fileSystemState,
+						soupCppGenerateResultContent);
 					fileSystem->CreateMockFile(
-						Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
+						Path(
+							"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+							"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
 						std::make_shared<MockFile>(std::move(soupCppGenerateResultContent)));
 				});
 
@@ -1493,11 +1615,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			Build::Execute(
-				packageProvider,
-				std::move(arguments),
-				userDataPath,
-				systemReadAccess,
-				recipeCache);
+				packageProvider, std::move(arguments), userDataPath, systemReadAccess, recipeCache);
 
 			// Verify expected logs
 			Assert::AreEqual(
@@ -1506,24 +1624,35 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/my-package/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"DIAG: Load PackageLock: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"INFO: Skip loading sub graph for prebuilt package",
 					"DIAG: 0>Package was prebuilt: soup|wren",
 					"DIAG: 2>Running Build: [Wren]soup|cpp",
 					"INFO: 2>Build 'soup|cpp'",
-					"INFO: 2>Preload Directory Missing: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"INFO: 2>Preload Directory Missing: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
 					"INFO: 2>Generate result file does not exist",
 					"INFO: 2>Phase1 no previous graph",
-					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"INFO: 2>Check outdated generate input file: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"INFO: 2>Create Directory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"INFO: 2>Check outdated generate input file: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
 					"INFO: 2>Value Table file does not exist",
 					"INFO: 2>Save Generate Input file",
 					"INFO: 2>Checking for existing Generate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					"INFO: 2>Operation results file does not exist",
 					"INFO: 2>No previous results found",
 					"DIAG: 2>Build evaluation start 1",
@@ -1531,7 +1660,12 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Check for previous operation invocation",
 					"INFO: 2>Operation has no successful previous invocation",
 					"HIGH: 2>Generate Core: [Wren]soup|cpp",
-					std::format("DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/", GetGenerateExePath()),
+					std::format(
+						"DIAG: 2>Execute: [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} "
+						"true "
+						"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+						"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+						GetGenerateExePath()),
 					"DIAG: 2>Allowed Read Access:",
 					std::format("DIAG: 2>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 2>C:/Users/Me/.soup/local-user-config.sml",
@@ -1539,31 +1673,47 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>C:/Program Files/dotnet/",
 					"DIAG: 2>C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/",
 					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 2>Allowed Write Access:",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 2>Worker thread end 1",
 					"DIAG: 2>Build evaluation end",
 					"INFO: 2>Save operation results",
 					"INFO: 2>Loading updated Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
 					"DIAG: 2>Map previous operation graph observed results",
-					"INFO: 2>Create Directory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"INFO: 2>Create Directory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
 					"DIAG: 2>Build evaluation skipped",
 					"INFO: 2>Nothing to do.",
 					"DIAG: 1>Running Build: [C++]my-package",
 					"INFO: 1>Build 'my-package'",
-					"INFO: 1>Preload Directory Missing: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
+					"INFO: 1>Preload Directory Missing: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"INFO: 1>Generate result file does not exist",
 					"INFO: 1>Phase1 no previous graph",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
+					"INFO: 1>Create Directory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+					"INFO: 1>Check outdated generate input file: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
 					"INFO: 1>Value Table file does not exist",
 					"INFO: 1>Save Generate Input file",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"DIAG: 1>Build evaluation start 1",
@@ -1571,13 +1721,18 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]my-package",
-					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/my-package/] {0} true C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExePath()),
+					std::format(
+						"DIAG: 1>Execute: [C:/WorkingDirectory/my-package/] {0} true "
+						"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+						GetGenerateExePath()),
 					"DIAG: 1>Allowed Read Access:",
 					std::format("DIAG: 1>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 1>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 1>C:/Windows/",
 					"DIAG: 1>C:/Program Files/dotnet/",
-					"DIAG: 1>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"1>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 1>C:/WorkingDirectory/my-package/",
 					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"DIAG: 1>Allowed Write Access:",
@@ -1586,13 +1741,20 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Build evaluation end",
 					"INFO: 1>Save operation results",
 					"INFO: 1>Loading updated Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
+					"INFO: 1>Create Directory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 					"DIAG: 1>Build evaluation skipped",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
+					"INFO: 1>Check outdated generate input file: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bor",
 					"INFO: 1>Operation results file does not exist",
 					"INFO: 1>No previous results found",
 					"DIAG: 1>Build evaluation start 1",
@@ -1600,13 +1762,18 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Check for previous operation invocation",
 					"INFO: 1>Operation has no successful previous invocation",
 					"HIGH: 1>Generate Core: [C++]my-package",
-					std::format("DIAG: 1>Execute: [C:/WorkingDirectory/my-package/] {0} false C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/", GetGenerateExePath()),
+					std::format(
+						"DIAG: 1>Execute: [C:/WorkingDirectory/my-package/] {0} false "
+						"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+						GetGenerateExePath()),
 					"DIAG: 1>Allowed Read Access:",
 					std::format("DIAG: 1>{0}", GetRuntimeLibraryPath()),
 					"DIAG: 1>C:/Users/Me/.soup/local-user-config.sml",
 					"DIAG: 1>C:/Windows/",
 					"DIAG: 1>C:/Program Files/dotnet/",
-					"DIAG: 1>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"DIAG: "
+					"1>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
 					"DIAG: 1>C:/WorkingDirectory/my-package/",
 					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
 					"DIAG: 1>Allowed Write Access:",
@@ -1616,7 +1783,8 @@ namespace Soup::Core::UnitTests
 					"INFO: 1>Save operation results",
 					"INFO: 1>Load update Generate Phase 2 Result",
 					"DIAG: 1>Map previous operation graph observed results",
-					"INFO: 1>Create Directory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
+					"INFO: 1>Create Directory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 					"DIAG: 1>Build evaluation skipped",
 					"INFO: 1>Nothing to do.",
 				}),
@@ -1640,7 +1808,8 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/package-lock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -1653,36 +1822,84 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
-					"CreateDirectory: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"CreateDirectory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"OpenWriteBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"OpenWriteBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"CreateDirectory: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"CreateDirectory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"CreateDirectory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"OpenWriteBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
+					"OpenWriteBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
-					"CreateDirectory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor",
-					"OpenWriteBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bog",
+					"CreateDirectory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bor",
+					"OpenWriteBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bog",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
-					"CreateDirectory: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
+					"CreateDirectory: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 				}),
 				fileSystem->GetRequests(),
 				"Verify file system requests match expected.");
@@ -1699,19 +1916,33 @@ namespace Soup::Core::UnitTests
 
 			Assert::AreEqual(
 				std::vector<std::string>({
-					std::format("CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] {0} true C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
+					std::format(
+						"CreateMonitorProcess: 1 [C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/] "
+						"{0} true "
+						"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+						"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/ Environment [2] 1 0 AllowedRead [7] "
+						"AllowedWrite [1]",
+						GetGenerateExePath()),
 					"ProcessStart: 1",
 					"WaitForExit: 1",
 					"GetStandardOutput: 1",
 					"GetStandardError: 1",
 					"GetExitCode: 1",
-					std::format("CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
+					std::format(
+						"CreateMonitorProcess: 2 [C:/WorkingDirectory/my-package/] {0} true "
+						"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ "
+						"Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]",
+						GetGenerateExePath()),
 					"ProcessStart: 2",
 					"WaitForExit: 2",
 					"GetStandardOutput: 2",
 					"GetStandardError: 2",
 					"GetExitCode: 2",
-					std::format("CreateMonitorProcess: 3 [C:/WorkingDirectory/my-package/] {0} false C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]", GetGenerateExePath()),
+					std::format(
+						"CreateMonitorProcess: 3 [C:/WorkingDirectory/my-package/] {0} false "
+						"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/ "
+						"Environment [2] 1 0 AllowedRead [7] AllowedWrite [1]",
+						GetGenerateExePath()),
 					"ProcessStart: 3",
 					"WaitForExit: 3",
 					"GetStandardOutput: 3",
@@ -1722,296 +1953,261 @@ namespace Soup::Core::UnitTests
 				"Verify monitor process manager requests match expected.");
 
 			// Verify files
-			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt"));
+			auto myPackageGenerateInputMockFile = fileSystem->GetMockFile(Path(
+				"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+				"generate-input.bvt"));
 			Assert::AreEqual(
-				ValueTable({
+				ValueTable(
 					{
-						"Dependencies",
-						ValueTable(
-						{
-							{
-								"Build",
-								ValueTable(
-								{
-									{
-										"soup|cpp",
-										ValueTable(
-										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/") },
-										})
-									},
-								})
-							},
-						})
-					},
-					{
-						"EvaluateMacros",
-						ValueTable(
-						{
-							{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
-							{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/") },
-						})
-					},
-					{
-						"EvaluateReadAccess",
-						ValueList(
-						{
-							std::string("/(PACKAGE_my-package)/"),
-							std::string("/(TARGET_my-package)/"),
-						})
-					},
-					{
-						"EvaluateWriteAccess",
-						ValueList(
-						{
-							std::string("/(TARGET_my-package)/"),
-						})
-					},
-					{
-						"GenerateMacros",
-						ValueTable(
-						{
-							{ "/(BUILD_TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-						})
-					},
-					{
-						"GenerateSubGraphMacros",
-						ValueTable(
-						{
-							{ "/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/") },
-						})
-					},
-					{
-						"GlobalState",
-						ValueTable(
-						{
-							{
-								"Context",
-								ValueTable(
-								{
-									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
-									{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
-								})
-							},
-							{
-								"Dependencies",
-								ValueTable(
-								{
-									{
-										"Build",
-										ValueTable(
-										{
-											{
-												"soup|cpp",
-												ValueTable(
-												{
-													{
-														"Context",
-														ValueTable(
+						{"Dependencies",
+						 ValueTable(
+							 {
+								 {"Build",
+								  ValueTable(
+									  {
+										  {"soup|cpp",
+										   ValueTable(
+											   {
+												   {"SoupTargetDirectory",
+													std::string(
+														"C:/Users/Me/.soup/packages/Wren/soup/cpp/"
+														"0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+														".soup/")},
+											   })},
+									  })},
+							 })},
+						{"EvaluateMacros",
+						 ValueTable(
+							 {
+								 {"/(PACKAGE_my-package)/",
+								  std::string("C:/WorkingDirectory/my-package/")},
+								 {"/(TARGET_my-package)/",
+								  std::string(
+									  "C:/WorkingDirectory/my-package/out/"
+									  "J_HqSstV55vlb-x6RWC_hLRFRDU/")},
+							 })},
+						{"EvaluateReadAccess",
+						 ValueList(
+							 {
+								 std::string("/(PACKAGE_my-package)/"),
+								 std::string("/(TARGET_my-package)/"),
+							 })},
+						{"EvaluateWriteAccess",
+						 ValueList(
+							 {
+								 std::string("/(TARGET_my-package)/"),
+							 })},
+						{"GenerateMacros",
+						 ValueTable(
+							 {
+								 {"/(BUILD_TARGET_soup|cpp)/",
+								  std::string(
+									  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+									  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+							 })},
+						{"GenerateSubGraphMacros",
+						 ValueTable(
+							 {
+								 {"/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/")},
+							 })},
+						{"GlobalState",
+						 ValueTable(
+							 {
+								 {"Context",
+								  ValueTable(
+									  {
+										  {"HostPlatform", std::string("FakePlatform")},
+										  {"PackageDirectory",
+										   std::string("/(PACKAGE_my-package)/")},
+										  {"TargetDirectory", std::string("/(TARGET_my-package)/")},
+									  })},
+								 {"Dependencies",
+								  ValueTable(
+									  {
+										  {"Build",
+										   ValueTable(
+											   {
+												   {"soup|cpp",
+													ValueTable(
 														{
-															{ "Reference", std::string("[Wren]soup|cpp@0.8.2") },
-															{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-														})
-													},
-												})
-											},
-										})
-									},
-								})
-							},
-							{
-								"FileSystem",
-								ValueList({
-									std::string("recipe.sml"),
-								})
-							},
-							{ "Parameters", ValueTable() },
-						})
-					},
-					{
-						"PackageRoot",
-						std::string("C:/WorkingDirectory/my-package/")
-					},
-					{
-						"UserDataPath",
-						std::string("C:/Users/Me/.soup/")
-					},
-				}),
+															{"Context",
+															 ValueTable(
+																 {
+																	 {"Reference",
+																	  std::string(
+																		  "[Wren]soup|cpp@0.8.2")},
+																	 {"TargetDirectory",
+																	  std::string(
+																		  "/(TARGET_soup|cpp)/")},
+																 })},
+														})},
+											   })},
+									  })},
+								 {"FileSystem",
+								  ValueList(
+									  {
+										  std::string("recipe.sml"),
+									  })},
+								 {"Parameters", ValueTable()},
+							 })},
+						{"PackageRoot", std::string("C:/WorkingDirectory/my-package/")},
+						{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+					}),
 				ValueTableReader::Deserialize(myPackageGenerateInputMockFile->Content),
 				"Verify file content match expected.");
 
-			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor"));
-			auto myPackageGenerateResults = OperationResultsReader::Deserialize(myPackageGenerateResultsMockFile->Content, fileSystemState);
+			auto myPackageGenerateResultsMockFile = fileSystem->GetMockFile(Path(
+				"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+				"generate-phase1.bor"));
+			auto myPackageGenerateResults = OperationResultsReader::Deserialize(
+				myPackageGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
-				OperationResults({
+				OperationResults(
 					{
-						1,
-						OperationResult(
-							true,
-							std::chrono::clock_cast<std::chrono::file_clock>(
-								std::chrono::time_point<std::chrono::system_clock>()),
-							{ },
-							{ },
-							std::nullopt)
-					},
-				}),
+						{1,
+						 OperationResult(
+							 true,
+							 std::chrono::clock_cast<std::chrono::file_clock>(
+								 std::chrono::time_point<std::chrono::system_clock>()),
+							 {},
+							 {},
+							 std::nullopt)},
+					}),
 				myPackageGenerateResults,
 				"Verify my package generate results content match expected.");
 
-			auto soupCppGenerateInputMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt"));
+			auto soupCppGenerateInputMockFile = fileSystem->GetMockFile(Path(
+				"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+				".soup/generate-input.bvt"));
 			Assert::AreEqual(
-				ValueTable({
+				ValueTable(
 					{
-						"Dependencies",
-						ValueTable(
-						{
-							{
-								"Build",
-								ValueTable(
-								{
-									{
-										"soup|wren",
-										ValueTable(
-										{
-											{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/.soup/") },
-										})
-									},
-								})
-							},
-						})
-					},
-					{
-						"EvaluateMacros",
-						ValueTable(
-						{
-							{ "/(PACKAGE_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/") },
-							{ "/(TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-						})
-					},
-					{
-						"EvaluateReadAccess",
-						ValueList(
-						{
-							std::string("/(PACKAGE_soup|cpp)/"),
-							std::string("/(TARGET_soup|cpp)/"),
-						})
-					},
-					{
-						"EvaluateWriteAccess",
-						ValueList(
-						{
-							std::string("/(TARGET_soup|cpp)/"),
-						})
-					},
-					{
-						"GenerateMacros",
-						ValueTable(
-						{
-							{ "/(BUILD_TARGET_soup|wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/") },
-						})
-					},
-					{
-						"GenerateSubGraphMacros",
-						ValueTable(
-						{
-							{ "/(TARGET_soup|wren)/", std::string("/(BUILD_TARGET_soup|wren)/") },
-						})
-					},
-					{
-						"GlobalState",
-						ValueTable(
-						{
-							{
-								"Context",
-								ValueTable(
-								{
-									{ "HostPlatform", std::string("FakePlatform") },
-									{ "PackageDirectory", std::string("/(PACKAGE_soup|cpp)/") },
-									{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-								})
-							},
-							{
-								"Dependencies",
-								ValueTable(
-								{
-									{
-										"Build",
-										ValueTable(
-										{
-											{
-												"soup|wren",
-												ValueTable(
-												{
-													{
-														"Context",
-														ValueTable(
+						{"Dependencies",
+						 ValueTable(
+							 {
+								 {"Build",
+								  ValueTable(
+									  {
+										  {"soup|wren",
+										   ValueTable(
+											   {
+												   {"SoupTargetDirectory",
+													std::string(
+														"C:/Users/Me/.soup/artifacts/Wren/soup/"
+														"wren/0.5.4/soup-wren-artifact/.soup/")},
+											   })},
+									  })},
+							 })},
+						{"EvaluateMacros",
+						 ValueTable(
+							 {
+								 {"/(PACKAGE_soup|cpp)/",
+								  std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+								 {"/(TARGET_soup|cpp)/",
+								  std::string(
+									  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+									  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+							 })},
+						{"EvaluateReadAccess",
+						 ValueList(
+							 {
+								 std::string("/(PACKAGE_soup|cpp)/"),
+								 std::string("/(TARGET_soup|cpp)/"),
+							 })},
+						{"EvaluateWriteAccess",
+						 ValueList(
+							 {
+								 std::string("/(TARGET_soup|cpp)/"),
+							 })},
+						{"GenerateMacros",
+						 ValueTable(
+							 {
+								 {"/(BUILD_TARGET_soup|wren)/",
+								  std::string(
+									  "C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/"
+									  "soup-wren-artifact/")},
+							 })},
+						{"GenerateSubGraphMacros",
+						 ValueTable(
+							 {
+								 {"/(TARGET_soup|wren)/",
+								  std::string("/(BUILD_TARGET_soup|wren)/")},
+							 })},
+						{"GlobalState",
+						 ValueTable(
+							 {
+								 {"Context",
+								  ValueTable(
+									  {
+										  {"HostPlatform", std::string("FakePlatform")},
+										  {"PackageDirectory", std::string("/(PACKAGE_soup|cpp)/")},
+										  {"TargetDirectory", std::string("/(TARGET_soup|cpp)/")},
+									  })},
+								 {"Dependencies",
+								  ValueTable(
+									  {
+										  {"Build",
+										   ValueTable(
+											   {
+												   {"soup|wren",
+													ValueTable(
 														{
-															{ "Reference", std::string("[Wren]soup|wren@0.5.4") },
-															{ "TargetDirectory", std::string("/(TARGET_soup|wren)/") },
-														})
-													},
-												})
-											},
-										})
-									},
-								})
-							},
-							{
-								"FileSystem",
-								ValueList({
-									std::string("recipe.sml"),
-								})
-							},
-							{
-								"Parameters",
-								ValueTable(
-								{
-									{ "System", std::string("FakePlatform") },
-								})
-							},
-						})
-					},
-					{
-						"PackageRoot",
-						std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")
-					},
-					{
-						"UserDataPath",
-						std::string("C:/Users/Me/.soup/")
-					},
-				}),
+															{"Context",
+															 ValueTable(
+																 {
+																	 {"Reference",
+																	  std::string(
+																		  "[Wren]soup|wren@0.5.4")},
+																	 {"TargetDirectory",
+																	  std::string(
+																		  "/(TARGET_soup|wren)/")},
+																 })},
+														})},
+											   })},
+									  })},
+								 {"FileSystem",
+								  ValueList(
+									  {
+										  std::string("recipe.sml"),
+									  })},
+								 {"Parameters",
+								  ValueTable(
+									  {
+										  {"System", std::string("FakePlatform")},
+									  })},
+							 })},
+						{"PackageRoot",
+						 std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+						{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+					}),
 				ValueTableReader::Deserialize(soupCppGenerateInputMockFile->Content),
 				"Verify file content match expected.");
 
-			auto soupCppGenerateResultsMockFile = fileSystem->GetMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor"));
-			auto soupCppGenerateResults = OperationResultsReader::Deserialize(soupCppGenerateResultsMockFile->Content, fileSystemState);
+			auto soupCppGenerateResultsMockFile = fileSystem->GetMockFile(Path(
+				"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+				".soup/generate-phase1.bor"));
+			auto soupCppGenerateResults = OperationResultsReader::Deserialize(
+				soupCppGenerateResultsMockFile->Content, fileSystemState);
 
 			Assert::AreEqual(
-				OperationResults({
+				OperationResults(
 					{
-						1,
-						OperationResult(
-							true,
-							std::chrono::clock_cast<std::chrono::file_clock>(
-								std::chrono::time_point<std::chrono::system_clock>()),
-							{ },
-							{ },
-							std::nullopt)
-					},
-				}),
+						{1,
+						 OperationResult(
+							 true,
+							 std::chrono::clock_cast<std::chrono::file_clock>(
+								 std::chrono::time_point<std::chrono::system_clock>()),
+							 {},
+							 {},
+							 std::nullopt)},
+					}),
 				soupCppGenerateResults,
 				"Verify my package generate results content match expected.");
 		}
 
 		// [[Fact]]
-		void Execute_NoDependencies_HasPreprocessors_UpToDate()
-		{
+		void Execute_NoDependencies_HasPreprocessors_UpToDate() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -2026,9 +2222,8 @@ namespace Soup::Core::UnitTests
 
 			fileSystem->CreateMockFile(
 				Path(GetGenerateExePath()),
-				std::make_shared<MockFile>(
-					std::chrono::clock_cast<std::chrono::file_clock>(
-						std::chrono::sys_days{January/9/2024} + 11h + 3min + 4s)));
+				std::make_shared<MockFile>(std::chrono::clock_cast<std::chrono::file_clock>(
+					std::chrono::sys_days{January / 9 / 2024} + 11h + 3min + 4s)));
 
 			fileSystem->CreateMockDirectory(
 				Path("C:/WorkingDirectory/my-package/"),
@@ -2061,15 +2256,21 @@ namespace Soup::Core::UnitTests
 				})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			fileSystem->CreateMockDirectory(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/"),
 				std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 			// Create the Recipe to build
@@ -2147,334 +2348,328 @@ namespace Soup::Core::UnitTests
 			auto fileSystemState = FileSystemState();
 
 			auto myPackageGenerateResult = GenerateResult(
-				OperationGraph(
-					std::vector<OperationId>(),
-					std::vector<OperationInfo>()),
-				true);
+				OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()), true);
 			auto myPackageFiles = std::set<FileId>();
 			auto myPackageGenerateResultContent = std::stringstream();
-			GenerateResultWriter::Serialize(myPackageGenerateResult, myPackageFiles, fileSystemState, myPackageGenerateResultContent);
+			GenerateResultWriter::Serialize(
+				myPackageGenerateResult,
+				myPackageFiles,
+				fileSystemState,
+				myPackageGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(myPackageGenerateResultContent)));
 
 			auto soupCppGenerateResult = GenerateResult(
-				OperationGraph(
-					std::vector<OperationId>(),
-					std::vector<OperationInfo>()),
-				false);
+				OperationGraph(std::vector<OperationId>(), std::vector<OperationInfo>()), false);
 			auto soupCppFiles = std::set<FileId>();
 			auto soupCppGenerateResultContent = std::stringstream();
-			GenerateResultWriter::Serialize(soupCppGenerateResult, soupCppFiles, fileSystemState, soupCppGenerateResultContent);
+			GenerateResultWriter::Serialize(
+				soupCppGenerateResult, soupCppFiles, fileSystemState, soupCppGenerateResultContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr"),
 				std::make_shared<MockFile>(std::move(soupCppGenerateResultContent)));
 
-			auto soupCppGenerateInput = ValueTable({
+			auto soupCppGenerateInput = ValueTable(
 				{
-					"Dependencies",
-					ValueTable(
-					{
-						{
-							"Build",
-							ValueTable(
-							{
-								{
-									"soup|wren",
-									ValueTable(
-									{
-										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/.soup/") },
-									})
-								},
-							})
-						},
-					})
-				},
-				{
-					"EvaluateMacros",
-					ValueTable(
-					{
-						{ "/(PACKAGE_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/") },
-						{ "/(TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-					})
-				},
-				{
-					"EvaluateReadAccess",
-					ValueList(
-					{
-						std::string("/(PACKAGE_soup|cpp)/"),
-						std::string("/(TARGET_soup|cpp)/"),
-					})
-				},
-				{
-					"EvaluateWriteAccess",
-					ValueList(
-					{
-						std::string("/(TARGET_soup|cpp)/"),
-					})
-				},
-				{
-					"GenerateMacros",
-					ValueTable(
-					{
-						{ "/(BUILD_TARGET_soup|wren)/", std::string("C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/soup-wren-artifact/") },
-					})
-				},
-				{
-					"GenerateSubGraphMacros",
-					ValueTable(
-					{
-						{ "/(TARGET_soup|wren)/", std::string("/(BUILD_TARGET_soup|wren)/") },
-					})
-				},
-				{
-					"GlobalState",
-					ValueTable(
-					{
-						{
-							"Context",
-							ValueTable(
-							{
-								{ "HostPlatform", std::string("FakePlatform") },
-								{ "PackageDirectory", std::string("/(PACKAGE_soup|cpp)/") },
-								{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-							})
-						},
-						{
-							"Dependencies",
-							ValueTable(
-							{
-								{
-									"Build",
-									ValueTable(
-									{
-										{
-											"soup|wren",
-											ValueTable(
-											{
-												{
-													"Context",
-													ValueTable(
+					{"Dependencies",
+					 ValueTable(
+						 {
+							 {"Build",
+							  ValueTable(
+								  {
+									  {"soup|wren",
+									   ValueTable(
+										   {
+											   {"SoupTargetDirectory",
+												std::string(
+													"C:/Users/Me/.soup/artifacts/Wren/soup/wren/"
+													"0.5.4/soup-wren-artifact/.soup/")},
+										   })},
+								  })},
+						 })},
+					{"EvaluateMacros",
+					 ValueTable(
+						 {
+							 {"/(PACKAGE_soup|cpp)/",
+							  std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+							 {"/(TARGET_soup|cpp)/",
+							  std::string(
+								  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+								  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+						 })},
+					{"EvaluateReadAccess",
+					 ValueList(
+						 {
+							 std::string("/(PACKAGE_soup|cpp)/"),
+							 std::string("/(TARGET_soup|cpp)/"),
+						 })},
+					{"EvaluateWriteAccess",
+					 ValueList(
+						 {
+							 std::string("/(TARGET_soup|cpp)/"),
+						 })},
+					{"GenerateMacros",
+					 ValueTable(
+						 {
+							 {"/(BUILD_TARGET_soup|wren)/",
+							  std::string(
+								  "C:/Users/Me/.soup/artifacts/Wren/soup/wren/0.5.4/"
+								  "soup-wren-artifact/")},
+						 })},
+					{"GenerateSubGraphMacros",
+					 ValueTable(
+						 {
+							 {"/(TARGET_soup|wren)/", std::string("/(BUILD_TARGET_soup|wren)/")},
+						 })},
+					{"GlobalState",
+					 ValueTable(
+						 {
+							 {"Context",
+							  ValueTable(
+								  {
+									  {"HostPlatform", std::string("FakePlatform")},
+									  {"PackageDirectory", std::string("/(PACKAGE_soup|cpp)/")},
+									  {"TargetDirectory", std::string("/(TARGET_soup|cpp)/")},
+								  })},
+							 {"Dependencies",
+							  ValueTable(
+								  {
+									  {"Build",
+									   ValueTable(
+										   {
+											   {"soup|wren",
+												ValueTable(
 													{
-														{ "Reference", std::string("[Wren]soup|wren@0.5.4") },
-														{ "TargetDirectory", std::string("/(TARGET_soup|wren)/") },
-													})
-												},
-											})
-										},
-									})
-								},
-							})
-						},
-						{
-							"FileSystem",
-							ValueList({
-								std::string("recipe.sml"),
-							})
-						},
-						{
-							"Parameters",
-							ValueTable(
-							{
-								{ "System", std::string("FakePlatform") },
-							})
-						},
-					})
-				},
-				{
-					"PackageRoot",
-					std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")
-				},
-				{
-					"UserDataPath",
-					std::string("C:/Users/Me/.soup/")
-				},
-			});
+														{"Context",
+														 ValueTable(
+															 {
+																 {"Reference",
+																  std::string(
+																	  "[Wren]soup|wren@0.5.4")},
+																 {"TargetDirectory",
+																  std::string(
+																	  "/(TARGET_soup|wren)/")},
+															 })},
+													})},
+										   })},
+								  })},
+							 {"FileSystem",
+							  ValueList(
+								  {
+									  std::string("recipe.sml"),
+								  })},
+							 {"Parameters",
+							  ValueTable(
+								  {
+									  {"System", std::string("FakePlatform")},
+								  })},
+						 })},
+					{"PackageRoot", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/")},
+					{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+				});
 			auto soupCppGenerateInputContent = std::stringstream();
 			ValueTableWriter::Serialize(soupCppGenerateInput, soupCppGenerateInputContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt"),
 				std::make_shared<MockFile>(std::move(soupCppGenerateInputContent)));
 
-			auto myPackageGenerateInput = ValueTable({
+			auto myPackageGenerateInput = ValueTable(
 				{
-					"Dependencies",
-					ValueTable(
-					{
-						{
-							"Build",
-							ValueTable(
-							{
-								{
-									"soup|cpp",
-									ValueTable(
-									{
-										{ "SoupTargetDirectory", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/") },
-									})
-								},
-							})
-						},
-					})
-				},
-				{
-					"EvaluateMacros",
-					ValueTable(
-					{
-						{ "/(PACKAGE_my-package)/", std::string("C:/WorkingDirectory/my-package/") },
-						{ "/(TARGET_my-package)/", std::string("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/") },
-					})
-				},
-				{
-					"EvaluateReadAccess",
-					ValueList(
-					{
-						std::string("/(PACKAGE_my-package)/"),
-						std::string("/(TARGET_my-package)/"),
-					})
-				},
-				{
-					"EvaluateWriteAccess",
-					ValueList(
-					{
-						std::string("/(TARGET_my-package)/"),
-					})
-				},
-				{
-					"GenerateMacros",
-					ValueTable(
-					{
-						{ "/(BUILD_TARGET_soup|cpp)/", std::string("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/") },
-					})
-				},
-				{
-					"GenerateSubGraphMacros",
-					ValueTable(
-					{
-						{ "/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/") },
-					})
-				},
-				{
-					"GlobalState",
-					ValueTable(
-					{
-						{
-							"Context",
-							ValueTable(
-							{
-								{ "HostPlatform", std::string("FakePlatform") },
-								{ "PackageDirectory", std::string("/(PACKAGE_my-package)/") },
-								{ "TargetDirectory", std::string("/(TARGET_my-package)/") },
-							})
-						},
-						{
-							"Dependencies",
-							ValueTable(
-							{
-								{
-									"Build",
-									ValueTable(
-									{
-										{
-											"soup|cpp",
-											ValueTable(
-											{
-												{
-													"Context",
-													ValueTable(
+					{"Dependencies",
+					 ValueTable(
+						 {
+							 {"Build",
+							  ValueTable(
+								  {
+									  {"soup|cpp",
+									   ValueTable(
+										   {
+											   {"SoupTargetDirectory",
+												std::string(
+													"C:/Users/Me/.soup/packages/Wren/soup/cpp/"
+													"0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/"
+													".soup/")},
+										   })},
+								  })},
+						 })},
+					{"EvaluateMacros",
+					 ValueTable(
+						 {
+							 {"/(PACKAGE_my-package)/",
+							  std::string("C:/WorkingDirectory/my-package/")},
+							 {"/(TARGET_my-package)/",
+							  std::string(
+								  "C:/WorkingDirectory/my-package/out/"
+								  "J_HqSstV55vlb-x6RWC_hLRFRDU/")},
+						 })},
+					{"EvaluateReadAccess",
+					 ValueList(
+						 {
+							 std::string("/(PACKAGE_my-package)/"),
+							 std::string("/(TARGET_my-package)/"),
+						 })},
+					{"EvaluateWriteAccess",
+					 ValueList(
+						 {
+							 std::string("/(TARGET_my-package)/"),
+						 })},
+					{"GenerateMacros",
+					 ValueTable(
+						 {
+							 {"/(BUILD_TARGET_soup|cpp)/",
+							  std::string(
+								  "C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+								  "WhSd9nSIoVKWKcq9eytmC8vaOY4/")},
+						 })},
+					{"GenerateSubGraphMacros",
+					 ValueTable(
+						 {
+							 {"/(TARGET_soup|cpp)/", std::string("/(BUILD_TARGET_soup|cpp)/")},
+						 })},
+					{"GlobalState",
+					 ValueTable(
+						 {
+							 {"Context",
+							  ValueTable(
+								  {
+									  {"HostPlatform", std::string("FakePlatform")},
+									  {"PackageDirectory", std::string("/(PACKAGE_my-package)/")},
+									  {"TargetDirectory", std::string("/(TARGET_my-package)/")},
+								  })},
+							 {"Dependencies",
+							  ValueTable(
+								  {
+									  {"Build",
+									   ValueTable(
+										   {
+											   {"soup|cpp",
+												ValueTable(
 													{
-														{ "Reference", std::string("[Wren]soup|cpp@0.8.2") },
-														{ "TargetDirectory", std::string("/(TARGET_soup|cpp)/") },
-													})
-												},
-											})
-										},
-									})
-								},
-							})
-						},
-						{
-							"FileSystem",
-							ValueList({
-								std::string("recipe.sml"),
-							})
-						},
-						{ "Parameters", ValueTable() },
-					})
-				},
-				{
-					"PackageRoot",
-					std::string("C:/WorkingDirectory/my-package/")
-				},
-				{
-					"UserDataPath",
-					std::string("C:/Users/Me/.soup/")
-				},
-			});
+														{"Context",
+														 ValueTable(
+															 {
+																 {"Reference",
+																  std::string(
+																	  "[Wren]soup|cpp@0.8.2")},
+																 {"TargetDirectory",
+																  std::string(
+																	  "/(TARGET_soup|cpp)/")},
+															 })},
+													})},
+										   })},
+								  })},
+							 {"FileSystem",
+							  ValueList(
+								  {
+									  std::string("recipe.sml"),
+								  })},
+							 {"Parameters", ValueTable()},
+						 })},
+					{"PackageRoot", std::string("C:/WorkingDirectory/my-package/")},
+					{"UserDataPath", std::string("C:/Users/Me/.soup/")},
+				});
 			auto myPackageGenerateInputContent = std::stringstream();
 			ValueTableWriter::Serialize(myPackageGenerateInput, myPackageGenerateInputContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt"),
 				std::make_shared<MockFile>(std::move(myPackageGenerateInputContent)));
 
-			auto myPackageGenerateResults = OperationResults({
+			auto myPackageGenerateResults = OperationResults(
 				{
-					1,
-					OperationResult(
-						true,
-						std::chrono::clock_cast<std::chrono::file_clock>(
-							std::chrono::sys_days{January/9/2024} + 12h + 35min + 34s),
-						{ },
-						{ },
-						std::nullopt)
-				},
-			});
+					{1,
+					 OperationResult(
+						 true,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::sys_days{January / 9 / 2024} + 12h + 35min + 34s),
+						 {},
+						 {},
+						 std::nullopt)},
+				});
 			auto myPackageGeneratePhase1ResultsContent = std::stringstream();
 			auto myPackageGeneratePhase1ResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(myPackageGenerateResults, myPackageGeneratePhase1ResultsFiles, fileSystemState,  myPackageGeneratePhase1ResultsContent);
+			OperationResultsWriter::Serialize(
+				myPackageGenerateResults,
+				myPackageGeneratePhase1ResultsFiles,
+				fileSystemState,
+				myPackageGeneratePhase1ResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(myPackageGeneratePhase1ResultsContent)));
 
 			auto myPackageGeneratePhase2ResultsContent = std::stringstream();
 			auto myPackageGeneratePhase2ResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(myPackageGenerateResults, myPackageGeneratePhase2ResultsFiles, fileSystemState,  myPackageGeneratePhase2ResultsContent);
+			OperationResultsWriter::Serialize(
+				myPackageGenerateResults,
+				myPackageGeneratePhase2ResultsFiles,
+				fileSystemState,
+				myPackageGeneratePhase2ResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bor"),
 				std::make_shared<MockFile>(std::move(myPackageGeneratePhase2ResultsContent)));
 
-			auto soupCppGenerateResults = OperationResults({
+			auto soupCppGenerateResults = OperationResults(
 				{
-					1,
-					OperationResult(
-						true,
-						std::chrono::clock_cast<std::chrono::file_clock>(
-							std::chrono::sys_days{January/9/2024} + 12h + 13min + 23s),
-						{ },
-						{ },
-						std::nullopt)
-				},
-			});
+					{1,
+					 OperationResult(
+						 true,
+						 std::chrono::clock_cast<std::chrono::file_clock>(
+							 std::chrono::sys_days{January / 9 / 2024} + 12h + 13min + 23s),
+						 {},
+						 {},
+						 std::nullopt)},
+				});
 			auto soupCppGenerateResultsContent = std::stringstream();
 			auto soupCppGenerateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(soupCppGenerateResults, soupCppGenerateResultsFiles, fileSystemState, soupCppGenerateResultsContent);
+			OperationResultsWriter::Serialize(
+				soupCppGenerateResults,
+				soupCppGenerateResultsFiles,
+				fileSystemState,
+				soupCppGenerateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(soupCppGenerateResultsContent)));
 
 			auto soupCppEvaluateResults = OperationResults();
 			auto soupCppEvaluateResultsContent = std::stringstream();
 			auto soupCppEvaluateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(soupCppEvaluateResults, soupCppEvaluateResultsFiles, fileSystemState, soupCppEvaluateResultsContent);
+			OperationResultsWriter::Serialize(
+				soupCppEvaluateResults,
+				soupCppEvaluateResultsFiles,
+				fileSystemState,
+				soupCppEvaluateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor"),
+				Path(
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(soupCppEvaluateResultsContent)));
 
 			auto myPackageEvaluateResults = OperationResults();
 			auto myPackageEvaluateResultsContent = std::stringstream();
 			auto myPackageEvaluateResultsFiles = std::set<FileId>();
-			OperationResultsWriter::Serialize(myPackageEvaluateResults, myPackageEvaluateResultsFiles, fileSystemState, myPackageEvaluateResultsContent);
+			OperationResultsWriter::Serialize(
+				myPackageEvaluateResults,
+				myPackageEvaluateResultsFiles,
+				fileSystemState,
+				myPackageEvaluateResultsContent);
 			fileSystem->CreateMockFile(
-				Path("C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/evaluate-phase1.bor"),
+				Path(
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"evaluate-phase1.bor"),
 				std::make_shared<MockFile>(std::move(myPackageEvaluateResultsContent)));
 
 			// Register the test process manager
@@ -2483,7 +2678,8 @@ namespace Soup::Core::UnitTests
 
 			// Register the test process manager
 			auto monitorProcessManager = std::make_shared<Monitor::MockMonitorProcessManager>();
-			auto scopedMonitorProcessManager = Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
+			auto scopedMonitorProcessManager =
+				Monitor::ScopedMonitorProcessManagerRegister(monitorProcessManager);
 
 			auto hostPlatform = "FakePlatform";
 
@@ -2509,11 +2705,7 @@ namespace Soup::Core::UnitTests
 				recipeCache);
 
 			Build::Execute(
-				packageProvider,
-				std::move(arguments),
-				userDataPath,
-				systemReadAccess,
-				recipeCache);
+				packageProvider, std::move(arguments), userDataPath, systemReadAccess, recipeCache);
 
 			// Verify expected logs
 			Assert::AreEqual(
@@ -2522,7 +2714,8 @@ namespace Soup::Core::UnitTests
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/WorkingDirectory/my-package/recipe.sml",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"DIAG: Load PackageLock: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"DIAG: Load PackageLock: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"INFO: Package lock loaded",
 					"DIAG: Load Recipe: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"INFO: Skip loading sub graph for prebuilt package",
@@ -2530,14 +2723,22 @@ namespace Soup::Core::UnitTests
 					"DIAG: 2>Running Build: [Wren]soup|cpp",
 					"INFO: 2>Build 'soup|cpp'",
 					"INFO: 2>Checking for existing Generate Phase 1 Result",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
 					"INFO: 2>Phase1 previous graph found",
 					"INFO: 2>Checking for existing Evaluate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
 					"INFO: 2>Phase1 previous results found",
-					"INFO: 2>Check outdated generate input file: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"INFO: 2>Check outdated generate input file: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
 					"INFO: 2>Checking for existing Generate Operation Results",
-					"DIAG: 2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"DIAG: "
+					"2>C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					"INFO: 2>Previous results found",
 					"DIAG: 2>Build evaluation start 1",
 					"DIAG: 2>Worker thread start 1",
@@ -2551,18 +2752,28 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Running Build: [C++]my-package",
 					"INFO: 1>Build 'my-package'",
 					"INFO: 1>Checking for existing Generate Phase 1 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
 					"INFO: 1>Phase1 previous graph found",
 					"INFO: 1>Checking for existing Evaluate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/evaluate-phase1.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"evaluate-phase1.bor",
 					"INFO: 1>Phase1 previous results found",
 					"INFO: 1>Checking for existing Generate Phase 2 Result",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bog",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bog",
 					"INFO: 1>Operation graph file does not exist",
 					"INFO: 1>Phase2 no previous graph",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
+					"INFO: 1>Check outdated generate input file: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
 					"INFO: 1>Previous results found",
 					"DIAG: 1>Build evaluation start 1",
 					"DIAG: 1>Worker thread start 1",
@@ -2572,9 +2783,13 @@ namespace Soup::Core::UnitTests
 					"DIAG: 1>Worker thread end 1",
 					"DIAG: 1>Build evaluation end",
 					"DIAG: 1>Build evaluation skipped",
-					"INFO: 1>Check outdated generate input file: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
+					"INFO: 1>Check outdated generate input file: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
 					"INFO: 1>Checking for existing Generate Operation Results",
-					"DIAG: 1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor",
+					"DIAG: "
+					"1>C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bor",
 					"INFO: 1>Previous results found",
 					"DIAG: 1>Build evaluation start 1",
 					"DIAG: 1>Worker thread start 1",
@@ -2602,7 +2817,8 @@ namespace Soup::Core::UnitTests
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/package-lock.sml",
 					"TryOpenReadBinary: C:/WorkingDirectory/my-package/recipe.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/recipe.sml",
-					"TryOpenReadBinary: C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/locks/Wren/soup/cpp/0.8.2/package-lock.sml",
 					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/recipe.sml",
 					"Exists: C:/WorkingDirectory/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
@@ -2615,26 +2831,57 @@ namespace Soup::Core::UnitTests
 					"Exists: C:/Users/root-recipe.sml",
 					"Exists: C:/root-recipe.sml",
 					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
-					"TryGetDirectoryFilesLastWriteTime: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/wren/0.5.4/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bgr",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/evaluate-phase1.bor",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/.soup/generate-phase1.bor",
 					std::format("TryGetLastWriteTime: {0}", GetGenerateExePath()),
-					"Exists: C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
-					"TryGetDirectoryFilesLastWriteTime: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bgr",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/evaluate-phase1.bor",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bog",
+					"Exists: "
+					"C:/Users/Me/.soup/packages/Wren/soup/cpp/0.8.2/out/"
+					"WhSd9nSIoVKWKcq9eytmC8vaOY4/temp/",
+					"TryGetDirectoryFilesLastWriteTime: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bgr",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"evaluate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bog",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase1.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase1.bor",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-input.bvt",
-					"TryOpenReadBinary: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/generate-phase2.bor",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-input.bvt",
+					"TryOpenReadBinary: "
+					"C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"
+					"generate-phase2.bor",
 					"Exists: C:/WorkingDirectory/my-package/out/J_HqSstV55vlb-x6RWC_hLRFRDU/temp/",
 				}),
 				fileSystem->GetRequests(),
@@ -2657,26 +2904,24 @@ namespace Soup::Core::UnitTests
 		}
 
 	private:
-		std::string_view GetRuntimeLibraryPath()
-		{
-			#ifdef _WIN32
-				return "C:/testlocation/";
-			#elif defined(__linux__)
-				return "C:/lib/soup/";
-			#else
-				#error "Unknown platform"
-			#endif
+		std::string_view GetRuntimeLibraryPath() {
+#ifdef _WIN32
+			return "C:/testlocation/";
+#elif defined(__linux__)
+			return "C:/lib/soup/";
+#else
+#error "Unknown platform"
+#endif
 		}
 
-		std::string_view GetGenerateExePath()
-		{
-			#ifdef _WIN32
-				return "C:/testlocation/soup-generate.exe";
-			#elif defined(__linux__)
-				return "C:/lib/soup/generate";
-			#else
-				#error "Unknown platform"
-			#endif
+		std::string_view GetGenerateExePath() {
+#ifdef _WIN32
+			return "C:/testlocation/soup-generate.exe";
+#elif defined(__linux__)
+			return "C:/lib/soup/generate";
+#else
+#error "Unknown platform"
+#endif
 		}
 	};
 }

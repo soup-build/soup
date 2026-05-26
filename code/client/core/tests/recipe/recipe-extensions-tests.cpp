@@ -26,14 +26,11 @@ using namespace Opal::System;
 using namespace Soup::SML;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class RecipeExtensionsTests
-	{
+namespace Soup::Core::UnitTests {
+	export class RecipeExtensionsTests {
 	public:
 		// [[Fact]]
-		void TryLoadRecipeFromFile_MissingFile()
-		{
+		void TryLoadRecipeFromFile_MissingFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -61,14 +58,13 @@ namespace Soup::Core::UnitTests
 				std::vector<std::string>({
 					"DIAG: Load Recipe: ./TestFiles/NoFile/recipe.sml",
 					"INFO: Recipe file does not exist.",
-				}), 
+				}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
-		
+
 		// [[Fact]]
-		void TryLoadRecipeFromFile_GarbageFile()
-		{
+		void TryLoadRecipeFromFile_GarbageFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -98,16 +94,16 @@ namespace Soup::Core::UnitTests
 			Assert::AreEqual(
 				std::vector<std::string>({
 					"DIAG: Load Recipe: ./TestFiles/GarbageRecipe/recipe.sml",
-					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at 1:7  ./TestFiles/GarbageRecipe/recipe.sml",
+					"ERRO: Deserialize Threw: Parsing the Recipe SML failed: Failed to parse at "
+					"1:7  ./TestFiles/GarbageRecipe/recipe.sml",
 					"INFO: Failed to parse Recipe.",
-				}), 
+				}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
 
 		// [[Fact]]
-		void TryLoadRecipeFromFile_SimpleFile()
-		{
+		void TryLoadRecipeFromFile_SimpleFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -129,10 +125,10 @@ namespace Soup::Core::UnitTests
 			Assert::IsTrue(result, "Verify result is false.");
 
 			auto expected = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+				}));
 
 			Assert::AreEqual(expected, actual, "Verify matches expected.");
 
@@ -148,14 +144,13 @@ namespace Soup::Core::UnitTests
 			Assert::AreEqual(
 				std::vector<std::string>({
 					"DIAG: Load Recipe: ./TestFiles/SimpleRecipe/recipe.sml",
-				}), 
+				}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 		}
 
 		// [[Fact]]
-		void SaveToFile_SimpleFile()
-		{
+		void SaveToFile_SimpleFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -166,10 +161,10 @@ namespace Soup::Core::UnitTests
 
 			auto directory = Path("./TestFiles/SimpleRecipe/recipe.sml");
 			auto recipe = Recipe(RecipeTable(
-			{
-				{ "Name", "my-package" },
-				{ "Language", LanguageReference("C++", SemanticVersion(1)) },
-			}));
+				{
+					{"Name", "my-package"},
+					{"Language", LanguageReference("C++", SemanticVersion(1))},
+				}));
 			RecipeExtensions::SaveToFile(directory, recipe);
 
 			// Verify expected file system requests
@@ -182,18 +177,19 @@ namespace Soup::Core::UnitTests
 
 			// Verify expected logs
 			Assert::AreEqual(
-				std::vector<std::string>({
-				}), 
+				std::vector<std::string>({}),
 				testListener->GetMessages(),
 				"Verify messages match expected.");
 
 			// Verify the contents of the build file
-			std::string expectedBuildFile = 
-R"(Name: 'my-package'
+			std::string expectedBuildFile =
+				R"(Name: 'my-package'
 Language: (C++@1)
 )";
-			auto mockBuildFile = fileSystem->GetMockFile(Path("./TestFiles/SimpleRecipe/recipe.sml"));
-			Assert::AreEqual(expectedBuildFile, mockBuildFile->Content.str(), "Verify file contents.");
+			auto mockBuildFile =
+				fileSystem->GetMockFile(Path("./TestFiles/SimpleRecipe/recipe.sml"));
+			Assert::AreEqual(
+				expectedBuildFile, mockBuildFile->Content.str(), "Verify file contents.");
 		}
 	};
 }

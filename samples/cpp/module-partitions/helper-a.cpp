@@ -5,7 +5,6 @@ module;
 
 export module Sample.ModulePartitions:HelperA;
 
-export std::string_view Truncate(std::string_view value, size_t length)
-{
+export std::string_view Truncate(std::string_view value, size_t length) {
 	return value.substr(0, length);
 }

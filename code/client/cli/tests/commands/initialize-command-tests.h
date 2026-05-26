@@ -5,17 +5,14 @@
 #pragma once
 #include "initialize-command.h"
 
-namespace Soup::Client::UnitTests
-{
+namespace Soup::Client::UnitTests {
 	/// <summary>
 	/// Initialize Command Tests
 	/// </summary>
-	class InitializeCommandTests
-	{
+	class InitializeCommandTests {
 	public:
 		// [[Fact]]
-		void NameIsCorrect()
-		{
+		void NameIsCorrect() {
 			auto options = InitializeOptions();
 			auto uut = InitializeCommand(options);
 		}

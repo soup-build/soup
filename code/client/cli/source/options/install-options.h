@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Install Command
 	/// </summary>
 	// TODO: [Verb("install")]
-	class InstallOptions : public SharedOptions
-	{
+	class InstallOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to install
@@ -29,8 +27,7 @@ namespace Soup::Client
 		/// <summary>
 		/// Show the usage details for this command
 		/// </summary>
-		static void ShowUsage()
-		{
+		static void ShowUsage() {
 			std::cout << std::endl;
 			std::cout << "Usage: soup install <package_file> <package_reference>" << std::endl;
 			std::cout << "\tpackage_file: ." << std::endl;

@@ -39,11 +39,11 @@ namespace Soup::Core {
 	public:
 		OperationResult()
 			: WasSuccessfulRun(false),
-			  EvaluateTime(
-				  std::chrono::time_point<std::chrono::file_clock>::min()),
+			  EvaluateTime(std::chrono::time_point<std::chrono::file_clock>::min()),
 			  ObservedInput(),
 			  ObservedOutput(),
-			  ObservedValues(std::nullopt) {}
+			  ObservedValues(std::nullopt) {
+		}
 
 		OperationResult(
 			bool wasSuccessfulRun,
@@ -55,13 +55,12 @@ namespace Soup::Core {
 			  EvaluateTime(evaluateTime),
 			  ObservedInput(std::move(observedInput)),
 			  ObservedOutput(std::move(observedOutput)),
-			  ObservedValues(std::move(observedValues)) {}
+			  ObservedValues(std::move(observedValues)) {
+		}
 
 		bool operator==(const OperationResult &rhs) const {
-			return WasSuccessfulRun == rhs.WasSuccessfulRun &&
-				   EvaluateTime == rhs.EvaluateTime &&
-				   ObservedInput == rhs.ObservedInput &&
-				   ObservedOutput == rhs.ObservedOutput &&
+			return WasSuccessfulRun == rhs.WasSuccessfulRun && EvaluateTime == rhs.EvaluateTime &&
+				   ObservedInput == rhs.ObservedInput && ObservedOutput == rhs.ObservedOutput &&
 				   ObservedValues == rhs.ObservedValues;
 		}
 	};

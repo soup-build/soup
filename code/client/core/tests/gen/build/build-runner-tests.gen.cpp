@@ -7,17 +7,29 @@ export module Soup.Core.Tests:RunBuildRunnerTests;
 import :BuildRunnerTests;
 import Soup.Test.Assert;
 
-export TestState RunBuildRunnerTests() 
-{
+export TestState RunBuildRunnerTests() {
 	auto className = "BuildRunnerTests";
 	auto testClass = std::make_shared<Soup::Core::Build::UnitTests::BuildRunnerTests>();
-	TestState state = { 0, 0 };
-	state += Soup::Test::RunTest(className, "Initialize_Success", [&testClass]() { testClass->Initialize_Success(); });
-	state += Soup::Test::RunTest(className, "Execute_NoDependencies", [&testClass]() { testClass->Execute_NoDependencies(); });
-	state += Soup::Test::RunTest(className, "Execute_NoDependencies_HasPreprocessors", [&testClass]() { testClass->Execute_NoDependencies_HasPreprocessors(); });
-	state += Soup::Test::RunTest(className, "Execute_TriangleDependency_NoRebuild", [&testClass]() { testClass->Execute_TriangleDependency_NoRebuild(); });
-	state += Soup::Test::RunTest(className, "Execute_BuildDependency", [&testClass]() { testClass->Execute_BuildDependency(); });
-	state += Soup::Test::RunTest(className, "Execute_PackageLock_OverrideBuildDependency", [&testClass]() { testClass->Execute_PackageLock_OverrideBuildDependency(); });
+	TestState state = {0, 0};
+	state += Soup::Test::RunTest(
+		className, "Initialize_Success", [&testClass]() { testClass->Initialize_Success(); });
+	state += Soup::Test::RunTest(className, "Execute_NoDependencies", [&testClass]() {
+		testClass->Execute_NoDependencies();
+	});
+	state +=
+		Soup::Test::RunTest(className, "Execute_NoDependencies_HasPreprocessors", [&testClass]() {
+			testClass->Execute_NoDependencies_HasPreprocessors();
+		});
+	state += Soup::Test::RunTest(className, "Execute_TriangleDependency_NoRebuild", [&testClass]() {
+		testClass->Execute_TriangleDependency_NoRebuild();
+	});
+	state += Soup::Test::RunTest(className, "Execute_BuildDependency", [&testClass]() {
+		testClass->Execute_BuildDependency();
+	});
+	state += Soup::Test::RunTest(
+		className, "Execute_PackageLock_OverrideBuildDependency", [&testClass]() {
+			testClass->Execute_PackageLock_OverrideBuildDependency();
+		});
 
 	return state;
 }

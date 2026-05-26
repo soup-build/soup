@@ -73,10 +73,8 @@ namespace Soup::Core {
 		bool operator==(const RecipeBuildArguments &rhs) const {
 			return GlobalParameters == rhs.GlobalParameters &&
 				   WorkingDirectory == rhs.WorkingDirectory &&
-				   Parallelization == rhs.Parallelization &&
-				   SkipGenerate == rhs.SkipGenerate &&
-				   SkipEvaluate == rhs.SkipEvaluate &&
-				   ForceRebuild == rhs.ForceRebuild;
+				   Parallelization == rhs.Parallelization && SkipGenerate == rhs.SkipGenerate &&
+				   SkipEvaluate == rhs.SkipEvaluate && ForceRebuild == rhs.ForceRebuild;
 		}
 
 		bool operator!=(const RecipeBuildArguments &rhs) const {

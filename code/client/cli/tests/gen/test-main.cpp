@@ -15,11 +15,10 @@ using namespace Soup::Test;
 #include "commands/release-command-tests.gen.h"
 #include "commands/version-command-tests.gen.h"
 
-int main()
-{
+int main() {
 	std::cout << "Running Tests..." << std::endl;
 
-	TestState state = { 0, 0 };
+	TestState state = {0, 0};
 
 	state += RunBuildCommandTests();
 	state += RunInitializeCommandTests();

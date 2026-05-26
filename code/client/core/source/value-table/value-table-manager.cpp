@@ -25,12 +25,10 @@ namespace Soup::Core {
 		/// <summary>
 		/// Load the value table from the target file
 		/// </summary>
-		static bool TryLoadState(const Path &valueTableFile,
-								 ValueTable &result) {
+		static bool TryLoadState(const Path &valueTableFile, ValueTable &result) {
 			// Open the file to read from
 			std::shared_ptr<System::IInputFile> file;
-			if (!System::IFileSystem::Current().TryOpenRead(valueTableFile,
-															true, file)) {
+			if (!System::IFileSystem::Current().TryOpenRead(valueTableFile, true, file)) {
 				Log::Info("Value Table file does not exist");
 				return false;
 			}
@@ -55,8 +53,7 @@ namespace Soup::Core {
 			auto targetFolder = valueTableFile.GetParent();
 
 			// Open the file to write to
-			auto file =
-				System::IFileSystem::Current().OpenWrite(valueTableFile, true);
+			auto file = System::IFileSystem::Current().OpenWrite(valueTableFile, true);
 
 			// Write the build state to the file stream
 			ValueTableWriter::Serialize(state, file->GetOutStream());

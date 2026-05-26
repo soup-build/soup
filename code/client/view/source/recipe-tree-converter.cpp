@@ -12,18 +12,14 @@ export module Soup.View:RecipeTreeConverter;
 import Soup.Core;
 import :TreeValue;
 
-namespace Soup::View
-{
+namespace Soup::View {
 	/// <summary>
 	/// Converter from recipe values to tree values
 	/// </summary>
-	export class RecipeTreeConverter
-	{
+	export class RecipeTreeConverter {
 	public:
-		static TreeValue ToTreeValue(const Core::RecipeValue& value)
-		{
-			switch (value.GetType())
-			{
+		static TreeValue ToTreeValue(const Core::RecipeValue &value) {
+			switch (value.GetType()) {
 				case Core::RecipeValueType::Table:
 					return TreeValue(ToTreeValue(value.AsTable()));
 				case Core::RecipeValueType::List:
@@ -47,11 +43,9 @@ namespace Soup::View
 			}
 		}
 
-		static TreeValueTable ToTreeValue(const Core::RecipeTable& table)
-		{
+		static TreeValueTable ToTreeValue(const Core::RecipeTable &table) {
 			auto valueTable = TreeValueTable();
-			for (auto& [key, value] : table)
-			{
+			for (auto &[key, value] : table) {
 				auto valueValue = ToTreeValue(value);
 				valueTable.Insert(key, std::move(valueValue));
 			}
@@ -59,11 +53,9 @@ namespace Soup::View
 			return valueTable;
 		}
 
-		static TreeValueList ToTreeValue(const Core::RecipeList& list)
-		{
+		static TreeValueList ToTreeValue(const Core::RecipeList &list) {
 			auto valueList = TreeValueList();
-			for (auto& value : list)
-			{
+			for (auto &value : list) {
 				auto valueValue = ToTreeValue(value);
 				valueList.push_back(std::move(valueValue));
 			}

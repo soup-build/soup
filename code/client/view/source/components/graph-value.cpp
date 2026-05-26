@@ -10,22 +10,18 @@ export module Soup.View:GraphValue;
 
 import Opal;
 
-export namespace Soup::View
-{
-	struct GraphEdge
-	{
+export namespace Soup::View {
+	struct GraphEdge {
 		int Source;
 		int Target;
 	};
 
-	struct Graph
-	{
+	struct Graph {
 		int Vertices;
 		std::vector<GraphEdge> Edges;
 	};
 
-	struct GraphNode
-	{
+	struct GraphNode {
 		int Index;
 
 		// The set of edges in the next row

@@ -10,25 +10,25 @@ module;
 
 #pragma warning(push)
 #if _MSC_VER > 1400
-#pragma warning(disable:6102 6103)
+#pragma warning(disable : 6102 6103)
 #endif
 #include <strsafe.h>
 #pragma warning(pop)
 
 #endif
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
 
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#include <atomic>
 #include <array>
+#include <atomic>
 #include <codecvt>
 #include <iostream>
 #include <map>
-#include <string>
 #include <sstream>
+#include <string>
 #include <thread>
 #include <vector>
 
@@ -39,10 +39,8 @@ export module Monitor.Shared;
 #include "windows/detour-event-type.h"
 #include "windows/process-payload.h"
 
-export void ThrowIfFailed(int32_t result, std::string_view message)
-{
-	if (result != NO_ERROR)
-	{
+export void ThrowIfFailed(int32_t result, std::string_view message) {
+	if (result != NO_ERROR) {
 		throw std::runtime_error(message.data());
 	}
 }

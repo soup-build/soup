@@ -7,14 +7,12 @@ export module Sample.ModulePartitions;
 import :HelperB;
 import :HelperC;
 
-export class Helper
-{
+export class Helper {
 public:
-	static std::string GetName()
-	{
+	static std::string GetName() {
 		std::string result;
 		result += GetSourcePrefix();
 		result += GetPackagesPostfix();
-		return  result;
+		return result;
 	}
 };

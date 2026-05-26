@@ -73,17 +73,16 @@ namespace Soup::Core {
 		const Path &TemporaryDirectory;
 		const std::vector<Path> &GlobalAllowedReadAccess;
 		const std::vector<Path> &GlobalAllowedWriteAccess;
-		std::optional<std::function<ValueTable(std::string_view)>>
-			ProcessStdOut;
+		std::optional<std::function<ValueTable(std::string_view)>> ProcessStdOut;
 
 	public:
 		BuildEvaluateGraphState(
-			OperationGraph &graph, OperationResults &results,
+			OperationGraph &graph,
+			OperationResults &results,
 			const Path &temporaryDirectory,
 			const std::vector<Path> &globalAllowedReadAccess,
 			const std::vector<Path> &globalAllowedWriteAccess,
-			std::optional<std::function<ValueTable(std::string_view)>>
-				processStdOut)
+			std::optional<std::function<ValueTable(std::string_view)>> processStdOut)
 			: _mutex(),
 			  _isComplete(false),
 			  _activeOperations(0),
@@ -124,9 +123,8 @@ namespace Soup::Core {
 
 			// If nothing to do then wait
 			if (ReadyOperations.empty() && !_isComplete) {
-				_conditionalVariable.wait(lock, [&] {
-					return !ReadyOperations.empty() || _isComplete;
-				});
+				_conditionalVariable.wait(
+					lock, [&] { return !ReadyOperations.empty() || _isComplete; });
 			}
 
 			if (_isComplete) {
@@ -136,16 +134,14 @@ namespace Soup::Core {
 				ReadyOperations.pop();
 				_activeOperations++;
 
-				auto &operationInfo =
-					Graph.GetOperationInfo(currentOperationId);
+				auto &operationInfo = Graph.GetOperationInfo(currentOperationId);
 
 				OperationResult *previousResult;
 				if (!Results.TryFindResult(operationInfo.Id, previousResult)) {
 					previousResult = nullptr;
 				}
 
-				CurrentOperationState operationState = {operationInfo,
-														previousResult};
+				CurrentOperationState operationState = {operationInfo, previousResult};
 				return operationState;
 			} else {
 				throw std::runtime_error("No Operations and not complete");
@@ -160,15 +156,13 @@ namespace Soup::Core {
 			_conditionalVariable.notify_all();
 		}
 
-		void UpdateOperationResult(OperationId operationId,
-								   OperationResult &&operationResult) {
+		void UpdateOperationResult(OperationId operationId, OperationResult &&operationResult) {
 			std::unique_lock lock(_mutex);
 
 			// This is only called when an operation was built
 			_didAnyEvaluate |= true;
 
-			Results.AddOrUpdateOperationResult(operationId,
-											   std::move(operationResult));
+			Results.AddOrUpdateOperationResult(operationId, std::move(operationResult));
 		}
 
 		/// <summary>
@@ -182,19 +176,17 @@ namespace Soup::Core {
 			for (auto operationId : operationInfo.Children) {
 				// Only register the operation when all of its dependencies have
 				// completed
-				auto currentOperationSearch =
-					RemainingDependencyCounts.find(operationId);
+				auto currentOperationSearch = RemainingDependencyCounts.find(operationId);
 				int32_t remainingCount = -1;
 				if (currentOperationSearch != RemainingDependencyCounts.end()) {
 					remainingCount = --currentOperationSearch->second;
 				} else {
 					// Get the cached total count and store the active count in
 					// the lookup
-					auto &childOperationInfo =
-						Graph.GetOperationInfo(operationId);
+					auto &childOperationInfo = Graph.GetOperationInfo(operationId);
 					remainingCount = childOperationInfo.DependencyCount - 1;
-					auto insertResult = RemainingDependencyCounts.emplace(
-						operationId, remainingCount);
+					auto insertResult =
+						RemainingDependencyCounts.emplace(operationId, remainingCount);
 					if (!insertResult.second)
 						throw std::runtime_error(
 							"The operation id already existed in the remaining "
@@ -205,8 +197,7 @@ namespace Soup::Core {
 					ReadyOperations.push(operationId);
 					countAdded++;
 				} else if (remainingCount < 0) {
-					throw std::runtime_error(
-						"Remaining dependency count less than zero");
+					throw std::runtime_error("Remaining dependency count less than zero");
 				} else {
 					// This operation still has dependencies that have not
 					// finished
@@ -223,9 +214,7 @@ namespace Soup::Core {
 			}
 		}
 
-		bool
-		TryGetInputFileOperations(FileId fileId,
-								  const std::set<OperationId> *&result) const {
+		bool TryGetInputFileOperations(FileId fileId, const std::set<OperationId> *&result) const {
 			auto findResult = InputFileLookup.find(fileId);
 			if (findResult != InputFileLookup.end()) {
 				result = &findResult->second;
@@ -235,8 +224,7 @@ namespace Soup::Core {
 			}
 		}
 
-		bool TryGetOutputFileOperation(FileId fileId,
-									   OperationId &result) const {
+		bool TryGetOutputFileOperation(FileId fileId, OperationId &result) const {
 			auto findResult = OutputFileLookup.find(fileId);
 			if (findResult != OutputFileLookup.end()) {
 				result = findResult->second;
@@ -257,8 +245,7 @@ namespace Soup::Core {
 						findResult->second.insert(operationInfo.Id);
 					} else {
 						auto [insertIterator, wasInserted] =
-							InputFileLookup.emplace(fileId,
-													std::set<OperationId>());
+							InputFileLookup.emplace(fileId, std::set<OperationId>());
 						insertIterator->second.insert(operationInfo.Id);
 					}
 				}

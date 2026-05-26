@@ -30,19 +30,23 @@ namespace Soup::Core {
 		/// class.
 		/// </summary>
 		LocalUserConfig()
-			: _table() {}
+			: _table() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LocalUserConfig"/>
 		/// class.
 		/// </summary>
 		LocalUserConfig(RecipeTable table)
-			: _table(std::move(table)) {}
+			: _table(std::move(table)) {
+		}
 
 		/// <summary>
 		/// Gets or sets the list of SDKs
 		/// </summary>
-		bool HasSDKs() { return HasValue(Property_SDKs); }
+		bool HasSDKs() {
+			return HasValue(Property_SDKs);
+		}
 
 		std::vector<SDKConfig> GetSDKs() {
 			if (!HasSDKs())
@@ -60,7 +64,9 @@ namespace Soup::Core {
 		/// <summary>
 		/// Raw access
 		/// </summary>
-		RecipeTable &GetTable() { return _table; }
+		RecipeTable &GetTable() {
+			return _table;
+		}
 
 		/// <summary>
 		/// Equality operator

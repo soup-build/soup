@@ -60,6 +60,7 @@ namespace Soup::Core {
 			  EvaluateRecursiveMacros(),
 			  EvaluateCurrentReadDirectories(),
 			  EvaluateCurrentWriteDirectories(),
-			  EvaluateRecursiveReadDirectories() {}
+			  EvaluateRecursiveReadDirectories() {
+		}
 	};
 }

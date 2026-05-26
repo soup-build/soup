@@ -34,7 +34,8 @@ namespace Soup::Core {
 		/// </summary>
 		GenerateResult()
 			: _graph(),
-			  _hasPreprocessor() {}
+			  _hasPreprocessor() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GenerateResult"/>
@@ -42,21 +43,28 @@ namespace Soup::Core {
 		/// </summary>
 		GenerateResult(OperationGraph graph, bool hasPreprocessor)
 			: _graph(std::move(graph)),
-			  _hasPreprocessor(hasPreprocessor) {}
+			  _hasPreprocessor(hasPreprocessor) {
+		}
 
 		/// <summary>
 		/// Get the operation graph
 		/// </summary>
-		const OperationGraph &GetGraph() const { return _graph; }
+		const OperationGraph &GetGraph() const {
+			return _graph;
+		}
 
 		/// <summary>
 		/// Get the operation graph
 		/// </summary>
-		OperationGraph &GetGraph() { return _graph; }
+		OperationGraph &GetGraph() {
+			return _graph;
+		}
 
 		/// <summary>
 		/// Get a value indicating if the graph has preprocessing operations
 		/// </summary>
-		bool HasPreprocessor() const { return _hasPreprocessor; }
+		bool HasPreprocessor() const {
+			return _hasPreprocessor;
+		}
 	};
 }

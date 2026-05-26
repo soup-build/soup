@@ -5,8 +5,8 @@
 module;
 
 #include <format>
-#include <string>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 export module Soup.View:PropertiesView;
@@ -17,16 +17,12 @@ import :RecipeTreeConverter;
 import :TreeValue;
 import :TreeView;
 
-namespace Soup::View
-{
-	TreeValueTable ToTreeValue(const Core::PackageChildrenMap& children)
-	{
+namespace Soup::View {
+	TreeValueTable ToTreeValue(const Core::PackageChildrenMap &children) {
 		auto dependencyProperties = TreeValueTable();
-		for (auto& [dependencyType, dependencies] : children)
-		{
+		for (auto &[dependencyType, dependencies] : children) {
 			auto dependencyItems = TreeValueList();
-			for (auto& dependency : dependencies)
-			{
+			for (auto &dependency : dependencies) {
 				dependencyItems.push_back(TreeValue(dependency.OriginalReference.ToString()));
 			}
 
@@ -35,9 +31,8 @@ namespace Soup::View
 
 		return dependencyProperties;
 	}
-	
-	export ftxui::Component LayoutProperties(const Core::PackageInfo& packageInfo)
-	{
+
+	export ftxui::Component LayoutProperties(const Core::PackageInfo &packageInfo) {
 		auto properties = TreeValueTable();
 
 		properties.Insert("Id", TreeValue(std::to_string(packageInfo.Id)));

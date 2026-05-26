@@ -29,39 +29,33 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
-{
-	export class PackageProviderTests
-	{
+namespace Soup::Core::UnitTests {
+	export class PackageProviderTests {
 	public:
 		// [[Fact]]
-		void Initialize()
-		{
+		void Initialize() {
 			auto packageGraphLookup = PackageGraphLookupMap(
-			{
-				{ 1, PackageGraph(1, 1, ValueTable()) },
-			});
+				{
+					{1, PackageGraph(1, 1, ValueTable())},
+				});
 			auto packageRecipe = Recipe();
 			auto packageLookup = PackageLookupMap(
-			{
 				{
-					1,
-					PackageInfo(
-						1,
-						PackageName("User1", "Package1"),
-						std::nullopt,
-						Path(),
-						&packageRecipe,
-						PackageChildrenMap())
-				},
-			});
+					{1,
+					 PackageInfo(
+						 1,
+						 PackageName("User1", "Package1"),
+						 std::nullopt,
+						 Path(),
+						 &packageRecipe,
+						 PackageChildrenMap())},
+				});
 			auto packageTargetDirectories = PackageTargetDirectories();
-			auto uut = PackageProvider(1, packageGraphLookup, packageLookup, packageTargetDirectories);
+			auto uut =
+				PackageProvider(1, packageGraphLookup, packageLookup, packageTargetDirectories);
 
 			Assert::AreEqual(
-				1,
-				uut.GetRootPackageGraph().Id,
-				"Verify root package graph matches expected.");
+				1, uut.GetRootPackageGraph().Id, "Verify root package graph matches expected.");
 		}
 	};
 }

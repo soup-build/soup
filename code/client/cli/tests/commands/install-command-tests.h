@@ -5,17 +5,14 @@
 #pragma once
 #include "install-command.h"
 
-namespace Soup::Client::UnitTests
-{
+namespace Soup::Client::UnitTests {
 	/// <summary>
 	/// Install Command Tests
 	/// </summary>
-	class InstallCommandTests
-	{
+	class InstallCommandTests {
 	public:
 		// [[Fact]]
-		void Initialize()
-		{
+		void Initialize() {
 			auto options = InstallOptions();
 			auto uut = InstallCommand(options);
 		}

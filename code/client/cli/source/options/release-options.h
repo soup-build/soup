@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Release Command Options
 	/// </summary>
 	// TODO: [Verb("release")]
-	class ReleaseOptions : public SharedOptions
-	{
+	class ReleaseOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to release

@@ -3,24 +3,20 @@
 #include "helpers.h"
 #include "message-builder.h"
 
-namespace Monitor
-{
-	class ConnectionManagerBase
-	{
+namespace Monitor {
+	class ConnectionManagerBase {
 	private:
 		std::mutex pipeMutex;
 		bool hadError;
 
 	public:
-		ConnectionManagerBase() :
-			pipeMutex(),
-			hadError(false)
-		{
+		ConnectionManagerBase()
+			: pipeMutex(),
+			  hadError(false) {
 			DebugTrace("ConnectionManagerBase::ConnectionManagerBase");
 		}
 
-		void Initialize(int32_t traceProcessId, int32_t traceChildId)
-		{
+		void Initialize(int32_t traceProcessId, int32_t traceChildId) {
 			DebugTrace("ConnectionManagerBase::Initialize");
 			{
 				auto lock = std::lock_guard<std::mutex>(pipeMutex);
@@ -34,16 +30,14 @@ namespace Monitor
 			WriteMessage(message);
 		}
 
-		void Shutdown()
-		{
+		void Shutdown() {
 			DebugTrace("ConnectionManagerBase::Shutdown");
 			auto lock = std::lock_guard<std::mutex>(pipeMutex);
 			Message message;
 			message.Type = MessageType::Shutdown;
 			message.ContentSize = 0;
 			MessageBuilder::AppendValue(message, hadError);
-			if (!TryUnsafeWriteMessage(message))
-			{
+			if (!TryUnsafeWriteMessage(message)) {
 				// Not much we can do at the end...
 				hadError = true;
 			}
@@ -51,55 +45,45 @@ namespace Monitor
 			Disconnect();
 		}
 
-		void WriteMessage(const Message& message)
-		{
+		void WriteMessage(const Message &message) {
 			auto lock = std::lock_guard<std::mutex>(pipeMutex);
-			if (!TryUnsafeWriteMessage(message))
-			{
+			if (!TryUnsafeWriteMessage(message)) {
 				// Save the failure for the final response
 				hadError = true;
 			}
 		}
 
-	#ifdef TRACE_DETOUR_CLIENT
-		void DebugError(std::string_view message, uint32_t value)
-		{
+#ifdef TRACE_DETOUR_CLIENT
+		void DebugError(std::string_view message, uint32_t value) {
 			std::cout << "DETOUR-CLIENT-ERROR: " << message << " " << value << std::endl;
 		}
 
-		void DebugError(std::string_view message)
-		{
+		void DebugError(std::string_view message) {
 			std::cout << "DETOUR-CLIENT-ERROR: " << message << std::endl;
 		}
-	#else
-		void DebugError(std::string_view /*message*/, uint32_t /*value*/)
-		{
+#else
+		void DebugError(std::string_view /*message*/, uint32_t /*value*/) {
 		}
-		
-		void DebugError(std::string_view /*message*/)
-		{
+
+		void DebugError(std::string_view /*message*/) {
 		}
-	#endif
+#endif
 
-
-	#ifdef TRACE_DETOUR_CLIENT
-		template<typename... Args>
-		static void DebugTrace(std::string_view message, Args&&... args)
-		{
+#ifdef TRACE_DETOUR_CLIENT
+		template <typename... Args>
+		static void DebugTrace(std::string_view message, Args &&...args) {
 			auto result = std::vformat(message, std::make_format_args(args...));
-			std::cout <<  "DETOUR-CLIENT: " << result << std::endl;
+			std::cout << "DETOUR-CLIENT: " << result << std::endl;
 		}
-	#else
-		template<typename... Args>
-		static void DebugTrace(std::string_view, Args&&...)
-		{
+#else
+		template <typename... Args> static void DebugTrace(std::string_view, Args &&...) {
 			// NO-OP
 		}
-	#endif
+#endif
 
 	protected:
 		virtual void Connect(int32_t traceProcessId, int32_t traceChildId) = 0;
 		virtual void Disconnect() = 0;
-		virtual bool TryUnsafeWriteMessage(const Message& message) = 0;
+		virtual bool TryUnsafeWriteMessage(const Message &message) = 0;
 	};
 }

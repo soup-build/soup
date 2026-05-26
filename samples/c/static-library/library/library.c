@@ -1,6 +1,5 @@
 #include "library.h"
 
-const char* GetName()
-{
+const char *GetName() {
 	return "Soup";
 }

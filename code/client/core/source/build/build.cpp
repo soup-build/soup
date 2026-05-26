@@ -47,15 +47,17 @@ namespace Soup::Core::Build {
 	/// Load the build graph
 	/// </summary>
 	export PackageProvider LoadBuildGraph(
-		const Path &workingDirectory, const std::optional<std::string> &owner,
-		const ValueTable &targetGlobalParameters, const Path &userDataPath,
-		std::string_view hostPlatform, RecipeCache &recipeCache) {
+		const Path &workingDirectory,
+		const std::optional<std::string> &owner,
+		const ValueTable &targetGlobalParameters,
+		const Path &userDataPath,
+		std::string_view hostPlatform,
+		RecipeCache &recipeCache) {
 		// auto startTime = std::chrono::high_resolution_clock::now();
 
 		// Load the system specific state
 		auto hostGlobalParameters = ValueTable();
-		hostGlobalParameters.emplace("System",
-									 Value(std::string(hostPlatform)));
+		hostGlobalParameters.emplace("System", Value(std::string(hostPlatform)));
 
 		// auto endTime = std::chrono::high_resolution_clock::now();
 		// auto duration =
@@ -70,10 +72,14 @@ namespace Soup::Core::Build {
 		auto knownLanguages = GetKnownLanguages();
 		auto locationManager = RecipeBuildLocationManager(knownLanguages);
 		auto loadEngine = BuildLoadEngine(
-			knownLanguages, locationManager, targetGlobalParameters,
-			hostGlobalParameters, hostPlatform, userDataPath, recipeCache);
-		auto packageProvider =
-			loadEngine.Load(workingDirectory, std::move(owner));
+			knownLanguages,
+			locationManager,
+			targetGlobalParameters,
+			hostGlobalParameters,
+			hostPlatform,
+			userDataPath,
+			recipeCache);
+		auto packageProvider = loadEngine.Load(workingDirectory, std::move(owner));
 
 		// endTime = std::chrono::high_resolution_clock::now();
 		// duration =
@@ -88,8 +94,8 @@ namespace Soup::Core::Build {
 	/// <summary>
 	/// Preload the file system
 	/// </summary>
-	void PreloadFileSystemState(PackageProvider &packageProvider,
-								FileSystemState &fileSystemState) {
+	void PreloadFileSystemState(
+		PackageProvider &packageProvider, FileSystemState &fileSystemState) {
 		// auto startTime = std::chrono::high_resolution_clock::now();
 
 		for (auto package : packageProvider.GetPackageLookup()) {
@@ -107,11 +113,12 @@ namespace Soup::Core::Build {
 		// Log::Info("PreloadFileSystemState: {} seconds", duration.count());
 	}
 
-	export void Execute(PackageProvider &packageProvider,
-						const RecipeBuildArguments &arguments,
-						const Path &userDataPath,
-						const std::vector<Path> &systemReadAccess,
-						RecipeCache &recipeCache) {
+	export void Execute(
+		PackageProvider &packageProvider,
+		const RecipeBuildArguments &arguments,
+		const Path &userDataPath,
+		const std::vector<Path> &systemReadAccess,
+		RecipeCache &recipeCache) {
 		// auto startTime = std::chrono::high_resolution_clock::now();
 
 		// Load the file system state
@@ -120,15 +127,22 @@ namespace Soup::Core::Build {
 
 		// Initialize a shared Evaluate Engine
 		auto evaluateEngine = BuildEvaluateEngine(
-			arguments.Parallelization, arguments.ForceRebuild,
-			arguments.DisableMonitor, arguments.PartialMonitor,
+			arguments.Parallelization,
+			arguments.ForceRebuild,
+			arguments.DisableMonitor,
+			arguments.PartialMonitor,
 			fileSystemState);
 
 		// Initialize the build runner that will perform the generate and
 		// evaluate phase for each individual package
-		auto buildRunner =
-			BuildRunner(arguments, userDataPath, systemReadAccess, recipeCache,
-						packageProvider, evaluateEngine, fileSystemState);
+		auto buildRunner = BuildRunner(
+			arguments,
+			userDataPath,
+			systemReadAccess,
+			recipeCache,
+			packageProvider,
+			evaluateEngine,
+			fileSystemState);
 		buildRunner.Execute();
 
 		// auto endTime = std::chrono::high_resolution_clock::now();

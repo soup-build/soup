@@ -23,7 +23,8 @@ namespace Soup::Core {
 
 	public:
 		MacroManager(const std::map<std::string, std::string> &macros)
-			: _macros(macros) {}
+			: _macros(macros) {
+		}
 
 		Path ResolveMacros(Path value) {
 			// TODO: Is there a way to not process the path again?

@@ -24,14 +24,11 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class OperationGraphManagerTests
-	{
+namespace Soup::Core::UnitTests {
+	export class OperationGraphManagerTests {
 	public:
 		// [[Fact]]
-		void TryLoadFromFile_MissingFile()
-		{
+		void TryLoadFromFile_MissingFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -65,8 +62,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void TryLoadFromFile_GarbageFile()
-		{
+		void TryLoadFromFile_GarbageFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -103,8 +99,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void TryLoadFromFile_SimpleFile()
-		{
+		void TryLoadFromFile_SimpleFile() {
 			// Register the test listener
 			auto testListener = std::make_shared<TestTraceListener>();
 			auto scopedTraceListener = ScopedTraceListenerRegister(testListener);
@@ -113,30 +108,22 @@ namespace Soup::Core::UnitTests
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
 
-			auto binaryFileContent = std::vector<uint8_t>(
-			{
-				'B', 'O', 'G', '\0', 0x06, 0x00, 0x00, 0x00,
-				'F', 'I', 'S', '\0', 0x00, 0x00, 0x00, 0x00,
-				'R', 'O', 'P', '\0', 0x01, 0x00, 0x00, 0x00,
-				0x05, 0x00, 0x00, 0x00,
-				'O', 'P', 'S', '\0', 0x01, 0x00, 0x00, 0x00,
-				0x05, 0x00, 0x00, 0x00,
-				0x0D, 0x00, 0x00, 0x00, 'T', 'e', 's', 't', 'O', 'p', 'e', 'r', 'a', 't', 'i', 'o', 'n',
-				0x08, 0x00, 0x00, 0x00, 'C', ':', '/', 'R', 'o', 'o', 't', '/',
-				0x0D, 0x00, 0x00, 0x00, '.', '/', 'D', 'o', 'S', 't', 'u', 'f', 'f', '.', 'e', 'x', 'e',
-				0x02, 0x00, 0x00, 0x00,
-				0x04, 0x00, 0x00, 0x00, 'a', 'r', 'g', '1',
-				0x04, 0x00, 0x00, 0x00, 'a', 'r', 'g', '2',
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x01, 0x00, 0x00, 0x00,
+			auto binaryFileContent = std::vector<uint8_t>({
+				'B',  'O',	'G',  '\0', 0x06, 0x00, 0x00, 0x00, 'F',  'I',	'S',  '\0', 0x00,
+				0x00, 0x00, 0x00, 'R',	'O',  'P',	'\0', 0x01, 0x00, 0x00, 0x00, 0x05, 0x00,
+				0x00, 0x00, 'O',  'P',	'S',  '\0', 0x01, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00,
+				0x00, 0x0D, 0x00, 0x00, 0x00, 'T',	'e',  's',	't',  'O',	'p',  'e',	'r',
+				'a',  't',	'i',  'o',	'n',  0x08, 0x00, 0x00, 0x00, 'C',	':',  '/',	'R',
+				'o',  'o',	't',  '/',	0x0D, 0x00, 0x00, 0x00, '.',  '/',	'D',  'o',	'S',
+				't',  'u',	'f',  'f',	'.',  'e',	'x',  'e',	0x02, 0x00, 0x00, 0x00, 0x04,
+				0x00, 0x00, 0x00, 'a',	'r',  'g',	'1',  0x04, 0x00, 0x00, 0x00, 'a',	'r',
+				'g',  '2',	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
 			});
 			fileSystem->CreateMockFile(
 				Path("./TestFiles/SimpleOperationGraph/.soup/OperationGraph.bog"),
-				std::make_shared<MockFile>(std::stringstream(std::string((char*)binaryFileContent.data(), binaryFileContent.size()))));
+				std::make_shared<MockFile>(std::stringstream(
+					std::string((char *)binaryFileContent.data(), binaryFileContent.size()))));
 
 			auto filePath = Path("./TestFiles/SimpleOperationGraph/.soup/OperationGraph.bog");
 			auto fileSystemState = std::make_shared<FileSystemState>();
@@ -153,24 +140,19 @@ namespace Soup::Core::UnitTests
 				actual.GetRootOperationIds(),
 				"Verify root operation ids match expected.");
 			Assert::AreEqual(
-				std::map<OperationId, OperationInfo>({
-					{
+				std::map<OperationId, OperationInfo>({{
+					5,
+					OperationInfo(
 						5,
-						OperationInfo(
-							5,
-							"TestOperation",
-							CommandInfo(
-								Path("C:/Root/"),
-								Path("./DoStuff.exe"),
-								{ "arg1", "arg2" }),
-							{ },
-							{ },
-							{ },
-							{ },
-							{ },
-							1),
-					}
-				}),
+						"TestOperation",
+						CommandInfo(Path("C:/Root/"), Path("./DoStuff.exe"), {"arg1", "arg2"}),
+						{},
+						{},
+						{},
+						{},
+						{},
+						1),
+				}}),
 				actual.GetOperations(),
 				"Verify operations match expected.");
 
@@ -190,8 +172,7 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void SaveState()
-		{
+		void SaveState() {
 			// Register the test file system
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
@@ -206,15 +187,12 @@ namespace Soup::Core::UnitTests
 					OperationInfo(
 						5,
 						"TestOperation",
-						CommandInfo(
-							Path("C:/Root/"),
-							Path("./DoStuff.exe"),
-							{ "arg1", "arg2" }),
-						{ },
-						{ },
-						{ },
-						{ },
-						{ },
+						CommandInfo(Path("C:/Root/"), Path("./DoStuff.exe"), {"arg1", "arg2"}),
+						{},
+						{},
+						{},
+						{},
+						{},
 						1),
 				}));
 			OperationGraphManager::SaveState(filePath, operationGraph, *fileSystemState);
@@ -228,30 +206,21 @@ namespace Soup::Core::UnitTests
 				"Verify file system requests match expected.");
 
 			// Verify the file content
-			auto binaryFileContent = std::vector<uint8_t>(
-			{
-				'B', 'O', 'G', '\0', 0x06, 0x00, 0x00, 0x00,
-				'F', 'I', 'S', '\0', 0x00, 0x00, 0x00, 0x00,
-				'R', 'O', 'P', '\0', 0x01, 0x00, 0x00, 0x00,
-				0x05, 0x00, 0x00, 0x00,
-				'O', 'P', 'S', '\0', 0x01, 0x00, 0x00, 0x00,
-				0x05, 0x00, 0x00, 0x00,
-				0x0D, 0x00, 0x00, 0x00, 'T', 'e', 's', 't', 'O', 'p', 'e', 'r', 'a', 't', 'i', 'o', 'n',
-				0x08, 0x00, 0x00, 0x00, 'C', ':', '/', 'R', 'o', 'o', 't', '/',
-				0x0D, 0x00, 0x00, 0x00, '.', '/', 'D', 'o', 'S', 't', 'u', 'f', 'f', '.', 'e', 'x', 'e',
-				0x02, 0x00, 0x00, 0x00,
-				0x04, 0x00, 0x00, 0x00, 'a', 'r', 'g', '1',
-				0x04, 0x00, 0x00, 0x00, 'a', 'r', 'g', '2',
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00,
-				0x01, 0x00, 0x00, 0x00,
+			auto binaryFileContent = std::vector<uint8_t>({
+				'B',  'O',	'G',  '\0', 0x06, 0x00, 0x00, 0x00, 'F',  'I',	'S',  '\0', 0x00,
+				0x00, 0x00, 0x00, 'R',	'O',  'P',	'\0', 0x01, 0x00, 0x00, 0x00, 0x05, 0x00,
+				0x00, 0x00, 'O',  'P',	'S',  '\0', 0x01, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00,
+				0x00, 0x0D, 0x00, 0x00, 0x00, 'T',	'e',  's',	't',  'O',	'p',  'e',	'r',
+				'a',  't',	'i',  'o',	'n',  0x08, 0x00, 0x00, 0x00, 'C',	':',  '/',	'R',
+				'o',  'o',	't',  '/',	0x0D, 0x00, 0x00, 0x00, '.',  '/',	'D',  'o',	'S',
+				't',  'u',	'f',  'f',	'.',  'e',	'x',  'e',	0x02, 0x00, 0x00, 0x00, 0x04,
+				0x00, 0x00, 0x00, 'a',	'r',  'g',	'1',  0x04, 0x00, 0x00, 0x00, 'a',	'r',
+				'g',  '2',	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
 			});
 			auto mockFile = fileSystem->GetMockFile(Path("./TestFiles/.soup/OperationGraph.bog"));
 			Assert::AreEqual(
-				std::string((char*)binaryFileContent.data(), binaryFileContent.size()),
+				std::string((char *)binaryFileContent.data(), binaryFileContent.size()),
 				mockFile->Content.str(),
 				"Verify file content match expected.");
 		}

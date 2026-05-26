@@ -6,47 +6,45 @@ module;
 
 export module Sample.DirectX:DXSampleHelper;
 
-export inline std::string HrToString(HRESULT hr)
-{
+export inline std::string HrToString(HRESULT hr) {
 	char s_str[64] = {};
 	sprintf_s(s_str, "HRESULT of 0x%08X", static_cast<UINT>(hr));
 	return std::string(s_str);
 }
 
-export class HrException : public std::runtime_error
-{
+export class HrException : public std::runtime_error {
 public:
-	HrException(HRESULT hr) : std::runtime_error(HrToString(hr)), m_hr(hr) {}
-	HRESULT Error() const { return m_hr; }
+	HrException(HRESULT hr)
+		: std::runtime_error(HrToString(hr)),
+		  m_hr(hr) {
+	}
+	HRESULT Error() const {
+		return m_hr;
+	}
+
 private:
 	const HRESULT m_hr;
 };
 
-export inline void ThrowIfFailed(HRESULT hr)
-{
-	if (FAILED(hr))
-	{
+export inline void ThrowIfFailed(HRESULT hr) {
+	if (FAILED(hr)) {
 		throw HrException(hr);
 	}
 }
 
-export inline void GetAssetsPath(_Out_writes_(pathSize) WCHAR* path, UINT pathSize)
-{
-	if (path == nullptr)
-	{
+export inline void GetAssetsPath(_Out_writes_(pathSize) WCHAR *path, UINT pathSize) {
+	if (path == nullptr) {
 		throw std::runtime_error("Missing path");
 	}
 
 	DWORD size = GetModuleFileNameW(nullptr, path, pathSize);
-	if (size == 0 || size == pathSize)
-	{
+	if (size == 0 || size == pathSize) {
 		// Method failed or path was truncated.
 		throw std::runtime_error("Failed to get file name");
 	}
 
-	WCHAR* lastSlash = wcsrchr(path, L'\\');
-	if (lastSlash)
-	{
+	WCHAR *lastSlash = wcsrchr(path, L'\\');
+	if (lastSlash) {
 		*(lastSlash + 1) = L'\0';
 	}
 }

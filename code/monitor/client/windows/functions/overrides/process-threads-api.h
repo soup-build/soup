@@ -2,8 +2,7 @@
 #include "../cache/process-threads-api.h"
 #include "windows-helpers.h"
 
-namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
-{
+namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi {
 	BOOL WINAPI CreateProcessA(
 		LPCSTR lpApplicationName,
 		LPSTR lpCommandLine,
@@ -14,21 +13,19 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 		LPVOID lpEnvironment,
 		LPCSTR lpCurrentDirectory,
 		LPSTARTUPINFOA lpStartupInfo,
-		LPPROCESS_INFORMATION lpProcessInformation)
-	{
+		LPPROCESS_INFORMATION lpProcessInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateProcessA));
 
 		BOOL result = 0;
 		bool wasDetoured = false;
-		
+
 		// TODO: Get name from args if not passed in
 		auto applicationName = std::string_view();
 		if (lpApplicationName != nullptr)
 			applicationName = lpApplicationName;
 
-		if (IsWhiteListProcess(applicationName))
-		{
+		if (IsWhiteListProcess(applicationName)) {
 			result = Cache::ProcessThreadsApi::CreateProcessA(
 				lpApplicationName,
 				lpCommandLine,
@@ -40,17 +37,14 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 				lpCurrentDirectory,
 				lpStartupInfo,
 				lpProcessInformation);
-		}
-		else
-		{
+		} else {
 			wasDetoured = true;
 
 			// If the caller did not request the process information then create a temporary
 			// one for ourselves
 			LPPROCESS_INFORMATION lpInternalProcessInformation = lpProcessInformation;
 			PROCESS_INFORMATION privateProcessInformation;
-			if (lpInternalProcessInformation == nullptr)
-			{
+			if (lpInternalProcessInformation == nullptr) {
 				lpInternalProcessInformation = &privateProcessInformation;
 			}
 
@@ -69,20 +63,17 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 				s_szDllPath,
 				Cache::ProcessThreadsApi::CreateProcessA);
 
-			if (result)
-			{
+			if (result) {
 				// Perform the detour setup
 				CreateProcessInternals(lpInternalProcessInformation->hProcess);
 
 				// If the caller did not create the process suspended then undo our override
-				if (!(dwCreationFlags & CREATE_SUSPENDED))
-				{
+				if (!(dwCreationFlags & CREATE_SUSPENDED)) {
 					ResumeThread(lpInternalProcessInformation->hThread);
 				}
 
 				// Cleanup if we used the private information store
-				if (lpInternalProcessInformation == &privateProcessInformation)
-				{
+				if (lpInternalProcessInformation == &privateProcessInformation) {
 					CloseHandle(privateProcessInformation.hThread);
 					CloseHandle(privateProcessInformation.hProcess);
 				}
@@ -106,8 +97,7 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 		LPVOID lpEnvironment,
 		LPCWSTR lpCurrentDirectory,
 		LPSTARTUPINFOW lpStartupInfo,
-		LPPROCESS_INFORMATION lpProcessInformation)
-	{
+		LPPROCESS_INFORMATION lpProcessInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateProcessW));
 
@@ -119,8 +109,7 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 		if (lpApplicationName != nullptr)
 			applicationName = lpApplicationName;
 
-		if ( IsWhiteListProcess(applicationName))
-		{
+		if (IsWhiteListProcess(applicationName)) {
 			result = Cache::ProcessThreadsApi::CreateProcessW(
 				lpApplicationName,
 				lpCommandLine,
@@ -132,17 +121,14 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 				lpCurrentDirectory,
 				lpStartupInfo,
 				lpProcessInformation);
-		}
-		else
-		{
+		} else {
 			wasDetoured = true;
 
 			// If the caller did not request the process information then create a temporary
 			// one for ourselves
 			LPPROCESS_INFORMATION lpInternalProcessInformation = lpProcessInformation;
 			PROCESS_INFORMATION privateProcessInformation;
-			if (lpInternalProcessInformation == nullptr)
-			{
+			if (lpInternalProcessInformation == nullptr) {
 				lpInternalProcessInformation = &privateProcessInformation;
 			}
 
@@ -161,20 +147,17 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 				s_szDllPath,
 				Cache::ProcessThreadsApi::CreateProcessW);
 
-			if (result)
-			{
+			if (result) {
 				// Perform the detour setup
 				CreateProcessInternals(lpInternalProcessInformation->hProcess);
 
 				// If the caller did not create the process suspended then undo our override
-				if (!(dwCreationFlags & CREATE_SUSPENDED))
-				{
+				if (!(dwCreationFlags & CREATE_SUSPENDED)) {
 					ResumeThread(lpInternalProcessInformation->hThread);
 				}
 
 				// Cleanup if we used the private information store
-				if (lpInternalProcessInformation == &privateProcessInformation)
-				{
+				if (lpInternalProcessInformation == &privateProcessInformation) {
 					CloseHandle(privateProcessInformation.hThread);
 					CloseHandle(privateProcessInformation.hProcess);
 				}
@@ -199,8 +182,7 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 		LPVOID lpEnvironment,
 		LPCSTR lpCurrentDirectory,
 		LPSTARTUPINFOA lpStartupInfo,
-		LPPROCESS_INFORMATION lpProcessInformation)
-	{
+		LPPROCESS_INFORMATION lpProcessInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateProcessAsUserA));
 
@@ -240,8 +222,7 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 		LPVOID lpEnvironment,
 		LPCWSTR lpCurrentDirectory,
 		LPSTARTUPINFOW lpStartupInfo,
-		LPPROCESS_INFORMATION lpProcessInformation)
-	{
+		LPPROCESS_INFORMATION lpProcessInformation) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::CreateProcessAsUserW));
 
@@ -270,8 +251,7 @@ namespace Monitor::Windows::Functions::Overrides::ProcessThreadsApi
 		return result;
 	}
 
-	void WINAPI ExitProcess(UINT uExitCode)
-	{
+	void WINAPI ExitProcess(UINT uExitCode) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::ExitProcess));
 

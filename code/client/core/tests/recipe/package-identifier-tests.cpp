@@ -27,18 +27,12 @@ using namespace Opal::System;
 using namespace Soup::SML;
 using namespace Soup::Test;
 
-namespace Soup::Core::UnitTests
-{
-	export class PackageIdentifierTests
-	{
+namespace Soup::Core::UnitTests {
+	export class PackageIdentifierTests {
 	public:
 		// [[Fact]]
-		void Initialize()
-		{
-			auto uut = PackageIdentifier(
-				"C#",
-				"user1",
-				"my-package");
+		void Initialize() {
+			auto uut = PackageIdentifier("C#", "user1", "my-package");
 
 			Assert::AreEqual("C#", uut.GetLanguage(), "Verify language matches expected.");
 			Assert::AreEqual("user1", uut.GetOwner(), "Verify owner matches expected.");
@@ -46,71 +40,35 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void OperatorEqual()
-		{
-			auto uut = PackageIdentifier(
-				"C#",
-				"user1",
-				"my-package");
+		void OperatorEqual() {
+			auto uut = PackageIdentifier("C#", "user1", "my-package");
 
 			Assert::AreEqual(
-				PackageIdentifier(
-					"C#",
-					"user1",
-					"my-package"),
-				uut,
-				"Verify are equal.");
+				PackageIdentifier("C#", "user1", "my-package"), uut, "Verify are equal.");
 		}
 
 		// [[Fact]]
-		void OperatorNotEqualLanguage()
-		{
-			auto uut = PackageIdentifier(
-				"C#",
-				"user1",
-				"my-package");
+		void OperatorNotEqualLanguage() {
+			auto uut = PackageIdentifier("C#", "user1", "my-package");
 
 			Assert::AreNotEqual(
-				PackageIdentifier(
-					"C++",
-					"user1",
-					"my-package"),
-				uut,
-				"Verify are not equal.");
+				PackageIdentifier("C++", "user1", "my-package"), uut, "Verify are not equal.");
 		}
 
 		// [[Fact]]
-		void OperatorNotEqualOwner()
-		{
-			auto uut = PackageIdentifier(
-				"C#",
-				"user1",
-				"my-package");
+		void OperatorNotEqualOwner() {
+			auto uut = PackageIdentifier("C#", "user1", "my-package");
 
 			Assert::AreNotEqual(
-				PackageIdentifier(
-					"C#",
-					"User2",
-					"my-package"),
-				uut,
-				"Verify are not equal.");
+				PackageIdentifier("C#", "User2", "my-package"), uut, "Verify are not equal.");
 		}
 
 		// [[Fact]]
-		void OperatorNotEqualName()
-		{
-			auto uut = PackageIdentifier(
-				"C#",
-				"user1",
-				"my-package");
+		void OperatorNotEqualName() {
+			auto uut = PackageIdentifier("C#", "user1", "my-package");
 
 			Assert::AreNotEqual(
-				PackageIdentifier(
-					"C#",
-					"user1",
-					"my-package2"),
-				uut,
-				"Verify are not equal.");
+				PackageIdentifier("C#", "user1", "my-package2"), uut, "Verify are not equal.");
 		}
 
 		// [[Theory]]
@@ -118,25 +76,22 @@ namespace Soup::Core::UnitTests
 		// [[InlineData("[C#]name", "C#", std::nullopt, "name")]]
 		// [[InlineData("user1|name", std::nullopt, "user1", "name")]]
 		// [[InlineData("[C#]user1|name", "C#", "user1", "name")]]
-		void ParseValues(std::string value, std::optional<std::string> language, std::optional<std::string> owner, std::string name)
-		{
+		void ParseValues(
+			std::string value,
+			std::optional<std::string> language,
+			std::optional<std::string> owner,
+			std::string name) {
 			auto uut = PackageIdentifier::Parse(value);
 			Assert::AreEqual(
-				PackageIdentifier(language, owner, name),
-				uut,
-				"Verify matches expected values.");
+				PackageIdentifier(language, owner, name), uut, "Verify matches expected values.");
 		}
 
 		// [[Theory]]
 		// [[InlineData("package", true)]] // Success
-		void TryParseValues(std::string value, bool expectedResult)
-		{
+		void TryParseValues(std::string value, bool expectedResult) {
 			PackageReference uut;
 			auto result = PackageReference::TryParse(value, uut);
-			Assert::AreEqual(
-				expectedResult,
-				result,
-				"Verify matches expected result.");
+			Assert::AreEqual(expectedResult, result, "Verify matches expected result.");
 		}
 
 		// [[Theory]]
@@ -144,14 +99,14 @@ namespace Soup::Core::UnitTests
 		// [[InlineData("C#", std::nullopt, "name", "[C#]name")]]
 		// [[InlineData(std::nullopt, "user1", "name", "user1|name")]]
 		// [[InlineData("C#", "user1", "name", "[C#]user1|name")]]
-		void ToStringValues(std::optional<std::string> language, std::optional<std::string> owner, std::string name, std::string expected)
-		{
+		void ToStringValues(
+			std::optional<std::string> language,
+			std::optional<std::string> owner,
+			std::string name,
+			std::string expected) {
 			auto uut = PackageIdentifier(language, owner, name);
 			auto value = uut.ToString();
-			Assert::AreEqual(
-				expected,
-				value,
-				"Verify matches expected value.");
+			Assert::AreEqual(expected, value, "Verify matches expected value.");
 		}
 	};
 }

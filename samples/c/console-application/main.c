@@ -1,7 +1,6 @@
 #include <stdio.h>
 
-int main()
-{
+int main() {
 	printf("Hello World, Soup Style!\n");
 	return 0;
 }

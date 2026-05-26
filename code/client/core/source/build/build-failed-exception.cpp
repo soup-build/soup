@@ -22,6 +22,7 @@ namespace Soup::Core {
 		/// Initializes a new instance of the <see cref="BuildFailedException"/>
 		/// class.
 		/// </summary>
-		BuildFailedException() {}
+		BuildFailedException() {
+		}
 	};
 }

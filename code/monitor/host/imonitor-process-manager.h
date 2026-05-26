@@ -5,20 +5,17 @@
 #pragma once
 #include "isystem-access-monitor.h"
 
-namespace Monitor
-{
+namespace Monitor {
 	/// <summary>
 	/// The process manager interface that supports monitoring
 	/// Interface mainly used to allow for unit testing client code
 	/// </summary>
-	export class IMonitorProcessManager
-	{
+	export class IMonitorProcessManager {
 	public:
 		/// <summary>
 		/// Gets the current active process manager
 		/// </summary>
-		static IMonitorProcessManager& Current()
-		{
+		static IMonitorProcessManager &Current() {
 			if (_current == nullptr)
 				throw std::runtime_error("No monitor process manager implementation registered.");
 			return *_current;
@@ -27,8 +24,7 @@ namespace Monitor
 		/// <summary>
 		/// Register a new active process manager
 		/// </summary>
-		static void Register(std::shared_ptr<IMonitorProcessManager> value)
-		{
+		static void Register(std::shared_ptr<IMonitorProcessManager> value) {
 			_current = std::move(value);
 		}
 
@@ -37,10 +33,10 @@ namespace Monitor
 		/// Creates a process for the provided executable path
 		/// </summary>
 		virtual std::shared_ptr<Opal::System::IProcess> CreateMonitorProcess(
-			const Path& executable,
+			const Path &executable,
 			std::vector<std::string> arguments,
-			const Path& workingDirectory,
-			const std::map<std::string, std::string>& environmentVariables,
+			const Path &workingDirectory,
+			const std::map<std::string, std::string> &environmentVariables,
 			std::shared_ptr<ISystemAccessMonitor> monitor,
 			bool enableAccessChecks,
 			bool partialMonitor,

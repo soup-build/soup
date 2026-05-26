@@ -31,14 +31,19 @@ export namespace Soup::Core {
 			: OriginalReference(),
 			  IsSubGraph(false),
 			  PackageId(-1),
-			  PackageGraphId(-1) {}
+			  PackageGraphId(-1) {
+		}
 
-		PackageChildInfo(PackageReference originalReference, bool isSubGraph,
-						 PackageId packageId, PackageGraphId packageGraphId)
+		PackageChildInfo(
+			PackageReference originalReference,
+			bool isSubGraph,
+			PackageId packageId,
+			PackageGraphId packageGraphId)
 			: OriginalReference(originalReference),
 			  IsSubGraph(isSubGraph),
 			  PackageId(packageId),
-			  PackageGraphId(packageGraphId) {}
+			  PackageGraphId(packageGraphId) {
+		}
 
 		PackageReference OriginalReference;
 		bool IsSubGraph;
@@ -49,9 +54,8 @@ export namespace Soup::Core {
 		/// Equality operator
 		/// </summary>
 		bool operator==(const PackageChildInfo &rhs) const {
-			return OriginalReference == rhs.OriginalReference &&
-				   IsSubGraph == rhs.IsSubGraph && PackageId == rhs.PackageId &&
-				   PackageGraphId == rhs.PackageGraphId;
+			return OriginalReference == rhs.OriginalReference && IsSubGraph == rhs.IsSubGraph &&
+				   PackageId == rhs.PackageId && PackageGraphId == rhs.PackageGraphId;
 		}
 
 		/// <summary>
@@ -62,20 +66,24 @@ export namespace Soup::Core {
 		}
 	};
 
-	using PackageChildrenMap =
-		std::map<std::string, std::vector<PackageChildInfo>>;
+	using PackageChildrenMap = std::map<std::string, std::vector<PackageChildInfo>>;
 
 	class PackageInfo {
 	public:
-		PackageInfo(PackageId id, PackageName name,
-					std::optional<Digest> artifactDigest, Path packageRoot,
-					const Recipe *recipe, PackageChildrenMap dependencies)
+		PackageInfo(
+			PackageId id,
+			PackageName name,
+			std::optional<Digest> artifactDigest,
+			Path packageRoot,
+			const Recipe *recipe,
+			PackageChildrenMap dependencies)
 			: Id(id),
 			  Name(std::move(name)),
 			  ArtifactDigest(std::move(artifactDigest)),
 			  PackageRoot(std::move(packageRoot)),
 			  Recipe(recipe),
-			  Dependencies(std::move(dependencies)) {}
+			  Dependencies(std::move(dependencies)) {
+		}
 
 		PackageId Id;
 		PackageName Name;
@@ -84,17 +92,17 @@ export namespace Soup::Core {
 		const ::Soup::Core::Recipe *Recipe;
 		PackageChildrenMap Dependencies;
 
-		bool IsPrebuilt() const { return ArtifactDigest.has_value(); }
+		bool IsPrebuilt() const {
+			return ArtifactDigest.has_value();
+		}
 
 		/// <summary>
 		/// Equality operator
 		/// </summary>
 		bool operator==(const PackageInfo &rhs) const {
-			auto artifactDigestEqual =
-				ArtifactDigest.has_value() == rhs.ArtifactDigest.has_value();
+			auto artifactDigestEqual = ArtifactDigest.has_value() == rhs.ArtifactDigest.has_value();
 			if (ArtifactDigest.has_value()) {
-				artifactDigestEqual =
-					ArtifactDigest.value() == rhs.ArtifactDigest.value();
+				artifactDigestEqual = ArtifactDigest.value() == rhs.ArtifactDigest.value();
 			}
 
 			return Id == rhs.Id && Name == rhs.Name && artifactDigestEqual &&
@@ -112,11 +120,11 @@ export namespace Soup::Core {
 
 	class PackageGraph {
 	public:
-		PackageGraph(PackageGraphId id, PackageId rootPackageId,
-					 ValueTable globalParameters)
+		PackageGraph(PackageGraphId id, PackageId rootPackageId, ValueTable globalParameters)
 			: Id(id),
 			  RootPackageId(rootPackageId),
-			  GlobalParameters(std::move(globalParameters)) {}
+			  GlobalParameters(std::move(globalParameters)) {
+		}
 
 		PackageGraphId Id;
 		PackageId RootPackageId;
@@ -144,8 +152,7 @@ export namespace Soup::Core {
 	/// </summary>
 	using PackageGraphLookupMap = std::map<PackageGraphId, PackageGraph>;
 	using PackageLookupMap = std::map<PackageId, PackageInfo>;
-	using PackageTargetDirectories =
-		std::map<PackageGraphId, std::map<PackageId, Path>>;
+	using PackageTargetDirectories = std::map<PackageGraphId, std::map<PackageId, Path>>;
 	class PackageProvider {
 	private:
 		PackageGraphId _rootPackageGraphId;
@@ -158,22 +165,28 @@ export namespace Soup::Core {
 		/// Initializes a new instance of the <see cref="PackageProvider"/>
 		/// class.
 		/// </summary>
-		PackageProvider(PackageGraphId rootPackageGraphId,
-						PackageGraphLookupMap packageGraphLookup,
-						PackageLookupMap packageLookup,
-						PackageTargetDirectories packageTargetDirectories)
+		PackageProvider(
+			PackageGraphId rootPackageGraphId,
+			PackageGraphLookupMap packageGraphLookup,
+			PackageLookupMap packageLookup,
+			PackageTargetDirectories packageTargetDirectories)
 			: _rootPackageGraphId(rootPackageGraphId),
 			  _packageGraphLookup(std::move(packageGraphLookup)),
 			  _packageLookup(std::move(packageLookup)),
-			  _packageTargetDirectories(std::move(packageTargetDirectories)) {}
+			  _packageTargetDirectories(std::move(packageTargetDirectories)) {
+		}
 
-		PackageGraphId GetRootPackageGraphId() { return _rootPackageGraphId; }
+		PackageGraphId GetRootPackageGraphId() {
+			return _rootPackageGraphId;
+		}
 
 		const PackageGraphLookupMap &GetPackageGraphLookup() {
 			return _packageGraphLookup;
 		}
 
-		const PackageLookupMap &GetPackageLookup() { return _packageLookup; }
+		const PackageLookupMap &GetPackageLookup() {
+			return _packageLookup;
+		}
 
 		const PackageTargetDirectories &GetPackageTargetDirectories() {
 			return _packageTargetDirectories;
@@ -189,8 +202,8 @@ export namespace Soup::Core {
 			if (findPackageGraph != _packageGraphLookup.end()) {
 				return findPackageGraph->second;
 			} else {
-				throw std::runtime_error(std::format(
-					"PackageGraphId [{}] not found in lookup", packageGraphId));
+				throw std::runtime_error(
+					std::format("PackageGraphId [{}] not found in lookup", packageGraphId));
 			}
 		}
 
@@ -200,30 +213,26 @@ export namespace Soup::Core {
 			if (findPackageInfo != _packageLookup.end()) {
 				return findPackageInfo->second;
 			} else {
-				throw std::runtime_error(std::format(
-					"packageId [{}] not found in lookup", packageId));
+				throw std::runtime_error(
+					std::format("packageId [{}] not found in lookup", packageId));
 			}
 		}
 
-		const Path &GetTargetDirectory(PackageGraphId packageGraphId,
-									   PackageId packageId) {
+		const Path &GetTargetDirectory(PackageGraphId packageGraphId, PackageId packageId) {
 			// The PackageGraph must already be loaded
-			auto findPackageGraphTargetDirectory =
-				_packageTargetDirectories.find(packageGraphId);
-			if (findPackageGraphTargetDirectory !=
-				_packageTargetDirectories.end()) {
+			auto findPackageGraphTargetDirectory = _packageTargetDirectories.find(packageGraphId);
+			if (findPackageGraphTargetDirectory != _packageTargetDirectories.end()) {
 				auto findPackageTargetDirectory =
 					findPackageGraphTargetDirectory->second.find(packageId);
-				if (findPackageTargetDirectory !=
-					findPackageGraphTargetDirectory->second.end()) {
+				if (findPackageTargetDirectory != findPackageGraphTargetDirectory->second.end()) {
 					return findPackageTargetDirectory->second;
 				} else {
-					throw std::runtime_error(std::format(
-						"packageId [{}] not found in lookup", packageId));
+					throw std::runtime_error(
+						std::format("packageId [{}] not found in lookup", packageId));
 				}
 			} else {
-				throw std::runtime_error(std::format(
-					"PackageGraphId [{}] not found in lookup", packageGraphId));
+				throw std::runtime_error(
+					std::format("PackageGraphId [{}] not found in lookup", packageGraphId));
 			}
 		}
 

@@ -1,10 +1,8 @@
 #pragma once
 #include "../cache/undocumented-api.h"
 
-namespace Monitor::Windows::Functions::Overrides::UndocumentedApi
-{
-	int WINAPI EntryPoint(void)
-	{
+namespace Monitor::Windows::Functions::Overrides::UndocumentedApi {
+	int WINAPI EntryPoint(void) {
 		return Cache::UndocumentedApi::EntryPoint();
 	}
 
@@ -14,8 +12,7 @@ namespace Monitor::Windows::Functions::Overrides::UndocumentedApi
 		LPPROGRESS_ROUTINE lpProgressRoutine,
 		LPVOID lpData,
 		LPBOOL pbCancel,
-		DWORD dwCopyFlags)
-	{
+		DWORD dwCopyFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::PrivCopyFileExA));
 
@@ -24,13 +21,10 @@ namespace Monitor::Windows::Functions::Overrides::UndocumentedApi
 		bool blockWriteAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpNewFileName);
 		bool blockAccess = blockReadAccess || blockWriteAccess;
 		bool result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::UndocumentedApi::PrivCopyFileExA(
 				lpExistingFileName,
 				lpNewFileName,
@@ -54,8 +48,7 @@ namespace Monitor::Windows::Functions::Overrides::UndocumentedApi
 		LPPROGRESS_ROUTINE lpProgressRoutine,
 		LPVOID lpData,
 		LPBOOL pbCancel,
-		DWORD dwCopyFlags)
-	{
+		DWORD dwCopyFlags) {
 		auto message = MessageSender(MessageType::Detour);
 		message.AppendValue(static_cast<uint32_t>(DetourEventType::PrivCopyFileExW));
 
@@ -64,13 +57,10 @@ namespace Monitor::Windows::Functions::Overrides::UndocumentedApi
 		bool blockWriteAccess = !FileSystemAccessSandbox::IsWriteAllowed(lpNewFileName);
 		bool blockAccess = blockReadAccess || blockWriteAccess;
 		bool result = 0;
-		if (blockAccess)
-		{
+		if (blockAccess) {
 			result = FALSE;
 			SetLastError(ERROR_ACCESS_DENIED);
-		}
-		else
-		{
+		} else {
 			result = Cache::UndocumentedApi::PrivCopyFileExW(
 				lpExistingFileName,
 				lpNewFileName,

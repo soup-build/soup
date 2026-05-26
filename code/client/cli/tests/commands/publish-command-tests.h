@@ -5,17 +5,14 @@
 #pragma once
 #include "publish-command.h"
 
-namespace Soup::Client::UnitTests
-{
+namespace Soup::Client::UnitTests {
 	/// <summary>
 	/// Publish Command Tests
 	/// </summary>
-	class PublishCommandTests
-	{
+	class PublishCommandTests {
 	public:
 		// [[Fact]]
-		void Initialize()
-		{
+		void Initialize() {
 			auto options = PublishOptions();
 			auto uut = PublishCommand(options);
 		}

@@ -1,9 +1,7 @@
 #pragma once
 
-namespace Monitor::Windows
-{
-	export enum class DetourEventType : uint32_t
-	{
+namespace Monitor::Windows {
+	export enum class DetourEventType : uint32_t {
 		// FileApi
 		AreFileApisANSI,
 		CompareFileTime,

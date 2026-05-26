@@ -4,16 +4,13 @@
 
 #pragma once
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Shared Options for all Commands
 	/// </summary>
-	class SharedOptions
-	{
+	class SharedOptions {
 	public:
-		virtual ~SharedOptions()
-		{
+		virtual ~SharedOptions() {
 		}
 
 		/// <summary>

@@ -1,13 +1,11 @@
 #pragma once
 
-export namespace Monitor::Windows
-{
-	constexpr const char* TBLOG_PIPE_NAMEA = "\\\\.\\pipe\\monitor";
-	constexpr const wchar_t* TBLOG_PIPE_NAMEW = L"\\\\.\\pipe\\monitor";
-	constexpr const char* TBLOG_PIPE_NAME = TBLOG_PIPE_NAMEA;
+export namespace Monitor::Windows {
+	constexpr const char *TBLOG_PIPE_NAMEA = "\\\\.\\pipe\\monitor";
+	constexpr const wchar_t *TBLOG_PIPE_NAMEW = L"\\\\.\\pipe\\monitor";
+	constexpr const char *TBLOG_PIPE_NAME = TBLOG_PIPE_NAMEA;
 
-	struct ProcessPayload
-	{
+	struct ProcessPayload {
 		// The direct parent process id
 		DWORD nParentProcessId;
 		// The root parent process id for unique ownership
@@ -26,5 +24,6 @@ export namespace Monitor::Windows
 	};
 
 	// Shared payload guid used to get/set the payload when creating the child process
-	constexpr GUID ProcessPayloadResourceId = { 0xd8e2dc69, 0x3004, 0x453e, { 0x94, 0x15, 0x19, 0x0e, 0x79, 0xe8, 0x93, 0x52 } };
+	constexpr GUID ProcessPayloadResourceId = {
+		0xd8e2dc69, 0x3004, 0x453e, {0x94, 0x15, 0x19, 0x0e, 0x79, 0xe8, 0x93, 0x52}};
 }

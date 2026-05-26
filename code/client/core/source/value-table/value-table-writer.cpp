@@ -34,8 +34,7 @@ namespace Soup::Core {
 			WriteValueTable(stream, state);
 		}
 
-		static void WriteValueTable(std::ostream &stream,
-									const ValueTable &table) {
+		static void WriteValueTable(std::ostream &stream, const ValueTable &table) {
 			// Write the count of values
 			WriteValue(stream, static_cast<uint32_t>(table.size()));
 
@@ -74,18 +73,13 @@ namespace Soup::Core {
 					WriteValue(stream, value.AsBoolean());
 					break;
 				case ValueType::Version:
-					WriteValue(stream,
-							   std::string_view(value.AsVersion().ToString()));
+					WriteValue(stream, std::string_view(value.AsVersion().ToString()));
 					break;
 				case ValueType::PackageReference:
-					WriteValue(stream,
-							   std::string_view(
-								   value.AsPackageReference().ToString()));
+					WriteValue(stream, std::string_view(value.AsPackageReference().ToString()));
 					break;
 				case ValueType::LanguageReference:
-					WriteValue(stream,
-							   std::string_view(
-								   value.AsLanguageReference().ToString()));
+					WriteValue(stream, std::string_view(value.AsLanguageReference().ToString()));
 					break;
 				default:
 					throw std::runtime_error("Write Unknown ValueType");
@@ -115,8 +109,7 @@ namespace Soup::Core {
 
 		static void WriteValue(std::ostream &stream, bool value) {
 			uint32_t integerValue = value ? 1u : 0u;
-			stream.write(reinterpret_cast<char *>(&integerValue),
-						 sizeof(uint32_t));
+			stream.write(reinterpret_cast<char *>(&integerValue), sizeof(uint32_t));
 		}
 
 		static void WriteValue(std::ostream &stream, std::string_view value) {

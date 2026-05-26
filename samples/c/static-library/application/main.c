@@ -1,8 +1,7 @@
-#include <stdio.h>
 #include <library.h>
+#include <stdio.h>
 
-int main()
-{
+int main() {
 	printf("Hello World, %s Style!\n", GetName());
 	return 0;
 }

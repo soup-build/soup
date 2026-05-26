@@ -13,19 +13,25 @@ export module Soup.View:CustomStyle;
 
 import ftxui;
 
-namespace Soup::View
-{
-	export ftxui::Component AppAsciiArt(bool* showAsciiArt)
-	{
+namespace Soup::View {
+	export ftxui::Component AppAsciiArt(bool *showAsciiArt) {
 		auto asciiArt = ftxui::Renderer([] {
-			return ftxui::vbox({
-				ftxui::text(R"(  _________                     __________       __ __        ___)"),
-				ftxui::text(R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
-				ftxui::text(R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
-				ftxui::text(R"( /        (  (_) )  |  /  |_) )  |    |   \  |  /  |  |__/ /_/ | )"),
-				ftxui::text(R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )"),
-				ftxui::text(R"(        \/             |__|             \/                    \/ )"),
-			}) | ftxui::color(ftxui::Color::HotPink);
+			return ftxui::vbox(
+					   {
+						   ftxui::text(
+							   R"(  _________                     __________       __ __        ___)"),
+						   ftxui::text(
+							   R"( /   _____/ ____  __ ________   \______   \__ __|__|  |    __| _/)"),
+						   ftxui::text(
+							   R"( \_____  \ /  _ \|  |  \____ \   |    |  _/  |  \  |  |   / __ | )"),
+						   ftxui::text(
+							   R"( /        (  (_) )  |  /  |_) )  |    |   \  |  /  |  |__/ /_/ | )"),
+						   ftxui::text(
+							   R"(/_______  /\____/|____/|   __/   |______  /____/|__|____/\____ | )"),
+						   ftxui::text(
+							   R"(        \/             |__|             \/                    \/ )"),
+					   }) |
+				   ftxui::color(ftxui::Color::HotPink);
 		});
 
 		// Only show the art if there is plenty of room
@@ -33,10 +39,10 @@ namespace Soup::View
 		return conditionalView;
 	}
 
-	export ftxui::Component CustomToggle(std::vector<std::string>&& entries, ftxui::Ref<int> selected)
-	{
+	export ftxui::Component CustomToggle(
+		std::vector<std::string> &&entries, ftxui::Ref<int> selected) {
 		auto option = ftxui::MenuOption::Toggle();
-		option.entries_option.transform = [](const ftxui::EntryState& state) {
+		option.entries_option.transform = [](const ftxui::EntryState &state) {
 			auto element = ftxui::text(state.label);
 			if (state.focused) {
 				element |= ftxui::inverted;
@@ -59,19 +65,18 @@ namespace Soup::View
 	}
 
 	// Take a list of component, display them vertically, one column shifted to the right.
-	export ftxui::Component Inner(std::vector<ftxui::Component> children)
-	{
+	export ftxui::Component Inner(std::vector<ftxui::Component> children) {
 		auto vlist = ftxui::Container::Vertical(std::move(children));
 		return ftxui::Renderer(vlist, [vlist] {
-			return ftxui::hbox({
-				ftxui::text(" "),
-				vlist->Render(),
-			});
+			return ftxui::hbox(
+				{
+					ftxui::text(" "),
+					vlist->Render(),
+				});
 		});
 	}
 
-	export ftxui::Component CreateSingleItemMenuEntry(std::string_view value)
-	{
+	export ftxui::Component CreateSingleItemMenuEntry(std::string_view value) {
 		auto option = ftxui::MenuEntryOption();
 		option.transform = [](ftxui::EntryState state) {
 			auto prefix = ftxui::text("  ");
@@ -92,7 +97,8 @@ namespace Soup::View
 		return MenuEntry(value, option);
 	}
 
-	export ftxui::Component CreateSingleItemMenu(std::vector<std::string> entries, ftxui::Ref<int> selected) {
+	export ftxui::Component CreateSingleItemMenu(
+		std::vector<std::string> entries, ftxui::Ref<int> selected) {
 		auto option = ftxui::MenuOption::Vertical();
 		option.entries_option.transform = [](ftxui::EntryState state) {
 			auto prefix = ftxui::text(state.active ? "│ " : "  ");
@@ -110,13 +116,12 @@ namespace Soup::View
 
 		option.entries = std::move(entries);
 		option.selected = selected;
-		
+
 		auto menu = ftxui::Menu(std::move(option));
 		return menu;
 	}
 
-	ftxui::Component ScrollFrame(ftxui::Component component)
-	{
+	ftxui::Component ScrollFrame(ftxui::Component component) {
 		// Wrap the menu in a renderer to add a frame and scroll indicator
 		auto scrollFrame = ftxui::Renderer(component, [component] {
 			return component->Render() | ftxui::vscroll_indicator | ftxui::frame;

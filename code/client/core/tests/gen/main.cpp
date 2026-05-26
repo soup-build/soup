@@ -2,14 +2,14 @@
 #include <chrono>
 #include <filesystem>
 #include <iostream>
-#include <memory>
 #include <map>
+#include <memory>
 #include <optional>
-#include <unordered_map>
 #include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 import Monitor.Host;
@@ -22,11 +22,10 @@ using namespace Opal;
 using namespace Opal::System;
 using namespace Soup::Test;
 
-int main()
-{
+int main() {
 	std::cout << "Running Tests..." << std::endl;
 
-	TestState state = { 0, 0 };
+	TestState state = {0, 0};
 
 	state += RunBuildTests();
 	state += RunBuildEvaluateEngineTests();

@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Restore Command
 	/// </summary>
 	// TODO: [Verb("restore")]
-	class RestoreOptions : public SharedOptions
-	{
+	class RestoreOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to restore
@@ -23,8 +21,7 @@ namespace Soup::Client
 		/// <summary>
 		/// Show the usage details for this command
 		/// </summary>
-		static void ShowUsage()
-		{
+		static void ShowUsage() {
 			std::cout << std::endl;
 			std::cout << "Usage: soup restore <package_file>" << std::endl;
 			std::cout << "\tpackage_file: Must be a zip file." << std::endl;

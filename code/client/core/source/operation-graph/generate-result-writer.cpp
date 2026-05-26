@@ -29,10 +29,11 @@ namespace Soup::Core {
 		static constexpr uint32_t FileVersion = 1;
 
 	public:
-		static void Serialize(const GenerateResult &state,
-							  const std::set<FileId> &files,
-							  const FileSystemState &fileSystemState,
-							  std::ostream &stream) {
+		static void Serialize(
+			const GenerateResult &state,
+			const std::set<FileId> &files,
+			const FileSystemState &fileSystemState,
+			std::ostream &stream) {
 			// Write the File Header with version
 			stream.write("BGR\0", 4);
 			WriteValue(stream, FileVersion);
@@ -45,8 +46,7 @@ namespace Soup::Core {
 			for (auto fileId : files) {
 				// Write the file id + path length + path
 				WriteValue(stream, fileId);
-				WriteValue(stream,
-						   fileSystemState.GetFilePath(fileId).ToString());
+				WriteValue(stream, fileSystemState.GetFilePath(fileId).ToString());
 			}
 
 			// Write out the root operation ids
@@ -58,8 +58,7 @@ namespace Soup::Core {
 			stream.write("OPS\0", 4);
 			WriteValue(stream, static_cast<uint32_t>(operations.size()));
 			for (auto &operationValue : operations) {
-				OperationGraphWriter::WriteOperationInfo(stream,
-														 operationValue.second);
+				OperationGraphWriter::WriteOperationInfo(stream, operationValue.second);
 			}
 		}
 
@@ -74,8 +73,7 @@ namespace Soup::Core {
 
 		static void WriteValue(std::ostream &stream, bool value) {
 			uint32_t integerValue = value ? 1u : 0u;
-			stream.write(reinterpret_cast<char *>(&integerValue),
-						 sizeof(uint32_t));
+			stream.write(reinterpret_cast<char *>(&integerValue), sizeof(uint32_t));
 		}
 
 		static void WriteValue(std::ostream &stream, std::string_view value) {
@@ -83,16 +81,14 @@ namespace Soup::Core {
 			stream.write(value.data(), value.size());
 		}
 
-		static void WriteValues(std::ostream &stream,
-								const std::vector<std::string> &values) {
+		static void WriteValues(std::ostream &stream, const std::vector<std::string> &values) {
 			WriteValue(stream, static_cast<uint32_t>(values.size()));
 			for (auto &value : values) {
 				WriteValue(stream, value);
 			}
 		}
 
-		static void WriteValues(std::ostream &stream,
-								const std::vector<uint32_t> &values) {
+		static void WriteValues(std::ostream &stream, const std::vector<uint32_t> &values) {
 			WriteValue(stream, static_cast<uint32_t>(values.size()));
 			for (auto &value : values) {
 				WriteValue(stream, value);

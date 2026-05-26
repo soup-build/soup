@@ -1,9 +1,7 @@
 #pragma once
 
-namespace Monitor::Linux
-{
-	export enum class DetourEventType : uint32_t
-	{
+namespace Monitor::Linux {
+	export enum class DetourEventType : uint32_t {
 		// FileApi
 		open,
 		creat,

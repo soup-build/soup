@@ -28,85 +28,65 @@ using namespace Soup::Test;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
-namespace Soup::Core::UnitTests
-{
-	export class FileSystemStateTests
-	{
+namespace Soup::Core::UnitTests {
+	export class FileSystemStateTests {
 	public:
 		// [[Fact]]
-		void Initialize_Default()
-		{
+		void Initialize_Default() {
 			auto uut = FileSystemState();
 
+			Assert::AreEqual(0u, uut.GetMaxFileId(), "Verify max file id match expected.");
 			Assert::AreEqual(
-				0u,
-				uut.GetMaxFileId(),
-				"Verify max file id match expected.");
-			Assert::AreEqual(
-				std::unordered_map<FileId, Path>(),
-				uut.GetFiles(),
-				"Verify files match expected.");
+				std::unordered_map<FileId, Path>(), uut.GetFiles(), "Verify files match expected.");
 		}
 
 		// [[Fact]]
-		void Initialize_ListOperations_Single()
-		{
+		void Initialize_ListOperations_Single() {
 			auto uut = FileSystemState(
 				5,
-				std::unordered_map<FileId, Path>({
-					{
-						8,
-						Path("C:/Root/DoStuff.exe"),
-					}
-				}));
+				std::unordered_map<FileId, Path>({{
+					8,
+					Path("C:/Root/DoStuff.exe"),
+				}}));
 
+			Assert::AreEqual(5u, uut.GetMaxFileId(), "Verify max file id match expected.");
 			Assert::AreEqual(
-				5u,
-				uut.GetMaxFileId(),
-				"Verify max file id match expected.");
-			Assert::AreEqual(
-				std::unordered_map<FileId, Path>({
-					{
-						8,
-						Path("C:/Root/DoStuff.exe"),
-					}
-				}),
+				std::unordered_map<FileId, Path>({{
+					8,
+					Path("C:/Root/DoStuff.exe"),
+				}}),
 				uut.GetFiles(),
 				"Verify files match expected.");
 		}
 
 		// [[Fact]]
-		void GetFilePath_MissingThrows()
-		{
-			auto uut = FileSystemState(
-				10,
-				std::unordered_map<FileId, Path>({}));
+		void GetFilePath_MissingThrows() {
+			auto uut = FileSystemState(10, std::unordered_map<FileId, Path>({}));
 
-			auto exception = Assert::Throws<std::runtime_error>([&uut]() {
-				auto actual = uut.GetFilePath(8);
-			});
+			auto exception =
+				Assert::Throws<std::runtime_error>([&uut]() { auto actual = uut.GetFilePath(8); });
 
-			Assert::AreEqual("The provided file id does not exist in the files set.", exception.what(), "Verify Exception message");
+			Assert::AreEqual(
+				"The provided file id does not exist in the files set.",
+				exception.what(),
+				"Verify Exception message");
 		}
 
 		// [[Fact]]
-		void GetFilePath_Found()
-		{
+		void GetFilePath_Found() {
 			auto uut = FileSystemState(
 				10,
-				std::unordered_map<FileId, Path>({
-					{
-						8,
-						Path("C:/Root/DoStuff.exe"),
-					}}));
+				std::unordered_map<FileId, Path>({{
+					8,
+					Path("C:/Root/DoStuff.exe"),
+				}}));
 
 			auto actual = uut.GetFilePath(8);
 			Assert::AreEqual(Path("C:/Root/DoStuff.exe"), actual, "Verify path matches expected.");
 		}
 
 		// [[Fact]]
-		void GetLastWriteTime_Missing()
-		{
+		void GetLastWriteTime_Missing() {
 			// Register the test file system
 			auto fileSystem = std::make_shared<MockFileSystem>();
 			auto scopedFileSystem = ScopedFileSystemRegister(fileSystem);
@@ -114,10 +94,12 @@ namespace Soup::Core::UnitTests
 			auto uut = FileSystemState(
 				10,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/DoStuff.exe") },
+					{2, Path("C:/Root/DoStuff.exe")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({}));
 
 			auto lastWriteTime = uut.GetLastWriteTime(2);
 
@@ -136,18 +118,19 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void GetLastWriteTime_Found()
-		{
+		void GetLastWriteTime_Found() {
 			auto setLastWriteTime = std::chrono::clock_cast<std::chrono::file_clock>(
-				std::chrono::sys_days(May/22/2015) + 9h + 11min);
+				std::chrono::sys_days(May / 22 / 2015) + 9h + 11min);
 			auto uut = FileSystemState(
 				10,
 				std::unordered_map<FileId, Path>({
-					{ 2, Path("C:/Root/DoStuff.exe") },
+					{2, Path("C:/Root/DoStuff.exe")},
 				}),
 				{},
-				std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
-					{ 2, setLastWriteTime },
+				std::unordered_map<
+					FileId,
+					std::optional<std::chrono::time_point<std::chrono::file_clock>>>({
+					{2, setLastWriteTime},
 				}));
 
 			auto lastWriteTime = uut.GetLastWriteTime(2);
@@ -159,11 +142,8 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void TryFindFileId_Missing()
-		{
-			auto uut = FileSystemState(
-				10,
-				std::unordered_map<FileId, Path>({}));
+		void TryFindFileId_Missing() {
+			auto uut = FileSystemState(10, std::unordered_map<FileId, Path>({}));
 
 			FileId fileId;
 			auto result = uut.TryFindFileId(Path("C:/Root/DoStuff.exe"), fileId);
@@ -172,15 +152,13 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void TryFindFileId_Found()
-		{
+		void TryFindFileId_Found() {
 			auto uut = FileSystemState(
 				10,
-				std::unordered_map<FileId, Path>({
-					{
-						8,
-						Path("C:/Root/DoStuff.exe"),
-					}}));
+				std::unordered_map<FileId, Path>({{
+					8,
+					Path("C:/Root/DoStuff.exe"),
+				}}));
 
 			FileId fileId;
 			auto result = uut.TryFindFileId(Path("C:/Root/DoStuff.exe"), fileId);
@@ -190,15 +168,13 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void ToFileId_Existing()
-		{
+		void ToFileId_Existing() {
 			auto uut = FileSystemState(
 				10,
-				std::unordered_map<FileId, Path>({
-					{
-						8,
-						Path("C:/Root/DoStuff.exe"),
-					}}));
+				std::unordered_map<FileId, Path>({{
+					8,
+					Path("C:/Root/DoStuff.exe"),
+				}}));
 
 			FileId fileId = uut.ToFileId(Path("./DoStuff.exe"), Path("C:/Root/"));
 
@@ -216,15 +192,13 @@ namespace Soup::Core::UnitTests
 		}
 
 		// [[Fact]]
-		void ToFileId_Unknown()
-		{
+		void ToFileId_Unknown() {
 			auto uut = FileSystemState(
 				10,
-				std::unordered_map<FileId, Path>({
-					{
-						8,
-						Path("C:/Root/DoStuff.exe"),
-					}}));
+				std::unordered_map<FileId, Path>({{
+					8,
+					Path("C:/Root/DoStuff.exe"),
+				}}));
 
 			FileId fileId = uut.ToFileId(Path("./DoStuff2.exe"), Path("C:/Root/"));
 

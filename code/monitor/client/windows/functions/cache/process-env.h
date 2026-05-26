@@ -1,18 +1,17 @@
 #pragma once
 
-namespace Monitor::Windows::Functions::Cache::ProcessEnv
-{
+namespace Monitor::Windows::Functions::Cache::ProcessEnv {
 	/// <summary>
 	/// Searches for a specified file in a specified path.
 	/// </summary>
-	DWORD (WINAPI* SearchPathA)(
+	DWORD(WINAPI *SearchPathA)(
 		LPCSTR lpPath,
 		LPCSTR lpFileName,
 		LPCSTR lpExtension,
 		DWORD nBufferLength,
 		LPSTR lpBuffer,
 		LPSTR *lpFilePart) = ::SearchPathA;
-	DWORD (WINAPI* SearchPathW)(
+	DWORD(WINAPI *SearchPathW)(
 		LPCWSTR lpPath,
 		LPCWSTR lpFileName,
 		LPCWSTR lpExtension,

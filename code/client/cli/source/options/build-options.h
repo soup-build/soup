@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Build Command Options
 	/// </summary>
 	// TODO: [[Verb("build")]]
-	class BuildOptions : public SharedOptions
-	{
+	class BuildOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to build
@@ -29,25 +27,29 @@ namespace Soup::Client
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip the build generate phase
 		/// </summary>
-		// [[Args::Option("skipGenerate", Default = false, HelpText = "Do not run the build generate phase.")]]
+		// [[Args::Option("skipGenerate", Default = false, HelpText = "Do not run the build generate
+		// phase.")]]
 		bool SkipGenerate;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to skip the build evaluate phase
 		/// </summary>
-		// [[Args::Option("skipEvaluate", Default = false, HelpText = "Do not run the build evaluate phase.")]]
+		// [[Args::Option("skipEvaluate", Default = false, HelpText = "Do not run the build evaluate
+		// phase.")]]
 		bool SkipEvaluate;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to disable monitoring
 		/// </summary>
-		// [[Args::Option("disableMonitor", Default = false, HelpText = "Do not monitor usage for incremental builds.")]]
+		// [[Args::Option("disableMonitor", Default = false, HelpText = "Do not monitor usage for
+		// incremental builds.")]]
 		bool DisableMonitor;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to partial monitoring
 		/// </summary>
-		// [[Args::Option("partialMonitor", Default = false, HelpText = "Do not monitor usage for incremental builds.")]]
+		// [[Args::Option("partialMonitor", Default = false, HelpText = "Do not monitor usage for
+		// incremental builds.")]]
 		bool PartialMonitor;
 
 		/// <summary>

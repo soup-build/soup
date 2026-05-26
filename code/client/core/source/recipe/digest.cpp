@@ -54,24 +54,30 @@ namespace Soup::Core {
 		/// </summary>
 		Digest()
 			: _function(),
-			  _hash() {}
+			  _hash() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Digest"/> class.
 		/// </summary>
 		Digest(std::string function, std::string hash)
 			: _function(std::move(function)),
-			  _hash(std::move(hash)) {}
+			  _hash(std::move(hash)) {
+		}
 
 		/// <summary>
 		/// Gets the function.
 		/// </summary>
-		const std::string &GetFunction() const { return _function; }
+		const std::string &GetFunction() const {
+			return _function;
+		}
 
 		/// <summary>
 		/// Gets the hash.
 		/// </summary>
-		const std::string &GetHash() const { return _hash; }
+		const std::string &GetHash() const {
+			return _hash;
+		}
 
 		/// <summary>
 		/// Equality operator

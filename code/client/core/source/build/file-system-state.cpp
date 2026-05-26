@@ -39,8 +39,7 @@ export namespace Soup::Core {
 
 	struct DirectoryState {
 		std::set<std::string> Files;
-		std::unordered_map<std::string, DirectoryState, string_hash,
-						   std::equal_to<>>
+		std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>
 			ChildDirectories;
 	};
 
@@ -57,13 +56,10 @@ export namespace Soup::Core {
 		std::unordered_map<FileId, Path> _files;
 		std::unordered_map<std::string, FileId> _fileLookup;
 
-		std::unordered_map<std::string, DirectoryState, string_hash,
-						   std::equal_to<>>
+		std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>
 			_directoryLookup;
 
-		std::unordered_map<
-			FileId,
-			std::optional<std::chrono::time_point<std::chrono::file_clock>>>
+		std::unordered_map<FileId, std::optional<std::chrono::time_point<std::chrono::file_clock>>>
 			_writeCache;
 
 		// Thread safe hammer
@@ -80,29 +76,29 @@ export namespace Soup::Core {
 			  _fileLookup(),
 			  _directoryLookup(),
 			  _writeCache(),
-			  _mutex() {}
+			  _mutex() {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileSystemState"/>
 		/// class.
 		/// </summary>
-		FileSystemState(FileId maxFileId,
-						std::unordered_map<FileId, Path> files)
-			: FileSystemState(maxFileId, std::move(files), {}, {}) {}
+		FileSystemState(FileId maxFileId, std::unordered_map<FileId, Path> files)
+			: FileSystemState(maxFileId, std::move(files), {}, {}) {
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileSystemState"/>
 		/// class.
 		/// </summary>
 		FileSystemState(
-			FileId maxFileId, std::unordered_map<FileId, Path> files,
-			std::unordered_map<std::string, DirectoryState, string_hash,
-							   std::equal_to<>>
+			FileId maxFileId,
+			std::unordered_map<FileId, Path> files,
+			std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>
 				directoryLookup,
 			std::unordered_map<
 				FileId,
-				std::optional<std::chrono::time_point<std::chrono::file_clock>>>
-				writeCache)
+				std::optional<std::chrono::time_point<std::chrono::file_clock>>> writeCache)
 			: _maxFileId(maxFileId),
 			  _files(std::move(files)),
 			  _fileLookup(),
@@ -113,8 +109,7 @@ export namespace Soup::Core {
 			for (const auto &[key, value] : _files) {
 				auto insertResult = _fileLookup.emplace(value.ToString(), key);
 				if (!insertResult.second)
-					throw std::runtime_error(
-						"The file was not unique in the provided set.");
+					throw std::runtime_error("The file was not unique in the provided set.");
 			}
 		}
 
@@ -130,7 +125,9 @@ export namespace Soup::Core {
 		/// Get the max unique file id
 		/// Note: Used to write state at end
 		/// </summary>
-		FileId GetMaxFileId() const { return _maxFileId; }
+		FileId GetMaxFileId() const {
+			return _maxFileId;
+		}
 
 		/// <summary>
 		/// Update the write times for the provided set of files
@@ -145,8 +142,8 @@ export namespace Soup::Core {
 		/// <summary>
 		/// Find the write time for a given file id
 		/// </summary>
-		std::optional<std::chrono::time_point<std::chrono::file_clock>>
-		GetLastWriteTime(FileId file) {
+		std::optional<std::chrono::time_point<std::chrono::file_clock>> GetLastWriteTime(
+			FileId file) {
 			{
 				// Attempt read only check for existing entry
 				auto lock = std::shared_lock<std::shared_mutex>(_mutex);
@@ -162,8 +159,8 @@ export namespace Soup::Core {
 		/// <summary>
 		/// Convert a set of file paths to file ids
 		/// </summary>
-		std::vector<FileId> ToFileIds(const std::vector<Path> &files,
-									  const Path &workingDirectory) {
+		std::vector<FileId> ToFileIds(
+			const std::vector<Path> &files, const Path &workingDirectory) {
 			auto result = std::vector<FileId>();
 			for (auto &file : files) {
 				result.push_back(ToFileId(file, workingDirectory));
@@ -176,8 +173,7 @@ export namespace Soup::Core {
 		/// Convert a file path to file id
 		/// </summary>
 		FileId ToFileId(const Path &file, const Path &workingDirectory) {
-			auto &absolutePath =
-				file.HasRoot() ? file : workingDirectory + file;
+			auto &absolutePath = file.HasRoot() ? file : workingDirectory + file;
 			return ToFileId(absolutePath);
 		}
 
@@ -185,8 +181,7 @@ export namespace Soup::Core {
 			auto lock = std::unique_lock<std::shared_mutex>(_mutex);
 
 			if (!file.HasRoot())
-				throw std::runtime_error(
-					"File paths must be absolute to resolve to an id");
+				throw std::runtime_error("File paths must be absolute to resolve to an id");
 
 			// Check if the file is already known
 			FileId result;
@@ -195,11 +190,11 @@ export namespace Soup::Core {
 				result = ++_maxFileId;
 				auto insertResult = _files.emplace(result, file);
 				if (!insertResult.second)
-					throw std::runtime_error("The provided file id already "
-											 "exists in the file system state");
+					throw std::runtime_error(
+						"The provided file id already "
+						"exists in the file system state");
 
-				auto insertLookupResult =
-					_fileLookup.emplace(file.ToString(), result);
+				auto insertLookupResult = _fileLookup.emplace(file.ToString(), result);
 				if (!insertLookupResult.second)
 					throw std::runtime_error(
 						"The file was not unique even though we just failed to "
@@ -221,8 +216,7 @@ export namespace Soup::Core {
 		/// <summary>
 		/// Find a file path
 		/// </summary>
-		std::vector<Path>
-		GetFilePaths(const std::vector<FileId> &fileIds) const {
+		std::vector<Path> GetFilePaths(const std::vector<FileId> &fileIds) const {
 			auto lock = std::shared_lock<std::shared_mutex>(_mutex);
 
 			auto result = std::vector<Path>();
@@ -247,8 +241,7 @@ export namespace Soup::Core {
 		/// </summary>
 		void PreloadDirectory(const Path &directory, bool trackDirectories) {
 #ifdef TRACE_FILE_SYSTEM_STATE
-			std::cout << "PreloadDirectory: " << directory.ToString()
-					  << std::endl;
+			std::cout << "PreloadDirectory: " << directory.ToString() << std::endl;
 #endif
 
 			FileId directoryId;
@@ -258,49 +251,38 @@ export namespace Soup::Core {
 				// Add the requested file as null
 				// This will be replaced if the file exists with the find all
 				// callback
-				auto insertResult =
-					_writeCache.insert_or_assign(directoryId, std::nullopt);
+				auto insertResult = _writeCache.insert_or_assign(directoryId, std::nullopt);
 
 				std::function<void(
-					const Path &file,
-					std::chrono::time_point<std::chrono::file_clock>)>
-					callback =
-						[&](const Path &file,
-							std::chrono::time_point<std::chrono::file_clock>
-								lastWriteTime) {
-							auto &absolutePath =
-								file.HasRoot() ? file : directory + file;
+					const Path &file, std::chrono::time_point<std::chrono::file_clock>)>
+					callback = [&](const Path &file,
+								   std::chrono::time_point<std::chrono::file_clock> lastWriteTime) {
+						auto &absolutePath = file.HasRoot() ? file : directory + file;
 
 #ifdef TRACE_FILE_SYSTEM_STATE
-							std::cout << "PreloadDirectory: File "
-									  << file.ToString() << std::endl;
+						std::cout << "PreloadDirectory: File " << file.ToString() << std::endl;
 #endif
 
-							// Recursively load child directories
-							if (!file.IsEmpty() &&
-								!absolutePath.HasFileName()) {
-								PreloadDirectory(absolutePath,
-												 trackDirectories);
-							}
+						// Recursively load child directories
+						if (!file.IsEmpty() && !absolutePath.HasFileName()) {
+							PreloadDirectory(absolutePath, trackDirectories);
+						}
 
-							if (trackDirectories) {
-								UpdateDirectoryLookup(absolutePath);
-							}
+						if (trackDirectories) {
+							UpdateDirectoryLookup(absolutePath);
+						}
 
-							FileId fileId = ToFileId(absolutePath);
-							auto insertResult = _writeCache.insert_or_assign(
-								fileId, lastWriteTime);
-						};
+						FileId fileId = ToFileId(absolutePath);
+						auto insertResult = _writeCache.insert_or_assign(fileId, lastWriteTime);
+					};
 
 				// Load the write times for all files in the directory
 				// This optimization assumes that most files in a directory are
 				// relevant to the build and on windows it is a lot faster to
 				// iterate over the files instead of making individual calls
-				if (!System::IFileSystem::Current()
-						 .TryGetDirectoryFilesLastWriteTime(directory,
-															callback)) {
-					Log::Info("Preload Directory Missing: {}",
-							  directory.ToString());
+				if (!System::IFileSystem::Current().TryGetDirectoryFilesLastWriteTime(
+						directory, callback)) {
+					Log::Info("Preload Directory Missing: {}", directory.ToString());
 				}
 			}
 		}
@@ -308,12 +290,11 @@ export namespace Soup::Core {
 		const DirectoryState &GetDirectoryState(const Path &directory) const {
 			auto lock = std::shared_lock<std::shared_mutex>(_mutex);
 
-			auto activeDirectory =
-				GetDirectoryState(_directoryLookup, directory.GetRoot());
+			auto activeDirectory = GetDirectoryState(_directoryLookup, directory.GetRoot());
 			const auto directories = directory.DecomposeDirectories();
 			for (auto currentDirectory : directories) {
-				activeDirectory = GetDirectoryState(
-					activeDirectory->ChildDirectories, currentDirectory);
+				activeDirectory =
+					GetDirectoryState(activeDirectory->ChildDirectories, currentDirectory);
 			}
 
 			return *activeDirectory;
@@ -341,46 +322,42 @@ export namespace Soup::Core {
 			if (findResult != _files.end()) {
 				return findResult->second;
 			} else {
-				throw std::runtime_error(
-					"The provided file id does not exist in the files set.");
+				throw std::runtime_error("The provided file id does not exist in the files set.");
 			}
 		}
 
 		const DirectoryState *GetDirectoryState(
-			const std::unordered_map<std::string, DirectoryState, string_hash,
-									 std::equal_to<>> &activeDirectory,
+			const std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>
+				&activeDirectory,
 			const std::string_view name) const {
 			auto findResult = activeDirectory.find(name);
 			if (findResult != activeDirectory.end()) {
 				return &findResult->second;
 			} else {
-				throw std::runtime_error(
-					std::format("Missing directory state {}", name));
+				throw std::runtime_error(std::format("Missing directory state {}", name));
 			}
 		}
 
 		DirectoryState *EnsureDirectoryExists(
-			std::unordered_map<std::string, DirectoryState, string_hash,
-							   std::equal_to<>> &activeDirectory,
+			std::unordered_map<std::string, DirectoryState, string_hash, std::equal_to<>>
+				&activeDirectory,
 			const std::string_view name) {
 			auto findResult = activeDirectory.find(name);
 			if (findResult != activeDirectory.end()) {
 				return &findResult->second;
 			} else {
-				auto insertResult =
-					activeDirectory.emplace(name, DirectoryState());
+				auto insertResult = activeDirectory.emplace(name, DirectoryState());
 				return &insertResult.first->second;
 			}
 		}
 
 		void UpdateDirectoryLookup(const Path &file) {
-			auto activeDirectory =
-				EnsureDirectoryExists(_directoryLookup, file.GetRoot());
+			auto activeDirectory = EnsureDirectoryExists(_directoryLookup, file.GetRoot());
 
 			const auto directories = file.DecomposeDirectories();
 			for (auto directory : directories) {
-				activeDirectory = EnsureDirectoryExists(
-					activeDirectory->ChildDirectories, directory);
+				activeDirectory =
+					EnsureDirectoryExists(activeDirectory->ChildDirectories, directory);
 			}
 
 			if (file.HasFileName()) {
@@ -395,8 +372,7 @@ export namespace Soup::Core {
 			_writeCache.erase(fileId);
 		}
 
-		std::string
-		format(std::chrono::time_point<std::chrono::file_clock> time) {
+		std::string format(std::chrono::time_point<std::chrono::file_clock> time) {
 #ifdef _WIN32
 			return std::format("{:%Y-%m-%d %H:%M:%S %z}", time);
 #else
@@ -413,8 +389,8 @@ export namespace Soup::Core {
 		/// <summary>
 		/// Update the write times for the provided file
 		/// </summary>
-		std::optional<std::chrono::time_point<std::chrono::file_clock>>
-		CheckFileWriteTime(FileId fileId) {
+		std::optional<std::chrono::time_point<std::chrono::file_clock>> CheckFileWriteTime(
+			FileId fileId) {
 			// Acquire exclusive lock to update cache
 			auto lock = std::unique_lock<std::shared_mutex>(_mutex);
 
@@ -422,25 +398,22 @@ export namespace Soup::Core {
 
 			// The file does not exist in the cache
 			// Load the actual value and save it for later
-			std::optional<std::chrono::time_point<std::chrono::file_clock>>
-				lastWriteTime = std::nullopt;
+			std::optional<std::chrono::time_point<std::chrono::file_clock>> lastWriteTime =
+				std::nullopt;
 			std::chrono::time_point<std::chrono::file_clock> lastWriteTimeValue;
-			if (System::IFileSystem::Current().TryGetLastWriteTime(
-					filePath, lastWriteTimeValue)) {
+			if (System::IFileSystem::Current().TryGetLastWriteTime(filePath, lastWriteTimeValue)) {
 				lastWriteTime = lastWriteTimeValue;
 			}
 
 #ifdef TRACE_FILE_SYSTEM_STATE
 			if (lastWriteTime.has_value())
-				std::cout << "CheckFileWriteTime: " << filePath.ToString()
-						  << " " << format(lastWriteTime.value()) << std::endl;
+				std::cout << "CheckFileWriteTime: " << filePath.ToString() << " "
+						  << format(lastWriteTime.value()) << std::endl;
 			else
-				std::cout << "CheckFileWriteTime: " << filePath.ToString()
-						  << " NONE" << std::endl;
+				std::cout << "CheckFileWriteTime: " << filePath.ToString() << " NONE" << std::endl;
 #endif
 
-			auto insertResult =
-				_writeCache.insert_or_assign(fileId, lastWriteTime);
+			auto insertResult = _writeCache.insert_or_assign(fileId, lastWriteTime);
 			return lastWriteTime;
 		}
 	};

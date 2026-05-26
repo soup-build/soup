@@ -10,18 +10,15 @@ module;
 export module Soup.View:AppState;
 import :GraphLayout;
 
-namespace Soup::View
-{
-	export struct PackageState
-	{
+namespace Soup::View {
+	export struct PackageState {
 		int SelectedPreprocessorTask;
 		int SelectedTask;
 		int SelectedPreprocessor;
 		int SelectedOperation;
 	};
 
-	export struct AppState
-	{
+	export struct AppState {
 		bool ShowAsciiArt;
 
 		// 0 show list 1 show graph

@@ -14,12 +14,13 @@ import Soup.Core;
 using namespace Opal;
 using namespace Soup::Core;
 
-export std::optional<OperationGraph>
-LoadPackage(FileSystemState &fileSystemState, PackageProvider &packageProvider,
-			int graphId, int packageId) {
+export std::optional<OperationGraph> LoadPackage(
+	FileSystemState &fileSystemState,
+	PackageProvider &packageProvider,
+	int graphId,
+	int packageId) {
 	// Get the target directory
-	const auto &targetDirectory =
-		packageProvider.GetTargetDirectory(graphId, packageId);
+	const auto &targetDirectory = packageProvider.GetTargetDirectory(graphId, packageId);
 
 	auto soupTargetDirectory = targetDirectory + Path("./.soup/");
 
@@ -34,12 +35,10 @@ LoadPackage(FileSystemState &fileSystemState, PackageProvider &packageProvider,
 			// Check for the optional evaluate graph if the initial phase was
 			// preprocessor
 			auto generatePhase2ResultFile =
-				soupTargetDirectory +
-				Build::Constants::GeneratePhase2ResultFileName();
+				soupTargetDirectory + Build::Constants::GeneratePhase2ResultFileName();
 			auto generatePhase2Result = OperationGraph();
-			if (OperationGraphManager::TryLoadState(generatePhase2ResultFile,
-													generatePhase2Result,
-													fileSystemState)) {
+			if (OperationGraphManager::TryLoadState(
+					generatePhase2ResultFile, generatePhase2Result, fileSystemState)) {
 				return generatePhase2Result;
 			}
 		} else {

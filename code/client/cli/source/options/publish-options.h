@@ -5,14 +5,12 @@
 #pragma once
 #include "shared-options.h"
 
-namespace Soup::Client
-{
+namespace Soup::Client {
 	/// <summary>
 	/// Publish Command Options
 	/// </summary>
 	// TODO: [Verb("publish")]
-	class PublishOptions : public SharedOptions
-	{
+	class PublishOptions : public SharedOptions {
 	public:
 		/// <summary>
 		/// Gets or sets the path to publish

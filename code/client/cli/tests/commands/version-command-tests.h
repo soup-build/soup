@@ -5,17 +5,14 @@
 #pragma once
 #include "version-command.h"
 
-namespace Soup::Client::UnitTests
-{
+namespace Soup::Client::UnitTests {
 	/// <summary>
 	/// Version Command Tests
 	/// </summary>
-	class VersionCommandTests
-	{
+	class VersionCommandTests {
 	public:
 		// [[Fact]]
-		void Initialize()
-		{
+		void Initialize() {
 			auto options = VersionOptions();
 			auto uut = VersionCommand(options);
 		}

@@ -3,26 +3,26 @@
 #include "functions/overrides/file-api.h"
 #include "functions/overrides/process-api.h"
 
-#include "connection-manager.h"
 #include "attach-detours.h"
+#include "connection-manager.h"
 
-namespace Monitor::Linux
-{
-	class Startup
-	{
+namespace Monitor::Linux {
+	class Startup {
 	public:
-		Startup()
-		{
-			try
-			{
+		Startup() {
+			try {
 				DebugTrace("Startup");
 				size_t traceProcessId = 123; // s_Payload.nTraceProcessId;
 
 				// Extract the allowed read/write directories
 				auto workingDirectory = Opal::Path(); // Opal::Path(s_Payload.zWorkingDirectory);
-				bool enableAccessChecks = false; //s_Payload.EnableAccessChecks;
-				auto allowedReadDirectories = std::vector<std::string>(); // ExtractStringList(s_Payload.zReadAccessDirectories, s_Payload.cReadAccessDirectories);
-				auto allowedWriteDirectories = std::vector<std::string>(); // ExtractStringList(s_Payload.zWriteAccessDirectories, s_Payload.cWriteAccessDirectories);
+				bool enableAccessChecks = false; // s_Payload.EnableAccessChecks;
+				auto allowedReadDirectories = std::vector<
+					std::string>(); // ExtractStringList(s_Payload.zReadAccessDirectories,
+									// s_Payload.cReadAccessDirectories);
+				auto allowedWriteDirectories = std::vector<
+					std::string>(); // ExtractStringList(s_Payload.zWriteAccessDirectories,
+									// s_Payload.cWriteAccessDirectories);
 
 				AttachDetours();
 
@@ -34,18 +34,14 @@ namespace Monitor::Linux
 				// 	std::move(workingDirectory),
 				// 	std::move(allowedReadDirectories),
 				// 	std::move(allowedWriteDirectories));
-			}
-			catch (const std::exception& ex)
-			{
+			} catch (const std::exception &ex) {
 				{
 					auto message = MessageSender(MessageType::Error);
 					message.AppendValue(ex.what());
 				}
 
 				exit(-1234);
-			}
-			catch (...)
-			{
+			} catch (...) {
 				{
 					auto message = MessageSender(MessageType::Error);
 					message.AppendValue("Unknown error attaching detours");
@@ -56,11 +52,10 @@ namespace Monitor::Linux
 		}
 
 	private:
-		void DebugTrace(std::string_view message)
-		{
-	#ifdef TRACE_DETOUR_CLIENT
+		void DebugTrace(std::string_view message) {
+#ifdef TRACE_DETOUR_CLIENT
 			std::cout << "DETOUR-CLIENT: " << message << std::endl;
-	#endif
+#endif
 		}
 	};
 }
