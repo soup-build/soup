@@ -2,6 +2,7 @@ Version: 6
 Closure: {
 	'C++': {
 		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: '/home/mwasplund/repos/opal/source/', Build: '0', Tool: '0' }
 		'soup-bsp': { Version: './', Build: '0', Tool: '0' }
 	}
 }

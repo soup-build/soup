@@ -7,9 +7,12 @@ module;
 export module BSP:Connection;
 import :IInStream;
 import :IOutStream;
-import :Message;
-
+import :Request;
+import :Response;
+import Opal;
 import json11;
+
+using namespace Opal;
 
 namespace BSP {
 	struct HeaderPart {
@@ -28,12 +31,14 @@ namespace BSP {
 			  m_outStream(std::move(outStream)) {
 		}
 
-		std::vector<Message> ReadNextMessage() {
+		std::vector<Request> ReadNextRequest() {
+			Log::Info("ReadNextRequest");
 			auto header = TryReadNextHeader();
 
 			std::optional<int> contentLength;
 			while (header.has_value()) {
 				if (header->Name == "Content-Length") {
+					Log::Info("Content length header found");
 					contentLength = std::stoi(header->Value);
 				} else if (header->Name == "Content-Type") {
 					// TODO
@@ -41,34 +46,93 @@ namespace BSP {
 				} else {
 					throw std::runtime_error("Unknown message header: " + header->Name);
 				}
+
+				header = TryReadNextHeader();
 			}
 
-			if (contentLength.has_value()) {
+			Log::Info("End of headers");
+
+			if (!contentLength.has_value()) {
 				throw std::runtime_error("Missing required header part \"Content-Length\"");
 			}
 
 			auto content = m_inStream->Read(*contentLength);
+			Log::Info(content);
 
 			// Parse the json
 			std::string errorMessage;
 			auto json = json11::Json::parse(content, errorMessage);
 
 			if (json.is_object()) {
-				return {ParseMessage(json)};
+				return {ParseRequest(json.object_items())};
 			} else if (json.is_array()) {
-				return ParseMessageBatch(json.array_items());
+				return ParseRequestBatch(json.array_items());
 			} else {
-				throw std::runtime_error("Message content must be a json object or array.");
+				throw std::runtime_error("Request content must be a json object or array.");
 			}
 		}
 
-		void SendMessage(Message &message) {
+		void SendResponse(Response &&response) {
+			Log::Info("SendResponse");
+			auto jsonRPC = json11::Json::object(
+				{
+					{"jsonrpc", "2.0"},
+					{"id", std::move(response.Id)},
+				});
+
+			if (response.Result.has_value()) {
+				jsonRPC["result"] = std::move(response.Result.value());
+			} else if (response.Error.has_value()) {
+				jsonRPC["error"] = std::move(response.Error.value());
+			} else {
+				throw std::runtime_error("Response must have a result of an error");
+			}
+
+			auto jsonMessage = json11::Json(std::move(jsonRPC));
+
+			auto jsonContent = jsonMessage.dump();
+			Log::Info(jsonContent);
+
 			m_outStream->Write("Content-Length: ");
+			m_outStream->Write(std::to_string(jsonContent.size()));
+			m_outStream->Write("\r\n");
+
+			m_outStream->Write("\r\n");
+
+			m_outStream->Write(jsonContent);
+			m_outStream->Flush();
+		}
+		void SendRequest(Request &&request) {
+			Log::Info("SendRequest");
+			auto jsonRPC = json11::Json::object(
+				{
+					{"jsonrpc", "2.0"},
+					{"method", std::move(request.Method)},
+					{"params", std::move(request.Params)},
+				});
+
+			if (request.Id.has_value()) {
+				jsonRPC["id"] = std::move(request.Id.value());
+			}
+
+			auto jsonMessage = json11::Json(std::move(jsonRPC));
+
+			auto jsonContent = jsonMessage.dump();
+			Log::Info(jsonContent);
+
+			m_outStream->Write("Content-Length: ");
+			m_outStream->Write(std::to_string(jsonContent.size()));
+			m_outStream->Write("\r\n");
+
+			m_outStream->Write("\r\n");
+
+			m_outStream->Write(jsonContent);
 			m_outStream->Flush();
 		}
 
 	private:
 		std::optional<HeaderPart> TryReadNextHeader() {
+			Log::Info("TryReadNextHeader");
 			auto headerLine = m_inStream->ReadLine();
 
 			if (headerLine.length() == 0)
@@ -83,23 +147,29 @@ namespace BSP {
 			});
 		}
 
-		Message ParseMessage(const json11::Json &message) {
-			if (message["jsonrpc"].string_value() != "2.0") {
+		Request ParseRequest(const json11::Json::object &request) {
+			Log::Info("ParseRequest");
+			if (request.at("jsonrpc").string_value() != "2.0") {
 				throw std::runtime_error(
-					"Unsupported jsonrpc version: " + message["jsonrpc"].dump());
+					"Unsupported jsonrpc version: " + request.at("jsonrpc").dump());
 			}
 
-			std::optional<std::string> id = std::nullopt;
+			std::optional<int> id = std::nullopt;
 
-			auto method = message["method"].string_value();
+			if (request.contains("id"))
+				id = request.at("id").int_value();
 
-			return Message(std::move(id), std::move(method));
+			auto method = request.at("method").string_value();
+			auto params = request.at("params");
+
+			return Request(std::move(id), std::move(method), std::move(params));
 		}
 
-		std::vector<Message> ParseMessageBatch(const json11::Json::array &batch) {
-			auto result = std::vector<Message>();
-			for (const auto &message : batch) {
-				result.push_back(ParseMessage(message));
+		std::vector<Request> ParseRequestBatch(const json11::Json::array &batch) {
+			Log::Info("ParseRequestBatch");
+			auto result = std::vector<Request>();
+			for (const auto &request : batch) {
+				result.push_back(ParseRequest(request.object_items()));
 			}
 			return result;
 		}
