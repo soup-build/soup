@@ -1,0 +1,40 @@
+Setup
+ReadNextRequest
+TryReadNextHeader
+StdInStream::Readline
+Content-Length: 5021
+Content length header found
+TryReadNextHeader
+StdInStream::Readline
+
+End of headers
+StdInStream::Read
+{"jsonrpc":"2.0","method":"initialize","params":{"trace":"off","processId":2578102,"workDoneToken":"1","capabilities":{"general":{"positionEncodings":["utf-8","utf-16","utf-32"]},"workspace":{"didChangeWatchedFiles":{"relativePatternSupport":true,"dynamicRegistration":false},"workspaceEdit":{"resourceOperations":["rename","create","delete"],"normalizesLineEndings":true,"changeAnnotationSupport":{"groupsOnLabel":true}},"symbol":{"symbolKind":{"valueSet":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]},"dynamicRegistration":false},"configuration":true,"fileOperations":{"willRename":false,"didRename":false,"willCreate":false,"didCreate":false,"dynamicRegistration":false,"willDelete":false,"didDelete":false},"diagnostics":{"refreshSupport":true},"didChangeConfiguration":{"dynamicRegistration":false},"semanticTokens":{"refreshSupport":true},"workspaceFolders":true,"inlayHint":{"refreshSupport":true},"applyEdit":true,"codeLens":{"refreshSupport":true}},"textDocument":{"onTypeFormatting":{"dynamicRegistration":false},"linkedEditingRange":{"dynamicRegistration":false},"selectionRange":{"dynamicRegistration":false},"completion":{"completionList":{"itemDefaults":["commitCharacters","editRange","insertTextFormat","insertTextMode","data"]},"contextSupport":true,"insertTextMode":1,"dynamicRegistration":false,"completionItemKind":{"valueSet":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]},"completionItem":{"snippetSupport":true,"labelDetailsSupport":true,"insertReplaceSupport":true,"deprecatedSupport":true,"preselectSupport":false,"documentationFormat":["markdown","plaintext"],"tagSupport":{"valueSet":[1]},"insertTextModeSupport":{"valueSet":[1]},"commitCharactersSupport":false,"resolveSupport":{"properties":["documentation","detail","additionalTextEdits","command","data"]}}},"callHierarchy":{"dynamicRegistration":false},"rename":{"dynamicRegistration":true,"prepareSupport":true,"honorsChangeAnnotations":true},"references":{"dynamicRegistration":false},"implementation":{"linkSupport":true},"documentSymbol":{"tagSupport":{"valueSet":[1]},"dynamicRegistration":false,"symbolKind":{"valueSet":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]},"hierarchicalDocumentSymbolSupport":true},"hover":{"contentFormat":["markdown","plaintext"],"dynamicRegistration":true},"diagnostic":{"dataSupport":true,"tagSupport":{"valueSet":[1,2]},"dynamicRegistration":true,"relatedInformation":true,"relatedDocumentSupport":true},"synchronization":{"willSaveWaitUntil":true,"dynamicRegistration":false,"willSave":true,"didSave":true},"documentHighlight":{"dynamicRegistration":false},"signatureHelp":{"signatureInformation":{"noActiveParameterSupport":true,"activeParameterSupport":true,"documentationFormat":["markdown","plaintext"],"parameterInformation":{"labelOffsetSupport":true}},"dynamicRegistration":false},"colorProvider":{"dynamicRegistration":true},"inlineCompletion":{"dynamicRegistration":false},"typeDefinition":{"linkSupport":true},"publishDiagnostics":{"dataSupport":true,"tagSupport":{"valueSet":[1,2]},"relatedInformation":true},"rangeFormatting":{"rangesSupport":true,"dynamicRegistration":true},"codeLens":{"resolveSupport":{"properties":["command"]},"dynamicRegistration":false},"formatting":{"dynamicRegistration":true},"foldingRange":{"foldingRange":{"collapsedText":true},"dynamicRegistration":false,"lineFoldingOnly":true,"foldingRangeKind":{"valueSet":["comment","imports","region"]}},"declaration":{"linkSupport":true},"semanticTokens":{"multilineTokenSupport":true,"requests":{"range":true,"full":{"delta":true}},"tokenTypes":["namespace","type","class","enum","interface","struct","typeParameter","parameter","variable","property","enumMember","event","function","method","macro","keyword","modifier","comment","string","number","regexp","operator","decorator"],"formats":["relative"],"tokenModifiers":["declaration","definition","readonly","static","deprecated","abstract","async","modification","documentation","defaultLibrary"],"overlappingTokenSupport":true,"dynamicRegistration":false,"augmentsSyntaxTokens":true,"serverCancelSupport":false},"documentLink":{"tooltipSupport":false,"dynamicRegistration":false},"inlayHint":{"resolveSupport":{"properties":["textEdits","tooltip","location","command"]},"dynamicRegistration":true},"definition":{"linkSupport":true,"dynamicRegistration":true},"codeAction":{"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["","quickfix","refactor","refactor.extract","refactor.inline","refactor.rewrite","source","source.organizeImports"]}},"dataSupport":true,"disabledSupport":true,"isPreferredSupport":true,"dynamicRegistration":true,"honorsChangeAnnotations":true,"resolveSupport":{"properties":["edit","command"]}}},"window":{"workDoneProgress":true,"showMessage":{"messageActionItem":{"additionalPropertiesSupport":true}},"showDocument":{"support":true}}},"workspaceFolders":null,"rootPath":null,"clientInfo":{"name":"Neovim","version":"0.12.2+v0.12.2"},"rootUri":null},"id":1}
+ParseRequest
+Initialize
+SendResponse
+{"id": 1, "jsonrpc": "2.0", "result": {"capabilities": {}}}
+Content-Length: 
+59
+
+
+
+
+{"id": 1, "jsonrpc": "2.0", "result": {"capabilities": {}}}
+Flush
+ReadNextRequest
+TryReadNextHeader
+StdInStream::Readline
+Content-Length: 52
+Content length header found
+TryReadNextHeader
+StdInStream::Readline
+
+End of headers
+StdInStream::Read
+{"jsonrpc":"2.0","method":"initialized","params":{}}
+ParseRequest
+Initialized
+ReadNextRequest
+TryReadNextHeader
+StdInStream::Readline

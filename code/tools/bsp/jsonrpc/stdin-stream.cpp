@@ -1,13 +1,13 @@
 module;
 #include <iostream>
 #include <string>
-export module BSP:StdInStream;
+export module JsonRPC:StdInStream;
 import :IInStream;
 import Opal;
 
 using namespace Opal;
 
-namespace BSP {
+namespace JsonRPC {
 	export class StdInStream : public IInStream {
 	public:
 		std::string ReadLine() override final {

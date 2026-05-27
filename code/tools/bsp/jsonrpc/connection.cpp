@@ -4,7 +4,7 @@ module;
 #include <optional>
 #include <string>
 #include <vector>
-export module BSP:Connection;
+export module JsonRPC:Connection;
 import :IInStream;
 import :IOutStream;
 import :Request;
@@ -14,7 +14,7 @@ import json11;
 
 using namespace Opal;
 
-namespace BSP {
+namespace JsonRPC {
 	struct HeaderPart {
 		std::string Name;
 		std::string Value;

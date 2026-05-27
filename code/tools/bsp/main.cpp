@@ -2,31 +2,13 @@
 #include <memory>
 #include <optional>
 
+import JsonRPC;
 import BSP;
 import json11;
 import Opal;
 
 using namespace Opal;
-
-void ProcessRequest(BSP::Connection &connection, int id, BSP::InitializeParams &params) {
-	Log::Info("Initialize");
-	auto result = BSP::InitializeResult();
-	auto initializeResponse = BSP::Response(id, result.Serialize(), std::nullopt);
-	connection.SendResponse(std::move(initializeResponse));
-}
-
-void ProcessRequest(BSP::Connection &connection, BSP::Request &request) {
-	if (request.Method == "initialize") {
-		if (!request.Id.has_value())
-			throw std::runtime_error("Required Id");
-		auto params = BSP::InitializeParams::Parse(request.Params);
-		ProcessRequest(connection, request.Id.value(), params);
-	} else if (request.Method == "initialized") {
-		Log::Info("Initialized");
-	} else {
-		Log::Warning("Unknown message method: {}", request.Method);
-	}
-}
+using namespace JsonRPC;
 
 int main() {
 	try {
@@ -50,14 +32,14 @@ int main() {
 
 		Log::Info("Setup");
 
-		auto inStream = std::make_unique<BSP::StdInStream>();
-		auto outStream = std::make_unique<BSP::StdOutStream>();
-		auto connection = BSP::Connection(std::move(inStream), std::move(outStream));
+		auto inStream = std::make_unique<StdInStream>();
+		auto outStream = std::make_unique<StdOutStream>();
+		auto connection = Connection(std::move(inStream), std::move(outStream));
 
 		while (true) {
 			auto requests = connection.ReadNextRequest();
 			for (auto &request : requests) {
-				ProcessRequest(connection, request);
+				BSP::ProcessRequest(connection, request);
 			}
 		}
 

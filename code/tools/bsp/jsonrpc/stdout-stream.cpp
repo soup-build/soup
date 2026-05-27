@@ -1,12 +1,12 @@
 module;
 #include <iostream>
-export module BSP:StdOutStream;
+export module JsonRPC:StdOutStream;
 import :IOutStream;
 import Opal;
 
 using namespace Opal;
 
-namespace BSP {
+namespace JsonRPC {
 	export class StdOutStream : public IOutStream {
 	public:
 		void Write(std::string_view content) override final {

@@ -1,8 +1,6 @@
-export module BSP;
+export module JsonRPC;
 
 export import :Connection;
-export import :InitializeParams;
-export import :InitializeResult;
 export import :IInStream;
 export import :IOutStream;
 export import :Request;

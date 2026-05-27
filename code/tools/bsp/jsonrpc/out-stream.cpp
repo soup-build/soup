@@ -1,8 +1,8 @@
 module;
 #include <string>
-export module BSP:IOutStream;
+export module JsonRPC:IOutStream;
 
-namespace BSP {
+namespace JsonRPC {
 	export class IOutStream {
 	public:
 		virtual ~IOutStream() = default;

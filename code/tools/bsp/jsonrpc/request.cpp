@@ -1,10 +1,10 @@
 module;
 #include <optional>
 #include <string>
-export module BSP:Request;
+export module JsonRPC:Request;
 import json11;
 
-namespace BSP {
+namespace JsonRPC {
 	export class Request {
 	public:
 		Request(std::optional<int> &&id, std::string &&method, json11::Json &&params)

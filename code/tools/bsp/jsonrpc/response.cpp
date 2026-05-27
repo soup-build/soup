@@ -1,10 +1,10 @@
 module;
 #include <optional>
 #include <string>
-export module BSP:Response;
+export module JsonRPC:Response;
 import json11;
 
-namespace BSP {
+namespace JsonRPC {
 	export class Response {
 	public:
 		Response(int id, std::optional<json11::Json> &&result, std::optional<json11::Json> &&error)

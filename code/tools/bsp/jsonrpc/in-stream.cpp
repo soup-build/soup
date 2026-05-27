@@ -1,8 +1,8 @@
 module;
 #include <string>
-export module BSP:IInStream;
+export module JsonRPC:IInStream;
 
-namespace BSP {
+namespace JsonRPC {
 	export class IInStream {
 	public:
 		virtual ~IInStream() = default;
