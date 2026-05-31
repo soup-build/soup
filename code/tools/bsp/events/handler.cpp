@@ -19,16 +19,22 @@ namespace BSP {
 		connection.SendResponse(std::move(initializeResponse));
 	}
 
-	export void ProcessRequest(Connection &connection, Request &request) {
+	export bool ProcessRequest(Connection &connection, Request &request) {
 		if (request.Method == "initialize") {
 			if (!request.Id.has_value())
 				throw std::runtime_error("Required Id");
 			auto params = InitializeParams::Parse(request.Params);
 			ProcessRequest(connection, request.Id.value(), params);
+			return true;
 		} else if (request.Method == "initialized") {
 			Log::Info("Initialized");
+			return true;
+		} else if (request.Method == "exit") {
+			Log::Info("exit");
+			return false;
 		} else {
 			Log::Warning("Unknown message method: {}", request.Method);
+			return true;
 		}
 	}
 }

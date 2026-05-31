@@ -28,7 +28,7 @@ int main() {
 		auto logFile = Opal::System::IFileSystem::Current().OpenWrite(
 			Path("/home/mwasplund/repos/soup/code/tools/bsp/log.txt"), true);
 		Log::RegisterListener(
-			std::make_shared<FileTraceListener>(logFile, "Log", filter, false, false));
+			std::make_shared<FileTraceListener>(logFile, "Log", filter, false, false, true));
 
 		Log::Info("Setup");
 
@@ -36,17 +36,22 @@ int main() {
 		auto outStream = std::make_unique<StdOutStream>();
 		auto connection = Connection(std::move(inStream), std::move(outStream));
 
-		while (true) {
+		auto shouldExit = false;
+		while (!shouldExit) {
 			auto requests = connection.ReadNextRequest();
 			for (auto &request : requests) {
-				BSP::ProcessRequest(connection, request);
+				if (!BSP::ProcessRequest(connection, request)) {
+					Log::Info("Exit server");
+					shouldExit = true;
+					break;
+				}
 			}
 		}
-
 	} catch (const std::exception &ex) {
 		Log::Error("Unhandled error {}", ex.what());
 		return -1;
 	}
 
+	Log::Info("Done");
 	return 0;
 }
