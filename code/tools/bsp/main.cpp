@@ -37,10 +37,11 @@ int main() {
 		auto connection = Connection(std::move(inStream), std::move(outStream));
 
 		auto shouldExit = false;
+		auto handler = BSP::Handler(connection);
 		while (!shouldExit) {
 			auto requests = connection.ReadNextRequest();
 			for (auto &request : requests) {
-				if (!BSP::ProcessRequest(connection, request)) {
+				if (!handler.ProcessRequest(request)) {
 					Log::Info("Exit server");
 					shouldExit = true;
 					break;
