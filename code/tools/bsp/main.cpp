@@ -3,7 +3,7 @@
 #include <optional>
 
 import JsonRPC;
-import BSP;
+import Handler;
 import json11;
 import Opal;
 

@@ -5,6 +5,7 @@ export module BuildSystem:BuildSystemMonitor;
 import Opal;
 import Soup.Core;
 import Soup.SML;
+import BSP;
 
 using namespace Opal;
 
@@ -18,7 +19,7 @@ namespace BuildSystem {
 			: _fileSystemState() {
 		}
 
-		std::optional<Soup::Core::OperationInfo> TryFindFileOperationInfo(const Path &file) {
+		std::optional<BSP::OperationInfo> TryFindFileOperationInfo(const Path &file) {
 			Log::Info("TryFindFileOperationInfo");
 			auto packageRoot = TryFindPackageRoot(file);
 			if (packageRoot) {
@@ -29,7 +30,7 @@ namespace BuildSystem {
 						for (auto &inputFileId : operationInfo.DeclaredInput) {
 							auto inputFile = _fileSystemState.GetFilePath(inputFileId);
 							if (inputFile == file) {
-								return operationInfo;
+								return ConvertToBSP(operationInfo);
 							}
 						}
 					}
@@ -39,6 +40,26 @@ namespace BuildSystem {
 		}
 
 	private:
+		BSP::OperationInfo ConvertToBSP(const Soup::Core::OperationInfo &operationInfo) {
+			auto result = BSP::OperationInfo();
+			result.WorkingDirectory = operationInfo.Command.WorkingDirectory;
+			result.Executable = operationInfo.Command.Executable;
+
+			for (auto &argument : operationInfo.Command.Arguments) {
+				result.Arguments.push_back(argument);
+			}
+
+			for (auto &fileId : operationInfo.DeclaredInput) {
+				result.DeclaredInput.push_back(_fileSystemState.GetFilePath(fileId));
+			}
+
+			for (auto &fileId : operationInfo.DeclaredOutput) {
+				result.DeclaredOutput.push_back(_fileSystemState.GetFilePath(fileId));
+			}
+
+			return result;
+		}
+
 		std::optional<Path> TryFindPackageRoot(const Path &file) {
 			Log::Info("TryFindPackageRoot");
 			auto currentDirectory = file.HasFileName() ? file.GetParent() : file;

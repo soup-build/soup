@@ -1,6 +1,5 @@
 export module BSP;
-export import :Handler;
-import :InitializeParams;
-import :InitializeResult;
-import :OperationInfoParams;
-import :OperationInfoResult;
+export import :InitializeParams;
+export import :InitializeResult;
+export import :OperationInfoParams;
+export import :OperationInfoResult;

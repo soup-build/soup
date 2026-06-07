@@ -1,14 +1,11 @@
 module;
 #include <optional>
 #include <stdexcept>
-export module BSP:Handler;
+export module Handler;
 import Opal;
 import JsonRPC;
 import BuildSystem;
-import :InitializeParams;
-import :InitializeResult;
-import :OperationInfoParams;
-import :OperationInfoResult;
+import BSP;
 
 using namespace Opal;
 using namespace JsonRPC;
@@ -69,18 +66,7 @@ namespace BSP {
 
 			auto operationInfo = _buildSystemMonitor.TryFindFileOperationInfo(params.File);
 			if (operationInfo) {
-				auto info = OperationInfo();
-				info.WorkingDirectory = operationInfo->Command.WorkingDirectory;
-				info.Executable = operationInfo->Command.Executable;
-
-				for (auto &argument : operationInfo->Command.Arguments) {
-					info.Arguments.push_back(argument);
-				}
-
-				// info.DeclaredInput = operationInfo->DeclaredInput;
-				// info.DeclaredOutput = operationInfo->DeclaredOutput;
-
-				result.Info = std::move(info);
+				result.Info = std::move(*operationInfo);
 			}
 
 			auto response = Response(id, result.Serialize(), std::nullopt);

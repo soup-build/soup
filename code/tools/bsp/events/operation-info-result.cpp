@@ -12,6 +12,8 @@ namespace BSP {
 		Opal::Path WorkingDirectory;
 		Opal::Path Executable;
 		std::vector<std::string> Arguments;
+		std::vector<Opal::Path> DeclaredInput;
+		std::vector<Opal::Path> DeclaredOutput;
 
 	public:
 		json11::Json Serialize() {
@@ -25,6 +27,18 @@ namespace BSP {
 				arguments.push_back(argument);
 			}
 			result.emplace("arguments", std::move(arguments));
+
+			auto declaredInput = json11::Json::array();
+			for (auto &file : DeclaredInput) {
+				declaredInput.push_back(file.ToString());
+			}
+			result.emplace("declaredInput", std::move(declaredInput));
+
+			auto declaredOutput = json11::Json::array();
+			for (auto &file : DeclaredOutput) {
+				declaredOutput.push_back(file.ToString());
+			}
+			result.emplace("declaredOutput", std::move(declaredOutput));
 
 			return result;
 		}
