@@ -4,14 +4,25 @@ module;
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
+#include <optional>
 #include <vector>
 
 export module PrintResults;
 
 import Opal;
 import Soup.Core;
+import PrintValueTable;
 
 namespace PrintResults {
+	void PrintValues(const std::optional<Soup::Core::ValueTable> &values) {
+		if (values) {
+			::PrintValueTable::PrintValueTable(*values, "\t");
+			std::cout << std::endl;
+		} else {
+			std::cout << "[null]" << std::endl;
+		}
+	}
+
 	std::string ToString(const std::vector<uint32_t> &valueList) {
 		auto builder = std::stringstream();
 		builder << "[";
@@ -64,6 +75,8 @@ namespace PrintResults {
 					  << std::endl;
 			std::cout << "\tObservedOutput: " << ToString(operationResult.ObservedOutput)
 					  << std::endl;
+			std::cout << "\tObservedValues: ";
+			PrintValues(operationResult.ObservedValues);
 		}
 	}
 

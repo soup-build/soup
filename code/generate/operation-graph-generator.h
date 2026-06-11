@@ -111,6 +111,10 @@ namespace Soup::Core::Generate {
 			ResolveDependencies(operationInfoReference);
 		}
 
+		bool HasOperations() const {
+			return !_result.GetOperations().empty();
+		}
+
 		OperationGraph FinalizeState() {
 			// Add any operation with zero dependencies to the root
 			auto rootOperations = std::vector<OperationId>();

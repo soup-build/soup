@@ -177,7 +177,7 @@ namespace Soup::Client {
 				// Split all parameters after the args flag to pass into the run
 				// command
 				std::vector<std::string> runArgs;
-				SplitArguments("args", unusedArgs, runArgs);
+				SplitArguments(unusedArgs, runArgs);
 
 				// Check for required index argument
 				auto argument = std::string();
@@ -333,10 +333,9 @@ namespace Soup::Client {
 		}
 
 		static void SplitArguments(
-			const char *name,
 			std::vector<std::string> &unusedArgs,
 			std::vector<std::string> &splitArgs) {
-			auto flagValue = std::string("-") + name;
+			auto flagValue = std::string("--");
 			Log::Diag("IsFlagSet: {}", flagValue);
 			auto flagLocation = std::find(unusedArgs.begin(), unusedArgs.end(), flagValue);
 			if (flagLocation != unusedArgs.end()) {

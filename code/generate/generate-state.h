@@ -16,6 +16,7 @@ namespace Soup::Core::Generate {
 		ValueTable _sharedState;
 		ValueTable _generateInfo;
 		OperationGraphGenerator _graphGenerator;
+		OperationGraphGenerator _preprocessorGraphGenerator;
 
 	public:
 		/// <summary>
@@ -31,7 +32,9 @@ namespace Soup::Core::Generate {
 			  _sharedState(),
 			  _generateInfo(),
 			  _graphGenerator(
-				  fileSystemState, std::move(readAccessList), std::move(writeAccessList)) {
+				  fileSystemState, readAccessList, writeAccessList),
+			  _preprocessorGraphGenerator(
+				  fileSystemState, readAccessList, writeAccessList) {
 		}
 
 		/// <summary>
@@ -95,13 +98,45 @@ namespace Soup::Core::Generate {
 				std::move(declaredOutputPaths));
 		}
 
+		/// <summary>
+		/// Create a build operation
+		/// </summary>
+		void CreatePreprocessorOperation(
+			std::string title,
+			std::string executable,
+			std::vector<std::string> arguments,
+			std::string workingDirectory,
+			std::vector<std::string> declaredInput) {
+			auto declaredInputPaths = std::vector<Path>();
+			for (auto &value : declaredInput)
+				declaredInputPaths.push_back(Path(std::move(value)));
+
+			auto declaredOutputPaths = std::vector<Path>();
+
+			_preprocessorGraphGenerator.CreateOperation(
+				std::move(title),
+				Path(std::move(executable)),
+				std::move(arguments),
+				Path(std::move(workingDirectory)),
+				std::move(declaredInputPaths),
+				std::move(declaredOutputPaths));
+		}
+
 		void Update(ValueTable activeState, ValueTable sharedState) {
 			_activeState = std::move(activeState);
 			_sharedState = std::move(sharedState);
 		}
 
+		bool HasPreprocessorOperations() {
+			return _preprocessorGraphGenerator.HasOperations();
+		}
+
 		OperationGraph BuildOperationGraph() {
 			return _graphGenerator.FinalizeState();
+		}
+
+		OperationGraph BuildPreprocessorOperationGraph() {
+			return _preprocessorGraphGenerator.FinalizeState();
 		}
 	};
 }
