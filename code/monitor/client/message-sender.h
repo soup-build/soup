@@ -2,7 +2,7 @@
 #include "message-builder.h"
 
 namespace Monitor {
-	/// RAI class to help with sending messages even when the internal message throws
+	/// RAII class to help with sending messages even when the internal message throws
 	class MessageSender {
 	private:
 		Message message;
