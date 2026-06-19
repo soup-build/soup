@@ -197,14 +197,6 @@ namespace Soup::Core::Generate {
 					std::make_unique<GenerateHost>(buildExtension.first, buildExtension.second);
 				host->InterpretMain();
 
-				// Check if there are optional preprocessing tasks on the first run
-				if (isFirstRun) {
-					auto preprocessorTasks = host->DiscoverPreprocessorTasks();
-					for (auto &task : preprocessorTasks) {
-						extensionManager.RegisterPreprocessorTask(std::move(task));
-					}
-				}
-
 				auto extensionTasks = host->DiscoverTasks();
 				for (auto &task : extensionTasks) {
 					extensionManager.RegisterExtensionTask(std::move(task));
@@ -218,16 +210,14 @@ namespace Soup::Core::Generate {
 				evaluateAllowedReadAccess,
 				evaluateAllowedWriteAccess);
 
-			if (extensionManager.HasPreprocessorTasks()) {
-				extensionManager.ExecutePreprocessorTasks(buildState);
-			} else {
-				extensionManager.ExecuteExtensionTasks(buildState);
-			}
+			extensionManager.ExecuteExtensionTasks(buildState);
 
 			// Grab the build results
 			auto generateInfoTable = buildState.GetGenerateInfo();
+			auto hasPreprocessorOperations = buildState.HasPreprocessorOperations();
 			auto generateResult = GenerateResult(
-				buildState.BuildOperationGraph(), extensionManager.HasPreprocessorTasks());
+				hasPreprocessorOperations ? buildState.BuildPreprocessorOperationGraph() : buildState.BuildOperationGraph(),
+				hasPreprocessorOperations);
 			auto sharedState = buildState.GetSharedState();
 
 			// Save the runtime information so Soup View can easily visualize runtime

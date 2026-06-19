@@ -12,7 +12,6 @@ namespace Soup::Core::Generate {
 	/// </summary>
 	class ExtensionManager {
 	private:
-		std::map<std::string, ExtensionTaskDetails> _preprocessorTasks;
 		std::map<std::string, ExtensionTaskDetails> _extensionTasks;
 
 	public:
@@ -20,26 +19,7 @@ namespace Soup::Core::Generate {
 		/// Initializes a new instance of the <see cref="ExtensionManager"/> class.
 		/// </summary>
 		ExtensionManager()
-			: _preprocessorTasks(),
-			  _extensionTasks() {
-		}
-
-		/// <summary>
-		/// Register preprocessor task
-		/// </summary>
-		void RegisterPreprocessorTask(ExtensionTaskDetails preprocessorTaskDetails) {
-			auto name = preprocessorTaskDetails.Name;
-			Log::Diag("RegisterPreprocessorTask: {}", name);
-
-			auto insertResult =
-				_preprocessorTasks.emplace(name, std::move(preprocessorTaskDetails));
-			if (!insertResult.second) {
-				Log::HighPriority(
-					"An preprocessor task with the provided name has already been registered: {}",
-					name);
-				throw std::runtime_error(
-					"An preprocessor task with the provided name has already been registered");
-			}
+			: _extensionTasks() {
 		}
 
 		/// <summary>
@@ -85,20 +65,6 @@ namespace Soup::Core::Generate {
 				throw std::runtime_error(
 					"An extension task with the provided name has already been registered");
 			}
-		}
-
-		/// <summary>
-		/// Get a value indicating if there are proprocessor tasks
-		/// </summary>
-		bool HasPreprocessorTasks() {
-			return _preprocessorTasks.size() > 0;
-		}
-
-		/// <summary>
-		/// Execute all build extensions
-		/// </summary>
-		void ExecutePreprocessorTasks(GenerateState &state) {
-			Execute(state, _preprocessorTasks);
 		}
 
 		/// <summary>

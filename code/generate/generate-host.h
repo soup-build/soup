@@ -13,7 +13,6 @@ namespace Soup::Core::Generate {
 		static inline const char *SoupModuleName = "soup";
 		static inline const char *SoupClassName = "Soup";
 		static inline const char *SoupTaskClassName = "SoupTask";
-		static inline const char *SoupPreprocessorTaskClassName = "SoupPreprocessorTask";
 
 	private:
 		GenerateState *_state;
@@ -53,33 +52,6 @@ namespace Soup::Core::Generate {
 							_bundlesFile,
 							std::move(runBeforeList),
 							std::move(runAfterList)));
-					}
-				}
-			}
-
-			return extensions;
-		}
-
-		std::vector<ExtensionTaskDetails> DiscoverPreprocessorTasks() {
-			auto extensions = std::vector<ExtensionTaskDetails>();
-
-			// Discover all class types
-			wrenEnsureSlots(_vm, 1);
-			auto variableCount = wrenGetVariableCount(_vm, _scriptFile.ToString().c_str());
-			for (auto i = 0; i < variableCount; i++) {
-				wrenGetVariableAt(_vm, _scriptFile.ToString().c_str(), i, 0);
-
-				// Check if a class
-				auto type = wrenGetSlotType(_vm, 0);
-				if (type == WREN_TYPE_UNKNOWN) {
-					auto classHandle = SmartHandle(_vm, wrenGetSlotHandle(_vm, 0));
-					if (WrenHelpers::HasParentType(
-							_vm, classHandle, SoupPreprocessorTaskClassName)) {
-						Log::Diag("Found Build Finalizer Task");
-						auto className = WrenHelpers::GetClassName(_vm, classHandle);
-
-						extensions.push_back(ExtensionTaskDetails(
-							std::move(className), _scriptFile, _bundlesFile, {}, {}));
 					}
 				}
 			}
@@ -227,6 +199,8 @@ namespace Soup::Core::Generate {
 						return SoupLoadSharedState;
 					else if (signature == "createOperation_(_,_,_,_,_,_)")
 						return SoupCreateOperation;
+					else if (signature == "createPreprocessorOperation_(_,_,_,_,_)")
+						return SoupCreatePreprocessorOperation;
 					else if (signature == "info_(_)")
 						return SoupLogInfo;
 					else if (signature == "warning_(_)")
@@ -359,6 +333,62 @@ namespace Soup::Core::Generate {
 			}
 		}
 
+		void SoupCreatePreprocessorOperation() {
+			try {
+				Log::Diag("SoupCreatePreprocessorOperation");
+				if (_state == nullptr)
+					throw std::runtime_error("Cannot CreatePreprocessorOperation at this time");
+
+				auto parameter1 = wrenGetSlotType(_vm, 1);
+				if (parameter1 != WREN_TYPE_STRING) {
+					throw std::runtime_error(
+						"SoupCreatePreprocessorOperation parameter 1 must be of type string");
+				}
+				auto title = std::string(wrenGetSlotString(_vm, 1));
+
+				auto parameter2 = wrenGetSlotType(_vm, 2);
+				if (parameter2 != WREN_TYPE_STRING) {
+					throw std::runtime_error(
+						"SoupCreatePreprocessorOperation parameter 2 must be of type string");
+				}
+				auto executable = std::string(wrenGetSlotString(_vm, 2));
+
+				auto parameter3 = wrenGetSlotType(_vm, 3);
+				if (parameter3 != WREN_TYPE_LIST) {
+					throw std::runtime_error(
+						"SoupCreatePreprocessorOperation parameter 3 must be of type list");
+				}
+				auto arguments = WrenHelpers::GetSlotStringList(_vm, 3, 7);
+
+				auto parameter4 = wrenGetSlotType(_vm, 4);
+				if (parameter4 != WREN_TYPE_STRING) {
+					throw std::runtime_error(
+						"SoupCreatePreprocessorOperation parameter 4 must be of type string");
+				}
+				auto workingDirectory = std::string(wrenGetSlotString(_vm, 4));
+
+				auto parameter5 = wrenGetSlotType(_vm, 5);
+				if (parameter5 != WREN_TYPE_LIST) {
+					throw std::runtime_error(
+						"SoupCreatePreprocessorOperation parameter 5 must be of type list");
+				}
+				auto declaredInput = WrenHelpers::GetSlotStringList(_vm, 5, 7);
+
+				_state->CreatePreprocessorOperation(
+					std::move(title),
+					std::move(executable),
+					std::move(arguments),
+					std::move(workingDirectory),
+					std::move(declaredInput));
+
+				// No return value
+				wrenEnsureSlots(_vm, 1);
+				wrenSetSlotNull(_vm, 0);
+			} catch (const std::exception &ex) {
+				WrenHelpers::GenerateRuntimeError(_vm, ex.what());
+			}
+		}
+
 		void SoupLogInfo() {
 			auto message = wrenGetSlotString(_vm, 1);
 			Log::Info(message);
@@ -397,6 +427,11 @@ namespace Soup::Core::Generate {
 			host->SoupCreateOperation();
 		}
 
+		static void SoupCreatePreprocessorOperation(WrenVM *vm) {
+			auto host = (GenerateHost *)wrenGetUserData(vm);
+			host->SoupCreatePreprocessorOperation();
+		}
+
 		static void SoupLogInfo(WrenVM *vm) {
 			auto host = (GenerateHost *)wrenGetUserData(vm);
 			host->SoupLogInfo();
@@ -422,9 +457,6 @@ namespace Soup::Core::Generate {
 			"	static runAfter { [] }\n"
 			"	static evaluate() {}\n"
 			"}\n"
-			"class SoupPreprocessorTask {\n"
-			"	static evaluate() {}\n"
-			"}\n"
 			"\n"
 			"class Soup {\n"
 			"	static globalState {\n"
@@ -443,17 +475,29 @@ namespace Soup::Core::Generate {
 			"	}\n"
 			"\n"
 			"	static createOperation(title, executable, arguments, workingDirectory, "
-			"declaredInput, declaredOutput) {\n"
+			"		declaredInput, declaredOutput) {\n"
 			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
 			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
 			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
-			"		if (!(workingDirectory is String)) Fiber.abort(\"WorkingDirectory must be a "
-			"string.\")\n"
+			"		if (!(workingDirectory is String))"
+			"			Fiber.abort(\"WorkingDirectory must be a string.\")\n"
 			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
-			"		if (!(declaredOutput is List)) Fiber.abort(\"DeclaredOutput must be a "
-			"list.\")\n"
+			"		if (!(declaredOutput is List))"
+			"			Fiber.abort(\"DeclaredOutput must be a list.\")\n"
 			"		createOperation_(title, executable, arguments, workingDirectory, "
-			"declaredInput, declaredOutput)\n"
+			"			declaredInput, declaredOutput)\n"
+			"	}\n"
+			"\n"
+			"	static createPreprocessorOperation(title, executable, arguments, workingDirectory, "
+			"		declaredInput) {\n"
+			"		if (!(title is String)) Fiber.abort(\"Title must be a string.\")\n"
+			"		if (!(executable is String)) Fiber.abort(\"Executable must be a string.\")\n"
+			"		if (!(arguments is List)) Fiber.abort(\"Arguments must be a list.\")\n"
+			"		if (!(workingDirectory is String))"
+			"			Fiber.abort(\"WorkingDirectory must be a string.\")\n"
+			"		if (!(declaredInput is List)) Fiber.abort(\"DeclaredInput must be a list.\")\n"
+			"		createPreprocessorOperation_(title, executable, arguments, workingDirectory, "
+			"			declaredInput)\n"
 			"	}\n"
 			"\n"
 			"	static info(message) {\n"
@@ -475,7 +519,9 @@ namespace Soup::Core::Generate {
 			"	foreign static loadActiveState_()\n"
 			"	foreign static loadSharedState_()\n"
 			"	foreign static createOperation_(title, executable, arguments, workingDirectory, "
-			"declaredInput, declaredOutput)\n"
+			"		declaredInput, declaredOutput)\n"
+			"	foreign static createPreprocessorOperation_(title, executable, arguments, workingDirectory, "
+			"		declaredInput)\n"
 			"	foreign static info_(message)\n"
 			"	foreign static warning_(message)\n"
 			"	foreign static error_(message)\n"

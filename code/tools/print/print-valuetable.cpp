@@ -12,7 +12,7 @@ import Soup.Core;
 namespace PrintValueTable {
 	void PrintValue(const Soup::Core::Value &value, const std::string &indent);
 
-	void PrintValueTable(const Soup::Core::ValueTable &values, const std::string &indent) {
+	export void PrintValueTable(const Soup::Core::ValueTable &values, const std::string &indent) {
 		std::cout << "{" << std::endl;
 		auto nextIndent = indent + "  ";
 		for (const auto &[key, value] : values) {

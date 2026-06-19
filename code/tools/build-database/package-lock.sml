@@ -8,7 +8,7 @@ Closure: {
 		'build-database': { Version: './', Build: '0', Tool: '0' }
 		'monitor-host': { Version: '../../monitor/host/', Build: '0', Tool: '0' }
 		'monitor-shared': { Version: '../../monitor/shared/', Build: '0', Tool: '0' }
-		'mwasplund|cryptopp': { Version: 1.2.8, Digest: 'sha256:6d19806db25880437c805a616a3470ddb1b86cba2e6bfd83a378118e1f46e037', Build: '0', Tool: '0' }
+		'mwasplund|cryptopp': { Version: 1.2.9, Digest: 'sha256:53e593acbdfcaa81f285bcb64dabc3d38f36fd9bff7168d3c10a5d9ef752f446', Build: '0', Tool: '0' }
 		'mwasplund|detours': { Version: 4.0.15, Digest: 'sha256:1d482c600a7ac1acc36ea43c3d847451aeb5bf146312f40d351ec530c8c04746', Build: '0', Tool: '0' }
 		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '0', Tool: '0' }
 		'mwasplund|opal': { Version: 0.13.0, Digest: 'sha256:7aefec36342b2f3112e3ebf4f1fd1e11153b1a72742506d3b96ac569b03df9cb', Build: '0', Tool: '0' }

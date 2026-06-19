@@ -2,16 +2,16 @@
 // TODO: Warning unsafe method
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include <algorithm>
-#include <cctype>
+#include <locale>
 #include <codecvt>
 #include <format>
 #include <fstream>
 #include <iostream>
-#include <locale>
 #include <mutex>
-#include <sstream>
 #include <string>
+#include <sstream>
 #include <vector>
+#include <cctype>
 
 #ifdef _WIN32
 
@@ -43,14 +43,14 @@ import Monitor.Shared;
 
 import Detours;
 
-#include "message-sender.h"
 #include "windows/connection-manager.h"
+#include "message-sender.h"
 #include "windows/dll-main.h"
 
 #elif defined(__linux__)
 
 #include "linux/connection-manager.h"
-#include "linux/startup.h"
 #include "message-sender.h"
+#include "linux/startup.h"
 
 #endif
