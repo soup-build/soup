@@ -31,7 +31,7 @@ namespace Monitor {
 		}
 
 		static void UpdateWorkingDirectory(const char *fileName) {
-			auto path = Opal::Path::Parse(fileName);
+			auto path = Opal::Path::ParseWindows(fileName);
 			if (!path.HasRoot()) {
 				// Updated working directory is relative to the previous one
 				m_workingDirectory = m_workingDirectory + path;
@@ -65,10 +65,12 @@ namespace Monitor {
 
 			auto normalizedFileName = NormalizePath(fileName);
 			for (const auto &allowedDirectory : m_allowedReadDirectories) {
-				if (IsUnderDirectory(normalizedFileName, allowedDirectory))
+				if (IsUnderDirectory(normalizedFileName, allowedDirectory)) {
 					return true;
+				}
 			}
 
+			ConnectionManagerBase::DebugTrace("Block: {} {}", fileName, normalizedFileName);
 			return false;
 		}
 
@@ -112,7 +114,7 @@ namespace Monitor {
 
 		static std::string NormalizePath(const char *fileName) {
 			// Normalize the path separators and get absolute path
-			auto path = Opal::Path::Parse(fileName);
+			auto path = Opal::Path::ParseWindows(fileName);
 			if (!path.HasRoot()) {
 				path = m_workingDirectory + path;
 			}

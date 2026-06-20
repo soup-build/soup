@@ -1085,7 +1085,7 @@ namespace Monitor::Windows {
 		void TouchFileRead(std::string_view fileName, bool exists, bool wasBlocked) {
 			// Verify not a special file
 			if (!IsSpecialFile(fileName)) {
-				_monitor->TouchFileRead(Path::Parse(fileName), exists, wasBlocked);
+				_monitor->TouchFileRead(Path::ParseWindows(fileName), exists, wasBlocked);
 			}
 		}
 
@@ -1097,7 +1097,7 @@ namespace Monitor::Windows {
 		void TouchFileWrite(std::string_view fileName, bool wasBlocked) {
 			// Verify not a special file
 			if (!IsSpecialFile(fileName)) {
-				_monitor->TouchFileWrite(Path::Parse(fileName), wasBlocked);
+				_monitor->TouchFileWrite(Path::ParseWindows(fileName), wasBlocked);
 			}
 		}
 
@@ -1107,7 +1107,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileDelete(std::string_view fileName, bool wasBlocked) {
-			_monitor->TouchFileDelete(Path::Parse(fileName), wasBlocked);
+			_monitor->TouchFileDelete(Path::ParseWindows(fileName), wasBlocked);
 		}
 
 		void TouchFileDeleteOnClose(std::wstring_view fileName) {
@@ -1116,7 +1116,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileDeleteOnClose(std::string_view fileName) {
-			_monitor->TouchFileDeleteOnClose(Path::Parse(fileName));
+			_monitor->TouchFileDeleteOnClose(Path::ParseWindows(fileName));
 		}
 
 		bool IsSpecialFile(std::string_view fileName) {

@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 	try {
 		Opal::System::IFileSystem::Register(std::make_shared<Opal::System::STLFileSystem>());
 
-		auto file = Opal::Path::Parse(argv[1]);
+		auto file = Opal::Path::ParseRelaxed(argv[1]);
 
 		if (file.GetFileExtension() == ".bgr") {
 			PrintGraph::LoadAndPrintGenerateResult(file);

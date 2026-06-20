@@ -40,7 +40,7 @@ namespace Soup::Client {
 
 				// Setup the console listener
 				Log::RegisterListener(
-					std::make_shared<ConsoleTraceListener>("Log", _filter, false, false));
+					std::make_shared<ConsoleTraceListener>("Log", _filter, false, false, false));
 
 				// Setup the real services
 				System::ISystem::Register(std::make_shared<System::STLSystem>());
