@@ -27,46 +27,51 @@ class GenerateBuildTask is SoupTask {
 	static evaluate() {
 		Soup.info("Running Before Build!")
 
-		// Get the build table
-		var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
+		var globalState = Soup.globalState
+		var isPass1 = !(globalState.containsKey("Preprocessors"))
 
-		var contextTable = Soup.globalState["Context"]
-		var targetRoot = Path.new(contextTable["TargetDirectory"])
+		if (!isPass1) {
+			// Get the build table
+			var buildTable = MapExtensions.EnsureTable(Soup.activeState, "Build")
 
-		var generateDirectory = Path.new("./gen/")
-		var generateFile = generateDirectory + Path.new("helper.cpp")
+			var contextTable = Soup.globalState["Context"]
+			var targetRoot = Path.new(contextTable["TargetDirectory"])
 
-		// Ensure the generate folder exists
-		var createGenerateDirectory = SharedOperations.CreateCreateDirectoryOperation(
-			targetRoot,
-			generateDirectory)
-		Soup.createOperation(
-			createGenerateDirectory.Title,
-			createGenerateDirectory.Executable.toString,
-			createGenerateDirectory.Arguments,
-			createGenerateDirectory.WorkingDirectory.toString,
-			ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredInput),
-			ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredOutput))
+			var generateDirectory = Path.new("./gen/")
+			var generateFile = generateDirectory + Path.new("helper.cpp")
 
-		// Create the generate operation
-		GenerateBuildTask.CreateGenerateFileOperation(targetRoot, generateFile)
+			// Ensure the generate folder exists
+			var createGenerateDirectory = SharedOperations.CreateCreateDirectoryOperation(
+				targetRoot,
+				generateDirectory)
+			Soup.createOperation(
+				createGenerateDirectory.Title,
+				createGenerateDirectory.Executable.toString,
+				createGenerateDirectory.Arguments,
+				createGenerateDirectory.WorkingDirectory.toString,
+				ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredInput),
+				ListExtensions.ConvertFromPathList(createGenerateDirectory.DeclaredOutput))
 
-		var generatedSourceInfo = {}
-		generatedSourceInfo["File"] = generateFile.toString
-		generatedSourceInfo["Root"] = targetRoot.toString
-		generatedSourceInfo["IsInterface"] = true
-		generatedSourceInfo["Module"] = "Sample.Generate"
-		generatedSourceInfo["Imports"] = []
+			// Create the generate operation
+			GenerateBuildTask.CreateGenerateFileOperation(targetRoot, generateFile)
 
-		var sourceFiles = [
-			generatedSourceInfo
-		]
+			var generatedSourceInfo = {}
+			generatedSourceInfo["File"] = generateFile.toString
+			generatedSourceInfo["Root"] = targetRoot.toString
+			generatedSourceInfo["IsInterface"] = true
+			generatedSourceInfo["Module"] = "Sample.Generate"
+			generatedSourceInfo["Imports"] = []
 
-		// Add the explicit source info for the generated file so we treat it like a normal
-		// compiled translation unit
-		ListExtensions.Append(
-			MapExtensions.EnsureList(buildTable, "Source"),
-			sourceFiles)
+			var sourceFiles = [
+				generatedSourceInfo
+			]
+
+			// Add the explicit source info for the generated file so we treat it like a normal
+			// compiled translation unit
+			ListExtensions.Append(
+				MapExtensions.EnsureList(buildTable, "Source"),
+				sourceFiles)
+		}
 	}
 
 	/// <summary>
