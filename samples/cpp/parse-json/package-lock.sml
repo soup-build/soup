@@ -1,19 +1,18 @@
 Version: 6
 Closure: {
 	'C++': {
-		'samples-cpp-parse-json': { Version: './', Build: '0', Tool: '0' }
 		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '0', Tool: '0' }
+		'samples-cpp-parse-json': { Version: './', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.19.4
-				Digest: 'sha256:24cf2167fb91e85589d242aadfd04d4f81b6388248d959557dc10642c08a0cee'
+				Version: 0.20.0
+				Digest: 'sha256:f4a6bd667a431c011d1a2eb298918db58e05a2d8d8186afea041d51ff1ecee26'
 				Artifacts: {
-					Linux: 'sha256:b9d96a131b2b521fee79f8eec8af5b49c5361a3a6b222e49f9daa6d0851ae505'
-					Windows: 'sha256:20bb37ee5ec324df254d039ba34b713d54f046e8c2f89e5e1c96ef7b773ad8b9'
+					Windows: 'sha256:22dd63fbe71ecf70db8c229f5d0b8ee355dd912ff7f81e7a0a11b5d7ae534e4d'
 				}
 			}
 		}
@@ -39,11 +38,11 @@ Tools: {
 				}
 			}
 			'mwasplund|parse-modules': {
-				Version: 3.0.0
-				Digest: 'sha256:c7d7b9e7de3b304c936430be8d94b406b40939550503c0d8b5d3c1a5d10815e2'
+				Version: 4.0.0
+				Digest: 'sha256:85318f523aac6635109a51f7c0bddcc44fff28da4b7613514db6cefb3ca8ceee'
 				Artifacts: {
-					Linux: 'sha256:8a54de2c0495c08349c7f9e073536c30c071cca9c311639c59b10bf11c3ebe79'
-					Windows: 'sha256:ce5ab795beffde62d46d00a24a20b5206fa6e560a05c8a5058141aa8bd7e64ad'
+					Linux: 'sha256:f71f90238478d1463efb621e18ac7da091e55684451db89da40b70fba340a872'
+					Windows: 'sha256:6e7b764ca856d6b5c97db3fe22e5442a755f7f56089b0faac550bc216c43f1a8'
 				}
 			}
 		}
