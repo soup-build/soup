@@ -11,6 +11,7 @@ Builds: {
 				Version: 0.20.0
 				Digest: 'sha256:f4a6bd667a431c011d1a2eb298918db58e05a2d8d8186afea041d51ff1ecee26'
 				Artifacts: {
+					Linux: 'sha256:0f2138e3835f6a1672e52ace585b391027f11f3ad6753ee1eb4b43818a2a9569'
 					Windows: 'sha256:22dd63fbe71ecf70db8c229f5d0b8ee355dd912ff7f81e7a0a11b5d7ae534e4d'
 				}
 			}
@@ -40,7 +41,7 @@ Tools: {
 				Version: 4.0.0
 				Digest: 'sha256:85318f523aac6635109a51f7c0bddcc44fff28da4b7613514db6cefb3ca8ceee'
 				Artifacts: {
-					Linux: 'sha256:f71f90238478d1463efb621e18ac7da091e55684451db89da40b70fba340a872'
+					Linux: 'sha256:6552ef06bfdef36e204b7352aee359f845876131b81c3a8532c76bf4cf0a1b5c'
 					Windows: 'sha256:6e7b764ca856d6b5c97db3fe22e5442a755f7f56089b0faac550bc216c43f1a8'
 				}
 			}
