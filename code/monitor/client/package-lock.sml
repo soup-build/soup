@@ -15,7 +15,7 @@ Builds: {
 				Digest: 'sha256:f4a6bd667a431c011d1a2eb298918db58e05a2d8d8186afea041d51ff1ecee26'
 				Artifacts: {
 					Linux: 'sha256:1ae4766a4350909e0ac138752f24304622dab75c6d1ab98e87cfc0e4855b405a'
-					Windows: 'sha256:22dd63fbe71ecf70db8c229f5d0b8ee355dd912ff7f81e7a0a11b5d7ae534e4d'
+					Windows: 'sha256:3c2596e63a092e5b70a6e34fc4d2aeb141b2a378e548e88523351a14f89e76ac'
 				}
 			}
 		}
@@ -45,7 +45,7 @@ Tools: {
 				Digest: 'sha256:85318f523aac6635109a51f7c0bddcc44fff28da4b7613514db6cefb3ca8ceee'
 				Artifacts: {
 					Linux: 'sha256:a1d15fada2827293862377a381427c5e75cbca16afcf913e9fcef6346b087a75'
-					Windows: 'sha256:6e7b764ca856d6b5c97db3fe22e5442a755f7f56089b0faac550bc216c43f1a8'
+					Windows: 'sha256:ad30416a9a2dc0eebed727e16c8676ae35c3496a3cbe218885af868df4f55d50'
 				}
 			}
 		}
