@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 	try {
 		Opal::System::IFileSystem::Register(std::make_shared<Opal::System::STLFileSystem>());
 
-		auto workingDirectory = Opal::Path::Parse(argv[1]);
+		auto workingDirectory = Opal::Path::ParseRelaxed(argv[1]);
 
 		auto content = LoadBuildGraphContent(workingDirectory);
 

@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 		auto filter = std::make_shared<EventTypeFilter>(static_cast<TraceEventFlag>(defaultTypes));
 
 		// Setup the console listener
-		Log::RegisterListener(std::make_shared<ConsoleTraceListener>("Log", filter, false, false));
+		Log::RegisterListener(std::make_shared<ConsoleTraceListener>("Log", filter, false, false, false));
 
 		// Setup the real services
 		System::IFileSystem::Register(std::make_shared<System::STLFileSystem>());
@@ -47,11 +47,11 @@ int main(int argc, char **argv) {
 			return -1;
 		}
 
-		auto scriptFile = Path::Parse(argv[1]);
+		auto scriptFile = Path::ParseRelaxed(argv[1]);
 
 		std::optional<Path> bundlesFile;
 		if (argc > 2) {
-			bundlesFile = Path::Parse(argv[2]);
+			bundlesFile = Path::ParseRelaxed(argv[2]);
 		}
 
 		auto host = std::make_unique<Soup::Core::Generate::GenerateTestHost>(

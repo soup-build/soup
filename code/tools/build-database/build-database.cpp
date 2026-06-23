@@ -140,7 +140,7 @@ export std::string LoadBuildGraphContent(const Path &workingDirectory) {
 	auto filter = std::make_shared<EventTypeFilter>(static_cast<TraceEventFlag>(defaultTypes));
 
 	// Setup the console listener
-	Log::RegisterListener(std::make_shared<ConsoleTraceListener>("Log", filter, false, false));
+	Log::RegisterListener(std::make_shared<ConsoleTraceListener>("Log", filter, false, false, false));
 
 	// Setup the real services
 	System::ISystem::Register(std::make_shared<System::STLSystem>());

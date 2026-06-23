@@ -33,7 +33,9 @@
       "args": [
         "build",
         "samples/cpp/console-application",
-        "-v:d"
+        "-v:d",
+        "-p",
+        "1"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

@@ -31,7 +31,7 @@ namespace Soup::Client {
 				workingDirectory = System::IFileSystem::Current().GetCurrentDirectory();
 			} else {
 				// Parse the path in any system valid format
-				workingDirectory = Path::Parse(std::format("{}/", _options.Path));
+				workingDirectory = Path::ParseRelaxed(std::format("{}/", _options.Path));
 
 				// Check if this is relative to current directory
 				if (!workingDirectory.HasRoot()) {
