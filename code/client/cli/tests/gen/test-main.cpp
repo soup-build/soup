@@ -22,8 +22,8 @@ int main() {
 
 	state += RunBuildCommandTests();
 	state += RunInitializeCommandTests();
-	state += RunPublishArtifactCommandTests();
 	state += RunPublishCommandTests();
+	state += RunReleaseCommandTests();
 	state += RunVersionCommandTests();
 
 	// Touch stamp file to ensure incremental builds work

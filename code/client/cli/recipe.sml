@@ -18,10 +18,10 @@ Dependencies: {
 		'../../monitor/host/'
 	]
 	Build: [
-		# TODO: 'soup-test-cpp@0.4.0'
+		# 'soup-test-cpp@0'
 	]
 	Test: [
-		# TODO: 'soup-test-assert@0.3.0'
+		# 'mwasplund|soup-test-assert@0'
 	]
 }
 Tests: {
