@@ -436,6 +436,13 @@ namespace Monitor::Windows {
 			length = 0;
 			rawValues[0] = 0;
 
+			auto set = PathSet::Build(values);
+
+			auto stream = std::stringstream();
+			set.Serialize(stream);
+
+			std::cout << "S1: " << stream.str().size() << std::endl;
+
 			for (auto value : values) {
 				auto stringValue = value.ToString();
 				auto newLength = length + static_cast<unsigned long>(stringValue.length()) + 1;
@@ -448,6 +455,8 @@ namespace Monitor::Windows {
 
 				length = newLength;
 			}
+
+			std::cout << "S2: " << length << std::endl;
 		}
 
 		/// <summary>
