@@ -111,8 +111,12 @@ namespace Soup::Core {
 			// Add unique folder name for parameters
 			auto parametersStream = std::stringstream();
 			ValueTableWriter::Serialize(globalParameters, parametersStream);
-			auto hashParameters = CryptoPP::Sha1::HashBase64(parametersStream.str());
-			auto uniqueParametersFolder = Path(std::format("./{}/", hashParameters));
+			auto hashParameters = CryptoPP::Sha1::HashBase64Url(parametersStream.str());
+
+			// Shorten the hash to keep it under control with a small risk of collisions
+			auto uniqueName = hashParameters.substr(0, 12);
+
+			auto uniqueParametersFolder = Path(std::format("./{}/", uniqueName));
 			rootOutput = rootOutput + uniqueParametersFolder;
 
 			return rootOutput;

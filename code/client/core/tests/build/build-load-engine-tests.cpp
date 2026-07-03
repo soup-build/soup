@@ -341,7 +341,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -532,7 +532,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -927,7 +927,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -939,7 +939,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {3,
 								  "C:/Users/Me/.soup/packages/C++/user1/test-tool/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
@@ -951,7 +951,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/cpp/4.5.6/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 						})),
 				packageProvider,
@@ -1258,7 +1258,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -1270,7 +1270,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
@@ -1690,7 +1690,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -1702,7 +1702,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {3,
 								  "C:/Users/Me/.soup/packages/C++/user1/test-tool/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
@@ -1714,7 +1714,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 						})),
 				packageProvider,
@@ -2005,7 +2005,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -2017,7 +2017,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {2,
 								  "C:/WorkingDirectory/test-build/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
@@ -2514,7 +2514,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -2526,10 +2526,10 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 								 {3,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build2/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
@@ -2942,7 +2942,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -2954,13 +2954,13 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {3,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build2/4.4.4/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{5,
 							 {
@@ -3380,7 +3380,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -3392,7 +3392,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {3,
 								  "C:/Users/Me/.soup/packages/C++/user1/test-tool/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
@@ -3404,7 +3404,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build/3.3.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 						})),
 				packageProvider,
@@ -3841,7 +3841,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -3853,19 +3853,19 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {3,
 								  "C:/Users/Me/.soup/packages/Wren/user1/wren/2.2.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{4,
 							 {
 								 {2,
 								  "C:/Users/Me/.soup/packages/Wren/user1/test-build/3.3.4/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 							{5,
 							 {
 								 {5,
 								  "C:/Users/Me/.soup/packages/Wren/user1/cpp/1.1.2/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 						})),
 				packageProvider,
@@ -4180,9 +4180,9 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 								 {2,
-								  "C:/WorkingDirectory/package1/out/zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "C:/WorkingDirectory/package1/out/zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -4194,7 +4194,7 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {3,
 								  "C:/Users/Me/.soup/packages/Wren/user1/csharp/2.2.3/out/"
-								  "zDqRc65c9x3jySpevCCCyZ15fGs/"},
+								  "zDqRc65c9x3j/"},
 							 }},
 						})),
 				packageProvider,
@@ -4513,13 +4513,13 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 								 {2,
 								  "C:/Users/Me/.soup/packages/C++/user1/package-a/3.3.3/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 								 {3,
 								  "C:/Users/Me/.soup/packages/C++/user1/package-b/4.4.4/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {
@@ -4817,10 +4817,10 @@ namespace Soup::Core::Build::UnitTests {
 							 {
 								 {1,
 								  "C:/WorkingDirectory/my-package/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 								 {2,
 								  "C:/Users/Me/.soup/packages/C#/user1/package1/4.4.4/out/"
-								  "zxAcy-Et010fdZUKLgFemwwWuC8/"},
+								  "zxAcy-Et010f/"},
 							 }},
 							{2,
 							 {

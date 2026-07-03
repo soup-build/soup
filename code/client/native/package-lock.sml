@@ -7,7 +7,7 @@ Closure: {
 	'C++': {
 		'monitor-host': { Version: '../../monitor/host/', Build: '0', Tool: '0' }
 		'monitor-shared': { Version: '../../monitor/shared/', Build: '0', Tool: '0' }
-		'mwasplund|cryptopp': { Version: 1.2.9, Digest: 'sha256:53e593acbdfcaa81f285bcb64dabc3d38f36fd9bff7168d3c10a5d9ef752f446', Build: '0', Tool: '0' }
+		'mwasplund|cryptopp': { Version: 1.2.10, Digest: 'sha256:7a53c1ec24d6fd53ca3da5c34082a3ca3b31a82906b6223c6a177b7d8573ad73', Build: '0', Tool: '0' }
 		'mwasplund|detours': { Version: 4.0.15, Digest: 'sha256:1d482c600a7ac1acc36ea43c3d847451aeb5bf146312f40d351ec530c8c04746', Build: '0', Tool: '0' }
 		'mwasplund|json11': { Version: 1.1.6, Digest: 'sha256:c6b0981921f926b73e9512d068efde6eb2c5183f6b3a8442bddc67f847d2bfc4', Build: '0', Tool: '0' }
 		'mwasplund|opal': { Version: 0.13.5, Digest: 'sha256:44d81d4f032879ac74e753db438765829d6f4b512e68eacb990fb037f12b6e2a', Build: '0', Tool: '0' }
