@@ -4,7 +4,7 @@ Closure: {
 		'monitor-client': { Version: './', Build: '0', Tool: '0' }
 		'monitor-shared': { Version: '../shared/', Build: '0', Tool: '0' }
 		'mwasplund|detours': { Version: 4.0.15, Digest: 'sha256:1d482c600a7ac1acc36ea43c3d847451aeb5bf146312f40d351ec530c8c04746', Build: '0', Tool: '0' }
-		'mwasplund|opal': { Version: 0.13.6, Digest: 'sha256:10da1b08bd926efa18ab7710f6565f208745f7f915786dfea9e74eeb06cde3fa', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.13.8, Digest: 'sha256:a43a45de9efabdc5b6d204302d4309d00ab3c21d3cce0cfc2f136b1c652376b1', Build: '0', Tool: '0' }
 	}
 }
 Builds: {

@@ -438,25 +438,24 @@ namespace Monitor::Windows {
 
 			auto set = PathSet::Build(values);
 
+			// TODO: Serialize directly to the buffer
 			auto stream = std::stringstream();
 			set.Serialize(stream);
 
-			std::cout << "S1: " << stream.str().size() << std::endl;
+			length = static_cast<unsigned long>(stream.str().size());
+			if (length > maxLength)
+				throw std::runtime_error("Ran out of space in payload string list");
+			stream.str().copy(rawValues, length);
+		}
 
-			for (auto value : values) {
-				auto stringValue = value.ToString();
-				auto newLength = length + static_cast<unsigned long>(stringValue.length()) + 1;
-				if (newLength > maxLength)
-					throw std::runtime_error("Ran out of space in payload string list");
-
-				// Copy over the null terminated string
-				stringValue.copy(rawValues + length, stringValue.length());
-				rawValues[newLength - 1] = 0;
-
-				length = newLength;
+		static std::string ToHex(std::string_view s, bool upper_case = true) {
+			std::ostringstream ret;
+			for (std::string::size_type i = 0; i < s.length(); ++i) {
+				int z = static_cast<unsigned char>(s[i]) & 0xff;
+				ret << std::hex << std::setfill('0') << std::setw(2) 
+					<< (upper_case ? std::uppercase : std::nouppercase) << z;
 			}
-
-			std::cout << "S2: " << length << std::endl;
+			return ret.str();
 		}
 
 		/// <summary>
