@@ -8,21 +8,15 @@ namespace Monitor {
 	public:
 		static void Initialize(
 			bool enableAccessChecks,
-			Opal::Path workingDirectory,
-			std::vector<std::string> allowedReadDirectories,
-			std::vector<std::string> allowedWriteDirectories) {
+			Opal::Path&& workingDirectory,
+			std::vector<Opal::Path>&& allowedReadDirectories,
+			std::vector<Opal::Path>&& allowedWriteDirectories) {
 			connectionManager.DebugTrace("FileSystemAccessSandbox::Initialize");
 
 			m_enableAccessChecks = enableAccessChecks;
 			m_workingDirectory = std::move(workingDirectory);
-
-			m_allowedReadDirectories.clear();
-			for (auto &value : allowedReadDirectories)
-				m_allowedReadDirectories.push_back(NormalizePath(value.c_str()));
-
-			m_allowedWriteDirectories.clear();
-			for (auto &value : allowedWriteDirectories)
-				m_allowedWriteDirectories.push_back(NormalizePath(value.c_str()));
+			m_allowedReadDirectories = std::move(allowedReadDirectories);
+			m_allowedWriteDirectories = std::move(allowedWriteDirectories);
 		}
 
 		static void UpdateWorkingDirectory(const wchar_t *fileName) {
@@ -70,7 +64,7 @@ namespace Monitor {
 				}
 			}
 
-			ConnectionManagerBase::DebugTrace("Block: {} {}", fileName, normalizedFileName);
+			ConnectionManagerBase::DebugTrace("Block: {} {}", fileName, normalizedFileName.ToString());
 			return false;
 		}
 
@@ -112,25 +106,31 @@ namespace Monitor {
 			return file.starts_with("\\\\.\\");
 		}
 
-		static std::string NormalizePath(const char *fileName) {
+		static Opal::Path NormalizePath(const char *fileName) {
 			// Normalize the path separators and get absolute path
 			auto path = Opal::Path::ParseWindows(fileName);
 			if (!path.HasRoot()) {
 				path = m_workingDirectory + path;
 			}
 
-			auto result = path.ToString();
-
-			// Ignore case
-			std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) {
-				return (char)std::toupper(c);
-			});
-
-			return result;
+			return path;
 		}
 
-		static bool IsUnderDirectory(const std::string &fileName, const std::string &directory) {
-			return fileName.find(directory) == 0;
+		static bool IsUnderDirectory(const Opal::Path &fileName, const Opal::Path &directory) {
+			return StartsWithIgnoreCase(fileName.ToString(), directory.ToString());
+		}
+
+		static bool StartsWithIgnoreCase(std::string_view lhs, std::string_view rhs) {
+			// A string cannot start with a prefix longer than itself
+			if (lhs.length() < rhs.length()) {
+				return false;
+			}
+
+			// Compare characters up to the length of the prefix
+			return std::equal(rhs.begin(), rhs.end(), lhs.begin(), 
+				[](unsigned char a, unsigned char b) {
+					return std::toupper(a) == std::toupper(b);
+				});
 		}
 
 		static std::string UTF8Encode(const std::wstring_view wideString) {
@@ -164,14 +164,14 @@ namespace Monitor {
 		static bool m_enableAccessChecks;
 		static Opal::Path m_workingDirectory;
 
-		static std::vector<std::string> m_allowedReadDirectories;
-		static std::vector<std::string> m_allowedWriteDirectories;
+		static std::vector<Opal::Path> m_allowedReadDirectories;
+		static std::vector<Opal::Path> m_allowedWriteDirectories;
 	};
 
 	bool FileSystemAccessSandbox::m_enableAccessChecks = false;
 	Opal::Path FileSystemAccessSandbox::m_workingDirectory = Opal::Path();
-	std::vector<std::string> FileSystemAccessSandbox::m_allowedReadDirectories =
-		std::vector<std::string>();
-	std::vector<std::string> FileSystemAccessSandbox::m_allowedWriteDirectories =
-		std::vector<std::string>();
+	std::vector<Opal::Path> FileSystemAccessSandbox::m_allowedReadDirectories =
+		std::vector<Opal::Path>();
+	std::vector<Opal::Path> FileSystemAccessSandbox::m_allowedWriteDirectories =
+		std::vector<Opal::Path>();
 }

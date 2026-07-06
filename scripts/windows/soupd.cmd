@@ -6,9 +6,9 @@ SET OutDir=%RootDir%\out
 SET MSBuildDir=%OutDir%\msbuild
 SET RunDir=%OutDir%\run
 
-SET ConfigHash=OZlIVjblazFuKXg-raWUNoGEnG4
+SET ConfigHash=OZlIVjblazFu
 
-SET SOUP_VERSION=0.48.0
+SET SOUP_VERSION=0.48.1
 
 REM - Cleanup previous runs
 rmdir /S /Q %RunDir% > NUL

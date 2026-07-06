@@ -232,19 +232,19 @@ int main() {
 		fileSystem->CreateMockDirectory(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+				"J_HqSstV55vl/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/"),
+				"J_HqSstV55vl/.soup/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/temp/"),
+				"J_HqSstV55vl/temp/"),
 			std::make_shared<MockDirectory>(std::vector<Path>({})));
 
 		fileSystem->CreateMockDirectory(
@@ -352,7 +352,7 @@ int main() {
 		fileSystem->CreateMockFile(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Evaluate.bog"),
+				"J_HqSstV55vl/.soup/Evaluate.bog"),
 			std::make_shared<MockFile>(std::move(myPackageOperationGraphContent)));
 
 		auto soupCppOperationGraph =
@@ -495,7 +495,7 @@ int main() {
 						 {"/(TARGET_my-package)/",
 						  std::string(
 							  "C:/WorkingDirectory/my-package/out/"
-							  "J_HqSstV55vlb-x6RWC_hLRFRDU/")},
+							  "J_HqSstV55vl/")},
 					 })},
 				{"EvaluateReadAccess",
 				 ValueList(
@@ -566,7 +566,7 @@ int main() {
 		fileSystem->CreateMockFile(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/GenerateInput.bvt"),
+				"J_HqSstV55vl/.soup/GenerateInput.bvt"),
 			std::make_shared<MockFile>(std::move(myPackageGenerateInputContent)));
 
 		auto myPackageGenerateResults = OperationResults(
@@ -589,7 +589,7 @@ int main() {
 		fileSystem->CreateMockFile(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Generate.bor"),
+				"J_HqSstV55vl/.soup/Generate.bor"),
 			std::make_shared<MockFile>(std::move(myPackageGenerateResultsContent)));
 
 		auto soupCppGenerateResults = OperationResults(
@@ -640,7 +640,7 @@ int main() {
 		fileSystem->CreateMockFile(
 			Path(
 				"C:/WorkingDirectory/my-package/out/"
-				"J_HqSstV55vlb-x6RWC_hLRFRDU/.soup/Evaluate.bor"),
+				"J_HqSstV55vl/.soup/Evaluate.bor"),
 			std::make_shared<MockFile>(std::move(myPackageEvaluateResultsContent)));
 
 		// Register the test process manager

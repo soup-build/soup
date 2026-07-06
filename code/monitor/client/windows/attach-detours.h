@@ -1994,20 +1994,9 @@ namespace Monitor::Windows {
 		return true;
 	}
 
-	std::vector<std::string> ExtractStringList(const char *rawValues, uint64_t length) {
-		auto result = std::vector<std::string>();
-		auto remainingContent = length;
-		auto valueBuffer = rawValues;
-
-		// Keep pulling off strings until we reach the end
-		while (remainingContent > 0) {
-			auto value = std::string(valueBuffer);
-			valueBuffer += value.length() + 1;
-			remainingContent -= value.length() + 1;
-
-			result.push_back(std::move(value));
-		}
-
+	std::vector<Opal::Path> ExtractStringList(const char *rawValues, size_t length) {
+		auto set = Opal::PathSet::Deserialize(rawValues, length);
+		auto result = set.GetPaths();
 		return result;
 	}
 

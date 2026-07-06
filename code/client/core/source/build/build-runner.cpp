@@ -380,7 +380,7 @@ namespace Soup::Core::Build {
 				auto updatedGeneratePhase1Result = GenerateResult();
 				if (!GenerateResultManager::TryLoadState(
 						generatePhase1ResultFile, updatedGeneratePhase1Result, _fileSystemState)) {
-					throw std::runtime_error("Missing required generate phase 1 result.");
+					throw std::runtime_error(std::format("Missing required generate phase 1 result: {}", generatePhase1ResultFile.ToString()));
 				}
 
 				Log::Diag("Map previous operation graph observed results");

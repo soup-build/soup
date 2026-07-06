@@ -55,7 +55,7 @@ namespace Soup::Core::UnitTests {
 				packageName, workingDirectory, recipe, globalParameters, recipeCache);
 
 			Assert::AreEqual(
-				Path("C:/WorkingDirectory/out/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+				Path("C:/WorkingDirectory/out/J_HqSstV55vl/"),
 				targetDirectory,
 				"Verify target directory matches expected.");
 
@@ -101,7 +101,7 @@ namespace Soup::Core::UnitTests {
 				packageName, workingDirectory, recipe, globalParameters, recipeCache);
 
 			Assert::AreEqual(
-				Path("C:/BuildOut/cpp/local/my-package/1.2.3/J_HqSstV55vlb-x6RWC_hLRFRDU/"),
+				Path("C:/BuildOut/cpp/local/my-package/1.2.3/J_HqSstV55vl/"),
 				targetDirectory,
 				"Verify target directory matches expected.");
 
