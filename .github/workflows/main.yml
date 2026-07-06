@@ -51,7 +51,7 @@ jobs:
       if: matrix.os == 'ubuntu-24.04'
       run: soup build ./soup/code/client/cli/ -flavor ${{matrix.config}}
     - name: Soup Run Version
-      run: soup run ./soup/code/client/cli/ -flavor ${{matrix.config}} -args version
+      run: soup run ./soup/code/client/cli/ -flavor ${{matrix.config}} -- version
     - name: Soup Restore GenerateTest
       run: soup restore ./soup/code/generate-test/
     - name: Soup Build GenerateTest
