@@ -13,11 +13,13 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:LocalUserConfigExtensionsTests;
+export module Soup.Core:LocalUserConfigExtensionsTests;
+
+import :LocalUserConfig;
+import :LocalUserConfigExtensions;
 
 import Monitor.Host;
 import Opal;
-import Soup.Core;
 import Soup.Test.Assert;
 
 using namespace Opal;

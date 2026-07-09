@@ -14,7 +14,10 @@ module;
 #include <string_view>
 #include <vector>
 
-export module Soup.Core.Tests:PackageNameTests;
+export module Soup.Core:PackageNameTests;
+
+import :PackageName;
+import :PackageReference;
 
 import Monitor.Host;
 import Opal;
