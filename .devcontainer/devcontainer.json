@@ -1,7 +1,7 @@
 {
 	"name": "C++",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Containerfile"
 	},
     // "mounts": [
     //     "source=/home/mwasplund/repos/soup-csharp,target=/workspaces/soup-csharp,type=bind"
@@ -11,4 +11,4 @@
             "version": "10.0"
         }
 	}
-} 
+}

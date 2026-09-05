@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/universal:4.1.1-linux
+FROM mcr.microsoft.com/devcontainers/universal:6-noble
 RUN apt-get update
 
 # ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="none"
