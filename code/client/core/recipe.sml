@@ -13,7 +13,7 @@ Source: [
 ]
 Dependencies: {
 	Build: [
-		'mwasplund|soup-test-cpp@0'
+		# 'mwasplund|soup-test-cpp@0'
 	]
 	Runtime: [
 		'mwasplund|opal@0'

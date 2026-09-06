@@ -1069,8 +1069,7 @@ namespace Monitor::Windows {
 
 	private:
 		void OnCreateProcess(bool wasDetoured, std::wstring_view applicationName) {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			OnCreateProcess(wasDetoured, converter.to_bytes(applicationName.data()));
+			OnCreateProcess(wasDetoured, StringConverter::ToUTF8(applicationName));
 		}
 
 		void OnCreateProcess(bool wasDetoured, std::string_view applicationName) {
@@ -1078,8 +1077,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileRead(std::wstring_view fileName, bool exists, bool wasBlocked) {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			TouchFileRead(converter.to_bytes(fileName.data()), exists, wasBlocked);
+			TouchFileRead(StringConverter::ToUTF8(fileName), exists, wasBlocked);
 		}
 
 		void TouchFileRead(std::string_view fileName, bool exists, bool wasBlocked) {
@@ -1090,8 +1088,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileWrite(std::wstring_view fileName, bool wasBlocked) {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			TouchFileWrite(converter.to_bytes(fileName.data()), wasBlocked);
+			TouchFileWrite(StringConverter::ToUTF8(fileName), wasBlocked);
 		}
 
 		void TouchFileWrite(std::string_view fileName, bool wasBlocked) {
@@ -1102,8 +1099,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileDelete(std::wstring_view fileName, bool wasBlocked) {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			TouchFileDelete(converter.to_bytes(fileName.data()), wasBlocked);
+			TouchFileDelete(StringConverter::ToUTF8(fileName), wasBlocked);
 		}
 
 		void TouchFileDelete(std::string_view fileName, bool wasBlocked) {
@@ -1111,8 +1107,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileDeleteOnClose(std::wstring_view fileName) {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			TouchFileDeleteOnClose(converter.to_bytes(fileName.data()));
+			TouchFileDeleteOnClose(StringConverter::ToUTF8(fileName));
 		}
 
 		void TouchFileDeleteOnClose(std::string_view fileName) {
@@ -1125,9 +1120,8 @@ namespace Monitor::Windows {
 		}
 
 		void SearchPath(std::wstring_view path, std::wstring_view filename) {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			auto pathString = converter.to_bytes(path.data());
-			auto filenameString = converter.to_bytes(filename.data());
+			auto pathString = StringConverter::ToUTF8(path);
+			auto filenameString = StringConverter::ToUTF8(filename);
 			SearchPath(pathString, filenameString);
 		}
 
