@@ -2,18 +2,18 @@ Version: 6
 Closure: {
 	'C++': {
 		mkdir: { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|opal': { Version: 0.13.8, Digest: 'sha256:a43a45de9efabdc5b6d204302d4309d00ab3c21d3cce0cfc2f136b1c652376b1', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.14.0, Digest: 'sha256:b211995f3b85ec2a2895f9f4d541b75ddb09ccd542943ae2391d8fdfbe3c16f2', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
 	'0': {
 		Wren: {
 			'soup|cpp': {
-				Version: 0.20.1
-				Digest: 'sha256:03c5b657804b220628f08a2411130e32289ada0375c475928e64ca5d89a0905a'
+				Version: 0.20.3
+				Digest: 'sha256:01090a3637e82e3a428175f4a5c562cbbd87488b4ac26a7bd0b5b9f3706ebd57'
 				Artifacts: {
-					Linux: 'sha256:4737f68f448976de1501556f7e95a2c92c1c6f1ab067c8d369e71d8c96a6cb2e'
-					Windows: 'sha256:44ee8107fc669e21753e508caa4c62faae8f5cd46d8126dd4559446b7f7d1e23'
+					Linux: 'sha256:e8fe01767098cbf13c90a447bbb45da3c44be0bf30c159f1d457f7d196e47862'
+					Windows: 'sha256:cb2bd1824c6a70077b93d98d56d8f665cc3891eb528fe0415998827e6356c09f'
 				}
 			}
 		}
