@@ -9,6 +9,8 @@
     "features": {
         "ghcr.io/devcontainers/features/dotnet:2": {
             "version": "10.0"
-        }
+        },
+        "gitea.mwasplund.com/mwasplund/devcontainers/opencode:0": {},
+        "gitea.mwasplund.com/mwasplund/devcontainers/mils-daemon:0": {}
 	}
 }

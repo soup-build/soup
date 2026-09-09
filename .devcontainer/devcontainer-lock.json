@@ -4,6 +4,16 @@
       "version": "2.5.0",
       "resolved": "ghcr.io/devcontainers/features/dotnet@sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093",
       "integrity": "sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093"
+    },
+    "gitea.mwasplund.com/mwasplund/devcontainers/mils-daemon:0": {
+      "version": "0.1.6",
+      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/mils-daemon@sha256:31e6edf341ee68a0223a96b198ea7a42a99d4022cee01b8a120c72290261e199",
+      "integrity": "sha256:31e6edf341ee68a0223a96b198ea7a42a99d4022cee01b8a120c72290261e199"
+    },
+    "gitea.mwasplund.com/mwasplund/devcontainers/opencode:0": {
+      "version": "0.1.1",
+      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/opencode@sha256:13f475c187600e40bb762bea3f7e5f9ea8eae5d23d3a459d41e379689dc84ee3",
+      "integrity": "sha256:13f475c187600e40bb762bea3f7e5f9ea8eae5d23d3a459d41e379689dc84ee3"
     }
   }
 }
