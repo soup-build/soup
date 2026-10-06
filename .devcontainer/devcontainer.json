@@ -1,8 +1,8 @@
 {
-	"name": "C++",
-	"build": {
-		"dockerfile": "Containerfile"
-	},
+    "name": "C++",
+    "build": {
+        "dockerfile": "Containerfile"
+    },
     // "mounts": [
     //     "source=/home/mwasplund/repos/soup-csharp,target=/workspaces/soup-csharp,type=bind"
     // ],
@@ -11,6 +11,12 @@
             "version": "10.0"
         },
         "gitea.mwasplund.com/mwasplund/devcontainers/opencode:0": {},
-        "gitea.mwasplund.com/mwasplund/devcontainers/mils-daemon:0": {}
-	}
+        "gitea.mwasplund.com/mwasplund/devcontainers/mils:0": {
+            "clientVersion": "v0.1.57"
+        },
+        "gitea.mwasplund.com/mwasplund/devcontainers/neovim:0": {
+            "version": "0.12.5",
+            "gitConfig": "https://github.com/mwasplund/config-nvim.git"
+        }
+    }
 }

@@ -5,15 +5,20 @@
       "resolved": "ghcr.io/devcontainers/features/dotnet@sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093",
       "integrity": "sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093"
     },
-    "gitea.mwasplund.com/mwasplund/devcontainers/mils-daemon:0": {
-      "version": "0.1.6",
-      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/mils-daemon@sha256:31e6edf341ee68a0223a96b198ea7a42a99d4022cee01b8a120c72290261e199",
-      "integrity": "sha256:31e6edf341ee68a0223a96b198ea7a42a99d4022cee01b8a120c72290261e199"
+    "gitea.mwasplund.com/mwasplund/devcontainers/mils:0": {
+      "version": "0.2.3",
+      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/mils@sha256:40b8d28351d0bb15b8ef7cfd823e9c165b2a8eba05df352c08b4a5a939a4a21a",
+      "integrity": "sha256:40b8d28351d0bb15b8ef7cfd823e9c165b2a8eba05df352c08b4a5a939a4a21a"
+    },
+    "gitea.mwasplund.com/mwasplund/devcontainers/neovim:0": {
+      "version": "0.1.0",
+      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/neovim@sha256:9d433c57d30f0f5f8709898c69b51c054995373fee48e9960fa26d81d80ee773",
+      "integrity": "sha256:9d433c57d30f0f5f8709898c69b51c054995373fee48e9960fa26d81d80ee773"
     },
     "gitea.mwasplund.com/mwasplund/devcontainers/opencode:0": {
-      "version": "0.1.1",
-      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/opencode@sha256:13f475c187600e40bb762bea3f7e5f9ea8eae5d23d3a459d41e379689dc84ee3",
-      "integrity": "sha256:13f475c187600e40bb762bea3f7e5f9ea8eae5d23d3a459d41e379689dc84ee3"
+      "version": "0.2.0",
+      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/opencode@sha256:0203c64dd48af5ab5c801f60201ee0e7f742849fcb22509230a2196716ee7f55",
+      "integrity": "sha256:0203c64dd48af5ab5c801f60201ee0e7f742849fcb22509230a2196716ee7f55"
     }
   }
 }
