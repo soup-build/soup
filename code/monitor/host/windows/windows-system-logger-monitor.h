@@ -36,8 +36,7 @@ namespace Monitor::Windows {
 
 		virtual void OnCreateDirectoryW(
 			std::wstring_view pathName, bool /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateDirectoryW: " << converter.to_bytes(pathName.data()) << " "
+			m_stream << "CreateDirectoryW: " << StringConverter::ToUTF8(pathName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -48,8 +47,7 @@ namespace Monitor::Windows {
 			uint32_t /*creationDisposition*/,
 			uint64_t /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateFile2: " << converter.to_bytes(fileName.data()) << " " << wasBlocked
+			m_stream << "CreateFile2: " << StringConverter::ToUTF8(fileName) << " " << wasBlocked
 					 << std::endl;
 		}
 
@@ -72,8 +70,7 @@ namespace Monitor::Windows {
 			uint32_t flagsAndAttributes,
 			uint64_t result,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateFileW: " << converter.to_bytes(fileName.data()) << " "
+			m_stream << "CreateFileW: " << StringConverter::ToUTF8(fileName) << " "
 					 << desiredAccess << " " << sharedMode << " " << creationDisposition << " "
 					 << flagsAndAttributes << result << " " << wasBlocked << std::endl;
 		}
@@ -93,8 +90,7 @@ namespace Monitor::Windows {
 
 		virtual void OnDeleteFileW(
 			std::wstring_view fileName, bool /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "DeleteFileW: " << converter.to_bytes(fileName.data()) << " " << wasBlocked
+			m_stream << "DeleteFileW: " << StringConverter::ToUTF8(fileName) << " " << wasBlocked
 					 << std::endl;
 		}
 
@@ -126,8 +122,7 @@ namespace Monitor::Windows {
 			std::wstring_view pathName,
 			bool /*watchSubtree*/,
 			uint32_t /*notifyFilter*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstChangeNotificationW: " << converter.to_bytes(pathName.data())
+			m_stream << "FindFirstChangeNotificationW: " << StringConverter::ToUTF8(pathName)
 					 << std::endl;
 		}
 
@@ -136,8 +131,7 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnFindFirstFileW(std::wstring_view fileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstFileW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "FindFirstFileW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnFindFirstFileExA(std::string_view fileName) override final {
@@ -145,24 +139,20 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnFindFirstFileExW(std::wstring_view fileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstFileExW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "FindFirstFileExW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnFindFirstFileNameW(
 			std::wstring_view fileName, uint32_t /*flags*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstFileNameW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "FindFirstFileNameW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnFindFirstStreamW(std::wstring_view fileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstStreamW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "FindFirstStreamW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnFindFirstVolumeW(std::wstring_view fileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstVolumeW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "FindFirstVolumeW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnFindNextChangeNotification(bool /*result*/) override final {
@@ -204,8 +194,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetCompressedFileSizeW(
 			std::wstring_view fileName, uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetCompressedFileSizeW: " << converter.to_bytes(fileName.data())
+			m_stream << "GetCompressedFileSizeW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
@@ -216,8 +205,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetDiskFreeSpaceW(
 			std::wstring_view rootPathName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetDiskFreeSpaceW: " << converter.to_bytes(rootPathName.data())
+			m_stream << "GetDiskFreeSpaceW: " << StringConverter::ToUTF8(rootPathName)
 					 << std::endl;
 		}
 
@@ -228,8 +216,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetDiskFreeSpaceExW(
 			std::wstring_view directoryName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetDiskFreeSpaceExW: " << converter.to_bytes(directoryName.data())
+			m_stream << "GetDiskFreeSpaceExW: " << StringConverter::ToUTF8(directoryName)
 					 << std::endl;
 		}
 
@@ -240,8 +227,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetDriveTypeW(
 			std::wstring_view rootPathName, uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetDriveTypeW: " << converter.to_bytes(rootPathName.data()) << std::endl;
+			m_stream << "GetDriveTypeW: " << StringConverter::ToUTF8(rootPathName) << std::endl;
 		}
 
 		virtual void OnGetFileAttributesA(
@@ -251,8 +237,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetFileAttributesW(
 			std::wstring_view fileName, uint32_t /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetFileAttributesW: " << converter.to_bytes(fileName.data()) << " "
+			m_stream << "GetFileAttributesW: " << StringConverter::ToUTF8(fileName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -263,8 +248,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetFileAttributesExW(
 			std::wstring_view fileName, bool result, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetFileAttributesExW: " << converter.to_bytes(fileName.data()) << " "
+			m_stream << "GetFileAttributesExW: " << StringConverter::ToUTF8(fileName) << " "
 					 << result << " " << wasBlocked << std::endl;
 		}
 
@@ -305,8 +289,7 @@ namespace Monitor::Windows {
 			std::wstring_view fileName,
 			std::wstring_view /*buffer*/,
 			uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetFullPathNameW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "GetFullPathNameW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnGetLogicalDrives(uint32_t /*result*/) override final {
@@ -354,8 +337,7 @@ namespace Monitor::Windows {
 			uint32_t /*unique*/,
 			std::wstring_view /*tempFileName*/,
 			uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetTempFileNameW: " << converter.to_bytes(pathName.data()) << std::endl;
+			m_stream << "GetTempFileNameW: " << StringConverter::ToUTF8(pathName) << std::endl;
 		}
 
 		virtual void OnGetTempPathA(
@@ -390,8 +372,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetVolumePathNameW(
 			std::wstring_view filename, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetVolumePathNameW: " << converter.to_bytes(filename.data()) << std::endl;
+			m_stream << "GetVolumePathNameW: " << StringConverter::ToUTF8(filename) << std::endl;
 		}
 
 		virtual void OnLocalFileTimeToFileTime(bool /*result*/) override final {
@@ -430,8 +411,7 @@ namespace Monitor::Windows {
 
 		virtual void OnRemoveDirectoryW(
 			std::wstring_view pathName, bool /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "RemoveDirectoryW: " << converter.to_bytes(pathName.data()) << " "
+			m_stream << "RemoveDirectoryW: " << StringConverter::ToUTF8(pathName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -454,8 +434,7 @@ namespace Monitor::Windows {
 
 		virtual void OnSetFileAttributesW(
 			std::wstring_view fileName, bool /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "SetFileAttributesW: " << converter.to_bytes(fileName.data()) << " "
+			m_stream << "SetFileAttributesW: " << StringConverter::ToUTF8(fileName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -509,8 +488,7 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnLoadLibraryW(std::wstring_view libFileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "LoadLibraryW: " << converter.to_bytes(libFileName.data()) << std::endl;
+			m_stream << "LoadLibraryW: " << StringConverter::ToUTF8(libFileName) << std::endl;
 		}
 
 		virtual void OnLoadLibraryExA(std::string_view libFileName) override final {
@@ -518,8 +496,7 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnLoadLibraryExW(std::wstring_view libFileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "LoadLibraryExW: " << converter.to_bytes(libFileName.data()) << std::endl;
+			m_stream << "LoadLibraryExW: " << StringConverter::ToUTF8(libFileName) << std::endl;
 		}
 
 		// ProcessEnv
@@ -536,8 +513,7 @@ namespace Monitor::Windows {
 			std::wstring_view fileName,
 			std::wstring_view /*extension*/,
 			uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "SearchPathW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "SearchPathW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		// ProcessThreadsApi
@@ -552,8 +528,7 @@ namespace Monitor::Windows {
 			bool /*wasDetoured*/,
 			std::wstring_view applicationName,
 			bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateProcessW: " << converter.to_bytes(applicationName.data())
+			m_stream << "CreateProcessW: " << StringConverter::ToUTF8(applicationName)
 					 << std::endl;
 		}
 
@@ -564,8 +539,7 @@ namespace Monitor::Windows {
 
 		virtual void OnCreateProcessAsUserW(
 			std::wstring_view applicationName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateProcessAsUserW: " << converter.to_bytes(applicationName.data())
+			m_stream << "CreateProcessAsUserW: " << StringConverter::ToUTF8(applicationName)
 					 << std::endl;
 		}
 
@@ -588,9 +562,8 @@ namespace Monitor::Windows {
 			std::wstring_view newFileName,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "PrivCopyFileExW: " << converter.to_bytes(existingFileName.data()) << " -> "
-					 << converter.to_bytes(newFileName.data()) << " " << wasBlocked << std::endl;
+			m_stream << "PrivCopyFileExW: " << StringConverter::ToUTF8(existingFileName) << " -> "
+					 << StringConverter::ToUTF8(newFileName.data()) << " " << wasBlocked << std::endl;
 		}
 
 		// WinBase
@@ -610,9 +583,8 @@ namespace Monitor::Windows {
 			bool /*failIfExists*/,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CopyFileW: " << converter.to_bytes(existingFileName.data()) << " -> "
-					 << converter.to_bytes(newFileName.data()) << " " << wasBlocked << std::endl;
+			m_stream << "CopyFileW: " << StringConverter::ToUTF8(existingFileName) << " -> "
+					 << StringConverter::ToUTF8(newFileName) << " " << wasBlocked << std::endl;
 		}
 
 		virtual void OnCopyFile2(
@@ -620,9 +592,8 @@ namespace Monitor::Windows {
 			std::wstring_view newFileName,
 			uint64_t /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CopyFile2: " << converter.to_bytes(existingFileName.data()) << " -> "
-					 << converter.to_bytes(newFileName.data()) << " " << wasBlocked << std::endl;
+			m_stream << "CopyFile2: " << StringConverter::ToUTF8(existingFileName) << " -> "
+					 << StringConverter::ToUTF8(newFileName) << " " << wasBlocked << std::endl;
 		}
 
 		virtual void OnCopyFileExA(
@@ -639,9 +610,8 @@ namespace Monitor::Windows {
 			std::wstring_view newFileName,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CopyFileExW: " << converter.to_bytes(existingFileName.data()) << " -> "
-					 << converter.to_bytes(newFileName.data()) << " " << wasBlocked << std::endl;
+			m_stream << "CopyFileExW: " << StringConverter::ToUTF8(existingFileName) << " -> "
+					 << StringConverter::ToUTF8(newFileName) << " " << wasBlocked << std::endl;
 		}
 
 		virtual void OnCopyFileTransactedA(
@@ -658,9 +628,8 @@ namespace Monitor::Windows {
 			std::wstring_view newFileName,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CopyFileTransactedW: " << converter.to_bytes(existingFileName.data())
-					 << " -> " << converter.to_bytes(newFileName.data()) << " " << wasBlocked
+			m_stream << "CopyFileTransactedW: " << StringConverter::ToUTF8(existingFileName)
+					 << " -> " << StringConverter::ToUTF8(newFileName) << " " << wasBlocked
 					 << std::endl;
 		}
 
@@ -677,8 +646,7 @@ namespace Monitor::Windows {
 			std::wstring_view newDirectory,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateDirectoryExW: " << converter.to_bytes(newDirectory.data()) << " "
+			m_stream << "CreateDirectoryExW: " << StringConverter::ToUTF8(newDirectory) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -696,8 +664,7 @@ namespace Monitor::Windows {
 			std::wstring_view newDirectory,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateDirectoryTransactedW: " << converter.to_bytes(newDirectory.data())
+			m_stream << "CreateDirectoryTransactedW: " << StringConverter::ToUTF8(newDirectory)
 					 << " " << wasBlocked << std::endl;
 		}
 
@@ -716,8 +683,7 @@ namespace Monitor::Windows {
 			uint32_t /*shareMode*/,
 			uint64_t /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateFileTransactedW: " << converter.to_bytes(fileName.data()) << " "
+			m_stream << "CreateFileTransactedW: " << StringConverter::ToUTF8(fileName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -732,9 +698,8 @@ namespace Monitor::Windows {
 			std::wstring_view fileName,
 			std::wstring_view existingFileName,
 			bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateHardLinkW: " << converter.to_bytes(fileName.data()) << " -> "
-					 << converter.to_bytes(existingFileName.data()) << std::endl;
+			m_stream << "CreateHardLinkW: " << StringConverter::ToUTF8(fileName) << " -> "
+					 << StringConverter::ToUTF8(existingFileName) << std::endl;
 		}
 
 		virtual void OnCreateHardLinkTransactedA(
@@ -749,22 +714,19 @@ namespace Monitor::Windows {
 			std::wstring_view fileName,
 			std::wstring_view /*existingFileName*/,
 			bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateHardLinkTransactedW: " << converter.to_bytes(fileName.data())
-					 << " -> " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "CreateHardLinkTransactedW: " << StringConverter::ToUTF8(fileName)
+					 << " -> " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnCreateProcessWithLogonW(
 			std::wstring_view applicationName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateProcessWithLogonW: " << converter.to_bytes(applicationName.data())
+			m_stream << "CreateProcessWithLogonW: " << StringConverter::ToUTF8(applicationName)
 					 << std::endl;
 		}
 
 		virtual void OnCreateProcessWithTokenW(
 			std::wstring_view applicationName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateProcessWithTokenW: " << converter.to_bytes(applicationName.data())
+			m_stream << "CreateProcessWithTokenW: " << StringConverter::ToUTF8(applicationName)
 					 << std::endl;
 		}
 
@@ -782,9 +744,8 @@ namespace Monitor::Windows {
 			std::wstring_view targetFileName,
 			uint32_t /*flags*/,
 			bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "CreateSymbolicLinkW: " << converter.to_bytes(symlinkFileName.data())
-					 << " -> " << converter.to_bytes(targetFileName.data()) << std::endl;
+			m_stream << "CreateSymbolicLinkW: " << StringConverter::ToUTF8(symlinkFileName)
+					 << " -> " << StringConverter::ToUTF8(targetFileName) << std::endl;
 		}
 
 		virtual void OnCreateSymbolicLinkTransactedA(
@@ -801,10 +762,9 @@ namespace Monitor::Windows {
 			std::wstring_view targetFileName,
 			uint32_t /*flags*/,
 			bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
 			m_stream << "CreateSymbolicLinkTransactedW: "
-					 << converter.to_bytes(symlinkFileName.data()) << " -> "
-					 << converter.to_bytes(targetFileName.data()) << std::endl;
+					 << StringConverter::ToUTF8(symlinkFileName) << " -> "
+					 << StringConverter::ToUTF8(targetFileName) << std::endl;
 		}
 
 		virtual void OnDecryptFileA(std::string_view fileName, bool /*result*/) override final {
@@ -812,8 +772,7 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnDecryptFileW(std::wstring_view fileName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "DecryptFileW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "DecryptFileW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnDeleteFileTransactedA(
@@ -823,8 +782,7 @@ namespace Monitor::Windows {
 
 		virtual void OnDeleteFileTransactedW(
 			std::wstring_view fileName, bool /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "DeleteFileTransactedW: " << converter.to_bytes(fileName.data()) << " "
+			m_stream << "DeleteFileTransactedW: " << StringConverter::ToUTF8(fileName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -833,8 +791,7 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnEncryptFileW(std::wstring_view fileName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "EncryptFileW: " << converter.to_bytes(fileName.data()) << std::endl;
+			m_stream << "EncryptFileW: " << StringConverter::ToUTF8(fileName) << std::endl;
 		}
 
 		virtual void OnFileEncryptionStatusA(
@@ -844,15 +801,13 @@ namespace Monitor::Windows {
 
 		virtual void OnFileEncryptionStatusW(
 			std::wstring_view fileName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FileEncryptionStatusW: " << converter.to_bytes(fileName.data())
+			m_stream << "FileEncryptionStatusW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
 		virtual void OnFindFirstFileNameTransactedW(
 			std::wstring_view fileName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstFileNameTransactedW: " << converter.to_bytes(fileName.data())
+			m_stream << "FindFirstFileNameTransactedW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
@@ -861,14 +816,12 @@ namespace Monitor::Windows {
 		}
 
 		virtual void OnFindFirstFileTransactedW(std::wstring_view fileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstFileTransactedW: " << converter.to_bytes(fileName.data())
+			m_stream << "FindFirstFileTransactedW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
 		virtual void OnFindFirstStreamTransactedW(std::wstring_view fileName) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "FindFirstStreamTransactedW: " << converter.to_bytes(fileName.data())
+			m_stream << "FindFirstStreamTransactedW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
@@ -879,8 +832,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetBinaryTypeW(
 			std::wstring_view applicationName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetBinaryTypeW: " << converter.to_bytes(applicationName.data())
+			m_stream << "GetBinaryTypeW: " << StringConverter::ToUTF8(applicationName)
 					 << std::endl;
 		}
 
@@ -891,8 +843,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetCompressedFileSizeTransactedW(
 			std::wstring_view fileName, uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetCompressedFileSizeTransactedW: " << converter.to_bytes(fileName.data())
+			m_stream << "GetCompressedFileSizeTransactedW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
@@ -911,8 +862,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetEnvironmentVariableW(
 			std::wstring_view name, uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetEnvironmentVariableW: " << converter.to_bytes(name.data()) << std::endl;
+			m_stream << "GetEnvironmentVariableW: " << StringConverter::ToUTF8(name) << std::endl;
 		}
 
 		virtual void OnGetFileAttributesTransactedA(
@@ -923,8 +873,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetFileAttributesTransactedW(
 			std::wstring_view fileName, uint32_t /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetFileAttributesTransactedW: " << converter.to_bytes(fileName.data())
+			m_stream << "GetFileAttributesTransactedW: " << StringConverter::ToUTF8(fileName)
 					 << " " << wasBlocked << std::endl;
 		}
 
@@ -948,8 +897,7 @@ namespace Monitor::Windows {
 
 		virtual void OnGetFullPathNameTransactedW(
 			std::wstring_view fileName, uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "GetFullPathNameTransactedW: " << converter.to_bytes(fileName.data())
+			m_stream << "GetFullPathNameTransactedW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
@@ -1004,9 +952,8 @@ namespace Monitor::Windows {
 			std::wstring_view newFileName,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "MoveFileW: " << converter.to_bytes(existingFileName.data()) << " -> "
-					 << converter.to_bytes(newFileName.data()) << " " << wasBlocked << std::endl;
+			m_stream << "MoveFileW: " << StringConverter::ToUTF8(existingFileName) << " -> "
+					 << StringConverter::ToUTF8(newFileName.data()) << " " << wasBlocked << std::endl;
 		}
 
 		virtual void OnMoveFileExA(
@@ -1025,9 +972,8 @@ namespace Monitor::Windows {
 			uint32_t /*flags*/,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "MoveFileExW: " << converter.to_bytes(existingFileName.data()) << " -> "
-					 << converter.to_bytes(newFileName.data()) << " " << wasBlocked << std::endl;
+			m_stream << "MoveFileExW: " << StringConverter::ToUTF8(existingFileName) << " -> "
+					 << StringConverter::ToUTF8(newFileName) << " " << wasBlocked << std::endl;
 		}
 
 		virtual void OnMoveFileTransactedA(
@@ -1046,9 +992,8 @@ namespace Monitor::Windows {
 			uint32_t /*flags*/,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "MoveFileTransactedW: " << converter.to_bytes(existingFileName.data())
-					 << " -> " << converter.to_bytes(newFileName.data()) << " " << wasBlocked
+			m_stream << "MoveFileTransactedW: " << StringConverter::ToUTF8(existingFileName)
+					 << " -> " << StringConverter::ToUTF8(newFileName) << " " << wasBlocked
 					 << std::endl;
 		}
 
@@ -1068,9 +1013,8 @@ namespace Monitor::Windows {
 			uint32_t /*flags*/,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "MoveFileWithProgressW: " << converter.to_bytes(existingFileName.data())
-					 << " -> " << converter.to_bytes(newFileName.data()) << " " << wasBlocked
+			m_stream << "MoveFileWithProgressW: " << StringConverter::ToUTF8(existingFileName)
+					 << " -> " << StringConverter::ToUTF8(newFileName.data()) << " " << wasBlocked
 					 << std::endl;
 		}
 
@@ -1081,8 +1025,7 @@ namespace Monitor::Windows {
 
 		virtual void OnOpenEncryptedFileRawW(
 			std::wstring_view fileName, uint32_t /*flags*/, uint32_t /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "OpenEncryptedFileRawW: " << converter.to_bytes(fileName.data())
+			m_stream << "OpenEncryptedFileRawW: " << StringConverter::ToUTF8(fileName)
 					 << std::endl;
 		}
 
@@ -1106,8 +1049,7 @@ namespace Monitor::Windows {
 
 		virtual void OnRemoveDirectoryTransactedW(
 			std::wstring_view pathName, bool /*result*/, bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "RemoveDirectoryTransactedW: " << converter.to_bytes(pathName.data()) << " "
+			m_stream << "RemoveDirectoryTransactedW: " << StringConverter::ToUTF8(pathName) << " "
 					 << wasBlocked << std::endl;
 		}
 
@@ -1131,10 +1073,9 @@ namespace Monitor::Windows {
 			std::wstring_view backupFileName,
 			uint32_t /*replaceFlags*/,
 			bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "ReplaceFileW: " << converter.to_bytes(replacedFileName.data()) << " - "
-					 << converter.to_bytes(replacementFileName.data()) << " - "
-					 << converter.to_bytes(backupFileName.data()) << std::endl;
+			m_stream << "ReplaceFileW: " << StringConverter::ToUTF8(replacedFileName) << " - "
+					 << StringConverter::ToUTF8(replacementFileName) << " - "
+					 << StringConverter::ToUTF8(backupFileName) << std::endl;
 		}
 
 		virtual void OnSetCurrentDirectoryA(
@@ -1144,8 +1085,7 @@ namespace Monitor::Windows {
 
 		virtual void OnSetCurrentDirectoryW(
 			std::wstring_view pathName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "SetCurrentDirectoryW: " << converter.to_bytes(pathName.data())
+			m_stream << "SetCurrentDirectoryW: " << StringConverter::ToUTF8(pathName)
 					 << std::endl;
 		}
 
@@ -1155,8 +1095,7 @@ namespace Monitor::Windows {
 
 		virtual void OnSetDllDirectoryW(
 			std::wstring_view pathName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "SetDllDirectoryW: " << converter.to_bytes(pathName.data()) << std::endl;
+			m_stream << "SetDllDirectoryW: " << StringConverter::ToUTF8(pathName) << std::endl;
 		}
 
 		virtual void OnSetFileAttributesTransactedA(
@@ -1173,8 +1112,7 @@ namespace Monitor::Windows {
 			uint32_t /*fileAttributes*/,
 			bool /*result*/,
 			bool wasBlocked) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "SetFileAttributesTransactedW: " << converter.to_bytes(pathName.data())
+			m_stream << "SetFileAttributesTransactedW: " << StringConverter::ToUTF8(pathName)
 					 << " " << wasBlocked << std::endl;
 		}
 
@@ -1197,8 +1135,7 @@ namespace Monitor::Windows {
 
 		virtual void OnSetFileShortNameW(
 			std::wstring_view shortName, bool /*result*/) override final {
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			m_stream << "SetFileShortNameW: " << converter.to_bytes(shortName.data()) << std::endl;
+			m_stream << "SetFileShortNameW: " << StringConverter::ToUTF8(shortName) << std::endl;
 		}
 
 		virtual void OnSetSearchPathMode(uint32_t /*flags*/, bool /*result*/) override final {

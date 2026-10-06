@@ -15,7 +15,7 @@ CONFIG_HASH=Oltq7cGwk0Rb
 
 OWNER=mwasplund
 
-SOUP_VERSION="0.48.1"
+SOUP_VERSION="0.48.2"
 
 # Cleanup previous runs
 rm -rf $RUN_DIR

@@ -1,5 +1,6 @@
 module;
 
+#include <iostream>
 #include <memory>
 
 export module Soup.Core.Tests:RunOperationGraphReaderTests;
