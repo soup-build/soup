@@ -2,7 +2,7 @@ Version: 6
 Closure: {
 	'C++': {
 		mkdir: { Version: './', Build: '0', Tool: '0' }
-		'mwasplund|opal': { Version: 0.14.0, Digest: 'sha256:b211995f3b85ec2a2895f9f4d541b75ddb09ccd542943ae2391d8fdfbe3c16f2', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.14.1, Digest: 'sha256:fcc8ec8a00237a96878ae612e1912df21f58224b2c8c17bbed658389589ed119', Build: '0', Tool: '0' }
 	}
 }
 Builds: {
