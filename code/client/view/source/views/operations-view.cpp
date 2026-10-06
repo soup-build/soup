@@ -4,7 +4,9 @@
 
 module;
 
+#include <chrono>
 #include <format>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -20,8 +22,31 @@ import :TreeView;
 import :ValueTreeConverter;
 
 namespace Soup::View {
+	std::string format_bool(bool value) {
+		return value ? "true" : "false";
+	}
+
+	std::string format_time(std::chrono::time_point<std::chrono::file_clock> time) {
+//#ifdef _WIN32
+		auto sys_time =
+			std::chrono::clock_cast<std::chrono::system_clock>(time);
+		std::chrono::zoned_time local_time{std::chrono::current_zone(), sys_time};
+		return std::format("{:%Y-%m-%d %H:%M:%S}", local_time);
+// #else
+// 		auto sys_time = std::chrono::file_clock::to_sys(time);
+// 		auto timeT = std::chrono::system_clock::to_time_t(sys_time);
+
+// 		std::stringstream ss;
+// 		ss << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S");
+
+// 		return ss.str();
+// #endif
+	}
+
 	ftxui::Component LayoutOperations(
-		const Core::OperationGraph &graph, int *selected, int *showGraphView) {
+		const Core::OperationGraph &graph,
+		std::optional<Core::OperationResults>& operationResults,
+		int *selected, int *showGraphView) {
 		// Build up the id lookups
 		auto operationLookup = std::unordered_map<int, int>();
 		auto operationComponents = std::vector<std::string>();
@@ -46,6 +71,22 @@ namespace Soup::View {
 
 			operationInfo.Insert("Id", TreeValue(std::to_string(operation.Id)));
 			operationInfo.Insert("Title", TreeValue(operation.Title));
+
+			auto resultInfo = TreeValueTable();
+			if (operationResults.has_value()) {
+				Core::OperationResult *operationResult;
+				if (operationResults->TryFindResult(operation.Id, operationResult)) {
+					resultInfo.Insert(
+						"WasSuccessfulRun", TreeValue(format_bool(operationResult->WasSuccessfulRun)));
+					resultInfo.Insert(
+						"EvaluateTime", TreeValue(format_time(operationResult->EvaluateTime)));
+
+					// std::vector<FileId> ObservedInput;
+					// std::vector<FileId> ObservedOutput;
+				}
+			}
+
+			operationInfo.Insert("Result", TreeValue(std::move(resultInfo)));
 
 			auto commandInfo = TreeValueTable();
 			commandInfo.Insert("WorkingDirectory", operation.Command.WorkingDirectory.ToString());

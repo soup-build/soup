@@ -209,6 +209,7 @@ namespace Soup::View {
 
 					auto operationsView = LayoutOperations(
 						packageLoadState.GeneratePhase1Result.value().GetGraph(),
+						packageLoadState.EvaluatePhase1Results,
 						selected,
 						&_state.ShowChildGraphView);
 
@@ -237,6 +238,7 @@ namespace Soup::View {
 
 					auto operationsView = LayoutOperations(
 						packageLoadState.GeneratePhase2Result.value(),
+						packageLoadState.EvaluatePhase2Results,
 						selected,
 						&_state.ShowChildGraphView);
 
