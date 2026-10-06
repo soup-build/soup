@@ -27,20 +27,10 @@ namespace Soup::View {
 	}
 
 	std::string format_time(std::chrono::time_point<std::chrono::file_clock> time) {
-//#ifdef _WIN32
 		auto sys_time =
 			std::chrono::clock_cast<std::chrono::system_clock>(time);
 		std::chrono::zoned_time local_time{std::chrono::current_zone(), sys_time};
 		return std::format("{:%Y-%m-%d %H:%M:%S}", local_time);
-// #else
-// 		auto sys_time = std::chrono::file_clock::to_sys(time);
-// 		auto timeT = std::chrono::system_clock::to_time_t(sys_time);
-
-// 		std::stringstream ss;
-// 		ss << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S");
-
-// 		return ss.str();
-// #endif
 	}
 
 	ftxui::Component LayoutOperations(
