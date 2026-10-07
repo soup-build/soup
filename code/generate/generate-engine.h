@@ -13,7 +13,7 @@ namespace Soup::Core::Generate {
 
 	public:
 		GenerateEngine()
-			: _fileSystemState(std::nullopt) {
+			: _fileSystemState() {
 		}
 
 		void Run(bool isFirstRun, const Path &soupTargetDirectory) {

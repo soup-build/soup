@@ -72,7 +72,16 @@ export namespace Soup::Core {
 		/// Initializes a new instance of the <see cref="FileSystemState"/>
 		/// class.
 		/// </summary>
-		FileSystemState(std::optional<std::chrono::time_point<std::chrono::file_clock>> startTime)
+		FileSystemState()
+			: _startTime(std::nullopt),
+			  _maxFileId(0),
+			  _files(),
+			  _fileLookup(),
+			  _directoryLookup(),
+			  _writeCache(),
+			  _mutex() {
+		}
+		FileSystemState(std::chrono::time_point<std::chrono::file_clock> startTime)
 			: _startTime(startTime),
 			  _maxFileId(0),
 			  _files(),

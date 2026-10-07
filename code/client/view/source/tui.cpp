@@ -35,7 +35,7 @@ namespace Soup::View {
 		/// Main entry point for a unique command
 		/// </summary>
 		void Run(Core::PackageProvider &packageProvider) {
-			auto fileSystemState = Core::FileSystemState(std::nullopt);
+			auto fileSystemState = Core::FileSystemState();
 
 			_state = AppState();
 

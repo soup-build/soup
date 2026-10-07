@@ -109,7 +109,7 @@ namespace PrintGraph {
 		auto file = Opal::System::IFileSystem::Current().OpenRead(generateResultFile, true);
 
 		// Read the contents of the build state file
-		auto fileSystemState = Soup::Core::FileSystemState(std::nullopt);
+		auto fileSystemState = Soup::Core::FileSystemState();
 		auto generateResult =
 			Soup::Core::GenerateResultReader::Deserialize(file->GetInStream(), fileSystemState);
 
@@ -130,7 +130,7 @@ namespace PrintGraph {
 		auto file = Opal::System::IFileSystem::Current().OpenRead(operationGraphFile, true);
 
 		// Read the contents of the build state file
-		auto fileSystemState = Soup::Core::FileSystemState(std::nullopt);
+		auto fileSystemState = Soup::Core::FileSystemState();
 		auto graph =
 			Soup::Core::OperationGraphReader::Deserialize(file->GetInStream(), fileSystemState);
 
