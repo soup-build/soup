@@ -122,7 +122,8 @@ namespace Soup::Core::Build {
 		// auto startTime = std::chrono::high_resolution_clock::now();
 
 		// Load the file system state
-		auto fileSystemState = FileSystemState();
+		auto buildStart = std::chrono::file_clock::now();
+		auto fileSystemState = FileSystemState(buildStart);
 		PreloadFileSystemState(packageProvider, fileSystemState);
 
 		// Initialize a shared Evaluate Engine

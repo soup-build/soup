@@ -49,6 +49,8 @@ export namespace Soup::Core {
 	/// </summary>
 	class FileSystemState {
 	private:
+		std::optional<std::chrono::time_point<std::chrono::file_clock>> _startTime;
+
 		// The maximum id that has been used for files
 		// Used to ensure unique ids are generated across the entire system
 		FileId _maxFileId;
@@ -70,8 +72,9 @@ export namespace Soup::Core {
 		/// Initializes a new instance of the <see cref="FileSystemState"/>
 		/// class.
 		/// </summary>
-		FileSystemState()
-			: _maxFileId(0),
+		FileSystemState(std::optional<std::chrono::time_point<std::chrono::file_clock>> startTime)
+			: _startTime(startTime),
+			  _maxFileId(0),
 			  _files(),
 			  _fileLookup(),
 			  _directoryLookup(),
@@ -398,12 +401,24 @@ export namespace Soup::Core {
 				lastWriteTime = lastWriteTimeValue;
 			}
 
+			if (lastWriteTime.has_value()) {
+				if (_startTime.has_value() && lastWriteTime.value() > _startTime) {
+					Log::Warning(
+						"File altered after build start [{}] {}",
+						format_time(lastWriteTime.value()),
+						filePath.ToString());
+				}
+
 #ifdef TRACE_FILE_SYSTEM_STATE
-			if (lastWriteTime.has_value())
 				Log::Diag("CheckFileWriteTime: {} {}", filePath.ToString(), format_time(lastWriteTime.value()));
-			else
+#endif
+			}
+			else {
+#ifdef TRACE_FILE_SYSTEM_STATE
 				Log::Diag("CheckFileWriteTime: {} NONE", filePath.ToString());
 #endif
+			}
+
 
 			auto insertResult = _writeCache.insert_or_assign(fileId, lastWriteTime);
 			return lastWriteTime;
