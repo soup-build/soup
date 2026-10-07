@@ -49,6 +49,8 @@ export namespace Soup::Core {
 	/// </summary>
 	class FileSystemState {
 	private:
+		std::optional<std::chrono::time_point<std::chrono::file_clock>> _startTime;
+
 		// The maximum id that has been used for files
 		// Used to ensure unique ids are generated across the entire system
 		FileId _maxFileId;
@@ -71,7 +73,17 @@ export namespace Soup::Core {
 		/// class.
 		/// </summary>
 		FileSystemState()
-			: _maxFileId(0),
+			: _startTime(std::nullopt),
+			  _maxFileId(0),
+			  _files(),
+			  _fileLookup(),
+			  _directoryLookup(),
+			  _writeCache(),
+			  _mutex() {
+		}
+		FileSystemState(std::chrono::time_point<std::chrono::file_clock> startTime)
+			: _startTime(startTime),
+			  _maxFileId(0),
 			  _files(),
 			  _fileLookup(),
 			  _directoryLookup(),
@@ -241,7 +253,7 @@ export namespace Soup::Core {
 		/// </summary>
 		void PreloadDirectory(const Path &directory, bool trackDirectories) {
 #ifdef TRACE_FILE_SYSTEM_STATE
-			std::cout << "PreloadDirectory: " << directory.ToString() << std::endl;
+			Log::Diag("PreloadDirectory: {}", directory.ToString());
 #endif
 
 			FileId directoryId;
@@ -260,7 +272,7 @@ export namespace Soup::Core {
 						auto &absolutePath = file.HasRoot() ? file : directory + file;
 
 #ifdef TRACE_FILE_SYSTEM_STATE
-						std::cout << "PreloadDirectory: File " << file.ToString() << std::endl;
+						Log::Diag("PreloadDirectory: File {}", file.ToString());
 #endif
 
 						// Recursively load child directories
@@ -372,18 +384,11 @@ export namespace Soup::Core {
 			_writeCache.erase(fileId);
 		}
 
-		std::string format(std::chrono::time_point<std::chrono::file_clock> time) {
-#ifdef _WIN32
-			return std::format("{:%Y-%m-%d %H:%M:%S %z}", time);
-#else
-			auto systemTime = std::chrono::file_clock::to_sys(time);
-			auto timeT = std::chrono::system_clock::to_time_t(systemTime);
-
-			std::stringstream ss;
-			ss << std::put_time(std::localtime(&timeT), "%Y-%m-%d %H:%M:%S %z");
-
-			return ss.str();
-#endif
+		std::string format_time(std::chrono::time_point<std::chrono::file_clock> time) {
+			auto sys_time =
+				std::chrono::clock_cast<std::chrono::system_clock>(time);
+			std::chrono::zoned_time local_time{std::chrono::current_zone(), sys_time};
+			return std::format("{:%Y-%m-%d %H:%M:%S}", local_time);
 		}
 
 		/// <summary>
@@ -405,13 +410,24 @@ export namespace Soup::Core {
 				lastWriteTime = lastWriteTimeValue;
 			}
 
+			if (lastWriteTime.has_value()) {
+				if (_startTime.has_value() && lastWriteTime.value() > _startTime) {
+					Log::Warning(
+						"File altered after build start [{}] {}",
+						format_time(lastWriteTime.value()),
+						filePath.ToString());
+				}
+
 #ifdef TRACE_FILE_SYSTEM_STATE
-			if (lastWriteTime.has_value())
-				std::cout << "CheckFileWriteTime: " << filePath.ToString() << " "
-						  << format(lastWriteTime.value()) << std::endl;
-			else
-				std::cout << "CheckFileWriteTime: " << filePath.ToString() << " NONE" << std::endl;
+				Log::Diag("CheckFileWriteTime: {} {}", filePath.ToString(), format_time(lastWriteTime.value()));
 #endif
+			}
+			else {
+#ifdef TRACE_FILE_SYSTEM_STATE
+				Log::Diag("CheckFileWriteTime: {} NONE", filePath.ToString());
+#endif
+			}
+
 
 			auto insertResult = _writeCache.insert_or_assign(fileId, lastWriteTime);
 			return lastWriteTime;

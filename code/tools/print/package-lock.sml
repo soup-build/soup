@@ -9,7 +9,7 @@ Closure: {
 		'monitor-shared': { Version: '../../monitor/shared/', Build: '0', Tool: '0' }
 		'mwasplund|cryptopp': { Version: 1.2.10, Digest: 'sha256:7a53c1ec24d6fd53ca3da5c34082a3ca3b31a82906b6223c6a177b7d8573ad73', Build: '0', Tool: '0' }
 		'mwasplund|detours': { Version: 4.0.15, Digest: 'sha256:1d482c600a7ac1acc36ea43c3d847451aeb5bf146312f40d351ec530c8c04746', Build: '0', Tool: '0' }
-		'mwasplund|opal': { Version: 0.14.0, Digest: 'sha256:b211995f3b85ec2a2895f9f4d541b75ddb09ccd542943ae2391d8fdfbe3c16f2', Build: '0', Tool: '0' }
+		'mwasplund|opal': { Version: 0.14.1, Digest: 'sha256:fcc8ec8a00237a96878ae612e1912df21f58224b2c8c17bbed658389589ed119', Build: '0', Tool: '0' }
 		'mwasplund|reflex': { Version: 5.5.4, Digest: 'sha256:09e879b8c200c6415543686cf81c710712d07286753cdcd77cec08eab8e81bbe', Build: '0', Tool: '0' }
 		'mwasplund|soup-test-assert': { Version: 0.5.0, Digest: 'sha256:ae069ae6775ed31b5eb3ba5c05f33fd8e786cb77884991ae642b887cf7e0dde0', Build: '0', Tool: '0' }
 		sml: { Version: '../../sml/', Build: '0', Tool: '0' }
