@@ -16,6 +16,7 @@ module;
 export module Soup.Core:FileSystemState;
 
 import Opal;
+import :FormatUtils;
 
 using namespace Opal;
 
@@ -384,13 +385,6 @@ export namespace Soup::Core {
 			_writeCache.erase(fileId);
 		}
 
-		std::string format_time(std::chrono::time_point<std::chrono::file_clock> time) {
-			auto sys_time =
-				std::chrono::clock_cast<std::chrono::system_clock>(time);
-			std::chrono::zoned_time local_time{std::chrono::current_zone(), sys_time};
-			return std::format("{:%Y-%m-%d %H:%M:%S}", local_time);
-		}
-
 		/// <summary>
 		/// Update the write times for the provided file
 		/// </summary>
@@ -414,12 +408,12 @@ export namespace Soup::Core {
 				if (_startTime.has_value() && lastWriteTime.value() > _startTime) {
 					Log::Warning(
 						"File altered after build start [{}] {}",
-						format_time(lastWriteTime.value()),
+						FormatUtils::FormatTime(lastWriteTime.value()),
 						filePath.ToString());
 				}
 
 #ifdef TRACE_FILE_SYSTEM_STATE
-				Log::Diag("CheckFileWriteTime: {} {}", filePath.ToString(), format_time(lastWriteTime.value()));
+				Log::Diag("CheckFileWriteTime: {} {}", filePath.ToString(), FormatUtils::FormatTime(lastWriteTime.value()));
 #endif
 			}
 			else {

@@ -114,6 +114,7 @@ export import :RootRecipe;
 export import :RootRecipeExtensions;
 
 // Utilities
+export import :FormatUtils;
 export import :HandledException;
 
 // Value Table

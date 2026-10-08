@@ -157,6 +157,8 @@ namespace Soup::Core {
 			// Check if this operation was run before
 			auto buildRequired = false;
 			if (operationState.PreviousResult && operationState.PreviousResult->WasSuccessfulRun) {
+				Log::Diag("Previous successful result {}", FormatUtils::FormatTime(operationState.PreviousResult->EvaluateTime));
+
 				// Check if the executable has changed since the last run
 				bool executableOutOfDate = false;
 				if (operationState.Info.Command.Executable != Path("./writefile.exe")) {
@@ -385,6 +387,8 @@ namespace Soup::Core {
 				// incremental builds
 				operationResult.WasSuccessfulRun = true;
 				operationResult.EvaluateTime = System::ISystem::Current().GetCurrentTime();
+
+				Log::Diag("Operation success: {}", FormatUtils::FormatTime(operationResult.EvaluateTime));
 
 				if (processStdOut.has_value()) {
 					operationResult.ObservedValues = processStdOut.value()(stdOut);

@@ -117,7 +117,7 @@ namespace PrintGraph {
 		PrintOperations(generateResult.GetGraph());
 		PrintGraph(generateResult.GetGraph());
 
-		std::cout << "HasPreprocessor: " << (generateResult.HasPreprocessor() ? "true" : "false")
+		std::cout << "HasPreprocessor: " << Soup::Core::FormatUtils::FormatBool(generateResult.HasPreprocessor())
 				  << std::endl;
 	}
 

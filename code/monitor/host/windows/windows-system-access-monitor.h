@@ -1081,6 +1081,8 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileRead(std::string_view fileName, bool exists, bool wasBlocked) {
+			Log::Diag("WindowsSystemAccessMonitor::TouchFileRead - {} (exists={}, wasBlocked={})", fileName, exists, wasBlocked);
+
 			// Verify not a special file
 			if (!IsSpecialFile(fileName)) {
 				_monitor->TouchFileRead(Path::ParseWindows(fileName), exists, wasBlocked);
@@ -1092,6 +1094,8 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileWrite(std::string_view fileName, bool wasBlocked) {
+			Log::Diag("WindowsSystemAccessMonitor::TouchFileWrite - {} (wasBlocked={})", fileName, wasBlocked);
+
 			// Verify not a special file
 			if (!IsSpecialFile(fileName)) {
 				_monitor->TouchFileWrite(Path::ParseWindows(fileName), wasBlocked);
@@ -1103,6 +1107,7 @@ namespace Monitor::Windows {
 		}
 
 		void TouchFileDelete(std::string_view fileName, bool wasBlocked) {
+			Log::Diag("WindowsSystemAccessMonitor::TouchFileDelete - {} (wasBlocked={})", fileName, wasBlocked);
 			_monitor->TouchFileDelete(Path::ParseWindows(fileName), wasBlocked);
 		}
 
@@ -1115,8 +1120,11 @@ namespace Monitor::Windows {
 		}
 
 		bool IsSpecialFile(std::string_view fileName) {
-			// Check if the file name is a pipe or the standard input/output streams
-			return fileName.starts_with("\\\\.\\") || fileName == "CONIN$" || fileName == "CONOUT$";
+			// Check if the file name is a pipe, NT drive or the standard input/output streams
+			return fileName.starts_with("\\\\.\\") ||
+				fileName.starts_with("\\\\?\\PhysicalDrive") ||
+				fileName == "CONIN$" ||
+				fileName == "CONOUT$";
 		}
 
 		void SearchPath(std::wstring_view path, std::wstring_view filename) {

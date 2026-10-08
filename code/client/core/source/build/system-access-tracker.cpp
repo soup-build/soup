@@ -12,6 +12,7 @@ export module Soup.Core:SystemAccessTracker;
 
 import Opal;
 import Monitor.Host;
+import :FormatUtils;
 
 using namespace Opal;
 
@@ -62,13 +63,12 @@ namespace Soup::Core {
 
 		virtual void TouchFileRead(Path filePath, bool exists, bool wasBlocked) override final {
 			if (wasBlocked) {
-				// TODO: Warning
-				Log::Info("FileReadBlocked: {}", filePath.ToString());
+				Log::Warning("FileReadBlocked: {}", filePath.ToString());
 			} else {
 				auto value = filePath.ToString();
 
 #ifdef TRACE_SYSTEM_ACCESS
-				Log::Diag("TouchFileRead {}", value);
+				Log::Diag("TouchFileRead {} {}", FormatUtils::FormatBool(exists), value);
 #endif
 
 				if (exists) {

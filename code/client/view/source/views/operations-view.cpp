@@ -22,17 +22,6 @@ import :TreeView;
 import :ValueTreeConverter;
 
 namespace Soup::View {
-	std::string format_bool(bool value) {
-		return value ? "true" : "false";
-	}
-
-	std::string format_time(std::chrono::time_point<std::chrono::file_clock> time) {
-		auto sys_time =
-			std::chrono::clock_cast<std::chrono::system_clock>(time);
-		std::chrono::zoned_time local_time{std::chrono::current_zone(), sys_time};
-		return std::format("{:%Y-%m-%d %H:%M:%S}", local_time);
-	}
-
 	ftxui::Component LayoutOperations(
 		const Core::OperationGraph &graph,
 		std::optional<Core::OperationResults>& operationResults,
@@ -67,9 +56,9 @@ namespace Soup::View {
 				Core::OperationResult *operationResult;
 				if (operationResults->TryFindResult(operation.Id, operationResult)) {
 					resultInfo.Insert(
-						"WasSuccessfulRun", TreeValue(format_bool(operationResult->WasSuccessfulRun)));
+						"WasSuccessfulRun", TreeValue(Core::FormatUtils::FormatBool(operationResult->WasSuccessfulRun)));
 					resultInfo.Insert(
-						"EvaluateTime", TreeValue(format_time(operationResult->EvaluateTime)));
+						"EvaluateTime", TreeValue(Core::FormatUtils::FormatTime(operationResult->EvaluateTime)));
 
 					// std::vector<FileId> ObservedInput;
 					// std::vector<FileId> ObservedOutput;
