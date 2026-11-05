@@ -1,24 +1,24 @@
 {
   "features": {
+    "forgejo.mwasplund.com/mwasplund/devcontainers/mils:0": {
+      "version": "0.3.4",
+      "resolved": "forgejo.mwasplund.com/mwasplund/devcontainers/mils@sha256:13807b67328530de5b5d6621b55b5a235320c0597af20adfc4fb1ba5e782109f",
+      "integrity": "sha256:13807b67328530de5b5d6621b55b5a235320c0597af20adfc4fb1ba5e782109f"
+    },
+    "forgejo.mwasplund.com/mwasplund/devcontainers/neovim:0": {
+      "version": "0.1.1",
+      "resolved": "forgejo.mwasplund.com/mwasplund/devcontainers/neovim@sha256:8814c4c49826d473fbe89a93022a80a6d8739331b8a9c16c5fb0b4119a2a9311",
+      "integrity": "sha256:8814c4c49826d473fbe89a93022a80a6d8739331b8a9c16c5fb0b4119a2a9311"
+    },
+    "forgejo.mwasplund.com/mwasplund/devcontainers/opencode:0": {
+      "version": "0.3.0",
+      "resolved": "forgejo.mwasplund.com/mwasplund/devcontainers/opencode@sha256:548d82f97d51e7d9e625a7cfb855af9a89ae95443744351d3e054e59333ea540",
+      "integrity": "sha256:548d82f97d51e7d9e625a7cfb855af9a89ae95443744351d3e054e59333ea540"
+    },
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "2.5.0",
       "resolved": "ghcr.io/devcontainers/features/dotnet@sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093",
       "integrity": "sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093"
-    },
-    "gitea.mwasplund.com/mwasplund/devcontainers/mils:0": {
-      "version": "0.2.3",
-      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/mils@sha256:40b8d28351d0bb15b8ef7cfd823e9c165b2a8eba05df352c08b4a5a939a4a21a",
-      "integrity": "sha256:40b8d28351d0bb15b8ef7cfd823e9c165b2a8eba05df352c08b4a5a939a4a21a"
-    },
-    "gitea.mwasplund.com/mwasplund/devcontainers/neovim:0": {
-      "version": "0.1.0",
-      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/neovim@sha256:9d433c57d30f0f5f8709898c69b51c054995373fee48e9960fa26d81d80ee773",
-      "integrity": "sha256:9d433c57d30f0f5f8709898c69b51c054995373fee48e9960fa26d81d80ee773"
-    },
-    "gitea.mwasplund.com/mwasplund/devcontainers/opencode:0": {
-      "version": "0.2.0",
-      "resolved": "gitea.mwasplund.com/mwasplund/devcontainers/opencode@sha256:0203c64dd48af5ab5c801f60201ee0e7f742849fcb22509230a2196716ee7f55",
-      "integrity": "sha256:0203c64dd48af5ab5c801f60201ee0e7f742849fcb22509230a2196716ee7f55"
     }
   }
 }
